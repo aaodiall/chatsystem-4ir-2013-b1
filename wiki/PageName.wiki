@@ -1,4 +1,4 @@
-#summary One-sentence summary of this page.
+#summary Link to the Gantt Diagram
 
 = Introduction =
 
@@ -7,4 +7,4 @@ Just a test to put gantt diagram in
 
 = Details =
 
-https://drive.google.com/file/d/0Bz4WQeA9oGGpRUY3WGlhbmhyZ00/edit?usp=sharing
+[https://drive.google.com/file/d/0Bz4WQeA9oGGpRUY3WGlhbmhyZ00/edit?usp=sharing GANTT]
