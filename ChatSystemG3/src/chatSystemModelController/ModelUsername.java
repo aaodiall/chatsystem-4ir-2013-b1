@@ -8,5 +8,15 @@ package chatSystemModelController;
  *
  */
 public class ModelUsername {
+	private String username;
+
+	public ModelUsername() {
+		this.username ="jojo";
+	}
+
+	public void getUsername() {
+		this.username = username;
+	}
+	
 
 }
