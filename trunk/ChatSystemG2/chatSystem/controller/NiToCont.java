@@ -6,12 +6,14 @@
 
 package chatSystem.controller;
 
+import chatSystemCommon.*;
+
 /**
  *
  * @author Marjorie
  */
 public interface NiToCont {
-    	public void performHelloReceived(boolean ack);
+    	public void performHelloReceived(Hello msg, String ip);
 
 	public void GoodbyeReceived(String idRemoteSystem);
 	

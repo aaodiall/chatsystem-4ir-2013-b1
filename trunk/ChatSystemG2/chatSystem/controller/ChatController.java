@@ -1,5 +1,7 @@
 package chatSystem.controller;
 
+import chatSystemCommon.*;
+
 public class ChatController extends Controller implements GuiToCont, NiToCont{
 	
     @Override
@@ -14,8 +16,8 @@ public class ChatController extends Controller implements GuiToCont, NiToCont{
         
 
     @Override
-    public void performHelloReceived(boolean ack) {
-        this.remoteSystems.addRemoteSystem();
+    public void performHelloReceived(Hello msg, String ip) {
+        this.remoteSystems.addRemoteSystem(msg.);
     
     }
 
