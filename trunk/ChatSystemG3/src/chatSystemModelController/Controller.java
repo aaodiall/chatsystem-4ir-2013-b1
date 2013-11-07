@@ -8,5 +8,9 @@ package chatSystemModelController;
  *
  */
 public class Controller {
+	
+	public void performConnect(String username){
+		
+	}
 
 }

@@ -14,8 +14,8 @@ public class ModelUsername {
 		this.username ="jojo";
 	}
 
-	public void getUsername() {
-		this.username = username;
+	public String getUsername() {
+		return this.username;
 	}
 	
 
