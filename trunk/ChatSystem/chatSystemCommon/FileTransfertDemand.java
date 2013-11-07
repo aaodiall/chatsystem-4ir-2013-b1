@@ -27,7 +27,9 @@ public class FileTransfertDemand extends Message{
 	public int getTaille() {
 		return taille;
 	}
-	
-	
 
+	@Override
+	public String toString() {
+		return "FileTransfertDemand [id=" + id + ", username=" + username  +",nom=" + nom + ", extension=" + extension + ", taille=" + taille + "]";
+	}
 }

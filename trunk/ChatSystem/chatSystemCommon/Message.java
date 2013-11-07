@@ -14,9 +14,9 @@ public abstract class Message implements Serializable{
 	private static final long serialVersionUID = 462798198653087399L;
 	
 	//Compteur d'id static permettant l'init de tout message avec id différent
-	private static int cptId = 0; 
-	private int id; 
-	private String username; 
+	protected static int cptId = 0; 
+	protected int id; 
+	protected String username; 
 	
 	public Message(String username) {
 		
@@ -32,29 +32,32 @@ public abstract class Message implements Serializable{
 		return username;
 	}
         
-        public byte[] toArray() throws IOException{
-            ByteArrayOutputStream output = new ByteArrayOutputStream();
-            ObjectOutputStream oout = new ObjectOutputStream(output);
-            
-            oout.writeObject(this);
-            oout.close();
-            
-            return output.toByteArray();
+    public byte[] toArray() throws IOException{
+        ByteArrayOutputStream output = new ByteArrayOutputStream();
+        ObjectOutputStream oout = new ObjectOutputStream(output);
+        
+        oout.writeObject(this);
+        oout.close();
+        
+        return output.toByteArray();
+    }
+    
+    public static Message fromArray(byte[] array) throws IOException{
+        ByteArrayInputStream input = new ByteArrayInputStream(array);
+        ObjectInputStream oiut = new ObjectInputStream(input);
+        
+        Message retour = null;
+        try {
+            retour = (Message) oiut.readObject();
+        } catch (ClassNotFoundException ex) {
+            Logger.getLogger(Message.class.getName()).log(Level.SEVERE, null, ex);
         }
         
-        public static Message fromArray(byte[] array) throws IOException{
-            ByteArrayInputStream input = new ByteArrayInputStream(array);
-            ObjectInputStream oiut = new ObjectInputStream(input);
-            
-            Message retour = null;
-            try {
-                retour = (Message) oiut.readObject();
-            } catch (ClassNotFoundException ex) {
-                Logger.getLogger(Message.class.getName()).log(Level.SEVERE, null, ex);
-            }
-            
-            return retour;
-        }
-	
-	
+        return retour;
+    }
+
+	@Override
+	public String toString() {
+		return "Message [id=" + id + ", username=" + username + "]";
+	}   
 }

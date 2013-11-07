@@ -22,4 +22,8 @@ public class FileTransfertConfirmation extends Message{
 		return idDemand;
 	}
 
+	@Override
+	public String toString() {
+		return "FileTransfertConfirmation [id=" + id + ", username=" + username  +", isAccepted=" + isAccepted + ", idDemand=" + idDemand + "]";
+	}
 }
