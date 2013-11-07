@@ -5,7 +5,7 @@ import java.util.Arrays;
 
 public class File extends Message{
 	
-	/**
+	/** 
 	 * id for serialization
 	 */
 	private static final long serialVersionUID = -3565202401661564908L;
