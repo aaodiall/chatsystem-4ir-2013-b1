@@ -8,7 +8,6 @@ public class Text extends Message{
 	
 	public Text(String username, String text) {
 		super(username);
-		
 		this.text = text;
 	}
 
@@ -16,6 +15,10 @@ public class Text extends Message{
 		return text;
 	}
 
+	public void setText(String text) {
+		this.text = text;
+	}
+	
 	@Override
 	public String toString() {
 		return "Text [id=" + id + ", username=" + username  +", text=" + text + "]";

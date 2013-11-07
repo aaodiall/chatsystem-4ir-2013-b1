@@ -25,9 +25,17 @@ public class File extends Message{
 	public byte[] getFilePart() {
 		return filePart;
 	}
+	
+	public void setFilePart(byte[] filePart) {
+		this.filePart = filePart;
+	}
 
 	public boolean isLast() {
 		return isLast;
+	}
+	
+	public void setIsLast(boolean isLast) {
+		this.isLast = isLast;
 	}
 
 	@Override

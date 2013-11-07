@@ -13,6 +13,10 @@ public class Hello extends Message{
 	public boolean isAck() {
 		return isAck;
 	}
+	
+	public void setIsAck(boolean isAck) {
+		this.isAck = isAck;
+	}
 
 	@Override
 	public String toString() {

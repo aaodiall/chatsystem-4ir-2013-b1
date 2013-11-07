@@ -31,6 +31,10 @@ public abstract class Message implements Serializable{
 	public String getUsername() {
 		return username;
 	}
+	
+	public void setUsername(String username) {
+		this.username = username;
+	}
         
     public byte[] toArray() throws IOException{
         ByteArrayOutputStream output = new ByteArrayOutputStream();
