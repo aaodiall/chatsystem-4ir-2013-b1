@@ -1,9 +1,11 @@
 import chatSystemModelController.*;
 import chatSystemNetwork.*;
+import chatSystemCommon.Message;
 //import chatSystemCommand
 import chatSystemIHMs.*;
 
 public class ChatSystem {
+
 	
 	private static Controller chatController;
 	//private static ChatGUI chatGUI;
