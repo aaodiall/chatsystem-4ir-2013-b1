@@ -4,10 +4,9 @@
 package chatSystemModelController;
 
 /**
- * @author alpha
+ * @author joanna
  *
  */
-public class controller {
-	null;
+public class Controller {
 
 }
