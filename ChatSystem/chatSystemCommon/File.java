@@ -1,5 +1,7 @@
 package chatSystemCommon;
 
+import java.util.Arrays;
+
 
 public class File extends Message{
 	
@@ -27,6 +29,9 @@ public class File extends Message{
 	public boolean isLast() {
 		return isLast;
 	}
-	
 
+	@Override
+	public String toString() {
+		return "Hello [id=" + id + ", username=" + username  +", filePart=" + Arrays.toString(filePart) + ", isLast=" + isLast + "]";
+	}
 }

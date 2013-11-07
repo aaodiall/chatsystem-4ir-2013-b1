@@ -6,7 +6,12 @@ public class Goodbye extends Message{
 
 	public Goodbye(String username) {
 		super(username);
-		
 	}
 
+	@Override
+	public String toString() {
+		return "Hello [id=" + id + ", username=" + username  +"]";
+	}
+
+	
 }

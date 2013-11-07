@@ -17,6 +17,9 @@ public class FileTransfertCancel extends Message {
 	public int getIdDemand() {
 		return idDemand;
 	}
-	
 
+	@Override
+	public String toString() {
+		return "FileTransfertCancel [id=" + id + ", username=" + username  +",idDemand=" + idDemand + "]";
+	}
 }

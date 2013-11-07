@@ -16,4 +16,9 @@ public class Text extends Message{
 		return text;
 	}
 
+	@Override
+	public String toString() {
+		return "Text [id=" + id + ", username=" + username  +", text=" + text + "]";
+	}
+	
 }
