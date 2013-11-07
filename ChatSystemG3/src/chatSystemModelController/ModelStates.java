@@ -3,11 +3,13 @@
  */
 package chatSystemModelController;
 
+import java.util.Observable;
+
 /**
  * @author alpha
  *
  */
-public class ModelStates {
+public class ModelStates extends Observable{
 
 	private boolean stateconnected;
 

@@ -3,11 +3,13 @@
  */
 package chatSystemModelController;
 
+import java.util.Observable;
+
 /**
  * @author alpha
  *
  */
-public class ModelUsername {
+public class ModelUsername extends Observable{
 	private String username;
 
 	public ModelUsername() {

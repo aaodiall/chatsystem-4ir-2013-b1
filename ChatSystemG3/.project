@@ -14,4 +14,11 @@
 	<natures>
 		<nature>org.eclipse.jdt.core.javanature</nature>
 	</natures>
+	<linkedResources>
+		<link>
+			<name>ChatSystem</name>
+			<type>2</type>
+			<location>/home/alpha/workspace/TDjava/chatsystem-4ir-2013-b1/ChatSystem</location>
+		</link>
+	</linkedResources>
 </projectDescription>

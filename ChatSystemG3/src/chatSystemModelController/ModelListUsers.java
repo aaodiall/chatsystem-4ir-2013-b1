@@ -4,12 +4,13 @@
 package chatSystemModelController;
 
 import java.util.HashMap;
+import java.util.Observable;
 
 /**
  * @author alpha
  *
  */
-public class ModelListUsers {
+public class ModelListUsers extends Observable {
 	private HashMap listUsers;
 
 	public ModelListUsers() {
