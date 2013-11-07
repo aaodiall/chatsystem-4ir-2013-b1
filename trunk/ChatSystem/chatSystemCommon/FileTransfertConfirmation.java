@@ -17,11 +17,19 @@ public class FileTransfertConfirmation extends Message{
 	public boolean isAccepted() {
 		return isAccepted;
 	}
+	
+	public void setIsAccepted(boolean isAccepted) {
+		this.isAccepted = isAccepted;
+	}
 
 	public int getIdDemand() {
 		return idDemand;
 	}
 
+	public void setIdDemand(int idDemand) {
+		this.idDemand = idDemand;
+	}
+	
 	@Override
 	public String toString() {
 		return "FileTransfertConfirmation [id=" + id + ", username=" + username  +", isAccepted=" + isAccepted + ", idDemand=" + idDemand + "]";
