@@ -15,10 +15,16 @@ public class RemoteSystems extends Model{
 		this.remoteSystemsInformation = new HashMap<String, RemoteSystemInformation>();
 	}
 
-	public void addRemoteSystem(RemoteSystemInformation newRS) {
+	public void addRemoteSystem(String username, String ip) {
+            RemoteSystemInformation newRS = new RemoteSystemInformation(username,ip);
+            String key = newRS.getIdRemoteSystem();
+            if (!this.remoteSystemsInformation.containsKey(key)) {
+                this.remoteSystemsInformation.put(key, newRS);
+            }
 	}
 	
 	public void deleteRemoteSystem(String idRemoteSystem) {
+            this.remoteSystemsInformation.remove(idRemoteSystem);
 	}
 	
 	public List<String> getUserList() {

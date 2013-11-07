@@ -4,7 +4,7 @@ public class ChatController extends Controller implements GuiToCont, NiToCont{
 	
     @Override
     public void performConnect() {
-                
+              
     }
 
     @Override
@@ -14,7 +14,10 @@ public class ChatController extends Controller implements GuiToCont, NiToCont{
         
 
     @Override
-    public void performHelloReceived(boolean ack) {}
+    public void performHelloReceived(boolean ack) {
+        this.remoteSystems.addRemoteSystem();
+    
+    }
 
     @Override
     public void GoodbyeReceived(String idRemoteSystem) {}
