@@ -1,12 +1,23 @@
 package chatSystem.controller;
 
-public class ChatController {
+public class ChatController extends Controller implements GuiToCont, NiToCont{
 	
-	void performGoodbyeReceived(String idRemoteSystem) {
-	}
-	
-	void performAcceptSuggestion() {
-	}
+    @Override
+    public void performConnect() {
+                
+    }
+
+    @Override
+    public void performDisconnect() {
+            
+    }
+        
+
+    @Override
+    public void performHelloReceived(boolean ack) {}
+
+    @Override
+    public void GoodbyeReceived(String idRemoteSystem) {}
 	
 
 }
