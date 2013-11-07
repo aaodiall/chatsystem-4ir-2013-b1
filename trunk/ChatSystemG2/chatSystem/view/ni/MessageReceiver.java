@@ -2,14 +2,15 @@ package chatSystem.view.ni;
 
 import java.net.*;
 import java.io.IOException;
+import java.lang.Runnable;
 
-public class MessageReceiver {
+public class MessageReceiver implements Runnable {
     
     private DatagramSocket serverSocket;
     private byte[] messageReceived;
     
     
-    public void MessageReceiver(int serverPort, int tailleMax) {
+    public MessageReceiver(int serverPort, int tailleMax) {
         try {
             this.serverSocket = new DatagramSocket(serverPort);
             this.messageReceived = new byte[tailleMax];
@@ -28,5 +29,9 @@ public class MessageReceiver {
                 System.out.println("probleme à la réception d'un message");
             }
         }
+    }
+    
+    public void run() {
+        ReceiveHello();
     }
 }
