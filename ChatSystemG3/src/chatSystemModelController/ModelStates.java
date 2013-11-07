@@ -11,7 +11,7 @@ public class ModelStates {
 
 	private boolean stateconnected;
 
-	public boolean isconnected() {
+	public boolean isConnected() {
 		return stateconnected;
 	}
 
