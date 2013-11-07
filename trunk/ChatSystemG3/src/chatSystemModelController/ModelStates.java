@@ -9,4 +9,12 @@ package chatSystemModelController;
  */
 public class ModelStates {
 
+	private boolean stateconnected;
+
+	public boolean isconnected() {
+		return stateconnected;
+	}
+
+	
+	
 }
