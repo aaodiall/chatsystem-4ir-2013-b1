@@ -1,6 +1,13 @@
 package chatSystemCommon;
 
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
 import java.io.Serializable;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 public abstract class Message implements Serializable{
 
@@ -24,6 +31,30 @@ public abstract class Message implements Serializable{
 	public String getUsername() {
 		return username;
 	}
+        
+        public byte[] toArray() throws IOException{
+            ByteArrayOutputStream output = new ByteArrayOutputStream();
+            ObjectOutputStream oout = new ObjectOutputStream(output);
+            
+            oout.writeObject(this);
+            oout.close();
+            
+            return output.toByteArray();
+        }
+        
+        public static Message fromArray(byte[] array) throws IOException{
+            ByteArrayInputStream input = new ByteArrayInputStream(array);
+            ObjectInputStream oiut = new ObjectInputStream(input);
+            
+            Message retour = null;
+            try {
+                retour = (Message) oiut.readObject();
+            } catch (ClassNotFoundException ex) {
+                Logger.getLogger(Message.class.getName()).log(Level.SEVERE, null, ex);
+            }
+            
+            return retour;
+        }
 	
 	
 }
