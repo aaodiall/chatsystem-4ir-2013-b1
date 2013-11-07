@@ -4,8 +4,9 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.List;
 import java.util.Map;
+import java.util.Observable;
 
-public class ChatGUI implements ActionListener{
+public class ChatGUI extends View implements ActionListener{
 	
 	private ConnectWindow cWindow = null;
 	private UserWindow uWindow = null;
@@ -80,4 +81,9 @@ public class ChatGUI implements ActionListener{
 	
 	public void DisplayAcceptedSuggestionNotification() {
 	}
+
+    @Override
+    public void update(Observable o, Object arg) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
 }

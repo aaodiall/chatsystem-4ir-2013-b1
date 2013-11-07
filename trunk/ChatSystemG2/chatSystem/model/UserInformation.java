@@ -1,6 +1,6 @@
 package chatSystem.model;
 
-public class UserInformation {
+public class UserInformation extends Model{
 	
 	private String username;
 	private String ip;
