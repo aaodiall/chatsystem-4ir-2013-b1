@@ -6,6 +6,14 @@ public class UserInformation extends Model{
 	private String ip;
 	private UserState state;
 	
+        public UserInformation(String username, String ip) {
+            this.username = username;
+            this.ip = ip;
+            this.state = UserState.CONNECTED;
+        }
+         
+        public UserInformation() {}
+        
 	public String getUsername() {
 		return this.username;
 	}
@@ -26,4 +34,15 @@ public class UserInformation extends Model{
 		return this.ip;
 	}
 	
+        @Override
+        public boolean equals(Object obj) {
+           if (obj == this)
+               return true;
+           if (obj instanceof UserInformation) {
+               UserInformation aux = (UserInformation) obj;
+               return (aux.getUsername() == this.username) && (aux.getIP() == this.ip)
+                       && (aux.getState() == this.state);
+           }
+           return false;
+        }
 }

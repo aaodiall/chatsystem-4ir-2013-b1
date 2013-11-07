@@ -16,6 +16,13 @@ public class RemoteSystemInformation extends UserInformation {
 		this.messagesSent = new ArrayList<String> ();
 	}
 	
+        public RemoteSystemInformation(String username, String ip) {
+            super(username,ip);
+            this.messagesReceived = new ArrayList<String> ();
+            this.messagesToSend = new ArrayList<String> ();
+            this.messagesSent = new ArrayList<String> ();
+        }
+        
 	public void addMessageReceived(String message) {
 		this.messagesReceived.add(message);
 	}
