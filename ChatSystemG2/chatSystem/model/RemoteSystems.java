@@ -6,7 +6,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-public class RemoteSystems {
+public class RemoteSystems extends Model{
 	
 	private static RemoteSystems instance;
 	private Map<String,RemoteSystemInformation> remoteSystemsInformation;

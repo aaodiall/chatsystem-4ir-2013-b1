@@ -3,7 +3,7 @@ package chatSystem.model;
 import java.util.ArrayList;
 import java.util.List;
 
-public class FileTransferts {
+public class FileTransferts extends Model{
 	private static FileTransferts instance;
 	private List<FileTransfertInformation> FileModel;
 

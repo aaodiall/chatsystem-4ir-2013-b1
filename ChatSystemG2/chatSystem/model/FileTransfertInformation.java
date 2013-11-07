@@ -1,6 +1,6 @@
 package chatSystem.model;
 
-public class FileTransfertInformation {
+public class FileTransfertInformation extends Model{
 	
 	private int taille;
 	private String idRemoteSystem;
