@@ -8,5 +8,6 @@ package chatSystemModelController;
  *
  */
 public class controller {
+	null;
 
 }
