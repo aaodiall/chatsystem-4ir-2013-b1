@@ -1,7 +1,7 @@
 /**
  * 
  */
-package chatSystemModelController;
+package chatSystemModel;
 
 import java.util.HashMap;
 import java.util.Observable;
@@ -11,15 +11,15 @@ import java.util.Observable;
  *
  */
 public class ModelListUsers extends Observable {
-	private HashMap listUsers;
+	private HashMap<String,String> listUsers;
 
 	public ModelListUsers() {
 		super();
-		this.listUsers=new HashMap();
+		this.listUsers=new HashMap<String,String>();
 	}
 	
 	public void AddUsernameList(String username,String addressIP){
 		listUsers.put(username,addressIP);
 	}
-
+	
 }

@@ -3,6 +3,5 @@
 	<classpathentry kind="src" path="src"/>
 	<classpathentry kind="src" path="ChatSystem"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/JavaSE-1.6"/>
-	<classpathentry kind="lib" path="/home/alpha/workspace/TDjava/chatsystem-4ir-2013-b1/ChatSystem"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
