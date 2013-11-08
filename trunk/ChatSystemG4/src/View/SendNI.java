@@ -9,12 +9,14 @@ import java.net.NetworkInterface;
 import java.net.SocketException;
 import java.util.Enumeration;
 
+import chatSystemCommon.Goodbye;
 import chatSystemCommon.Hello;
 import chatSystemCommon.Message;
 
 public class SendNI {
 	public SendNI() {
-		sendBroadcastMessage(new Hello("Maloubobola",false));
+		sendBroadcastMessage(new Hello("Thomas",false));
+		//sendBroadcastMessage(new Goodbye("Thomas"));
 	}
 	
 	public void sendBroadcastMessage(Message message) {
