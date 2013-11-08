@@ -1,25 +1,53 @@
-import chatSystemModelController.*;
+package chatSystemController;
+import chatSystemModel.*;
 import chatSystemNetwork.*;
-import chatSystemCommon.Message;
-//import chatSystemCommand
 import chatSystemIHMs.*;
 
 public class ChatSystem {
 
 	
 	private static Controller chatController;
-	//private static ChatGUI chatGUI;
+	private static ChatGui chatGui;
 	private static ChatNI chatNI;
 	private static ModelListUsers modelListUsers;
 	private static ModelUsername modelUsername;
 	private static ModelStates modelStates;
-	//private static ModelText modelText
+	private static ModelText modelText;
+	
+	public static Controller getController(){
+		return chatController;
+	}
+	
+	public static ChatGui getChatGui(){
+		return chatGui;
+	}
+	
+	public static ChatNI getChatNI(){
+		return chatNI;
+	}
+	
+	public static ModelListUsers getModelListUsers(){
+		return modelListUsers; 
+	}
+	
+	public static ModelUsername getModelUsername(){
+		return modelUsername;
+	}
+	
+	public static ModelStates getModelStates(){
+		return modelStates;
+	}
+	
+	public static ModelText getModelText(){
+		return modelText;
+	}
+	
 	/**
 	 * @param args
 	 */
 	public static void main(String[] args) {
 		chatController = new Controller();
-		chatNI = new ChatNI();
+		chatNI = new ChatNI(16000);
 		modelListUsers = new ModelListUsers();
 		modelUsername = new ModelUsername();
 		modelStates = new ModelStates();

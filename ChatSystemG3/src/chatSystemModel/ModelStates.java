@@ -1,7 +1,7 @@
 /**
  * 
  */
-package chatSystemModelController;
+package chatSystemModel;
 
 import java.util.Observable;
 
@@ -17,6 +17,8 @@ public class ModelStates extends Observable{
 		return stateconnected;
 	}
 
-	
+	public void setState(boolean connected){
+		this.stateconnected = connected;
+	}
 	
 }

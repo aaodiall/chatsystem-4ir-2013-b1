@@ -1,7 +1,7 @@
 /**
  * 
  */
-package chatSystemModelController;
+package chatSystemModel;
 
 import java.util.Observable;
 

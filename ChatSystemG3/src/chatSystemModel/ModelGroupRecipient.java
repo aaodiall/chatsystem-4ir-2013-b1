@@ -1,7 +1,7 @@
 /**
  * 
  */
-package chatSystemModelController;
+package chatSystemModel;
 
 import java.util.ArrayList;
 import java.util.Observable;
@@ -12,13 +12,13 @@ import java.util.Observable;
  */
 public class ModelGroupRecipient extends Observable{
 
-	ArrayList groupRecipients;
+	ArrayList<String> groupRecipients;
 
 	/**
 	 * @param groupRecipients
 	 */
 	public ModelGroupRecipient() {
-		this.groupRecipients = new ArrayList();
+		this.groupRecipients = new ArrayList<String>();
 	}
 	
 	public void AddRecipient(String username){
