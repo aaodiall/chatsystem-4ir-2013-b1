@@ -11,6 +11,8 @@ import java.net.SocketException;
 import java.net.UnknownHostException;
 import java.util.ArrayList;
 import java.util.HashMap;
+
+import runChat.ChatSystem;
 import chatSystemIHMs.View;
 import chatSystemCommon.*;
 import chatSystemController.*;
@@ -67,7 +69,7 @@ public class ChatNI extends View implements Runnable{
 			// Enable Broadcast
 			this.socketUDP.setBroadcast(true);
 			// make pdu
-			pdu = new DatagramPacket(helloStream,helloStream.length,InetAddress.getByAddress(localNetwork),portUDP);
+			pdu = new DatagramPacket(helloStream,helloStream.length,InetAddress.getLocalHost(),portUDP);//InetAddress.getByAddress(localNetwork),portUDP);
 			// add pdu to bufferMessagesToSend
 			this.bufferMessagesToSend.add(pdu);
 			// send pdu

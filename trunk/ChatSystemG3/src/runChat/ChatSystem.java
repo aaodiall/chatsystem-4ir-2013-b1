@@ -1,6 +1,7 @@
-package chatSystemController;
+package runChat;
 import chatSystemModel.*;
 import chatSystemNetwork.*;
+import chatSystemController.Controller;
 import chatSystemIHMs.*;
 
 public class ChatSystem {
