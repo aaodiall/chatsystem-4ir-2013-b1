@@ -3,6 +3,8 @@
  */
 package chatSystemController;
 
+import java.net.InetAddress;
+
 import runChat.ChatSystem;
 
 
@@ -23,7 +25,7 @@ public class Controller {
 		
 	}
 	
-	public void connectReceived(String username,String ipRemote, boolean ack){
+	public void connectReceived(String username,InetAddress ipRemote, boolean ack){
 		// si ack = false c'est juste une reponse a un hello 
 		if (ack == false){
 			//si state = disconnected on le passe a connected

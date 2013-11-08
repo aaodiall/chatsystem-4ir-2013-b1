@@ -109,7 +109,7 @@ public class ChatNI extends View implements Runnable{
 				receivedMsg = Message.fromArray(pduReceived.getData());
 				// si c'est un hello on fait le signale au controller
 				if (receivedMsg.getClass() == Hello.class){
-					ChatSystem.getController().connectReceived(receivedMsg.getUsername(), ipRemoteAddr.toString(),((Hello)receivedMsg).isAck());
+					ChatSystem.getController().connectReceived(receivedMsg.getUsername(), ipRemoteAddr,((Hello)receivedMsg).isAck());
 				}
 			}catch (IOException recExc){
 				System.out.println("error fromArray receive");

@@ -3,6 +3,7 @@
  */
 package chatSystemModel;
 
+import java.net.InetAddress;
 import java.util.HashMap;
 import java.util.Observable;
 
@@ -11,14 +12,14 @@ import java.util.Observable;
  *
  */
 public class ModelListUsers extends Observable {
-	private HashMap<String,String> listUsers;
+	private HashMap<String, InetAddress> listUsers;
 
 	public ModelListUsers() {
 		super();
-		this.listUsers=new HashMap<String,String>();
+		this.listUsers=new HashMap<String,InetAddress>();
 	}
 	
-	public void AddUsernameList(String username,String addressIP){
+	public void AddUsernameList(String username,InetAddress addressIP){
 		listUsers.put(username,addressIP);
 	}
 	
