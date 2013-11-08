@@ -22,4 +22,10 @@ public class ModelListUsers extends Observable {
 		listUsers.put(username,addressIP);
 	}
 	
+	public boolean isInListUsers(String username){
+		return this.listUsers.containsKey(username);
+	}
+
+	
+	
 }

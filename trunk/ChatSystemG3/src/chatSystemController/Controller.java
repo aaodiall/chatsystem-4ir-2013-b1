@@ -37,13 +37,11 @@ public class Controller {
 		}else{
 			System.out.println(username + " est connecté");
 			// si c'est un nouvel utilisateur on l'ajoute et on repond
-			if (true){
+			if (ChatSystem.getModelListUsers().isInListUsers(username)){
 				ChatSystem.getModelListUsers().AddUsernameList(username, ipRemote);
-				ChatSystem.getChatNI().connect(ChatSystem.getModelUsername().getUsername(),false);
-			//sinon c'est un checkPresence donc on repond
-			}else{
-				ChatSystem.getChatNI().connect(ChatSystem.getModelUsername().getUsername(),false);
+			
 			}
+			ChatSystem.getChatNI().connect(ChatSystem.getModelUsername().getUsername(),false);
 		}
 	}
 }
