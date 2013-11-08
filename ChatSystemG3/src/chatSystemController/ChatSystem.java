@@ -47,16 +47,11 @@ public class ChatSystem {
 	 */
 	public static void main(String[] args) {
 		chatController = new Controller();
-		chatNI = new ChatNI(16000);
+		chatNI = new ChatNI(16002);
 		modelListUsers = new ModelListUsers();
 		modelUsername = new ModelUsername();
 		modelStates = new ModelStates();
 		chatController.performConnect("lilou");
-		if (modelStates.isConnected()){
-			System.out.println(modelUsername.getUsername() + " : connection succeed");
-		}else{
-			System.out.println(modelUsername.getUsername() + " : connection failed");
-		}
 		/*chatController.performDisconnect();
 		if (modelStates.isConnected()){
 			System.out.println(modelUsername.getUsername() + " : disconnection succeed");
