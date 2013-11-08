@@ -14,12 +14,24 @@ import chatSystemCommon.Hello;
 import chatSystemCommon.Message;
 import chatSystemCommon.Text;
 
-public class ReceivedNI extends Thread {
+public final class ReceivedNI extends Thread {
+	private static ReceivedNI instance = null;
+	
 	private ChatController chatController;
 	
-	public ReceivedNI(ChatController chatController) {
+	private ReceivedNI(ChatController chatController) {
 		this.chatController = chatController;
 		this.run();
+	}
+	
+	public final static ReceivedNI getInstance(ChatController chatController) {
+		if(ReceivedNI.instance == null) {
+			synchronized(ReceivedNI.class) {
+				if(ReceivedNI.instance == null)
+					ReceivedNI.instance = new ReceivedNI(chatController);
+			}
+		}
+		return ReceivedNI.instance;
 	}
 
 	public void run() {
