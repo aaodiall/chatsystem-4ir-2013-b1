@@ -3,6 +3,8 @@
  */
 package chatSystemController;
 
+import runChat.ChatSystem;
+
 
 /**
  * @author joanna
