@@ -41,6 +41,7 @@ public class ChatNI extends View implements Runnable{
 			System.out.println("IP reseau local : " + InetAddress.getByAddress(localNetwork).toString());
 			// construction du socket UDP
 			this.socketUDP = new DatagramSocket(portUDP,localUserIP);
+			this.socketUDP.toString();
 			// initialisation d'un pdu de reception
 			this.streamReceived = new byte[this.socketUDP.getReceiveBufferSize()];
 			this.pduReceived = new DatagramPacket(this.streamReceived,this.streamReceived.length);
@@ -50,6 +51,7 @@ public class ChatNI extends View implements Runnable{
 			System.out.println("connection failed : no Localhost");
 		}catch(SocketException sockExc){
 			System.out.println("socketUDP : socket exception");
+			this.socketUDP.close();
 		}
 		
 	}
@@ -80,7 +82,7 @@ public class ChatNI extends View implements Runnable{
 	}
 	
 	public void run(){
-		int first = 1;
+		int first = 0;
 		Message receivedMsg;
 		InetAddress ipRemoteAddr;
 		// envoie d'un pdu
