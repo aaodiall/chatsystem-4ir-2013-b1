@@ -1,14 +1,10 @@
 package Model;
 
-import java.util.ArrayList;
-import java.util.Observer;
-
-import javax.swing.AbstractListModel;
 import javax.swing.DefaultListModel;
 
-import chatSystemCommon.Message;
-
+@SuppressWarnings("serial")
 public class ChatModel extends DefaultListModel<User> {
+
 	public ChatModel() {
 		
 	}
