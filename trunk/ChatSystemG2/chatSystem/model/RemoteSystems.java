@@ -6,41 +6,68 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+/**
+ * Keeps and manages the remote system's information
+ * @author Marjorie
+ */
 public class RemoteSystems extends Model{
-	
-	private static RemoteSystems instance;
-	private Map<String,RemoteSystemInformation> remoteSystemsInformation;
-	
-	private RemoteSystems () {
-		this.remoteSystemsInformation = new HashMap<String, RemoteSystemInformation>();
-	}
 
-	public void addRemoteSystem(String username, String ip) {
-            RemoteSystemInformation newRS = new RemoteSystemInformation(username,ip);
-            String key = newRS.getIdRemoteSystem();
-            if (!this.remoteSystemsInformation.containsKey(key)) {
-                this.remoteSystemsInformation.put(key, newRS);
+    private static RemoteSystems instance;
+    private Map<String,RemoteSystemInformation> remoteSystemsInformation;
+
+    /**
+     * Private class' constructor
+     */
+    private RemoteSystems () {
+            this.remoteSystemsInformation = new HashMap<String, RemoteSystemInformation>();
+    }
+
+    /**
+     * Add a remote system in the remote system's list
+     * @param username contact's username
+     * @param ip remote system's ip address
+     */
+    public void addRemoteSystem(String username, String ip) {
+        RemoteSystemInformation newRS = new RemoteSystemInformation(username,ip);
+        String key = newRS.getIdRemoteSystem();
+        if (!this.remoteSystemsInformation.containsKey(key)) {
+            this.remoteSystemsInformation.put(key, newRS);
+        }
+    }
+
+    /**
+     * Remove a remote system from the list
+     * @param idRemoteSystem id of the remote system to be removed
+     */
+    public void deleteRemoteSystem(String idRemoteSystem) {
+        this.remoteSystemsInformation.remove(idRemoteSystem);
+    }
+
+    /**
+     * Get the contacts username's list
+     * @return usernames' list
+     */
+    public List<String> getUserList() {
+            List<String> userList = new ArrayList<String>();
+            Set<String> remoteSystems = this.remoteSystemsInformation.keySet();
+            for(String rs: remoteSystems) {
+                    userList.add(this.remoteSystemsInformation.get(rs).getUsername());
             }
-	}
-	
-	public void deleteRemoteSystem(String idRemoteSystem) {
-            this.remoteSystemsInformation.remove(idRemoteSystem);
-	}
-	
-	public List<String> getUserList() {
-		List<String> userList = new ArrayList<String>();
-		Set<String> remoteSystems = this.remoteSystemsInformation.keySet();
-		for(String rs: remoteSystems) {
-			userList.add(this.remoteSystemsInformation.get(rs).getUsername());
-		}
-		return userList;
-	}
-	
-	public static RemoteSystems getInstance() {
-		if (instance == null) {
-			instance = new RemoteSystems();
-		}
-		return instance;
-	}
-	
+            return userList;
+    }
+
+    /**
+     * Static method to obtain an instance of the class RemoteSystems
+     * @return RemoteSystems unique instance
+     */
+    public final static RemoteSystems getInstance() {
+            if (instance == null) {
+                synchronized(RemoteSystems.class) {
+                    if (instance == null) {
+                        instance = new RemoteSystems();
+                    }
+                }
+            }
+            return instance;
+    }
 }
