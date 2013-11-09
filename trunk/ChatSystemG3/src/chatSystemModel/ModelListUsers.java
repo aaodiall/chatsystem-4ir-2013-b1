@@ -19,14 +19,14 @@ public class ModelListUsers extends Observable {
 		this.listUsers=new HashMap<String,InetAddress>();
 	}
 	
-	public void AddUsernameList(String username,InetAddress addressIP){
+	public void addUsernameList(String username,InetAddress addressIP){
 		listUsers.put(username,addressIP);
 	}
-	public void removeusernameList(String username){
+	public void removeUsernameList(String username){
 		this.listUsers.remove(username);
 	}
 	
-	public boolean IsInListUsers(String username){
+	public boolean isInListUsers(String username){
 		return this.listUsers.containsKey(username);
 	}
 

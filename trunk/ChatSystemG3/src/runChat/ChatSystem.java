@@ -48,7 +48,7 @@ public class ChatSystem {
 	 */
 	public static void main(String[] args) {
 		chatController = new Controller();
-		chatNI = new ChatNI(16002);
+		chatNI = new ChatNI(16001);
 		modelListUsers = new ModelListUsers();
 		modelUsername = new ModelUsername();
 		modelStates = new ModelStates();
