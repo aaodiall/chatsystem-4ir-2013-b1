@@ -11,6 +11,14 @@ public class FileTransfertInformation extends Model{
 	private int idTransfert;
 	private int tailleRecup;
 	
+        /**
+         * Class' constructor
+         * @param taille 
+         * @param idRemoteSystem
+         * @param name
+         * @param extension
+         * @param idTransfert 
+         */
 	public FileTransfertInformation(int taille, String idRemoteSystem, String name, String extension, int idTransfert) {
 		this.taille = taille;
 		this.idRemoteSystem = idRemoteSystem;

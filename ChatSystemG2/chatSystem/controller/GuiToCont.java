@@ -12,7 +12,7 @@ package chatSystem.controller;
  */
 public interface GuiToCont {
     
-    	public void performConnect();
+    	public void performConnect(String username);
 	
 	public void performDisconnect();
 	

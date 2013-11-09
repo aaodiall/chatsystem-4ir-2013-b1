@@ -6,34 +6,72 @@ public class UserInformation extends Model{
 	private String ip;
 	private UserState state;
 	
-        public UserInformation(String username, String ip) {
-            this.username = username;
+        /**
+         * Creation d'une zone d'information sur un utilisateur encore inconnu
+         * @param ip adresse ip, seule information disponible
+         */
+        public UserInformation(String ip) {
             this.ip = ip;
+            this.username = null;
+            this.state = UserState.DISCONNECTED;
+        }
+        
+        /**
+         * Creation d'une zone d'information sur un utilisateur dont on vient d'apprendre l'existence
+         * @param username pseudo de l'utilisateur
+         * @param ip adresse ip de l'utilisateur
+         */
+         public UserInformation(String username, String ip) {
+            this.ip = ip;
+            this.username = username;
             this.state = UserState.CONNECTED;
         }
-         
-        public UserInformation() {}
         
+         /**
+          * Recuperer le pseudo de l'utilisateur
+          * @return username
+          */
 	public String getUsername() {
 		return this.username;
 	}
 	
+        /**
+         * Modifier le pseudo de l'utilisateur
+         * @param username nouveau pseudo
+         */
 	public void setUsername(String username) {
 		this.username = username;
 	}
 	
+        /**
+         * Recuperer l'etat de l'utilisateur (connected/disconnected)
+         * @return etat de l'utilisateur
+         */
 	public UserState getState() {
 		return this.state;
 	}
 
+        /**
+         * Mettre a jour l'etat de l'utilisateur (connected/disconnected)
+         * @param state nouvel etat
+         */
 	public void setState(UserState state) {
 		this.state = state;
 	}
 	
+        /**
+         * Recuperer l'adresse ip de l'utilisateur
+         * @return adresse ip
+         */
 	public String getIP() {
 		return this.ip;
 	}
 	
+        /**
+         * Evalue si l'objet en argument est egal a cette instance de UserInformation
+         * @param obj objet a comparer
+         * @return resultat de la comparaison
+         */
         @Override
         public boolean equals(Object obj) {
            if (obj == this)
