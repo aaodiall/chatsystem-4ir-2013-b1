@@ -22,10 +22,12 @@ public class Controller {
 	}
 	
 	public void performDisconnect(String username){
+		ChatSystem.getChatNI().disconnect(username);
+		ChatSystem.getModelListUsers().clearListUsers();;
 		
 	}
 	
-	public void connectReceived(String username,InetAddress ipRemote, boolean ack){
+	public void ConnectReceived(String username,InetAddress ipRemote, boolean ack){
 		// si ack = false c'est juste une reponse a un hello 
 		if (ack == false){
 			//si state = disconnected on le passe a connected
@@ -39,11 +41,15 @@ public class Controller {
 		}else{
 			System.out.println(username + " est connecté");
 			// si c'est un nouvel utilisateur on l'ajoute et on repond
-			if (ChatSystem.getModelListUsers().isInListUsers(username)){
+			if (ChatSystem.getModelListUsers().IsInListUsers(username)){
 				ChatSystem.getModelListUsers().AddUsernameList(username, ipRemote);
 			
 			}
 			ChatSystem.getChatNI().connect(ChatSystem.getModelUsername().getUsername(),false);
 		}
+	}
+	public void DisconnectReceived(String username){
+		ChatSystem.getModelListUsers().removeusernameList(username);
+		
 	}
 }

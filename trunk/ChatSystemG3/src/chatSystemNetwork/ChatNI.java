@@ -79,7 +79,22 @@ public class ChatNI extends View implements Runnable{
 		}
 	}
 	
-	public void disconnect(){
+	public void disconnect(String username){
+		byte [] byeStream;
+		DatagramPacket pdu;
+		// new Goodbye object
+		Goodbye bye = new Goodbye(username);
+		try{
+			byeStream =((Message)bye).toArray();
+			this.socketUDP.setBroadcast(true);
+			pdu=new DatagramPacket(byeStream,byeStream.length,InetAddress.getLocalHost(),portUDP);//InetAddress.getByAddress(localNetwork),portUDP);
+			this.bufferMessagesToSend.add(pdu);
+			this.run();
+		}catch (IOException e){
+			e.printStackTrace();
+		}
+		
+		
 		
 	}
 	
@@ -109,11 +124,17 @@ public class ChatNI extends View implements Runnable{
 				receivedMsg = Message.fromArray(pduReceived.getData());
 				// si c'est un hello on fait le signale au controller
 				if (receivedMsg.getClass() == Hello.class){
-					ChatSystem.getController().connectReceived(receivedMsg.getUsername(), ipRemoteAddr,((Hello)receivedMsg).isAck());
+					ChatSystem.getController().ConnectReceived(receivedMsg.getUsername(), ipRemoteAddr,((Hello)receivedMsg).isAck());
 				}
 			}catch (IOException recExc){
 				System.out.println("error fromArray receive");
 			}			
 		}
 	}
+	public  String makeUsername(String username, InetAddress ip){
+		String ipString[]=ip.toString().split("/");
+		
+		return username+"@"+ipString[1];
+	}
+	
 }
