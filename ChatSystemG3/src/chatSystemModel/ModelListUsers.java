@@ -22,11 +22,18 @@ public class ModelListUsers extends Observable {
 	public void AddUsernameList(String username,InetAddress addressIP){
 		listUsers.put(username,addressIP);
 	}
+	public void removeusernameList(String username){
+		this.listUsers.remove(username);
+	}
 	
-	public boolean isInListUsers(String username){
+	public boolean IsInListUsers(String username){
 		return this.listUsers.containsKey(username);
 	}
 
+	public void clearListUsers(){
+		this.listUsers.clear();
+		this.listUsers=null;
+	}
 	
 	
 }
