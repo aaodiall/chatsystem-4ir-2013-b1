@@ -5,6 +5,7 @@ import java.awt.event.ActionListener;
 import java.util.List;
 import java.util.Map;
 import java.util.Observable;
+import chatSystem.controller.Controller;
 
 public class ChatGUI extends View implements ActionListener{
 	
@@ -12,9 +13,10 @@ public class ChatGUI extends View implements ActionListener{
 	private UserWindow uWindow = null;
 	private Map<String,DialogWindow> dWindows;
 
-	public ChatGUI()
+	public ChatGUI(Controller controller)
 	{
-		this.cWindow = new ConnectWindow(this);
+            super(controller);
+            this.cWindow = new ConnectWindow(this);
 	}
 	
 	@Override

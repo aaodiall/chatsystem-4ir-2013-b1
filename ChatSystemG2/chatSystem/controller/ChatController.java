@@ -20,9 +20,6 @@ public class ChatController extends Controller implements GuiToCont, NiToCont{
     @Override
     public void performHelloReceived(Hello msg, String ip) {
         this.remoteSystems.addRemoteSystem(msg.getUsername(), ip);
-        if (msg.isAck()) {
-           // this.remoteSystems
-        }
     }
 
     @Override
