@@ -19,6 +19,10 @@ public class ModelListUsers extends Observable {
 		this.listUsers=new HashMap<String,InetAddress>();
 	}
 	
+	public HashMap<String, InetAddress> getListUsers(){
+		return this.listUsers;
+	}
+	
 	public void addUsernameList(String username,InetAddress addressIP){
 		listUsers.put(username,addressIP);
 	}

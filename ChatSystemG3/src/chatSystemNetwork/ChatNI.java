@@ -6,22 +6,26 @@ package chatSystemNetwork;
 import java.io.IOException;
 import java.net.DatagramSocket;
 import java.net.DatagramPacket;
-import java.net.Inet4Address;
 import java.net.InetAddress;
 import java.net.InterfaceAddress;
 import java.net.NetworkInterface;
 import java.net.SocketException;
-import java.net.UnknownHostException;
 import java.util.ArrayList;
 import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.Iterator;
-import java.util.List;
 
 import runChat.ChatSystem;
 import chatSystemIHMs.View;
 import chatSystemCommon.*;
-import chatSystemController.*;
+
+/* Note pour plus tard : 
+ *  - tester le programme sur un reseau local
+ *  - decider si on utilise la liste du model ou une liste de chatNI qui sera actualisee a chaque changement
+ *  - definir le port udp comme il faut
+ *  - decider si on utilise a chaque fois un seul objet hello,bye,text juste en modifiant les attributs
+ *  - ecrire la javadoc et les commentaires
+ */
 
 public class ChatNI extends View implements Runnable{
 	
@@ -42,8 +46,8 @@ public class ChatNI extends View implements Runnable{
 		// initialisation de la liste des remoteUsers de ChatNI
 		this.remoteUsersList = new HashMap<String,InetAddress>();
 		// recuperation de l'IPUser et de l'IPBroadcast
-		this.setlocalIPandBroadcast();
-		try {			
+		//this.setlocalIPandBroadcast();
+		try {
 			// construction du socket UDP
 			this.socketUDP = new DatagramSocket(portUDP,localUserIP);
 			// initialisation d'un pdu de reception
@@ -53,7 +57,7 @@ public class ChatNI extends View implements Runnable{
 			if (this.socketUDP == null)
 				System.out.println("socketUDP : socket exception");
 			this.socketUDP.close();
-		}		
+		}
 	}
 	
 	public void setlocalIPandBroadcast(){
@@ -122,6 +126,26 @@ public class ChatNI extends View implements Runnable{
 		}		
 	}
 	
+	public void sendText (){
+		InetAddress recipient;
+		Iterator <String> it;
+		DatagramPacket pdu2send;
+		String text2Send = ChatSystem.getModelText().getTextToSend();
+		Text messageText = new Text(ChatSystem.getModelUsername().getUsername(),text2Send);
+		try{
+			byte[] messageStream = messageText.toArray();	
+			it = ChatSystem.getModelGroupRecipient().getGroupRecipients().iterator();
+			while(it.hasNext()){
+				recipient = ChatSystem.getModelListUsers().getListUsers().get((String)it.next());
+				pdu2send = new DatagramPacket(messageStream,messageStream.length,recipient,this.portUDP);
+				this.socketUDP.send(pdu2send);
+				this.run();
+			}
+		}catch(IOException ioExc){
+			System.out.println("error : construction du stream message");
+		}	
+	}
+	
 	public void run(){
 		int first = 0;
 		Message receivedMsg;
@@ -148,8 +172,9 @@ public class ChatNI extends View implements Runnable{
 				receivedMsg = Message.fromArray(pduReceived.getData());
 				// si c'est un hello on fait le signale au controller
 				if (receivedMsg.getClass() == Hello.class){
-					ChatSystem.getController().ConnectReceived(receivedMsg.getUsername(), ipRemoteAddr,((Hello)receivedMsg).isAck());
-					System.out.println("connect received");
+					ChatSystem.getController().connectReceived(this.makeUsername(receivedMsg.getUsername(),ipRemoteAddr), ipRemoteAddr,((Hello)receivedMsg).isAck());
+				}else if(receivedMsg.getClass() == Text.class){
+					ChatSystem.getController().messageReceived(((Text)receivedMsg).getText(), this.makeUsername(receivedMsg.getUsername(),ipRemoteAddr));
 				}
 			}catch (IOException recExc){
 				System.out.println("error fromArray receive");

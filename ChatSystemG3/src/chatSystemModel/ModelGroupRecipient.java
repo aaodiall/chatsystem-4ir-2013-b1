@@ -21,8 +21,11 @@ public class ModelGroupRecipient extends Observable{
 		this.groupRecipients = new ArrayList<String>();
 	}
 	
-	public void AddRecipient(String username){
+	public void addRecipient(String username){
 		this.groupRecipients.add(username);
 	}
 	
+	public ArrayList<String> getGroupRecipients(){
+		return this.groupRecipients;
+	}
 }
