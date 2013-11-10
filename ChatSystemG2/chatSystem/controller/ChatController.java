@@ -4,7 +4,7 @@ import chatSystem.model.RemoteSystems;
 import chatSystem.model.UserInformation;
 import chatSystem.model.UserState;
 import chatSystem.view.gui.ChatGUI;
-import chatSystemCommon.*;
+import chatSystem.view.ni.ChatNI;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
 
@@ -13,7 +13,8 @@ public class ChatController extends Controller implements GuiToCont, NiToCont{
     private UserInformation localUser;      ///mettre dans une HasMap créée dans la classe mère
     private RemoteSystems remoteSystems;
     
-    private ChatGUI chatGUI;
+    private final ChatGUI chatGUI;
+    private final ChatNI chatNI;
     
     public ChatController() {
         super();
@@ -29,6 +30,10 @@ public class ChatController extends Controller implements GuiToCont, NiToCont{
         
         this.chatGUI = new ChatGUI(this);
         this.localUser.addObserver(chatGUI);
+        this.remoteSystems.addObserver(chatGUI);
+        
+        this.chatNI = new ChatNI(this);
+        this.localUser.addObserver(chatNI);
     }
 	
     @Override
@@ -45,12 +50,14 @@ public class ChatController extends Controller implements GuiToCont, NiToCont{
         
 
     @Override
-    public void performHelloReceived(Hello msg, String ip) {
-        this.remoteSystems.addRemoteSystem(msg.getUsername(), ip);
+    public void performHelloReceived(String username, String ip) {
+        this.remoteSystems.addRemoteSystem(username, ip);
     }
 
     @Override
-    public void performGoodbyeReceived(String idRemoteSystem) {}
+    public void performGoodbyeReceived(String idRemoteSystem) {
+        this.remoteSystems.deleteRemoteSystem(idRemoteSystem);
+    }
 	
 
 }

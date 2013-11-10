@@ -2,28 +2,29 @@ package chatSystem.view.ni;
 
 import chatSystem.view.gui.View;
 import chatSystem.controller.ChatController;
+import chatSystem.model.UserInformation;
+import chatSystem.model.UserState;
 import java.util.Observable;
 import chatSystemCommon.*;
 
 public class ChatNI extends View implements Runnable {
 
-    private MessageReceiver messageReceiver;
-    private MessageTransfert messageTransfert;
-    private FileReceiver[] fileReceiver;
-    private FileTransfert[] fileTransfert;
-    private int numPort;
+    private final MessageReceiver messageReceiver;
+    private final MessageTransfert messageTransfert;
+    private final FileReceiver[] fileReceiver;
+    private final FileTransfert[] fileTransfert;
 
-    public ChatNI(ChatController controller, int serverPort, int tailleMax, int numPort) {
+    public ChatNI(ChatController controller) {
         super(controller);
-        this.numPort = numPort;
+     
         this.fileReceiver = new FileReceiver[5];
         this.fileTransfert = new FileTransfert[5];
-        this.messageReceiver = new MessageReceiver(serverPort, tailleMax, this);
+        this.messageReceiver = new MessageReceiver(this);
         this.messageTransfert = new MessageTransfert();
     }
 
-    public void helloReceived(Hello msg, String ip) {
-        ((ChatController) (this.controller)).performHelloReceived(msg, ip);
+    public void helloReceived(String username, String ip) {
+        ((ChatController) (this.controller)).performHelloReceived(username, ip);
     }
 
     public void textMessageReceived(Message msg, String ip) {
@@ -43,16 +44,31 @@ public class ChatNI extends View implements Runnable {
     }
 
     public void sendHelloMsg(String username, String ip) {
-        this.messageTransfert.sendHello(username, null, numPort);
+        this.messageTransfert.sendHello(username, ip);
     }
 
     public void sendHelloMsg(String username) {
-        this.messageTransfert.sendHello(username, numPort);
+        this.messageTransfert.sendHello(username);
     }
 
+    /**
+     *
+     * @param o : part of the model which send a the notification
+     * @param arg : argument sended by the model
+     */
     @Override
-    public void update(Observable o, Object arg) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    public void update(Observable o, Object arg) {          //pas sexy, trouver un moyen de mieux le gérer genre faire des fonction userInfoupdated etc
+        System.out.println("Entering update");
+        if(o instanceof UserInformation){
+            if(arg instanceof UserState){
+                if((UserState)arg == UserState.CONNECTED){
+                    //on est connecté, on commence l'écoute
+                    this.messageReceiver.run();
+                    //et on le guele car on est content :)
+                    this.messageTransfert.sendHello(((UserInformation) o).getUsername());
+                }
+            }
+        } 
     }
 
     @Override

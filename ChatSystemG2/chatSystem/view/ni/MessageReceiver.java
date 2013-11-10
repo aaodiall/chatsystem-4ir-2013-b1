@@ -12,21 +12,22 @@ import chatSystemCommon.*;
  */
 public class MessageReceiver implements Runnable {
     
+    final static int portUdpReception = 16001;
+    final static int tailleMaxDatagram = 1024;
+    
     private DatagramSocket serverSocket;
     private byte[] messageReceived;
     private ChatNI chatni;
     
     /**
      * Class' constructor
-     * @param serverPort port used for the communication
-     * @param tailleMax maximum receiving message's size
      * @param chatni chatNI responsible for this messageReceiver instance
      * 
      */
-    public MessageReceiver(int serverPort, int tailleMax, ChatNI chatni) {
+    public MessageReceiver(ChatNI chatni) {
         try {
-            this.serverSocket = new DatagramSocket(serverPort);
-            this.messageReceived = new byte[tailleMax];
+            this.serverSocket = new DatagramSocket(MessageReceiver.portUdpReception);
+            this.messageReceived = new byte[MessageReceiver.tailleMaxDatagram];
             this.chatni = chatni;
         } catch (SocketException exc) {
             System.out.println("Probleme à la création du socket server");
@@ -47,7 +48,7 @@ public class MessageReceiver implements Runnable {
                 Class msgClass = msg.getClass();
                 if (msgClass == Hello.class){
                     Hello helloReceived = (Hello)msg;
-                    this.chatni.helloReceived(helloReceived, from);
+                    this.chatni.helloReceived(helloReceived.getUsername(), from);
                 }
                 else if (msgClass == Text.class) {
                     this.chatni.textMessageReceived(msg, from);
@@ -73,6 +74,7 @@ public class MessageReceiver implements Runnable {
     /**
      * Action done by the active class
      */
+    @Override
     public void run() {
         receiveMessage();
     }

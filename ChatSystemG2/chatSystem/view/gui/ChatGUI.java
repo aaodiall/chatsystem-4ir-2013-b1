@@ -4,8 +4,10 @@ import java.util.List;
 import java.util.Map;
 import java.util.Observable;
 import chatSystem.controller.ChatController;
+import chatSystem.model.RemoteSystems;
 import chatSystem.model.UserInformation;
 import chatSystem.model.UserState;
+import java.util.ArrayList;
 
 public class ChatGUI extends View {
 
@@ -97,5 +99,10 @@ public class ChatGUI extends View {
                 }
             }
         } 
+        else if(o instanceof RemoteSystems){
+            if(arg instanceof List){
+                this.uWindow.updateContacts((List<String>)arg);
+            }
+        }
     }
 }

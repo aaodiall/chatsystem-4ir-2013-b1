@@ -20,9 +20,9 @@ public class RemoteSystemInformation extends UserInformation {
          */
 	public RemoteSystemInformation (String ip) {
 		super(ip);
-		this.messagesReceived = new ArrayList<String> ();
-		this.messagesToSend = new ArrayList<String> ();
-		this.messagesSent = new ArrayList<String> ();
+		this.messagesReceived = new ArrayList<> ();
+		this.messagesToSend = new ArrayList<> ();
+		this.messagesSent = new ArrayList<> ();
 	}
 	
         /**
@@ -32,9 +32,9 @@ public class RemoteSystemInformation extends UserInformation {
          */
         public RemoteSystemInformation(String username, String ip) {
             super(username,ip);
-            this.messagesReceived = new ArrayList<String> ();
-            this.messagesToSend = new ArrayList<String> ();
-            this.messagesSent = new ArrayList<String> ();
+            this.messagesReceived = new ArrayList<> ();
+            this.messagesToSend = new ArrayList<> ();
+            this.messagesSent = new ArrayList<> ();
         }
         
         /**

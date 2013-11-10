@@ -13,13 +13,13 @@ import java.util.Set;
 public class RemoteSystems extends Model{
 
     private static RemoteSystems instance;
-    private Map<String,RemoteSystemInformation> remoteSystemsInformation;
+    private final Map<String,RemoteSystemInformation> remoteSystemsInformation;
 
     /**
      * Private class' constructor
      */
     private RemoteSystems () {
-            this.remoteSystemsInformation = new HashMap<String, RemoteSystemInformation>();
+            this.remoteSystemsInformation = new HashMap<>();
     }
 
     /**
@@ -32,6 +32,9 @@ public class RemoteSystems extends Model{
         String key = newRS.getIdRemoteSystem();
         if (!this.remoteSystemsInformation.containsKey(key)) {
             this.remoteSystemsInformation.put(key, newRS);
+            this.setChanged();
+            this.notifyObservers(this.remoteSystemsInformation);
+            this.clearChanged();
         }
     }
 
@@ -41,6 +44,9 @@ public class RemoteSystems extends Model{
      */
     public void deleteRemoteSystem(String idRemoteSystem) {
         this.remoteSystemsInformation.remove(idRemoteSystem);
+        this.setChanged();
+        this.notifyObservers(this.remoteSystemsInformation);
+        this.clearChanged();
     }
 
     /**
@@ -48,7 +54,7 @@ public class RemoteSystems extends Model{
      * @return usernames' list
      */
     public List<String> getUserList() {
-            List<String> userList = new ArrayList<String>();
+            List<String> userList = new ArrayList<>();
             Set<String> remoteSystems = this.remoteSystemsInformation.keySet();
             for(String rs: remoteSystems) {
                     userList.add(this.remoteSystemsInformation.get(rs).getUsername());
