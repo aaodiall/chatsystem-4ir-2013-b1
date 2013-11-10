@@ -40,7 +40,11 @@ public class UserInformation extends Model{
          * @param username nouveau pseudo
          */
 	public void setUsername(String username) {
+                System.out.println("Entering setUsername");
 		this.username = username;
+                this.setChanged();
+                this.notifyObservers(this.username);
+                this.clearChanged();
 	}
 	
         /**
@@ -56,7 +60,11 @@ public class UserInformation extends Model{
          * @param state nouvel etat
          */
 	public void setState(UserState state) {
+                System.out.println("Entering setState");
 		this.state = state;
+                this.setChanged();
+                this.notifyObservers(this.state);
+                this.clearChanged();
 	}
 	
         /**

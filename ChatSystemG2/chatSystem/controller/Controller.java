@@ -14,17 +14,8 @@ import chatSystem.model.*;
  * @author Marjorie
  */
 public class Controller {
-    protected UserInformation localUser;
-    protected RemoteSystems remoteSystems;
     
     public Controller() {
-        InetAddress localIP;
-        try {
-            localIP = InetAddress.getLocalHost();
-            this.localUser = new UserInformation(localIP.toString());
-            this.remoteSystems = RemoteSystems.getInstance();
-        } catch (UnknownHostException ex) {
-            System.out.println("local host non existent");
-        }
+
     }
 }
