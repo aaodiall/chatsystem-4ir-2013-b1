@@ -7,6 +7,11 @@ import javax.swing.JFrame;
 
 public class OptionFrame extends JFrame implements ActionListener {
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -3737647258422285088L;
+
 	public OptionFrame() {
 		// TODO Auto-generated constructor stub
 	}

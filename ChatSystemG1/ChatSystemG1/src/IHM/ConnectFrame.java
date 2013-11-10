@@ -7,6 +7,11 @@ import javax.swing.JFrame;
 
 public class ConnectFrame extends JFrame implements ActionListener{
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 2889384820323516944L;
+
 	public ConnectFrame() {
 		// TODO Auto-generated constructor stub
 	}
