@@ -24,6 +24,14 @@ public class ChatNI extends View implements Runnable {
         public void helloReceived(Hello msg, String ip) {
             ((ChatController)(this.controller)).performHelloReceived(msg, ip);
         }
+        
+        public void sendHelloMsg(String username, String ip) {
+            this.messageTransfert.sendHello(username, null, numPort);
+        }
+        
+        public void sendHelloMsg(String username) {
+            this.messageTransfert.sendHello(username, numPort);
+        }
 
     @Override
     public void update(Observable o, Object arg) {
