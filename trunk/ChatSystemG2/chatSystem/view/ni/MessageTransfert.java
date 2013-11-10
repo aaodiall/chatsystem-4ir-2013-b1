@@ -8,9 +8,17 @@ import java.util.Enumeration;
 import java.util.List;
 import java.util.Iterator;
 
+
+/**
+ * Class used to send messages
+ * @author Marjorie
+ */
 public class MessageTransfert {
     
     private DatagramSocket messageSocket;
+    /**
+     * Class' constructor
+     */
     public MessageTransfert() {
         try{
             this.messageSocket = new DatagramSocket();
@@ -20,7 +28,12 @@ public class MessageTransfert {
         }
     }
     
-    public InetAddress determineBroadcastAddress(InetAddress ip) {
+    /**
+     * Determine the computer local red's broadcast address
+     * We assume that the first we find is the rigth one
+     * @return broadcast address determined
+     */
+    public InetAddress determineBroadcastAddress() {
         boolean found = false;
         InetAddress broadcast = null;
         try {
@@ -43,8 +56,23 @@ public class MessageTransfert {
         return broadcast;
     }
     
-    //public void sendHello(String username, int port) {}
+    /**
+     * Send a hello message to all the computers located in the local red
+     * Using the broadcast address which has to be determined
+     * @param username username of the person who wants to send the message
+     * @param port port used to send the message
+     */
+    public void sendHello(String username, int port) {
+        InetAddress broadcastAddress = this.determineBroadcastAddress();
+        this.sendHello(username, broadcastAddress, port);
+    }
     
+    /**
+     * Send a hello message to a determined remote system
+     * @param username username of the person who wants to send the message
+     * @param ip ip address of the remote system we want to send the message
+     * @param port port used to send the message
+     */
     public void sendHello(String username, InetAddress ip, int port) {
         Hello helloToSend = new Hello(username, false);
         try {
