@@ -1,5 +1,9 @@
 package ChatNI;
 
+import java.io.IOException;
+
+import chatSystemCommon.Message;
+
 public class Receiver implements Runnable{
 
 	public Receiver() {
@@ -12,4 +16,13 @@ public class Receiver implements Runnable{
 		
 	}
 
+		
+	public void ReceiveMessage(byte[] MessageToConvert){
+		try {
+			ChatNetwork.NotifyMessageReceive(Message.fromArray(MessageToConvert));
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
 }

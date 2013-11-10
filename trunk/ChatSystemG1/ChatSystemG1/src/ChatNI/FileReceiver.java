@@ -11,5 +11,9 @@ public class FileReceiver implements Runnable{
 		// TODO Auto-generated method stub
 		
 	}
+	
+	public void ReceiveFilePart(){
+		
+	}
 
 }

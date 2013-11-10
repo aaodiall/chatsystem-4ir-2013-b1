@@ -11,5 +11,9 @@ public class FileSender implements Runnable {
 		// TODO Auto-generated method stub
 		
 	}
+	
+	public void SendFilePart(){
+		
+	}
 
 }
