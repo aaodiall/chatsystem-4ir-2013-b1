@@ -12,9 +12,7 @@ import java.util.Observable;
 public class ModelUsername extends Observable{
 	private String username;
 
-	public ModelUsername() {
-		this.username ="jojo";
-	}
+	public ModelUsername() {}
 
 	public String getUsername() {
 		return this.username;

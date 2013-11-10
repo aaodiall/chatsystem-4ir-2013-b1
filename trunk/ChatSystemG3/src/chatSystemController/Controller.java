@@ -4,9 +4,15 @@
 package chatSystemController;
 
 import java.net.InetAddress;
+import java.util.ArrayList;
+import java.util.Iterator;
 
 import runChat.ChatSystem;
 
+/* note pour plus tard : 
+ *  - checkConnection a implementer
+ *  - ecrire la javadoc et les commentaires
+ */
 
 /**
  * @author joanna
@@ -24,7 +30,24 @@ public class Controller {
 		ChatSystem.getModelListUsers().clearListUsers();
 	}
 	
-	public void ConnectReceived(String username,InetAddress ipRemote, boolean ack){
+	public void performSendText (String text, ArrayList<String> recipientList){
+		Iterator<String> it = recipientList.iterator();
+		String recipient;
+		ChatSystem.getModelText().setTextToSend(text);
+		while (it.hasNext()){
+			recipient = ((String)it.next());
+			ChatSystem.getModelGroupRecipient().addRecipient(recipient);
+		}
+		ChatSystem.getChatNI().sendText();
+	}
+	
+	public void messageReceived(String text, String username){
+		ChatSystem.getModelText().setTextReceived(text);
+		ChatSystem.getModelText().setRemote(username);
+		System.out.println (username + " : " + text);
+	}
+	
+	public void connectReceived(String username,InetAddress ipRemote, boolean ack){
 		// si ack = false c'est juste une reponse a un hello 
 		if (ack == false){
 			//si state = disconnected on le passe a connected
@@ -44,7 +67,7 @@ public class Controller {
 			ChatSystem.getChatNI().connect(ChatSystem.getModelUsername().getUsername(),false);
 		}
 	}
-	public void DisconnectReceived(String username){
+	public void disconnectReceived(String username){
 		ChatSystem.getModelListUsers().removeUsernameList(username);
 		
 	}
