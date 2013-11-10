@@ -15,7 +15,7 @@ import chatSystemCommon.*;
 public interface NiToCont {
     	public void performHelloReceived(Hello msg, String ip);
 
-	public void GoodbyeReceived(String idRemoteSystem);
+	public void performGoodbyeReceived(String idRemoteSystem);
 	
 	/*public void performMessageReceived();
 	

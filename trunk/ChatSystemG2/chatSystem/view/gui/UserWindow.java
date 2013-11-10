@@ -3,7 +3,6 @@ package chatSystem.view.gui;
 import java.awt.BorderLayout;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
-import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
@@ -12,31 +11,31 @@ import javax.swing.*;
 public class UserWindow extends JFrame{
 
 	/**
-	 * numÈro de version
+	 * num√©ro de version
 	 */
 	private static final long serialVersionUID = 1L;
 	
-	private JButton deconnectButton;
-	private JLabel username;
-	private JList<String> contactsList;
-	private DefaultListModel<String> contactsName;
+	private final JButton deconnectButton;
+	private final JLabel username;
+	private final JList<String> contactsList;
+	private final DefaultListModel<String> contactsName;
 	
-	public UserWindow(String username, List<String> contactsName) {
-		Collections.sort(contactsName);
+	public UserWindow(String username/*, List<String> contactsName*/) { //parti comment√© devrait pas etre la pour moi
+		//Collections.sort(contactsName);
 		this.username = new JLabel(username);
 		this.deconnectButton = new JButton("Deconnect");
 		this.contactsName = new DefaultListModel<String>();
-		for (String name: contactsName)
+		/*for (String name: contactsName)
 		{
 			(this.contactsName).addElement(name);
-		}
+		}*/
 		this.contactsList = new JList<String>(this.contactsName);
-		this.InitWindow();
+		this.initWindow();
 	}
 	
-	private void InitWindow() {
+	private void initWindow() {
 		
-		this.setTitle("Connect Window");
+		this.setTitle("User Window");
 		this.setSize(300, 400);
 		JPanel panel = new JPanel();
 		panel.setLayout(new GridBagLayout());
@@ -52,7 +51,7 @@ public class UserWindow extends JFrame{
 		c.weightx = 0.0;
 		panel.add(this.username, c);
 		
-		//contraintes pour le bouton dÈconnecter
+		//contraintes pour le bouton d√©connecter
 		c.gridx = 3;
 		c.gridy = 0;
 		c.fill = GridBagConstraints.HORIZONTAL;
@@ -81,7 +80,7 @@ public class UserWindow extends JFrame{
 		panel.add(listScroller, c);
 		
 		this.add(panel, BorderLayout.PAGE_START);
-		this.setVisible(true);
+		
 	}
 	
 	public void updateContacts(List<String> newContacts) {
@@ -93,7 +92,7 @@ public class UserWindow extends JFrame{
 		}
 	}
 	
-	public static void main(String[] args) {
+	/*public static void main(String[] args) {
 		List<String> list = new ArrayList<String>();
 		list.add("anthony");
 		list.add("anthony");
@@ -111,5 +110,5 @@ public class UserWindow extends JFrame{
 		f.updateContacts(list);
 		list.remove("guillaume");
 		f.updateContacts(list);
-	}
+	}*/
 }

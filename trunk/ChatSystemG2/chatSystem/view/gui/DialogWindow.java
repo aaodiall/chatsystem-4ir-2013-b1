@@ -16,7 +16,7 @@ import javax.swing.ScrollPaneConstants;
 public class DialogWindow extends JFrame {
 
 	/**
-	 * numéro de version
+	 * numÃ©ro de version
 	 */
 	private static final long serialVersionUID = 1L;
 	

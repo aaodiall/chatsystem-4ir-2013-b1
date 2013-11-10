@@ -17,7 +17,7 @@ public class TestHelloMessage {
         System.out.println("test de l'envoi et la réception d'un message hello");
         try {
            MessageTransfert mTest = new MessageTransfert();
-           MessageReceiver mrTest = new MessageReceiver(34685,1000);
+           MessageReceiver mrTest = new MessageReceiver(34685,1000,null);
            Thread t1 = new Thread(mrTest);
            t1.start();
            InetAddress lh = InetAddress.getLocalHost();

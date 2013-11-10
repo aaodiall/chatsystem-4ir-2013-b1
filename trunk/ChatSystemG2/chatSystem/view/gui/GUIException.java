@@ -3,7 +3,7 @@ package chatSystem.view.gui;
 public class GUIException extends Exception {
 
 	/**
-	 * numéro de série
+	 * numÃ©ro de sÃ©rie
 	 */
 	private static final long serialVersionUID = 1L;
 	
