@@ -33,6 +33,7 @@ public class MessageReceiver implements Runnable {
             try {
                 this.serverSocket.receive(helloM);
                 System.out.println("HELLO RECEIVED FROM" + helloM.getAddress());
+                
             } catch(IOException exc) {
                 System.out.println("probleme à la réception d'un message");
             }
