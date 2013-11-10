@@ -13,7 +13,7 @@ import chatSystemCommon.*;
  * @author Marjorie
  */
 public interface NiToCont {
-    	public void performHelloReceived(Hello msg, String ip);
+    	public void performHelloReceived(String username, String ip);
 
 	public void performGoodbyeReceived(String idRemoteSystem);
 	

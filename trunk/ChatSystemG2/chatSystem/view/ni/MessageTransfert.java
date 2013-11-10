@@ -15,6 +15,8 @@ import java.util.Iterator;
  */
 public class MessageTransfert {
     
+    final static int portUdpEmission = 16000;
+    
     private DatagramSocket messageSocket;
     /**
      * Class' constructor
@@ -60,11 +62,10 @@ public class MessageTransfert {
      * Send a hello message to all the computers located in the local red
      * Using the broadcast address which has to be determined
      * @param username username of the person who wants to send the message
-     * @param port port used to send the message
      */
-    public void sendHello(String username, int port) {
+    public void sendHello(String username) {
         InetAddress broadcastAddress = this.determineBroadcastAddress();
-        this.sendHello(username, broadcastAddress, port);
+        this.sendHello(username, broadcastAddress);
         
     }
     
@@ -72,12 +73,11 @@ public class MessageTransfert {
      * Send a hello message to a determined remote system
      * @param username username of the person who wants to send the message
      * @param ip ip address of the remote system we want to send the message
-     * @param port port used to send the message
      */
-    public void sendHello(String username, String ip, int port) {
+    public void sendHello(String username, String ip) {
         try {
             InetAddress ipAddress = InetAddress.getByName(ip);
-            this.sendHello(username, ipAddress, port);
+            this.sendHello(username, ipAddress);
         } catch(UnknownHostException exc) {
             System.err.println("Erreur d'adresse ip");
         }
@@ -87,14 +87,13 @@ public class MessageTransfert {
      * Private function used to send a hello message
      * @param username username of the person who wants to send the message
      * @param ip ip address of the remote system we want to send the message
-     * @param port port used to send the message
      */
-    private void sendHello(String username, InetAddress ip, int port) {
+    private void sendHello(String username, InetAddress ip) {
         Hello helloToSend = new Hello(username, false);
         try {
             
             byte[] buffer = helloToSend.toArray();
-            DatagramPacket helloMessage = new DatagramPacket(buffer, buffer.length, ip, port);
+            DatagramPacket helloMessage = new DatagramPacket(buffer, buffer.length, ip, MessageTransfert.portUdpEmission);
             this.messageSocket.send(helloMessage);
         } catch (IOException exc) {
             System.out.println("Probleme à la conversion du message hello ou à l'envoi du message");
@@ -104,17 +103,16 @@ public class MessageTransfert {
     /**
      * Send a goodbye message to all the user's contacts
      * @param username username of the person who wants to send the message
-     * @param ipAddresses list of remote systems' ip address 
-     * @param port port used to send the message
+     * @param ipAddresses list of remote systems' ip address
      */
-    public void sendGoodbye(String username, String[] ipAddresses, int port) {
+    public void sendGoodbye(String username, String[] ipAddresses) {
         Goodbye goodbyeToSend = new Goodbye(username);
         try {
             byte[] buffer = goodbyeToSend.toArray();
             for (String ip: ipAddresses) {
                 try {
                    InetAddress ipAddress = InetAddress.getByName(ip);
-                   DatagramPacket goodbyeMessage = new DatagramPacket(buffer, buffer.length, ipAddress, port);
+                   DatagramPacket goodbyeMessage = new DatagramPacket(buffer, buffer.length, ipAddress, MessageTransfert.portUdpEmission);
                    this.messageSocket.send(goodbyeMessage);
                 } catch(UnknownHostException e) {
                     System.err.println("Erreur d'adresse ip");

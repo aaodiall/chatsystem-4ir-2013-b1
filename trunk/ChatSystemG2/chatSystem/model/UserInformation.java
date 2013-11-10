@@ -3,7 +3,7 @@ package chatSystem.model;
 public class UserInformation extends Model{
 	
 	private String username;
-	private String ip;
+	private final String ip;
 	private UserState state;
 	
         /**

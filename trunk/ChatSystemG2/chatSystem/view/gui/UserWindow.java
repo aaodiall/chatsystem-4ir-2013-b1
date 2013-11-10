@@ -24,12 +24,12 @@ public class UserWindow extends JFrame{
 		//Collections.sort(contactsName);
 		this.username = new JLabel(username);
 		this.deconnectButton = new JButton("Deconnect");
-		this.contactsName = new DefaultListModel<String>();
+		this.contactsName = new DefaultListModel<>();
 		/*for (String name: contactsName)
 		{
 			(this.contactsName).addElement(name);
 		}*/
-		this.contactsList = new JList<String>(this.contactsName);
+		this.contactsList = new JList<>(this.contactsName);
 		this.initWindow();
 	}
 	
