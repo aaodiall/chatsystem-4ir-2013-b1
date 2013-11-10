@@ -25,6 +25,21 @@ public class ChatNI extends View implements Runnable {
             ((ChatController)(this.controller)).performHelloReceived(msg, ip);
         }
         
+        public void textMessageReceived(Message msg, String ip) {
+            
+        }
+        
+        public void goodbyeReceived(Goodbye msg, String ip) {
+            
+        }
+        
+        public void fileTransfertDemandReceived(FileTransfertDemand msg, String ip) {
+            
+        }
+        
+        public void fileTransfetConfirmationReceived(FileTransfertConfirmation msg, String ip) {
+            
+        }
         public void sendHelloMsg(String username, String ip) {
             this.messageTransfert.sendHello(username, null, numPort);
         }
