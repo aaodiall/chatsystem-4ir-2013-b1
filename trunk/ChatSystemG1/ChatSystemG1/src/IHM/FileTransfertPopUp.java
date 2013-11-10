@@ -7,6 +7,11 @@ import javax.swing.JFrame;
 
 public class FileTransfertPopUp extends JFrame implements ActionListener,Runnable{
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 3722854696572951233L;
+
 	public FileTransfertPopUp() {
 		// TODO Auto-generated constructor stub
 	}
