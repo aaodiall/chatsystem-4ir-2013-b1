@@ -17,11 +17,11 @@ public interface NiToCont {
 
 	public void performGoodbyeReceived(String idRemoteSystem);
 	
-	/*public void performMessageReceived();
+	public void performMessageReceived(String msg, String idRemoteSystem);
 	
 	public void performSendMessageRequest(String message);
 	
-	public void performSendFileRequest();
+	/*public void performSendFileRequest();
 	
 	public void performSuggestionReceived(FileTransfertDemand suggestion);
 	
