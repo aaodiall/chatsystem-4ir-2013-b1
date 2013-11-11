@@ -7,17 +7,20 @@ import chatSystem.controller.ChatController;
 import chatSystem.model.RemoteSystems;
 import chatSystem.model.UserInformation;
 import chatSystem.model.UserState;
-import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 public class ChatGUI extends View {
 
     private ConnectWindow cWindow = null;
     private UserWindow uWindow = null;
-    private Map<String, DialogWindow> dWindows;
+    private final Map<String, DialogWindow> dWindows;
 
     public ChatGUI(ChatController controller) {
         super(controller);
         this.cWindow = new ConnectWindow(this);
+        this.dWindows = new HashMap<>();
     }
 
     public void Disconnected() {
@@ -100,9 +103,13 @@ public class ChatGUI extends View {
             }
         } 
         else if(o instanceof RemoteSystems){
-            //if(arg instanceof List){
-                this.uWindow.updateContacts((List<String>)arg);
-            //}
+            try {
+                //if(arg instanceof List){
+                listUser((List<String>)arg);
+                //}
+            } catch (GUIException ex) {
+                Logger.getLogger(ChatGUI.class.getName()).log(Level.SEVERE, null, ex);
+            }
         }
     }
 }
