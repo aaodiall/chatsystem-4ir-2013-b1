@@ -15,6 +15,7 @@ public class ChatNetwork implements Runnable{
 	
 	public ChatNetwork() {
 		// TODO Auto-generated constructor stub
+		
 	}
 	
 	
