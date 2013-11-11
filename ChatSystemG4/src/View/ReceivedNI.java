@@ -6,22 +6,15 @@ import java.net.DatagramSocket;
 import java.net.InetAddress;
 
 import Controller.ChatController;
-import chatSystemCommon.FileTransfertCancel;
-import chatSystemCommon.FileTransfertConfirmation;
-import chatSystemCommon.FileTransfertDemand;
-import chatSystemCommon.Goodbye;
-import chatSystemCommon.Hello;
 import chatSystemCommon.Message;
-import chatSystemCommon.Text;
 
-public final class ReceivedNI extends Thread {
+public final class ReceivedNI implements Runnable {
 	private static ReceivedNI instance = null;
 	
 	private ChatController chatController;
 	
 	private ReceivedNI(ChatController chatController) {
 		this.chatController = chatController;
-		this.run();
 	}
 	
 	public final static ReceivedNI getInstance(ChatController chatController) {
@@ -35,13 +28,13 @@ public final class ReceivedNI extends Thread {
 	}
 
 	public void run() {
+		DatagramSocket socket = null;
 		try {
-			DatagramSocket socket = new DatagramSocket(12345, InetAddress.getByName("0.0.0.0"));
+			socket = new DatagramSocket(16001, InetAddress.getByName("0.0.0.0"));
 			socket.setBroadcast(true);
 
 			while (true) {
-				System.out.println(getClass().getName() + ">>>Ready to receive broadcast packets!");
-				
+				//System.out.println(getClass().getName() + ">>>Ready to receive broadcast packets!");
 				//Receive a packet
 				byte[] recvBuf = new byte[15000];
 				DatagramPacket packet = new DatagramPacket(recvBuf, recvBuf.length);
@@ -55,6 +48,9 @@ public final class ReceivedNI extends Thread {
 			}
 		} catch (IOException ex) {
 			ex.printStackTrace();
+		}
+		finally {
+			socket.close();
 		}
 	}
 }

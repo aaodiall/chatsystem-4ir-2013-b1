@@ -4,24 +4,18 @@ import java.io.IOException;
 import java.net.DatagramPacket;
 import java.net.DatagramSocket;
 import java.net.InetAddress;
-import java.net.InterfaceAddress;
-import java.net.NetworkInterface;
 import java.net.SocketException;
 import java.net.UnknownHostException;
-import java.util.Enumeration;
-
-import chatSystemCommon.Goodbye;
-import chatSystemCommon.Hello;
 import chatSystemCommon.Message;
 
 public final class SendNI {
-	private static SendNI instance= null;
+	private static SendNI instance = null;
 	
 	private DatagramSocket datagramSocket;
 	
 	private SendNI() {
 		try {
-			datagramSocket = new DatagramSocket(54321);
+			datagramSocket = new DatagramSocket(16000);
 			datagramSocket.setBroadcast(true);
 		} catch (SocketException e) {
 			e.printStackTrace();
@@ -49,9 +43,9 @@ public final class SendNI {
 	public void sendMessage(Message message, InetAddress address) {
 		try {			
 			byte[] sendData = message.toArray();
-			DatagramPacket sendPacket = new DatagramPacket(sendData, sendData.length, address,12345);
+			DatagramPacket sendPacket = new DatagramPacket(sendData, sendData.length, address,16001);
 			datagramSocket.send(sendPacket);
-			System.out.println(getClass().getName() + ">>> Request packet sent to: "+address.toString());		
+			//System.out.println(getClass().getName() + ">>> Request packet sent to: "+address.toString());		
 		} catch (IOException e) {
 			e.printStackTrace();
 		}	
