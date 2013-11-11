@@ -13,7 +13,7 @@ import java.net.*;
  * @author Marjorie
  */
 public class TestHelloMessage {
-    public static void main(String[] args) {
+   /* public static void main(String[] args) {
         System.out.println("test de l'envoi et la réception d'un message hello");
         try {
            MessageTransfert mTest = new MessageTransfert();
@@ -28,5 +28,5 @@ public class TestHelloMessage {
         } catch (Exception e) {
             System.out.println("marre");
         }
-    }
+    }*/
 }

@@ -88,7 +88,7 @@ public class ChatGUI extends View {
      */
     @Override
     public void update(Observable o, Object arg) {          //pas sexy, trouver un moyen de mieux le gérer
-        System.out.println("Entering update");
+        System.out.println("Entering update Chat GUI");
         if(o instanceof UserInformation){
             if(arg instanceof String){
                 this.uWindow = new UserWindow((String) arg);
@@ -100,9 +100,9 @@ public class ChatGUI extends View {
             }
         } 
         else if(o instanceof RemoteSystems){
-            if(arg instanceof List){
+            //if(arg instanceof List){
                 this.uWindow.updateContacts((List<String>)arg);
-            }
+            //}
         }
     }
 }

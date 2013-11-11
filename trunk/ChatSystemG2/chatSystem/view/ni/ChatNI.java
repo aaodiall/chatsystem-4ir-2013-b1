@@ -22,6 +22,7 @@ public class ChatNI extends View implements Runnable {
         this.fileTransfert = new FileTransfert[5];
         this.messageReceiver = new MessageReceiver(this);
         this.messageTransfert = new MessageTransfert();
+        this.threadReceiver = new Thread(this.messageReceiver);
     }
 
     public void helloReceived(String username, String ip) {
@@ -64,7 +65,7 @@ public class ChatNI extends View implements Runnable {
             if(arg instanceof UserState){
                 if((UserState)arg == UserState.CONNECTED){
                     //on est connecté, on commence l'écoute
-                    this.threadReceiver = new Thread(this.messageReceiver);
+                    this.threadReceiver.start();
                     //et on le guele car on est content :)
                     this.messageTransfert.sendHello(((UserInformation) o).getUsername());
                 }

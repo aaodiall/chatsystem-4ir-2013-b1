@@ -47,6 +47,7 @@ public class MessageReceiver implements Runnable {
                 String from = packet.getAddress().toString();
                 Class msgClass = msg.getClass();
                 if (msgClass == Hello.class){
+                    System.out.println("Hello received je passe a chatNI");
                     Hello helloReceived = (Hello)msg;
                     this.chatni.helloReceived(helloReceived.getUsername(), from);
                 }
