@@ -1,6 +1,12 @@
 package ChatNI;
 
+import java.net.InetAddress;
+import java.net.InterfaceAddress;
+import java.net.NetworkInterface;
+import java.net.SocketException;
 import java.util.ArrayList;
+import java.util.Enumeration;
+import java.util.List;
 
 import Controller.ChatController;
 
@@ -15,7 +21,8 @@ public class ChatNetwork implements Runnable{
 	
 	public ChatNetwork() {
 		// TODO Auto-generated constructor stub
-		
+		setMessageReceiver(new Receiver());
+		MessageSender = new Sender();
 	}
 	
 	
@@ -41,6 +48,8 @@ public class ChatNetwork implements Runnable{
 	public void SendBye(){
 		
 		Goodbye b = new Goodbye(ChatController.getLocalUsername());
+		System.out.println("on broadcast un bye");
+
 		MessageSender.BroadCastMessage(b);
 		
 	}
@@ -58,13 +67,33 @@ public class ChatNetwork implements Runnable{
 		Hello h = new Hello(ChatController.getLocalUsername(),isAck);
 		
 		if(isAck){
+			System.out.println("on envoie un ack");
 			MessageSender.SendMessage(h,ChatController.extractIpFromUserName(RemoteUsername));
 		}else{
+			System.out.println("on broadcast un hello");
 			MessageSender.BroadCastMessage(h);
 		}
 		
 	}
 	
+	/**
+	 * @return the messageSender
+	 */
+	public Sender getMessageSender() {
+		return MessageSender;
+	}
+
+
+
+	/**
+	 * @param messageSender the messageSender to set
+	 */
+	public void setMessageSender(Sender messageSender) {
+		MessageSender = messageSender;
+	}
+
+
+
 	public void SendMessage(){
 		
 	}
@@ -74,5 +103,50 @@ public class ChatNetwork implements Runnable{
 		// TODO Auto-generated method stub
 		
 	}
+
+
+
+	/**
+	 * @return the messageReceiver
+	 */
+	public Receiver getMessageReceiver() {
+		return MessageReceiver;
+	}
+
+
+
+	/**
+	 * @param messageReceiver the messageReceiver to set
+	 */
+	public void setMessageReceiver(Receiver messageReceiver) {
+		MessageReceiver = messageReceiver;
+	}
 	
+	public static InetAddress BroadcastAddress() {
+        boolean found = false;
+        InetAddress broadcast = null;
+        try {
+            Enumeration<NetworkInterface> interfaces =NetworkInterface.getNetworkInterfaces();
+            while (interfaces.hasMoreElements() && !found)  {
+                NetworkInterface ni = interfaces.nextElement();
+                if (!ni.isLoopback()) {
+                	
+                    List<InterfaceAddress> addresses = ni.getInterfaceAddresses();
+                    
+                    
+                    	for(InterfaceAddress ia : addresses){
+                    		
+                        broadcast = ia.getBroadcast();
+                        if (broadcast != null && !found )
+                            found = true;
+                    	}
+                    }
+                
+            }
+        } catch (SocketException exc) {
+            System.out.println("no interface");
+        }
+       
+        return broadcast;
+    }
 }
