@@ -9,7 +9,6 @@ import chatSystemCommon.FileTransfertConfirmation;
 import chatSystemCommon.FileTransfertDemand;
 import chatSystemCommon.Goodbye;
 import chatSystemCommon.Hello;
-import chatSystemCommon.Text;
 
 /**
  * @author Thiebaud Thomas
@@ -17,7 +16,6 @@ import chatSystemCommon.Text;
  */
 public class MessageFactory {
 	private static Hello hello = null;
-	private static Text text = null;
 	private static Goodbye bye = null;
 	private static File file = null;
 	private static FileTransfertCancel fileTransfertCancel = null;
@@ -33,17 +31,6 @@ public class MessageFactory {
 			hello.setIsAck(isAck);
 		}
 		return hello;
-	}
-	
-	public static Text getTextMessage(String username, String txt) {
-		if(text == null) {
-			text = new Text(username, txt);
-		}
-		else {
-			text.setUsername(username);
-			text.setText(txt);
-		}
-		return text;
 	}
 	
 	public static Goodbye getByeMessage(String username) {

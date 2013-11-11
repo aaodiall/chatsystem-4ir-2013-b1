@@ -53,26 +53,12 @@ public class User {
 	}
 
 	@Override
-	public boolean equals(Object obj) {
-		if (this == obj)
-			return true;
-		if (obj == null)
+	public boolean equals(Object o) {
+		User u = (User) o;
+		if(!address.equals(u.getAddress()))
 			return false;
-		if (getClass() != obj.getClass())
-			return false;
-		User other = (User) obj;
-		if (address == null) {
-			if (other.address != null)
-				return false;
-		} else if (!address.equals(other.address))
-			return false;
-		if (username == null) {
-			if (other.username != null)
-				return false;
-		} else if (!username.equals(other.username))
+		if(!username.equals(u.getUsername()))
 			return false;
 		return true;
 	}
-	
-	
 }
