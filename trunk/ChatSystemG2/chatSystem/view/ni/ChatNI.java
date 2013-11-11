@@ -2,6 +2,7 @@ package chatSystem.view.ni;
 
 import chatSystem.view.gui.View;
 import chatSystem.controller.ChatController;
+import chatSystem.model.RemoteSystems;
 import chatSystem.model.UserInformation;
 import chatSystem.model.UserState;
 import java.util.Observable;
@@ -14,6 +15,8 @@ public class ChatNI extends View implements Runnable {
     private final MessageTransfert messageTransfert;
     private final FileReceiver[] fileReceiver;
     private final FileTransfert[] fileTransfert;
+    
+    private UserInformation usrInfo;
 
     public ChatNI(ChatController controller) {
         super(controller);
@@ -64,6 +67,7 @@ public class ChatNI extends View implements Runnable {
         if(o instanceof UserInformation){
             if(arg instanceof UserState){
                 if((UserState)arg == UserState.CONNECTED){
+                    this.usrInfo = (UserInformation)o;
                     //on est connecté, on commence l'écoute
                     if(!(this.threadReceiver.getState() == Thread.State.RUNNABLE)){
                         //a changer completement il faudrait pouvoir couper le thread et le lancer comme on veut
@@ -77,7 +81,12 @@ public class ChatNI extends View implements Runnable {
                     this.messageTransfert.sendGoodbye(((UserInformation) o).getUsername());
                 }
             }
-        } 
+        }
+        else if(o instanceof RemoteSystems){
+            if(arg instanceof String){
+                this.messageTransfert.sendHello(this.usrInfo.getUsername(),(String)arg);
+            }
+        }
     }
 
     @Override
