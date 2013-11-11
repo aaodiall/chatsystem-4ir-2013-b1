@@ -6,7 +6,8 @@ import IHM.FrontController;
 
 public class ChatController {
 	private FrontController ChatGuiFrontController;
-	private ChatNetwork ChatNi;
+	private static ChatNetwork ChatNi;
+
 	private ChatModel ChatMod;
 	private static String localUsername;
 	
@@ -15,7 +16,8 @@ public class ChatController {
 	}
 	
 	public static void ByeProcessing(Goodbye message){
-		
+		System.out.println("on a reçu un bye" + message);
+
 	}
 	
 	public static void FileAcceptanceProcessing(Message message){
@@ -27,7 +29,15 @@ public class ChatController {
 	}
 	
 	public static void HelloProcessing(Hello message){
-		
+		if(message.isAck()){
+			System.out.println("on a recu un ack" + message);
+		}else{
+			
+			
+			System.out.println("on a recu un hello" + message);
+			if(!message.getUsername().equals(getLocalUsername()) ) ChatNi.SendHello(true,message.getUsername());
+			
+		}
 	}
 	
 	public static void MessageProcessing(Text message){
@@ -37,7 +47,7 @@ public class ChatController {
 		
 	}
 	public void PerformConnect(){
-		ChatNi.SendHello(false,getLocalUsername());
+		ChatNi.SendHello(false,null);
 	}
 	
 	public void PerformDisconnect(){
@@ -64,7 +74,7 @@ public class ChatController {
 		String retour = null;
 		for(int i = 0; i <Username.length();i++ ){
 			if(Username.charAt(i) == '@'){
-				retour = Username.substring(i);
+				retour = Username.substring(i+1);
 			}
 		}
 		return retour;
@@ -97,4 +107,46 @@ public class ChatController {
 	public void setLocalUsername(String localUsername) {
 		this.localUsername = localUsername;
 	}
+	/**
+	 * @return the chatGuiFrontController
+	 */
+	public FrontController getChatGuiFrontController() {
+		return ChatGuiFrontController;
+	}
+
+	/**
+	 * @return the chatNi
+	 */
+	public ChatNetwork getChatNi() {
+		return ChatNi;
+	}
+
+	/**
+	 * @return the chatMod
+	 */
+	public ChatModel getChatMod() {
+		return ChatMod;
+	}
+
+	/**
+	 * @param chatGuiFrontController the chatGuiFrontController to set
+	 */
+	public void setChatGuiFrontController(FrontController chatGuiFrontController) {
+		ChatGuiFrontController = chatGuiFrontController;
+	}
+
+	/**
+	 * @param chatNi the chatNi to set
+	 */
+	public void setChatNi(ChatNetwork chatNi) {
+		ChatNi = chatNi;
+	}
+
+	/**
+	 * @param chatMod the chatMod to set
+	 */
+	public void setChatMod(ChatModel chatMod) {
+		ChatMod = chatMod;
+	}
+
 }

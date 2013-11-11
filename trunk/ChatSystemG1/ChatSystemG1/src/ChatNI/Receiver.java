@@ -9,18 +9,18 @@ import chatSystemCommon.Message;
 
 public class Receiver implements Runnable{
 
-	private int myPort;
-	    
 	private DatagramSocket socket;
-	
+	private Thread t;
 	public Receiver() {
-		// TODO Auto-generated constructor stub
-		this.myPort = 16000;
-        try {
-        this.socket = new DatagramSocket(16000);
+		
+		try {
+        this.socket = new DatagramSocket(16001);
         }
         catch(SocketException sE) {
-        }
+        } 
+		t = new Thread(this, "Receiver Thread");
+	      System.out.println("Child thread: " + t);
+	      t.start(); // Start the thread
 	}
 
 	@Override
