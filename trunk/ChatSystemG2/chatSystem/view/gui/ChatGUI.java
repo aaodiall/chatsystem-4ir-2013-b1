@@ -111,6 +111,7 @@ public class ChatGUI extends View {
             }
         } else if (o instanceof RemoteSystems) {
             //if (arg instanceof List) {
+            System.out.println("Je suis la GUI je mets a jour les utilisateur co");
                 try {
                     listUser(((RemoteSystems)o).getUserList());
 
