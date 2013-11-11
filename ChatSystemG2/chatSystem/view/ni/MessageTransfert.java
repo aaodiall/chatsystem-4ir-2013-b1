@@ -67,6 +67,7 @@ public class MessageTransfert {
         //hello sent to everyone can only be a hello without ack
         Hello helloToSend = new Hello(username, false);
         InetAddress broadcastAddress = this.determineBroadcastAddress();
+        System.out.println(helloToSend.toString()+" -> "+broadcastAddress.getHostAddress());
         this.sendPacket(broadcastAddress, helloToSend);
     }
     
@@ -78,6 +79,7 @@ public class MessageTransfert {
     public void sendHello(String username, String ip) {
         //hello sent to one person can only be an ack hello
         Hello helloToSend = new Hello(username, true);
+        System.out.println(helloToSend.toString()+" -> "+ip);
         this.sendPacket(ip, helloToSend);
     }
     
@@ -137,6 +139,7 @@ public class MessageTransfert {
             this.sendPacket(ipAddress, msg);
         } catch(UnknownHostException exc) {
             System.err.println("probleme a la creation de l'adresse");
+            exc.printStackTrace();
         }
     }
     
