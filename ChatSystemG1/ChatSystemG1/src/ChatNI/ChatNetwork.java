@@ -17,15 +17,7 @@ public class ChatNetwork implements Runnable{
 		// TODO Auto-generated constructor stub
 	}
 	
-	public String extractIp(String Username){
-		String retour = null;
-		for(int i = 0; i <Username.length();i++ ){
-			if(Username.charAt(i) == '@'){
-				retour = Username.substring(i);
-			}
-		}
-		return retour;
-	}
+	
 	
 	public static void NotifyMessageReceive(Message message){
 		if(message.getClass() == Hello.class){
@@ -60,12 +52,12 @@ public class ChatNetwork implements Runnable{
 		
 	}
 	
-	public void SendHello(boolean isAck, String username){
+	public void SendHello(boolean isAck, String RemoteUsername){
 		
 		Hello h = new Hello(ChatController.getLocalUsername(),isAck);
 		
 		if(isAck){
-			MessageSender.SendMessage(h,extractIp(username));
+			MessageSender.SendMessage(h,ChatController.extractIpFromUserName(RemoteUsername));
 		}else{
 			MessageSender.BroadCastMessage(h);
 		}
