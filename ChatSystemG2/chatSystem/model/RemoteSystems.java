@@ -33,7 +33,7 @@ public class RemoteSystems extends Model{
         if (!this.remoteSystemsInformation.containsKey(key)) {
             this.remoteSystemsInformation.put(key, newRS);
             this.setChanged();
-            this.notifyObservers(this.remoteSystemsInformation);
+            this.notifyObservers(new ArrayList<String>(this.remoteSystemsInformation.keySet()));
             this.clearChanged();
         }
     }

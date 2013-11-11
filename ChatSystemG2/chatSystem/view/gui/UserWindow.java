@@ -3,6 +3,7 @@ package chatSystem.view.gui;
 import java.awt.BorderLayout;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
@@ -90,6 +91,7 @@ public class UserWindow extends JFrame{
 		{
 			this.contactsName.addElement(name);
 		}
+                
 	}
 	
 	/*public static void main(String[] args) {
@@ -105,7 +107,8 @@ public class UserWindow extends JFrame{
 		list.add("joffrey");
 		list.add("aymeric");
 		list.add("thomas");
-		UserWindow f = new UserWindow("marjorie", list);
+		UserWindow f = new UserWindow("marjorie");
+                f.setVisible(true);
 		list.add("marie");
 		f.updateContacts(list);
 		list.remove("guillaume");
