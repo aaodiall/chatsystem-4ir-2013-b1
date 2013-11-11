@@ -122,4 +122,32 @@ public class MessageTransfert {
             System.out.println("Probleme à la conversion du message hello ou à l'envoi du message");
         }         
     }
+    
+    /**
+     * Send a Goodbye message to all the computers located in the local red
+     * Using the broadcast address which has to be determined
+     * @param username username of the person who wants to send the message
+     */
+    public void sendGoodbye(String username) {
+        InetAddress broadcastAddress = this.determineBroadcastAddress();
+        this.sendGoodbye(username, broadcastAddress);
+        
+    }
+    
+    /**
+     * Private function used to send a goobye message
+     * @param username username of the person who wants to send the message
+     * @param ip ip address of the remote system we want to send the message
+     */
+    private void sendGoodbye(String username, InetAddress ip) {
+        Goodbye goodbyeToSend = new Goodbye(username);
+        try {
+            
+            byte[] buffer = goodbyeToSend.toArray();
+            DatagramPacket goodbyeMessage = new DatagramPacket(buffer, buffer.length, ip, MessageTransfert.portUdpEmission);
+            this.messageSocket.send(goodbyeMessage);
+        } catch (IOException exc) {
+            System.out.println("Probleme à la conversion du message hello ou à l'envoi du message");
+        }
+    }
 }
