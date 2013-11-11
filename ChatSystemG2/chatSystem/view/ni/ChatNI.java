@@ -9,6 +9,7 @@ import chatSystemCommon.*;
 
 public class ChatNI extends View implements Runnable {
 
+    private Thread threadReceiver;
     private final MessageReceiver messageReceiver;
     private final MessageTransfert messageTransfert;
     private final FileReceiver[] fileReceiver;
@@ -63,7 +64,7 @@ public class ChatNI extends View implements Runnable {
             if(arg instanceof UserState){
                 if((UserState)arg == UserState.CONNECTED){
                     //on est connecté, on commence l'écoute
-                    this.messageReceiver.run();
+                    this.threadReceiver = new Thread(this.messageReceiver);
                     //et on le guele car on est content :)
                     this.messageTransfert.sendHello(((UserInformation) o).getUsername());
                 }
