@@ -33,7 +33,8 @@ public class RemoteSystems extends Model{
         if (!this.remoteSystemsInformation.containsKey(key)) {
             this.remoteSystemsInformation.put(key, newRS);
             this.setChanged();
-            this.notifyObservers(new ArrayList<String>(this.remoteSystemsInformation.keySet()));
+            //this.notifyObservers(new ArrayList<String>(this.remoteSystemsInformation.keySet()));
+            this.notifyObservers(ip);
             this.clearChanged();
         }
     }
@@ -45,7 +46,8 @@ public class RemoteSystems extends Model{
     public void deleteRemoteSystem(String idRemoteSystem) {
         this.remoteSystemsInformation.remove(idRemoteSystem);
         this.setChanged();
-        this.notifyObservers(new ArrayList<String>(this.remoteSystemsInformation.keySet()));
+        //this.notifyObservers(new ArrayList<String>(this.remoteSystemsInformation.keySet()));
+        this.notifyObservers();
         this.clearChanged();
     }
 

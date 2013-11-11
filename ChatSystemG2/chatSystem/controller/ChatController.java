@@ -34,6 +34,7 @@ public class ChatController extends Controller implements GuiToCont, NiToCont{
         
         this.chatNI = new ChatNI(this);
         this.localUser.addObserver(chatNI);
+        this.remoteSystems.addObserver(chatNI);
     }
 	
     @Override

@@ -110,14 +110,14 @@ public class ChatGUI extends View {
                 }
             }
         } else if (o instanceof RemoteSystems) {
-            if (arg instanceof List) {
+            //if (arg instanceof List) {
                 try {
-                    listUser((List<String>) arg);
+                    listUser(((RemoteSystems)o).getUserList());
 
                 } catch (GUIException ex) {
                     Logger.getLogger(ChatGUI.class.getName()).log(Level.SEVERE, null, ex);
                 }
-            }
+            //}
         }
     }
 }
