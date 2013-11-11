@@ -6,6 +6,7 @@ import chatSystem.model.RemoteSystems;
 import chatSystem.model.UserInformation;
 import chatSystem.model.UserState;
 import java.util.Observable;
+import java.util.List;
 import chatSystemCommon.*;
 
 public class ChatNI extends View implements Runnable {
@@ -15,7 +16,6 @@ public class ChatNI extends View implements Runnable {
     private final MessageTransfert messageTransfert;
     private final FileReceiver[] fileReceiver;
     private final FileTransfert[] fileTransfert;
-    
     private UserInformation usrInfo;
 
     public ChatNI(ChatController controller) {
