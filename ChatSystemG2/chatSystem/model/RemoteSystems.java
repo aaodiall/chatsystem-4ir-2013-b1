@@ -19,7 +19,7 @@ public class RemoteSystems extends Model{
      * Private class' constructor
      */
     private RemoteSystems () {
-            this.remoteSystemsInformation = new HashMap<>();
+            this.remoteSystemsInformation = new HashMap<String, RemoteSystemInformation>();
     }
 
     /**

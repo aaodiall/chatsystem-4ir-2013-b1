@@ -64,9 +64,10 @@ public class MessageTransfert {
      * @param username username of the person who wants to send the message
      */
     public void sendHello(String username) {
+        //hello sent to everyone can only be a hello without ack
+        Hello helloToSend = new Hello(username, false);
         InetAddress broadcastAddress = this.determineBroadcastAddress();
-        this.sendHello(username, broadcastAddress);
-        
+        this.sendPacket(broadcastAddress, helloToSend);
     }
     
     /**
@@ -75,29 +76,9 @@ public class MessageTransfert {
      * @param ip ip address of the remote system we want to send the message
      */
     public void sendHello(String username, String ip) {
-        try {
-            InetAddress ipAddress = InetAddress.getByName(ip);
-            this.sendHello(username, ipAddress);
-        } catch(UnknownHostException exc) {
-            System.err.println("Erreur d'adresse ip");
-        }
-    }
-    
-    /**
-     * Private function used to send a hello message
-     * @param username username of the person who wants to send the message
-     * @param ip ip address of the remote system we want to send the message
-     */
-    private void sendHello(String username, InetAddress ip) {
-        Hello helloToSend = new Hello(username, false);
-        try {
-            
-            byte[] buffer = helloToSend.toArray();
-            DatagramPacket helloMessage = new DatagramPacket(buffer, buffer.length, ip, MessageTransfert.portUdpEmission);
-            this.messageSocket.send(helloMessage);
-        } catch (IOException exc) {
-            System.out.println("Probleme à la conversion du message hello ou à l'envoi du message");
-        }
+        //hello sent to one person can only be an ack hello
+        Hello helloToSend = new Hello(username, true);
+        this.sendPacket(ip, helloToSend);
     }
     
     /**
@@ -130,22 +111,45 @@ public class MessageTransfert {
      */
     public void sendGoodbye(String username) {
         InetAddress broadcastAddress = this.determineBroadcastAddress();
-        this.sendGoodbye(username, broadcastAddress);
-        
+        Goodbye goodbyeToSend = new Goodbye(username);
+        this.sendPacket(broadcastAddress, goodbyeToSend);
     }
     
     /**
-     * Private function used to send a goobye message
+     * Send a text message to someone
+     * @param username username of the person who wants to send the message
+     * @param ip ip address of the remote system we want to send the message
+     * @param text message content
+     */
+    public void sendTextMessage(String username, String ip, String text) {
+        Text textToSend = new Text(username, text);
+        this.sendPacket(ip, textToSend);
+    }
+    
+    /**
+     * Private function used to send a Message to someone
+     * @param ip ip address of the remote system we want to send the message
+     * @param msg Message already built we want to send
+     */
+    private void sendPacket(String ip, Message msg) {
+        try{
+            InetAddress ipAddress = InetAddress.getByName(ip);
+            this.sendPacket(ipAddress, msg);
+        } catch(UnknownHostException exc) {
+            System.err.println("probleme a la creation de l'adresse");
+        }
+    }
+    
+     /**
+     * Private function used to send a Message
      * @param username username of the person who wants to send the message
      * @param ip ip address of the remote system we want to send the message
      */
-    private void sendGoodbye(String username, InetAddress ip) {
-        Goodbye goodbyeToSend = new Goodbye(username);
+    private void sendPacket(InetAddress ip, Message msg) {
         try {
-            
-            byte[] buffer = goodbyeToSend.toArray();
-            DatagramPacket goodbyeMessage = new DatagramPacket(buffer, buffer.length, ip, MessageTransfert.portUdpEmission);
-            this.messageSocket.send(goodbyeMessage);
+            byte[] buffer = msg.toArray();
+            DatagramPacket msgToSend = new DatagramPacket(buffer, buffer.length, ip, MessageTransfert.portUdpEmission);
+            this.messageSocket.send(msgToSend);
         } catch (IOException exc) {
             System.out.println("Probleme à la conversion du message hello ou à l'envoi du message");
         }
