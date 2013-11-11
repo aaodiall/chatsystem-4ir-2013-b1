@@ -12,7 +12,7 @@ import chatSystemCommon.*;
  */
 public class MessageReceiver implements Runnable {
     
-    final static int portUdpReception = 16001;
+    final static int portUdpReception = 16000;
     final static int tailleMaxDatagram = 1024;
     
     private DatagramSocket serverSocket;
