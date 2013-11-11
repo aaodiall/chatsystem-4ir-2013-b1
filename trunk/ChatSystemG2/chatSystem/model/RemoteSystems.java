@@ -45,7 +45,7 @@ public class RemoteSystems extends Model{
     public void deleteRemoteSystem(String idRemoteSystem) {
         this.remoteSystemsInformation.remove(idRemoteSystem);
         this.setChanged();
-        this.notifyObservers(this.remoteSystemsInformation);
+        this.notifyObservers(new ArrayList<String>(this.remoteSystemsInformation.keySet()));
         this.clearChanged();
     }
 

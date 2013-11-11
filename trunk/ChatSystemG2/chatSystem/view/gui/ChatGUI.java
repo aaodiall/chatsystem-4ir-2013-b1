@@ -23,18 +23,18 @@ public class ChatGUI extends View {
         this.dWindows = new HashMap<>();
     }
 
-    public void Disconnected() {
+    public void disconnected() {
     }
 
-    public void DisplayFileTransfertProgression() {
-
-    }
-
-    public void DisplaySuggestion() {
+    public void displayFileTransfertProgression() {
 
     }
 
-    public void DisplayDialogWindow(String contact) {
+    public void displaySuggestion() {
+
+    }
+
+    public void displayDialogWindow(String contact) {
         if (this.dWindows.containsKey(contact)) {
             if (this.dWindows.get(contact) == null) {
                 this.dWindows.remove(contact);
@@ -46,16 +46,16 @@ public class ChatGUI extends View {
         }
     }
 
-    public void DisplayDeclinedSuggestionNotification() {
+    public void displayDeclinedSuggestionNotification() {
     }
 
-    public void DisplayNewMessageNotification() {
+    public void displayNewMessageNotification() {
     }
 
-    public void DisplayReceivedFile() {
+    public void displayReceivedFile() {
     }
 
-    public void DisplayFileSendedNotification() {
+    public void displayFileSendedNotification() {
     }
 
     public void listUser(List<String> newList) throws GUIException {
@@ -71,17 +71,21 @@ public class ChatGUI extends View {
         }
     }
 
-    public void DisplayMessage() {
+    public void displayMessage() {
     }
 
-    public void DisplayBrowseWindow() {
+    public void displayBrowseWindow() {
     }
 
-    public void DisplayAcceptedSuggestionNotification() {
+    public void displayAcceptedSuggestionNotification() {
+    }
+
+    public void connectButtonPressed(String username) {
+        ((ChatController) this.controller).performConnect(username);
     }
     
-    public void connectButtonPressed(String username){
-        ((ChatController)this.controller).performConnect(username);
+    public void deconnectButtonPressed() {
+        ((ChatController) this.controller).performDisconnect();
     }
 
     /**
@@ -92,23 +96,27 @@ public class ChatGUI extends View {
     @Override
     public void update(Observable o, Object arg) {          //pas sexy, trouver un moyen de mieux le gérer
         System.out.println("Entering update Chat GUI");
-        if(o instanceof UserInformation){
-            if(arg instanceof String){
-                this.uWindow = new UserWindow((String) arg);
-            }else if(arg instanceof UserState){
-                if((UserState)arg == UserState.CONNECTED){
+        if (o instanceof UserInformation) {
+            if (arg instanceof String) {
+                this.uWindow = new UserWindow((String) arg,this);
+            } else if (arg instanceof UserState) {
+                if ((UserState) arg == UserState.CONNECTED) {
                     cWindow.setVisible(false);
                     uWindow.setVisible(true);
+                }else{
+                    cWindow.setVisible(true);
+                    uWindow.setVisible(false);
+                    uWindow = null;
                 }
             }
-        } 
-        else if(o instanceof RemoteSystems){
-            try {
-                //if(arg instanceof List){
-                listUser((List<String>)arg);
-                //}
-            } catch (GUIException ex) {
-                Logger.getLogger(ChatGUI.class.getName()).log(Level.SEVERE, null, ex);
+        } else if (o instanceof RemoteSystems) {
+            if (arg instanceof List) {
+                try {
+                    listUser((List<String>) arg);
+
+                } catch (GUIException ex) {
+                    Logger.getLogger(ChatGUI.class.getName()).log(Level.SEVERE, null, ex);
+                }
             }
         }
     }

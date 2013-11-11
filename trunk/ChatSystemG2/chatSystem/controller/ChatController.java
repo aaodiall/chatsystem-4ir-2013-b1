@@ -45,7 +45,7 @@ public class ChatController extends Controller implements GuiToCont, NiToCont{
 
     @Override
     public void performDisconnect() {
-            
+        this.localUser.setState(UserState.DISCONNECTED);
     }
         
 
@@ -57,6 +57,7 @@ public class ChatController extends Controller implements GuiToCont, NiToCont{
 
     @Override
     public void performGoodbyeReceived(String idRemoteSystem) {
+        System.out.println("Goodbye received je modif le model");
         this.remoteSystems.deleteRemoteSystem(idRemoteSystem);
     }
 	

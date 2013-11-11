@@ -33,8 +33,8 @@ public class ChatNI extends View implements Runnable {
 
     }
 
-    public void goodbyeReceived(Goodbye msg, String ip) {
-
+    public void goodbyeReceived(String username, String ip) {
+        ((ChatController) (this.controller)).performGoodbyeReceived(username+ip);
     }
 
     public void fileTransfertDemandReceived(FileTransfertDemand msg, String ip) {
@@ -65,9 +65,16 @@ public class ChatNI extends View implements Runnable {
             if(arg instanceof UserState){
                 if((UserState)arg == UserState.CONNECTED){
                     //on est connecté, on commence l'écoute
-                    this.threadReceiver.start();
+                    if(!(this.threadReceiver.getState() == Thread.State.RUNNABLE)){
+                        //a changer completement il faudrait pouvoir couper le thread et le lancer comme on veut
+                        this.threadReceiver.start();
+                    }
                     //et on le guele car on est content :)
                     this.messageTransfert.sendHello(((UserInformation) o).getUsername());
+                }
+                else{
+                    //this.threadReceiver.stop(); //il ne faut pas le stopper donc on lui mettra null mais faut changer la gestion de messageReceiver
+                    this.messageTransfert.sendGoodbye(((UserInformation) o).getUsername());
                 }
             }
         } 
