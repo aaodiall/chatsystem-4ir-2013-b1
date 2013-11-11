@@ -20,7 +20,7 @@ public class ChatGUI extends View {
     public ChatGUI(ChatController controller) {
         super(controller);
         this.cWindow = new ConnectWindow(this);
-        this.dWindows = new HashMap<>();
+        this.dWindows = new HashMap<String, DialogWindow>();
     }
 
     public void disconnected() {
