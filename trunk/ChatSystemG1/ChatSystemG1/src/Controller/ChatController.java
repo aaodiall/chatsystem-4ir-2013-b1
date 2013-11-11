@@ -36,30 +36,54 @@ public class ChatController {
 	public static void FileTransfertDemandProcessing(FileTransfertDemand message){
 		
 	}
-	public void PerformConnect(String Username){
-		ChatNi.SendHello(true,Username);
+	public void PerformConnect(){
+		ChatNi.SendHello(false,getLocalUsername());
 	}
 	
 	public void PerformDisconnect(){
+		ChatNi.SendBye();
+	}
+	
+	public void PerformFileAcceptance(File f,String RemoteUsername){
 		
 	}
 	
-	public void PerformFileAcceptance(){
+	public void PerformSendFile(File f,String RemoteUserName){
 		
 	}
 	
-	public void PerformSendFile(){
+	public void PerformSendMessage(String text,String RemoteUserName){
 		
 	}
 	
-	public void PerformSendMessage(){
+	public void UpdateModel(Message m){
 		
 	}
 	
-	public void UpdateModel(){
+	public static String extractIpFromUserName(String Username){
+		String retour = null;
+		for(int i = 0; i <Username.length();i++ ){
+			if(Username.charAt(i) == '@'){
+				retour = Username.substring(i);
+			}
+		}
+		return retour;
+	}
+	
+	public String GetUserNameFromIp(String RemoteIp){
+		String retour = null;
+		for(Conversation c : ChatMod.getConversationList()){
+			for(String s : c.getUserNameList()){
+				if(s.contains(RemoteIp)){
+					retour = s;
+				}
+			}
+		}
+		
+		
+		return retour;
 		
 	}
-
 	/**
 	 * @return the localUsername
 	 */
