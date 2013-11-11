@@ -52,7 +52,8 @@ public class MessageReceiver implements Runnable {
                     this.chatni.helloReceived(helloReceived.getUsername(), from);
                 }
                 else if (msgClass == Text.class) {
-                    this.chatni.textMessageReceived(((Text)msg).getText(),msg.getUsername(), from);
+                    Text msgText = (Text) msg;
+                    this.chatni.textMessageReceived(msgText.getText(), msgText.getUsername(), from);
                 }
                 else if (msgClass == Goodbye.class) {
                     Goodbye gbReceived = (Goodbye)msg;
