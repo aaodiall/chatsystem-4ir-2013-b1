@@ -12,14 +12,12 @@ import java.net.NetworkInterface;
 import java.net.SocketException;
 import java.util.ArrayList;
 import java.util.Enumeration;
-import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Observable;
 import java.util.Observer;
 
 import runChat.ChatSystem;
 import chatSystemIHMs.View;
-import chatSystemModel.ModelListUsers;
 import chatSystemModel.ModelStates;
 import chatSystemCommon.*;
 import chatSystemController.Controller;
@@ -63,7 +61,7 @@ public class ChatNI extends View implements Runnable, Observer{
 	private final int portUDP;
 	private Controller controller;
 	private ChatNIMessage chatNIMessage; 
-	private ChatNIStreamConnexion chatNIStreamConnexion;
+	//private ChatNIStreamConnexion chatNIStreamConnexion;
 	private DatagramSocket socketUDP;
 	private InetAddress userIP;
 	private InetAddress userIPBroadcast;
@@ -76,7 +74,7 @@ public class ChatNI extends View implements Runnable, Observer{
 		// associe son controlleur
 		this.controller=controller;
 		//crée son chatNIMessage
-		//this.chatNIMessage=new ChatNIMessage();
+		this.chatNIMessage=new ChatNIMessage(this.socketUDP, bufferSize, ChatSystem.getModelListUsers(), this.userIP, this.userIPBroadcast);
 		//crée son chatNIStreamConnexion
 		//this.chatNIStreamConnexion=new ChatNIStreamConnexion();
 		//initialisation du buffer de reception

@@ -8,7 +8,6 @@ import java.awt.EventQueue;
 import javax.swing.JFrame;
 import javax.swing.JButton;
 
-import runChat.ChatSystem;
 import chatSystemController.Controller;
 import chatSystemModel.ModelUsername;
 
@@ -32,6 +31,7 @@ public class InterfaceCommunicate extends JFrame implements ActionListener{
 	
 	private Controller controller;
 	private DefaultListModel users;
+	private ModelUsername modelUsername;
 	private JButton btnJoinFile;
 	private JTextArea tAreaHistoryCom;
 	private JButton btnSendFile;
@@ -49,8 +49,9 @@ public class InterfaceCommunicate extends JFrame implements ActionListener{
 	/**
 	 * Create the application.
 	 */
-	public InterfaceCommunicate(Controller controller) {
+	public InterfaceCommunicate(Controller controller,ModelUsername modelUsername) {
 		this.controller=controller;
+		this.modelUsername=modelUsername;
 		setResizable(false);
 		initialize();
 		
@@ -77,7 +78,7 @@ public class InterfaceCommunicate extends JFrame implements ActionListener{
 		panel.add(btnDeconnection);
 		btnDeconnection.addActionListener(this);
 		
-		lblUsername = new JLabel(ChatSystem.getModelUsername().getUsername());
+		lblUsername = new JLabel(this.modelUsername.getUsername());
 		lblUsername.setBounds(35, 17, 72, 15);
 		panel.add(lblUsername);
 		

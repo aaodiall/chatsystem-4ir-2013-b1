@@ -6,6 +6,8 @@ package chatSystemIHMs;
 import java.util.Observable;
 import java.util.Observer;
 
+import runChat.ChatSystem;
+
 import chatSystemController.Controller;
 import chatSystemModel.ModelListUsers;
 
@@ -31,9 +33,9 @@ public class ChatGUI extends View implements Observer{
 	 * @param wConnect
 	 * @param wCommunicate
 	 */
-	public ChatGUI(Controller controler) {
-		this.wConnect = new InterfaceConnect(controler);;
-		this.wCommunicate = new InterfaceCommunicate(controler);
+	public ChatGUI(Controller controller) {
+		this.wConnect = new InterfaceConnect(controller);;
+		this.wCommunicate = new InterfaceCommunicate(controller,ChatSystem.getModelUsername());
 	
 	}
 	
