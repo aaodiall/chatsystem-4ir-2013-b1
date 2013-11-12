@@ -60,6 +60,15 @@ public class Sender {
 		
 	}
 
+	public void closeSendSocket() {
+		// TODO Auto-generated method stub
+		  try {
+	            socket.close();
+	        }
+	        catch(Exception e) {
+	        }
+	}
+
 	
 }
 
