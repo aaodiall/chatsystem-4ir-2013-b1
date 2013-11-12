@@ -16,7 +16,7 @@ public class ChatSystem {
 	private static ChatNI chatNI;
 	private static ModelListUsers modelListUsers;
 	private static ModelUsername modelUsername;
-	private static ModelStates modelStates;
+	private static ModelStateConnected modelStateConnected ;
 	private static ModelText modelText;
 	private static ModelGroupRecipient modelGroupRecipient;
 	
@@ -40,9 +40,6 @@ public class ChatSystem {
 		return modelUsername;
 	}
 	
-	public static ModelStates getModelStates(){
-		return modelStates;
-	}
 	
 	public static ModelText getModelText(){
 		return modelText;
@@ -57,16 +54,30 @@ public class ChatSystem {
 	 */
 	public static void main(String[] args) {
 		ArrayList <String> remote = new ArrayList<String>();
-		chatController = new Controller();
-		chatNI = new ChatNI(16001);
+			
+		
+		
 		modelListUsers = new ModelListUsers();
 		modelUsername = new ModelUsername();
-		modelStates = new ModelStates();
+		modelStateConnected = new ModelStateConnected();
 		modelGroupRecipient = new ModelGroupRecipient();
 		modelText = new ModelText();
-		chatController.performConnect("lilou");
-		remote.add((String)(ChatSystem.getModelListUsers().getListUsers().keySet().iterator().next()));
+		chatController = new Controller(modelListUsers,modelStateConnected , modelText, modelUsername, modelGroupRecipient);
+		chatGui=new ChatGui(chatController);
+		chatNI = new ChatNI(16001,chatController);
+		modelUsername.addObserver(chatNI);
+		modelListUsers.addObserver(chatGui);
+		modelStateConnected.addObserver(chatNI);
+		modelGroupRecipient.addObserver(chatNI);
+		System.out.println("alpha");
+		//chatGui.getwConnect();
+		/*chatController.performDisconnect();*/
+	/*	if (modelStates.isConnected()){
+		chatController.performConnect("lilou");*/
+		remote.add((String)(ChatSystem.modelListUsers.getListUsers().keySet().iterator().next()));
+		
 		chatController.performSendText("premier message",remote);
+		System.out.println(ChatSystem.getModelUsername().getUsername());
 		/*chatController.performDisconnect();
 		if (modelStates.isConnected()){
 			System.out.println(modelUsername.getUsername() + " : disconnection succeed");
