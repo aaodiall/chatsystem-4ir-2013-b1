@@ -8,5 +8,6 @@ package chatSystemIHMs;
  *
  */
 public interface ToUser {
+	public void initConnection();
 
 }
