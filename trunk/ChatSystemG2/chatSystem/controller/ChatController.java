@@ -22,7 +22,7 @@ public class ChatController extends Controller implements GuiToCont, NiToCont{
         InetAddress localIP;
         try {
             localIP = InetAddress.getLocalHost();
-            this.localUser = new UserInformation(localIP.toString());
+            this.localUser = new UserInformation(localIP.getHostAddress());
             this.remoteSystems = RemoteSystems.getInstance();
         } catch (UnknownHostException ex) {
             System.out.println("local host non existent");
@@ -52,8 +52,10 @@ public class ChatController extends Controller implements GuiToCont, NiToCont{
 
     @Override
     public void performHelloReceived(String username, String ip) {
-        System.out.println("Hello received je modif le model");
-        this.remoteSystems.addRemoteSystem(username, ip);
+        if(!ip.equals(this.localUser.getIP())){
+            System.out.println("Hello received je modif le model");
+            this.remoteSystems.addRemoteSystem(username, ip);
+        }
     }
 
     @Override

@@ -60,7 +60,7 @@ public class UserInformation extends Model{
          * @param state nouvel etat
          */
 	public void setState(UserState state) {
-                System.out.println("Entering setState");
+                System.out.println("Entering setState : le nouvel état est : "+state.toString());
 		this.state = state;
                 this.setChanged();
                 this.notifyObservers(this.state);

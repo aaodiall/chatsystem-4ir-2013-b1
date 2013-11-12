@@ -67,7 +67,7 @@ public class MessageTransfert {
         //hello sent to everyone can only be a hello without ack
         Hello helloToSend = new Hello(username, false);
         InetAddress broadcastAddress = this.determineBroadcastAddress();
-        System.out.println(helloToSend.toString()+" -> "+broadcastAddress.getHostAddress());
+        System.out.println("ENVOI : "+helloToSend.toString()+" -> "+broadcastAddress.getHostAddress());
         this.sendPacket(broadcastAddress, helloToSend);
     }
     
@@ -79,7 +79,7 @@ public class MessageTransfert {
     public void sendHello(String username, String ip) {
         //hello sent to one person can only be an ack hello
         Hello helloToSend = new Hello(username, true);
-        System.out.println(helloToSend.toString()+" -> "+ip);
+        System.out.println("ENVOI : "+helloToSend.toString()+" -> "+ip);
         this.sendPacket(ip, helloToSend);
     }
     
@@ -114,6 +114,7 @@ public class MessageTransfert {
     public void sendGoodbye(String username) {
         InetAddress broadcastAddress = this.determineBroadcastAddress();
         Goodbye goodbyeToSend = new Goodbye(username);
+        System.out.println("ENVOI : "+goodbyeToSend.toString()+" -> "+broadcastAddress.getHostAddress());
         this.sendPacket(broadcastAddress, goodbyeToSend);
     }
     
@@ -154,7 +155,7 @@ public class MessageTransfert {
             DatagramPacket msgToSend = new DatagramPacket(buffer, buffer.length, ip, MessageTransfert.portUdpEmission);
             this.messageSocket.send(msgToSend);
         } catch (IOException exc) {
-            System.out.println("Probleme à la conversion du message hello ou à l'envoi du message");
+            System.out.println("Probleme à la conversion du message ou à l'envoi du message");
         }
     }
 }
