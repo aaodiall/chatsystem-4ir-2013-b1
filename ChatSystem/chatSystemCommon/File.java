@@ -40,6 +40,6 @@ public class File extends Message{
 
 	@Override
 	public String toString() {
-		return "Hello [id=" + id + ", username=" + username  +", filePart=" + Arrays.toString(filePart) + ", isLast=" + isLast + "]";
+		return "File [id=" + id + ", username=" + username  +", filePart=" + Arrays.toString(filePart) + ", isLast=" + isLast + "]";
 	}
 }
