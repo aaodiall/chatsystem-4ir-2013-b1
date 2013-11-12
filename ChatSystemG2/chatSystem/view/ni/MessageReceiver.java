@@ -47,7 +47,7 @@ public class MessageReceiver implements Runnable {
                 String from = packet.getAddress().getHostAddress();
                 Class msgClass = msg.getClass();
                 if (msgClass == Hello.class){
-                    System.out.println("Hello received je passe a chatNI");
+                    System.out.println("RECEPTION : "+msg.toString()+" <- "+from+" je passe a chatNI");
                     Hello helloReceived = (Hello)msg;
                     this.chatni.helloReceived(helloReceived.getUsername(), from);
                 }
@@ -56,6 +56,7 @@ public class MessageReceiver implements Runnable {
                     this.chatni.textMessageReceived(msgText.getText(), msgText.getUsername(), from);
                 }
                 else if (msgClass == Goodbye.class) {
+                    System.out.println("RECEPTION : "+msg.toString()+" <- "+from+" je passe a chatNI");
                     Goodbye gbReceived = (Goodbye)msg;
                     this.chatni.goodbyeReceived(gbReceived.getUsername(), from);
                 }  

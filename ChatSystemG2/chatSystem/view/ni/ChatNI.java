@@ -6,7 +6,6 @@ import chatSystem.model.RemoteSystems;
 import chatSystem.model.UserInformation;
 import chatSystem.model.UserState;
 import java.util.Observable;
-import java.util.List;
 import chatSystemCommon.*;
 
 public class ChatNI extends View implements Runnable {
@@ -83,6 +82,7 @@ public class ChatNI extends View implements Runnable {
             }
         }
         else if(o instanceof RemoteSystems){
+            System.out.println("-----------------------------------------------"+arg);
             if(arg instanceof String){
                 this.messageTransfert.sendHello(this.usrInfo.getUsername(),(String)arg);
             }

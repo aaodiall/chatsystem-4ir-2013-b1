@@ -19,7 +19,7 @@ public class RemoteSystems extends Model{
      * Private class' constructor
      */
     private RemoteSystems () {
-            this.remoteSystemsInformation = new HashMap<String, RemoteSystemInformation>();
+            this.remoteSystemsInformation = new HashMap<>();
     }
 
     /**
@@ -27,13 +27,15 @@ public class RemoteSystems extends Model{
      * @param username contact's username
      * @param ip remote system's ip address
      */
-    public void addRemoteSystem(String username, String ip) {
+    public synchronized void addRemoteSystem(String username, String ip) {
         RemoteSystemInformation newRS = new RemoteSystemInformation(username,ip);
         String key = newRS.getIdRemoteSystem();
         if (!this.remoteSystemsInformation.containsKey(key)) {
             this.remoteSystemsInformation.put(key, newRS);
             this.setChanged();
             //this.notifyObservers(new ArrayList<String>(this.remoteSystemsInformation.keySet()));
+            //Quand on ajoute un Remote System on passe en argument l'ip pour que ChatNI réponde Hello
+            //ChatGUI lui fait tjrs getUserList
             this.notifyObservers(ip);
             this.clearChanged();
         }
@@ -43,10 +45,12 @@ public class RemoteSystems extends Model{
      * Remove a remote system from the list
      * @param idRemoteSystem id of the remote system to be removed
      */
-    public void deleteRemoteSystem(String idRemoteSystem) {
+    public synchronized void deleteRemoteSystem(String idRemoteSystem) {
         this.remoteSystemsInformation.remove(idRemoteSystem);
         this.setChanged();
         //this.notifyObservers(new ArrayList<String>(this.remoteSystemsInformation.keySet()));
+        //Quand on enleve un Remote System on passe rien car ChatNI n'a rien a faire
+        //ChatGUI lui fait tjrs getUserList
         this.notifyObservers();
         this.clearChanged();
     }
@@ -57,8 +61,7 @@ public class RemoteSystems extends Model{
      */
     public List<String> getUserList() {
             List<String> userList = new ArrayList<>();
-            Set<String> remoteSystems = this.remoteSystemsInformation.keySet();
-            for(String rs: remoteSystems) {
+            for(String rs: this.remoteSystemsInformation.keySet()) {
                     userList.add(this.remoteSystemsInformation.get(rs).getUsername());
             }
             return userList;

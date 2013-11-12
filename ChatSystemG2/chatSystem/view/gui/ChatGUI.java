@@ -83,7 +83,7 @@ public class ChatGUI extends View {
     public void connectButtonPressed(String username) {
         ((ChatController) this.controller).performConnect(username);
     }
-    
+
     public void deconnectButtonPressed() {
         ((ChatController) this.controller).performDisconnect();
     }
@@ -98,27 +98,25 @@ public class ChatGUI extends View {
         System.out.println("Entering update Chat GUI");
         if (o instanceof UserInformation) {
             if (arg instanceof String) {
-                this.uWindow = new UserWindow((String) arg,this);
+                this.uWindow = new UserWindow((String) arg, this);
             } else if (arg instanceof UserState) {
                 if ((UserState) arg == UserState.CONNECTED) {
                     cWindow.setVisible(false);
                     uWindow.setVisible(true);
-                }else{
+                } else {
                     cWindow.setVisible(true);
                     uWindow.setVisible(false);
                     uWindow = null;
                 }
             }
         } else if (o instanceof RemoteSystems) {
-            //if (arg instanceof List) {
             System.out.println("Je suis la GUI je mets a jour les utilisateur co");
-                try {
-                    listUser(((RemoteSystems)o).getUserList());
+            try {
+                listUser(((RemoteSystems) o).getUserList());
 
-                } catch (GUIException ex) {
-                    Logger.getLogger(ChatGUI.class.getName()).log(Level.SEVERE, null, ex);
-                }
-            //}
+            } catch (GUIException ex) {
+                Logger.getLogger(ChatGUI.class.getName()).log(Level.SEVERE, null, ex);
+            }
         }
     }
 }
