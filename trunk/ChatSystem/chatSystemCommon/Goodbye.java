@@ -10,7 +10,7 @@ public class Goodbye extends Message{
 
 	@Override
 	public String toString() {
-		return "Hello [id=" + id + ", username=" + username  +"]";
+		return "Goodbye [id=" + id + ", username=" + username  +"]";
 	}
 
 	
