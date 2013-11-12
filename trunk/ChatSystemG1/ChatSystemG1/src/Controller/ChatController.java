@@ -13,6 +13,8 @@ public class ChatController {
 	
 	public ChatController() {
 		// TODO Auto-generated constructor stub
+		ChatNi = null;
+		localUsername = null;
 	}
 	
 	public static void ByeProcessing(Goodbye message){
@@ -35,23 +37,26 @@ public class ChatController {
 			
 			
 			System.out.println("on a recu un hello" + message);
-			if(!message.getUsername().equals(getLocalUsername()) ) ChatNi.SendHello(true,message.getUsername());
+			ChatNi.SendHello(true,message.getUsername());
 			
 		}
 	}
 	
 	public static void MessageProcessing(Text message){
-		
+		System.out.println("on a recu un message" + message);
 	}
 	public static void FileTransfertDemandProcessing(FileTransfertDemand message){
 		
 	}
 	public void PerformConnect(){
+		ChatNi = new ChatNetwork();
 		ChatNi.SendHello(false,null);
 	}
 	
 	public void PerformDisconnect(){
+		
 		ChatNi.SendBye();
+		ChatNi.getMessageReceiver().closeReceiveSocket();
 	}
 	
 	public void PerformFileAcceptance(File f,String RemoteUsername){
@@ -62,8 +67,10 @@ public class ChatController {
 		
 	}
 	
-	public void PerformSendMessage(String text,String RemoteUserName){
-		
+	public void PerformSendMessage(String text,String[] RemoteUserName){
+		Text message = new Text(getLocalUsername(),text);
+		System.out.println("on envoie un message");
+		ChatNi.SendMessage(message, RemoteUserName);
 	}
 	
 	public void UpdateModel(Message m){

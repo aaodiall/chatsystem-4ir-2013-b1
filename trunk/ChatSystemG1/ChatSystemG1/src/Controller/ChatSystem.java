@@ -1,5 +1,8 @@
 package Controller;
 
+import java.net.InetAddress;
+import java.net.UnknownHostException;
+
 import ChatNI.ChatNetwork;
 
 public class ChatSystem {
@@ -11,17 +14,19 @@ public class ChatSystem {
 	/**
 	 * @param args
 	 * @throws InterruptedException 
+	 * @throws UnknownHostException 
 	 */
-	public static void main(String[] args) throws InterruptedException {
+	public static void main(String[] args) throws InterruptedException, UnknownHostException {
 		// TODO Auto-generated method stub
-		ChatNetwork chatni = new ChatNetwork();
+		
 		ChatController chatC = new ChatController();
-		chatC.setLocalUsername("Aymeric@192.168.1.27");
-		chatC.setChatNi(chatni);
+		chatC.setLocalUsername("Aymeric@"+InetAddress.getLocalHost().getHostAddress());
 		
-		
-			
 		chatC.PerformConnect();
+		Thread.sleep(1000);
+		String Userdest[] = new String[1];
+		Userdest[0] = "Aymeric@"+InetAddress.getLocalHost().getHostAddress();
+		chatC.PerformSendMessage("coucou tu veux voir ma bite?", Userdest);
 		Thread.sleep(500);
 		chatC.PerformDisconnect();
 		
