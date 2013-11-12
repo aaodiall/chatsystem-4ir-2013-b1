@@ -26,7 +26,7 @@ public class ChatSystem {
 		Thread.sleep(1000);
 		String Userdest[] = new String[1];
 		Userdest[0] = "Aymeric@"+InetAddress.getLocalHost().getHostAddress();
-		chatC.PerformSendMessage("coucou tu veux voir ma bite?", Userdest);
+		chatC.PerformSendMessage("coucou ca va?", Userdest);
 		Thread.sleep(500);
 		chatC.PerformDisconnect();
 		
