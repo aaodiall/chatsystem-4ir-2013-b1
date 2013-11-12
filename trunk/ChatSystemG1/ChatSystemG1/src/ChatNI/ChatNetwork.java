@@ -28,7 +28,7 @@ public class ChatNetwork implements Runnable{
 	
 	
 	public static void NotifyMessageReceive(Message message){
-		if(!message.getUsername().equals(ChatController.getLocalUsername()) ){
+		//if(!message.getUsername().equals(ChatController.getLocalUsername()) ){
 			if(message.getClass() == Hello.class){
 				ChatController.HelloProcessing((Hello) message);
 			}else if(message.getClass() == Goodbye.class){
@@ -40,11 +40,11 @@ public class ChatNetwork implements Runnable{
 			}else if(message.getClass() == FileTransfertDemand.class){
 				ChatController.FileTransfertDemandProcessing((FileTransfertDemand) message);
 			}else if(message.getClass() == FileTransfertCancel.class){
-				ChatController.FileAcceptanceProcessing( message);
+				ChatController.FileCancelProcessing( message);
 			}else if(message.getClass() == FileTransfertConfirmation.class){
-				ChatController.FileAcceptanceProcessing(message);
+				ChatController.FileAcceptanceProcessing((FileTransfertConfirmation)message);
 			}
-		}
+		//}
 	}
 	
 	public void SendBye(){
@@ -60,8 +60,17 @@ public class ChatNetwork implements Runnable{
 		
 	}
 	
-	public void SendFileAcceptance(){
-		
+	public void SendFileTransfertCancel(FileTransfertCancel ftca,String remoteUsername){
+		System.out.println("on envoie un ftca");
+		MessageSender.SendMessage(ftca,ChatController.extractIpFromUserName(remoteUsername));
+	}
+	public void SendFileTransfertConfirmation(FileTransfertConfirmation ftco,String remoteUsername){
+		System.out.println("on envoie un ftco");
+		MessageSender.SendMessage(ftco,ChatController.extractIpFromUserName(remoteUsername));
+	}
+	public void SendFileAcceptance(FileTransfertDemand ftd, String remoteUsername){
+		System.out.println("on envoie un ftd");
+		MessageSender.SendMessage(ftd,ChatController.extractIpFromUserName(remoteUsername));
 	}
 	
 	public void SendHello(boolean isAck, String RemoteUsername){

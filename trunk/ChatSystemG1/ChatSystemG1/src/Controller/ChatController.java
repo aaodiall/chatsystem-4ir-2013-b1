@@ -22,8 +22,13 @@ public class ChatController {
 
 	}
 	
-	public static void FileAcceptanceProcessing(Message message){
-		
+	public static void FileAcceptanceProcessing(FileTransfertConfirmation message){
+		if(message.isAccepted()){
+			System.out.println("yahou ils ont accepté!" + message);
+			
+		}else{
+			System.out.println("oh non ils ont refusé" + message);
+		}
 	}
 	
 	public static void FileProcessing(File message){
@@ -46,6 +51,13 @@ public class ChatController {
 		System.out.println("on a recu un message" + message);
 	}
 	public static void FileTransfertDemandProcessing(FileTransfertDemand message){
+		System.out.println("on a recu une ftd" + message);
+		//demand de transfert
+		boolean transfertacceptance = false;
+		FileTransfertConfirmation ftco = new FileTransfertConfirmation(getLocalUsername(),transfertacceptance, message.getId());
+		
+			
+		ChatNi.SendFileTransfertConfirmation(ftco, message.getUsername());
 		
 	}
 	public void PerformConnect(){
@@ -59,11 +71,21 @@ public class ChatController {
 		ChatNi.getMessageReceiver().closeReceiveSocket();
 	}
 	
-	public void PerformFileAcceptance(File f,String RemoteUsername){
+	public void PerformFileAcceptance(java.io.File f,String RemoteUsername){
+		double bytes = f.length();
+		String name = f.getName();
+		String extension = null;
+		for(int i = 0; i <name.length();i++ ){
+			if(name.charAt(i) == '.'){
+				extension = name.substring(i+1);
+			}
+		}
 		
+		FileTransfertDemand ftd = new FileTransfertDemand(getLocalUsername(), name, extension,(int) bytes);
+		ChatNi.SendFileAcceptance(ftd,RemoteUsername);
 	}
 	
-	public void PerformSendFile(File f,String RemoteUserName){
+	public void PerformSendFile(java.io.File f,String RemoteUserName){
 		
 	}
 	
@@ -154,6 +176,11 @@ public class ChatController {
 	 */
 	public void setChatMod(ChatModel chatMod) {
 		ChatMod = chatMod;
+	}
+
+	public static void FileCancelProcessing(Message message) {
+		// TODO Auto-generated method stub
+		
 	}
 
 }
