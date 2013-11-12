@@ -46,7 +46,7 @@ public class Sender {
             byte[]data=m.toArray();
             
             DatagramPacket packet=new DatagramPacket(data,
-            data.length, ChatNetwork.BroadcastAddress(), 16001);
+            data.length, /*ChatNetwork.BroadcastAddress()*/InetAddress.getByName("255.255.255.255"), 16001);
            
             socket.send(packet);
            

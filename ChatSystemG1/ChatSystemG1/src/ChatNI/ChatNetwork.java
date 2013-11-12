@@ -28,21 +28,23 @@ public class ChatNetwork implements Runnable{
 	
 	
 	public static void NotifyMessageReceive(Message message){
-		if(message.getClass() == Hello.class){
-			ChatController.HelloProcessing((Hello) message);
-		}else if(message.getClass() == Goodbye.class){
-			ChatController.ByeProcessing((Goodbye) message);
-		}else if(message.getClass() == Text.class){
-			ChatController.MessageProcessing((Text) message);
-		}else if(message.getClass() == File.class){
-			ChatController.FileProcessing((File) message);
-		}else if(message.getClass() == FileTransfertDemand.class){
-			ChatController.FileTransfertDemandProcessing((FileTransfertDemand) message);
-		}else if(message.getClass() == FileTransfertCancel.class){
-			ChatController.FileAcceptanceProcessing( message);
-		}else if(message.getClass() == FileTransfertConfirmation.class){
-			ChatController.FileAcceptanceProcessing(message);
-		}
+		//if(!message.getUsername().equals(ChatController.getLocalUsername()) ){
+			if(message.getClass() == Hello.class){
+				ChatController.HelloProcessing((Hello) message);
+			}else if(message.getClass() == Goodbye.class){
+				ChatController.ByeProcessing((Goodbye) message);
+			}else if(message.getClass() == Text.class){
+				ChatController.MessageProcessing((Text) message);
+			}else if(message.getClass() == File.class){
+				ChatController.FileProcessing((File) message);
+			}else if(message.getClass() == FileTransfertDemand.class){
+				ChatController.FileTransfertDemandProcessing((FileTransfertDemand) message);
+			}else if(message.getClass() == FileTransfertCancel.class){
+				ChatController.FileAcceptanceProcessing( message);
+			}else if(message.getClass() == FileTransfertConfirmation.class){
+				ChatController.FileAcceptanceProcessing(message);
+			}
+		//}
 	}
 	
 	public void SendBye(){
@@ -94,8 +96,19 @@ public class ChatNetwork implements Runnable{
 
 
 
-	public void SendMessage(){
-		
+	public void SendMessage(Message m, String[] UsernameList){
+		if(UsernameList.length == 1){
+			MessageSender.SendMessage(m,ChatController.extractIpFromUserName(UsernameList[0]));
+		}else{
+			
+			String[] UsernameIpList = new String[UsernameList.length];
+			for(int i = 0;i<UsernameList.length;i++){
+				
+				UsernameIpList[i]=ChatController.extractIpFromUserName(UsernameList[i]);
+				
+			}
+			MessageSender.MultiCastMessage(m,UsernameIpList);
+		}
 	}
 
 	@Override
@@ -123,24 +136,20 @@ public class ChatNetwork implements Runnable{
 	}
 	
 	public static InetAddress BroadcastAddress() {
-        boolean found = false;
+        boolean Addressfound = false;
         InetAddress broadcast = null;
         try {
             Enumeration<NetworkInterface> interfaces =NetworkInterface.getNetworkInterfaces();
-            while (interfaces.hasMoreElements() && !found)  {
+            while (interfaces.hasMoreElements() && !Addressfound)  {
                 NetworkInterface ni = interfaces.nextElement();
                 if (!ni.isLoopback()) {
-                	
-                    List<InterfaceAddress> addresses = ni.getInterfaceAddresses();
-                    
-                    
-                    	for(InterfaceAddress ia : addresses){
-                    		
-                        broadcast = ia.getBroadcast();
-                        if (broadcast != null && !found )
-                            found = true;
-                    	}
+                	List<InterfaceAddress> addresses = ni.getInterfaceAddresses();
+                	for(InterfaceAddress ia : addresses){
+                		broadcast = ia.getBroadcast();
+                        if (broadcast != null && !Addressfound )
+                            Addressfound = true;
                     }
+                }
                 
             }
         } catch (SocketException exc) {
