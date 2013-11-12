@@ -19,15 +19,14 @@ public class Receiver implements Runnable{
         catch(SocketException sE) {
         } 
 		t = new Thread(this, "Receiver Thread");
-	      System.out.println("Child thread: " + t);
-	      t.start(); // Start the thread
+	    t.start(); // Start the thread
 	}
 
 	@Override
 	public void run() {
 		// TODO Auto-generated method stub
 		 byte[] buffer = new byte[512];
-	        while(true) {
+	        while(!socket.isClosed()) {
 	            DatagramPacket packet = new DatagramPacket(buffer, buffer.length);
 	            try {
 	                socket.receive(packet);
@@ -55,6 +54,7 @@ public class Receiver implements Runnable{
 	            socket.close();
 	        }
 	        catch(Exception e) {
+	        	
 	        }
 	    }
 }

@@ -9,6 +9,7 @@ import javax.swing.JFrame;
 import javax.swing.JPanel;
 
 import ChatNI.ChatNetwork;
+import IHM.FrontController;
 
 
 public class ChatSystem {
@@ -24,23 +25,15 @@ public class ChatSystem {
 	 */
 	public static void main(String[] args) throws InterruptedException, UnknownHostException {
 		// TODO Auto-generated method stub
-	
 		ChatController chatC = new ChatController();
-		chatC.setLocalUsername("Aymeric@"+InetAddress.getLocalHost().getHostAddress());
+		FrontController fc = new FrontController();
 		
-		chatC.PerformConnect();
-		Thread.sleep(1000);
-		java.io.File f = new File("testsend.txt");
-		if(f == null){
-			System.out.println("000");
+		while(fc.getmFrame().isVisible()){
+			System.out.flush();
 		}
-		chatC.PerformFileAcceptance(f, "Aymeric@"+InetAddress.getLocalHost().getHostAddress());
-		Thread.sleep(1000);
-		String Userdest[] = new String[1];
-		Userdest[0] = "Aymeric@"+InetAddress.getLocalHost().getHostAddress();
-		chatC.PerformSendMessage("coucou ca va?", Userdest);
-		Thread.sleep(500);
-		chatC.PerformDisconnect();
+		System.out.println("on quitte!");
+		System.exit(0);
+		
 		
 	}
 

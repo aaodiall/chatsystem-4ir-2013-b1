@@ -1,11 +1,15 @@
 package Controller;
 
+import java.net.InetAddress;
+import java.net.UnknownHostException;
+
 import chatSystemCommon.*;
 import ChatNI.ChatNetwork;
 import IHM.FrontController;
 
 public class ChatController {
 	private FrontController ChatGuiFrontController;
+	private static boolean isConnected ;
 	private static ChatNetwork ChatNi;
 
 	private ChatModel ChatMod;
@@ -13,10 +17,18 @@ public class ChatController {
 	
 	public ChatController() {
 		// TODO Auto-generated constructor stub
+		isConnected = false;
 		ChatNi = null;
 		localUsername = null;
 	}
 	
+	/**
+	 * @return the isConnected
+	 */
+	public static boolean isConnected() {
+		return isConnected;
+	}
+
 	public static void ByeProcessing(Goodbye message){
 		System.out.println("on a reçu un bye" + message);
 
@@ -60,15 +72,17 @@ public class ChatController {
 		ChatNi.SendFileTransfertConfirmation(ftco, message.getUsername());
 		
 	}
-	public void PerformConnect(){
+	public static void PerformConnect(){
+		isConnected = true;
 		ChatNi = new ChatNetwork();
 		ChatNi.SendHello(false,null);
 	}
 	
-	public void PerformDisconnect(){
-		
+	public static void PerformDisconnect(){
+		isConnected = false;
 		ChatNi.SendBye();
 		ChatNi.getMessageReceiver().closeReceiveSocket();
+		ChatNi.getMessageSender().closeSendSocket();
 	}
 	
 	public void PerformFileAcceptance(java.io.File f,String RemoteUsername){
@@ -132,9 +146,10 @@ public class ChatController {
 
 	/**
 	 * @param localUsername the localUsername to set
+	 * @throws UnknownHostException 
 	 */
-	public void setLocalUsername(String localUsername) {
-		this.localUsername = localUsername;
+	public static void setLocalUsername(String localusername) throws UnknownHostException {
+		localUsername = localusername+"@"+InetAddress.getLocalHost().getHostAddress().toString();
 	}
 	/**
 	 * @return the chatGuiFrontController
