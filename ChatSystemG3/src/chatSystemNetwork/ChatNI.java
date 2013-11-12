@@ -14,10 +14,15 @@ import java.util.ArrayList;
 import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.Observable;
+import java.util.Observer;
 
 import runChat.ChatSystem;
 import chatSystemIHMs.View;
+import chatSystemModel.ModelListUsers;
+import chatSystemModel.ModelStateConnected;
 import chatSystemCommon.*;
+import chatSystemController.Controller;
 
 /* Note pour plus tard : 
  *  - tester le programme sur un reseau local
@@ -27,8 +32,9 @@ import chatSystemCommon.*;
  *  - ecrire la javadoc et les commentaires
  */
 
-public class ChatNI extends View implements Runnable{
+public class ChatNI extends View implements Runnable, Observer{
 	
+	private Controller controller;
 	private final int portUDP;
 	private InetAddress localBroadcast;
 	private DatagramSocket socketUDP;
@@ -37,8 +43,10 @@ public class ChatNI extends View implements Runnable{
 	private DatagramPacket pduReceived;
 	private byte[] streamReceived;
 	private HashMap<String,InetAddress> remoteUsersList;
-	
-	public ChatNI(int portUDP){
+
+	public ChatNI(int portUDP,Controller controller){
+		//associe son controlleur
+		this.controller=controller;
 		// initialisation du port UDP de ChatNI
 		this.portUDP = portUDP;
 		// initialisation du buffer de messages a envoyer
@@ -56,10 +64,11 @@ public class ChatNI extends View implements Runnable{
 		}catch(SocketException sockExc){
 			if (this.socketUDP == null)
 				System.out.println("socketUDP : socket exception");
+			sockExc.printStackTrace();
 			this.socketUDP.close();
 		}
 	}
-	
+
 	public void setlocalIPandBroadcast(){
 		Enumeration <NetworkInterface> localInterfaces;
 		NetworkInterface ni;
@@ -87,8 +96,8 @@ public class ChatNI extends View implements Runnable{
 			System.out.println("error : socket exception ip adresses");
 		}
 	}
-	
-	public void connect(String username, boolean ack){
+
+	public void sendHello(String username, boolean ack){
 		byte [] helloStream;
 		DatagramPacket pdu;
 		// new Hello object
@@ -109,8 +118,8 @@ public class ChatNI extends View implements Runnable{
 			System.out.println("connection failed");
 		}
 	}
-	
-	public void disconnect(String username){
+
+	public void sendBye(String username){
 		byte [] byeStream;
 		DatagramPacket pdu;
 		// new Goodbye object
@@ -125,7 +134,7 @@ public class ChatNI extends View implements Runnable{
 			e.printStackTrace();
 		}		
 	}
-	
+
 	public void sendText (){
 		InetAddress recipient;
 		Iterator <String> it;
@@ -145,7 +154,7 @@ public class ChatNI extends View implements Runnable{
 			System.out.println("error : construction du stream message");
 		}	
 	}
-	
+
 	public void run(){
 		int first = 0;
 		Message receivedMsg;
@@ -172,18 +181,32 @@ public class ChatNI extends View implements Runnable{
 				receivedMsg = Message.fromArray(pduReceived.getData());
 				// si c'est un hello on fait le signale au controller
 				if (receivedMsg.getClass() == Hello.class){
-					ChatSystem.getController().connectReceived(this.makeUsername(receivedMsg.getUsername(),ipRemoteAddr), ipRemoteAddr,((Hello)receivedMsg).isAck());
+					controller.connectReceived(this.makeUsername(receivedMsg.getUsername(),ipRemoteAddr), ipRemoteAddr,((Hello)receivedMsg).isAck());
 				}else if(receivedMsg.getClass() == Text.class){
-					ChatSystem.getController().messageReceived(((Text)receivedMsg).getText(), this.makeUsername(receivedMsg.getUsername(),ipRemoteAddr));
+					controller.messageReceived(((Text)receivedMsg).getText(), this.makeUsername(receivedMsg.getUsername(),ipRemoteAddr));
+				}else if(receivedMsg.getClass() == Goodbye.class){
+					controller.disconnectReceived(this.makeUsername(receivedMsg.getUsername(),ipRemoteAddr));
 				}
 			}catch (IOException recExc){
 				System.out.println("error fromArray receive");
 			}			
 		}
 	}
-	
+
 	public  String makeUsername(String username, InetAddress ip){		
 		return username +"@"+ ip.getHostAddress();
 	}
-	
+
+	/* (non-Javadoc)
+	 * @see java.util.Observer#update(java.util.Observable, java.lang.Object)
+	 */
+	@Override
+	public void update(Observable arg0, Object arg1) {
+		// TODO Auto-generated method stub
+		
+		if(arg0.getClass().equals(ModelStateConnected.class)){
+			
+		}
+	}
+
 }

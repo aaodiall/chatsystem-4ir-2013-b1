@@ -8,5 +8,6 @@ package chatSystemIHMs;
  *
  */
 public interface FromUser{
-
+	
+	public void connect();
 }

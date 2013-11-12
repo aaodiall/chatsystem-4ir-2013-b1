@@ -25,9 +25,14 @@ public class ModelListUsers extends Observable {
 	
 	public void addUsernameList(String username,InetAddress addressIP){
 		listUsers.put(username,addressIP);
+		setChanged();
+		notifyObservers();
 	}
 	public void removeUsernameList(String username){
 		this.listUsers.remove(username);
+		setChanged();
+		notifyObservers();
+		
 	}
 	
 	public boolean isInListUsers(String username){
@@ -36,7 +41,7 @@ public class ModelListUsers extends Observable {
 
 	public void clearListUsers(){
 		this.listUsers.clear();
-		this.listUsers=null;
+		//this.listUsers=null;
 	}
 	
 	
