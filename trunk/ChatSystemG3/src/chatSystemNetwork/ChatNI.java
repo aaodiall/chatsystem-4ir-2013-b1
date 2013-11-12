@@ -20,7 +20,7 @@ import java.util.Observer;
 import runChat.ChatSystem;
 import chatSystemIHMs.View;
 import chatSystemModel.ModelListUsers;
-import chatSystemModel.ModelStateConnected;
+import chatSystemModel.ModelStates;
 import chatSystemCommon.*;
 import chatSystemController.Controller;
 
@@ -32,32 +32,62 @@ import chatSystemController.Controller;
  *  - ecrire la javadoc et les commentaires
  */
 
-public class ChatNI extends View implements Runnable, Observer{
-	
-	private Controller controller;
-	private final int portUDP;
-	private InetAddress localBroadcast;
-	private DatagramSocket socketUDP;
-	private InetAddress localUserIP;
-	private ArrayList <DatagramPacket> bufferMessagesToSend;
-	private DatagramPacket pduReceived;
-	private byte[] streamReceived;
-	private HashMap<String,InetAddress> remoteUsersList;
 
-	public ChatNI(int portUDP,Controller controller){
-		//associe son controlleur
+public class ChatNI extends View implements Runnable, Observer{
+
+	/* ATTRIBUTS A METTRE
+	 * final int portUDP;
+	 * Controller controller;
+	 * ChatNIMessage chatNIMessage;
+	 * ChatNIStreamConnexion chatNIStreamConnexion;
+	 * DatagramSocket socketUDP
+	 * InetAddress userIP
+	 * InetAddress userIPBroadcast
+	 * ArrayList<DatagramPacket> bufferPDUReceived
+	 * byte[] streamReceived;
+	 * DatagramPacket pduReceived;
+	 * 
+	 * METHODES A IMPLEMENTER
+	 * public ChatNI(int portUDP, Controller controller, ChatNIMessage chatNIMessage, ChatNIStreamConnexion chatNIStreamConnexion);
+	 * public void setlocalIPandBroadcast();
+	 * public void connect(String username, boolean ack);
+	 * public void disconnect();
+	 * public void sendMsgText(ArrayList<String> usernameList, String text2Send);
+	 * public void sendMsgFile(String recipient_username, String file_name);
+	 * public String make_username(String name, InetAddress ip);
+	 * public void pduAnalyze();
+	 * public void run();
+	*/
+	
+	
+	private final int portUDP;
+	private Controller controller;
+	private ChatNIMessage chatNIMessage; 
+	private ChatNIStreamConnexion chatNIStreamConnexion;
+	private DatagramSocket socketUDP;
+	private InetAddress userIP;
+	private InetAddress userIPBroadcast;
+	private ArrayList<DatagramPacket> bufferPDUReceived;
+	private byte[] streamReceived;
+	private DatagramPacket pduReceived;
+
+
+	public ChatNI(int portUDP, Controller controller,int bufferSize){
+		// associe son controlleur
 		this.controller=controller;
+		//crée son chatNIMessage
+		//this.chatNIMessage=new ChatNIMessage();
+		//crée son chatNIStreamConnexion
+		//this.chatNIStreamConnexion=new ChatNIStreamConnexion();
+		//initialisation du buffer de reception
+		bufferPDUReceived = new ArrayList<DatagramPacket>(bufferSize) ;
 		// initialisation du port UDP de ChatNI
 		this.portUDP = portUDP;
-		// initialisation du buffer de messages a envoyer
-		this.bufferMessagesToSend = new ArrayList<DatagramPacket>();
-		// initialisation de la liste des remoteUsers de ChatNI
-		this.remoteUsersList = new HashMap<String,InetAddress>();
 		// recuperation de l'IPUser et de l'IPBroadcast
-		//this.setlocalIPandBroadcast();
+		this.setlocalIPandBroadcast();
 		try {
 			// construction du socket UDP
-			this.socketUDP = new DatagramSocket(portUDP,localUserIP);
+			this.socketUDP = new DatagramSocket(this.portUDP,this.userIP);
 			// initialisation d'un pdu de reception
 			this.streamReceived = new byte[this.socketUDP.getReceiveBufferSize()];
 			this.pduReceived = new DatagramPacket(this.streamReceived,this.streamReceived.length);
@@ -68,7 +98,7 @@ public class ChatNI extends View implements Runnable, Observer{
 			this.socketUDP.close();
 		}
 	}
-
+	
 	public void setlocalIPandBroadcast(){
 		Enumeration <NetworkInterface> localInterfaces;
 		NetworkInterface ni;
@@ -84,10 +114,10 @@ public class ChatNI extends View implements Runnable, Observer{
 					while (ipAddrEnum.hasNext() && !trouve){
 						intAddr = ipAddrEnum.next();
 						if (((InterfaceAddress)intAddr).getBroadcast() != null){
-							this.localUserIP = ((InterfaceAddress)intAddr).getAddress();
-							this.localBroadcast = ((InterfaceAddress)intAddr).getBroadcast();
-							System.out.println("local IP : " + this.localUserIP.toString());
-							System.out.println("local Broadcast : " + this.localBroadcast.toString());									
+							this.userIP = ((InterfaceAddress)intAddr).getAddress();
+							this.userIPBroadcast = ((InterfaceAddress)intAddr).getBroadcast();
+							System.out.println("local IP : " + this.userIP.toString());
+							System.out.println("local Broadcast : " + this.userIPBroadcast.toString());									
 						}
 					}
 				}
@@ -96,104 +126,61 @@ public class ChatNI extends View implements Runnable, Observer{
 			System.out.println("error : socket exception ip adresses");
 		}
 	}
-
-	public void sendHello(String username, boolean ack){
-		byte [] helloStream;
-		DatagramPacket pdu;
-		// new Hello object
-		Hello hello = new Hello(username,ack);
-		try {
-			// Objet to byte[]
-			helloStream = ((Message)hello).toArray();
-			// Enable Broadcast
-			this.socketUDP.setBroadcast(true);
-			// make pdu
-			pdu = new DatagramPacket(helloStream,helloStream.length,InetAddress.getLocalHost(),portUDP);
-			// add pdu to bufferMessagesToSend
-			this.bufferMessagesToSend.add(pdu);
-			// send pdu
-			this.run();
-			this.socketUDP.setBroadcast(false);			
-		}catch (IOException e){
-			System.out.println("connection failed");
-		}
+	
+	public void connect(String username, boolean ack){
+		this.chatNIMessage.sendHello(username, ack);
 	}
-
-	public void sendBye(String username){
-		byte [] byeStream;
-		DatagramPacket pdu;
-		// new Goodbye object
-		Goodbye bye = new Goodbye(username);
-		try{
-			byeStream =((Message)bye).toArray();
-			this.socketUDP.setBroadcast(true);
-			pdu=new DatagramPacket(byeStream,byeStream.length,InetAddress.getLocalHost(),portUDP);//InetAddress.getByAddress(localNetwork),portUDP);
-			this.bufferMessagesToSend.add(pdu);
-			this.run();
-		}catch (IOException e){
-			e.printStackTrace();
-		}		
+	
+	
+	public void disconnect(String username){
+		this.chatNIMessage.sendBye();
 	}
-
-	public void sendText (){
-		InetAddress recipient;
-		Iterator <String> it;
-		DatagramPacket pdu2send;
-		String text2Send = ChatSystem.getModelText().getTextToSend();
-		Text messageText = new Text(ChatSystem.getModelUsername().getUsername(),text2Send);
-		try{
-			byte[] messageStream = messageText.toArray();	
-			it = ChatSystem.getModelGroupRecipient().getGroupRecipients().iterator();
-			while(it.hasNext()){
-				recipient = ChatSystem.getModelListUsers().getListUsers().get((String)it.next());
-				pdu2send = new DatagramPacket(messageStream,messageStream.length,recipient,this.portUDP);
-				this.socketUDP.send(pdu2send);
-				this.run();
-			}
-		}catch(IOException ioExc){
-			System.out.println("error : construction du stream message");
-		}	
+	
+	
+	public void sendMsgText(ArrayList<String> usernameList, String text2Send){
+		this.chatNIMessage.sendText(usernameList, text2Send);
 	}
-
-	public void run(){
+	
+	public void sendMsgFile(String recipient_username, String fileName){
+		this.chatNIMessage.sendFileTransfertDemand(recipient_username, fileName);
+	}
+	
+	public void pduAnalyze(){
 		int first = 0;
 		Message receivedMsg;
 		InetAddress ipRemoteAddr;
-		// envoie d'un pdu
-		if (this.bufferMessagesToSend.isEmpty() == false){
-			try{
-				socketUDP.send(this.bufferMessagesToSend.get(first));
-				this.bufferMessagesToSend.remove(first);
-			}catch (IOException sendExc){
-				System.out.println("cannot send the message");
-			}			
-		}
-		// on essaie de recevoir un pdu
+		ipRemoteAddr = this.bufferPDUReceived.get(first).getAddress();
 		try {
-			this.socketUDP.receive(pduReceived);
-		}catch (IOException sockRec){
-			System.out.println("error receive socket");
-		}
-		// si le pdu n'est pas vide on traite le message recu
-		if (this.pduReceived.getLength() > 0){
-			ipRemoteAddr = pduReceived.getAddress();
+			receivedMsg = Message.fromArray(this.bufferPDUReceived.get(first).getData());
+			// si c'est un hello on fait le signale au controller
+			if (receivedMsg.getClass() == Hello.class){
+				controller.connectReceived(this.makeUsername(receivedMsg.getUsername(),ipRemoteAddr), ipRemoteAddr,((Hello)receivedMsg).isAck());
+			}else if(receivedMsg.getClass() == Text.class){
+				controller.messageReceived(((Text)receivedMsg).getText(), this.makeUsername(receivedMsg.getUsername(),ipRemoteAddr));
+			}else if(receivedMsg.getClass() == Goodbye.class){
+				controller.disconnectReceived(this.makeUsername(receivedMsg.getUsername(),ipRemoteAddr));
+			}
+			this.bufferPDUReceived.remove(first);
+		}catch (IOException recExc){
+			System.out.println("error : fromArray receive");
+		}			
+	}
+	
+	public void run(){
+		while(true){
+			// on se met en attente de reception d'un pdu
 			try {
-				receivedMsg = Message.fromArray(pduReceived.getData());
-				// si c'est un hello on fait le signale au controller
-				if (receivedMsg.getClass() == Hello.class){
-					controller.connectReceived(this.makeUsername(receivedMsg.getUsername(),ipRemoteAddr), ipRemoteAddr,((Hello)receivedMsg).isAck());
-				}else if(receivedMsg.getClass() == Text.class){
-					controller.messageReceived(((Text)receivedMsg).getText(), this.makeUsername(receivedMsg.getUsername(),ipRemoteAddr));
-				}else if(receivedMsg.getClass() == Goodbye.class){
-					controller.disconnectReceived(this.makeUsername(receivedMsg.getUsername(),ipRemoteAddr));
-				}
-			}catch (IOException recExc){
-				System.out.println("error fromArray receive");
+				this.socketUDP.receive(this.pduReceived);
+				// on a recu un pdu donc on traite le message qu'il contient
+				this.bufferPDUReceived.add(pduReceived);
+				this.pduAnalyze();
+			}catch (IOException sockRec){
+				System.out.println("error receive socket");
 			}			
 		}
 	}
-
-	public  String makeUsername(String username, InetAddress ip){		
+	
+	public String makeUsername(String username, InetAddress ip){		
 		return username +"@"+ ip.getHostAddress();
 	}
 
@@ -204,7 +191,7 @@ public class ChatNI extends View implements Runnable, Observer{
 	public void update(Observable arg0, Object arg1) {
 		// TODO Auto-generated method stub
 		
-		if(arg0.getClass().equals(ModelStateConnected.class)){
+		if(arg0.getClass().equals(ModelStates.class)){
 			
 		}
 	}

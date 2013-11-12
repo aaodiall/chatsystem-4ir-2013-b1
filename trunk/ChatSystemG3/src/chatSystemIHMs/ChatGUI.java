@@ -13,7 +13,7 @@ import chatSystemModel.ModelListUsers;
  * @author alpha
  *
  */
-public class ChatGui extends View implements Observer{
+public class ChatGUI extends View implements Observer{
 	private InterfaceConnect wConnect;
 	private InterfaceCommunicate wCommunicate;
 	
@@ -31,7 +31,7 @@ public class ChatGui extends View implements Observer{
 	 * @param wConnect
 	 * @param wCommunicate
 	 */
-	public ChatGui(Controller controler) {
+	public ChatGUI(Controller controler) {
 		this.wConnect = new InterfaceConnect(controler);;
 		this.wCommunicate = new InterfaceCommunicate(controler);
 	

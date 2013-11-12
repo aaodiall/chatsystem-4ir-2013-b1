@@ -4,9 +4,9 @@
 package chatSystemNetwork;
 
 /**
- * @author alpha
+ * @author joanna
  *
  */
-public class ChatNIStream {
+public class ChatNIStreamReceiver {
 
 }

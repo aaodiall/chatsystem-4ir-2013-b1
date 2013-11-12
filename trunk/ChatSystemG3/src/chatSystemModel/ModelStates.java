@@ -9,14 +9,14 @@ import java.util.Observable;
  * @author alpha
  *
  */
-public class ModelStateConnected extends Observable {
+public class ModelStates extends Observable {
 	private boolean stateConnected;
 
 	
 	/**
 	 * @param stateConnected
 	 */
-	public ModelStateConnected() {
+	public ModelStates() {
 		this.stateConnected = false;
 	}
 

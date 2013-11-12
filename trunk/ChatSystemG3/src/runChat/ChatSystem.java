@@ -9,14 +9,13 @@ import chatSystemController.Controller;
 import chatSystemIHMs.*;
 
 public class ChatSystem {
-
 	
 	private static Controller chatController;
-	private static ChatGui chatGui;
+	private static ChatGUI chatGUI;
 	private static ChatNI chatNI;
 	private static ModelListUsers modelListUsers;
 	private static ModelUsername modelUsername;
-	private static ModelStateConnected modelStateConnected ;
+	private static ModelStates modelStates;
 	private static ModelText modelText;
 	private static ModelGroupRecipient modelGroupRecipient;
 	
@@ -24,8 +23,8 @@ public class ChatSystem {
 		return chatController;
 	}
 	
-	public static ChatGui getChatGui(){
-		return chatGui;
+	public static ChatGUI getChatGui(){
+		return chatGUI;
 	}
 	
 	public static ChatNI getChatNI(){
@@ -40,6 +39,9 @@ public class ChatSystem {
 		return modelUsername;
 	}
 	
+	public static ModelStates getModelStates(){
+		return modelStates;
+	}
 	
 	public static ModelText getModelText(){
 		return modelText;
@@ -54,20 +56,19 @@ public class ChatSystem {
 	 */
 	public static void main(String[] args) {
 		ArrayList <String> remote = new ArrayList<String>();
-			
-		
-		
+		int portUDP=16001;
+		int bufferSize=10;
 		modelListUsers = new ModelListUsers();
 		modelUsername = new ModelUsername();
-		modelStateConnected = new ModelStateConnected();
+		modelStates = new ModelStates();
 		modelGroupRecipient = new ModelGroupRecipient();
 		modelText = new ModelText();
-		chatController = new Controller(modelListUsers,modelStateConnected , modelText, modelUsername, modelGroupRecipient);
-		chatGui=new ChatGui(chatController);
-		chatNI = new ChatNI(16001,chatController);
+		chatController = new Controller(modelListUsers,modelStates , modelText, modelUsername, modelGroupRecipient);
+		chatGUI=new ChatGUI(chatController);
+		chatNI = new ChatNI(portUDP,chatController,bufferSize);
 		modelUsername.addObserver(chatNI);
-		modelListUsers.addObserver(chatGui);
-		modelStateConnected.addObserver(chatNI);
+		modelListUsers.addObserver(chatGUI);
+		modelStates.addObserver(chatNI);
 		modelGroupRecipient.addObserver(chatNI);
 		System.out.println("alpha");
 		//chatGui.getwConnect();
