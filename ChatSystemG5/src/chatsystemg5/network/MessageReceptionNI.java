@@ -6,39 +6,37 @@ import java.net.DatagramSocket;
 import java.net.InetAddress;
 import java.net.SocketException;
 
+    
+    
+    
 public class MessageReceptionNI extends MessageHandlerNI implements FromRemoteApp {
     
     private int UDP_port;
-    private InetAddress IP_dest;
     private DatagramSocket UDP_sock;
+    private InetAddress IP_dest;
     private DatagramPacket message;
     private byte[] buffer; 
     private String text;
-    
    
-    public MessageReceptionNI() {
-        try {
-            this.UDP_port  = 16000;
-            // Créer un datagramme socket
-            this.UDP_sock = new DatagramSocket(this.UDP_port);
-        }
-        catch (SocketException exc) {
-            System.out.println("Problem about the UDP socket creation");
-        }
-        
+    public MessageReceptionNI() {     
     }
-    
-    
-    
+
     @Override
     public void run() {
         
         try {
+            
+            // the recepter always listen on the same port 16000
+            this.UDP_port = 16000;
+            this.UDP_sock = new DatagramSocket(this.UDP_port);
+
              // always listenning
             while(true){
-                buffer = new byte[256];
-                message = new DatagramPacket(buffer, buffer.length);
-                UDP_sock.receive(message);
+                
+                this.buffer = new byte[256];
+                this.message = new DatagramPacket(buffer, buffer.length);
+                this.UDP_sock.receive(message);
+                
                 InetAddress IP_dest = message.getAddress();
                 text = new String(buffer) ;
 		text = text.substring(0, message.getLength());
@@ -48,7 +46,7 @@ public class MessageReceptionNI extends MessageHandlerNI implements FromRemoteAp
             }
         }
         catch (IOException exc) {
-            System.out.println("Connection error");
+            System.out.println("Connection error\n" + exc);
         }
     }
 
