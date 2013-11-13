@@ -62,11 +62,13 @@ public class ChatSystem {
 		modelGroupRecipient = new ModelGroupRecipient();
 		modelText = new ModelText();
 		chatController = new Controller(modelListUsers,modelStates , modelText, modelUsername, modelGroupRecipient);
-		chatGUI=new ChatGUI(chatController);
 		chatNI = new ChatNI(portUDP,chatController,bufferSize);
+		chatGUI=new ChatGUI(chatController);
 		modelUsername.addObserver(chatNI);
+		modelUsername.addObserver(chatGUI);
 		modelListUsers.addObserver(chatGUI);
 		modelStates.addObserver(chatNI);
+		modelStates.addObserver(chatGUI);
 		modelGroupRecipient.addObserver(chatNI);
 		System.out.println("alpha");
 		//chatGui.getwConnect();

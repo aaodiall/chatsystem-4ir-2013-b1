@@ -65,32 +65,33 @@ public class ChatNIMessage {
 			// Enable Broadcast
 			this.socketUDP.setBroadcast(true);
 			// make pdu
-			pdu = new DatagramPacket(helloStream,helloStream.length,this.socketUDP.getLocalPort());
+			pdu = new DatagramPacket(helloStream,helloStream.length,InetAddress.getLocalHost(),this.socketUDP.getLocalPort());
 			// add pdu to bufferMessagesToSend
 			this.bufferMsg2Send.add(pdu);
 			// send pdu
 			this.run();
 			this.socketUDP.setBroadcast(false);			
-		}catch (IOException e){
+		}catch (Exception e){
 			System.out.println("connection failed");
+			e.printStackTrace();
 		}
 
 	}
 
-	public void sendBye(){
-/*		byte [] byeStream;
+	public void sendBye(String username){
+	byte [] byeStream;
 		DatagramPacket pdu;
 		// new Goodbye object
 		Goodbye bye = new Goodbye(username);
 		try{
 			byeStream =((Message)bye).toArray();
 			this.socketUDP.setBroadcast(true);
-			pdu=new DatagramPacket(byeStream,byeStream.length,InetAddress.getLocalHost(),portUDP);//InetAddress.getByAddress(localNetwork),portUDP);
-			this.bufferMessagesToSend.add(pdu);
+			pdu=new DatagramPacket(byeStream,byeStream.length,InetAddress.getLocalHost(),this.socketUDP.getLocalPort());//portUDP);//InetAddress.getByAddress(localNetwork),portUDP);
+			this.bufferMsg2Send.add(pdu);
 			this.run();
 		}catch (IOException e){
 			e.printStackTrace();
-		}*/
+		}
 	}
 	
 	public void sendText(ArrayList<String> usernameList, String text2Send){

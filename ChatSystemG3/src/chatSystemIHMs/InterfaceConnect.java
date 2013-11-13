@@ -3,14 +3,11 @@
  */
 package chatSystemIHMs;
 
-import java.awt.EventQueue;
-
 import javax.swing.JFrame;
 import javax.swing.GroupLayout;
 import javax.swing.GroupLayout.Alignment;
 import javax.swing.JLabel;
 import javax.swing.JTextField;
-import javax.swing.LayoutStyle.ComponentPlacement;
 import javax.swing.JButton;
 
 import chatSystemController.Controller;
@@ -25,6 +22,10 @@ import java.awt.event.ActionListener;
  *
  */
 public class InterfaceConnect extends JFrame implements ActionListener{
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 	private Controller controller;
 	private JTextField tfdUsername;
 	private JButton btnConnect;
@@ -105,21 +106,21 @@ public class InterfaceConnect extends JFrame implements ActionListener{
 	public void actionPerformed(ActionEvent e) {
 		// TODO Auto-generated method stub
 		new Thread(new Runnable() {
-		      public void run() {
+		     public void run() {
 		    	 
 		  		//connect();
 		    	  
 		    	
-		  		controller.performConnect(tfdUsername.getText());
+		  	  controller.performConnect(tfdUsername.getText());
 		  		
-		    }
+		   }
 		  }).start();
 		
 	}
 	
 
-	public JTextField getTfdUsername() {
-		return tfdUsername;
+	public String getTfdUsername() {
+		return tfdUsername.getText();
 	}
 
 	public void setTfdUsername(String username) {

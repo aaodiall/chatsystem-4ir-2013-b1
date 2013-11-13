@@ -73,8 +73,6 @@ public class ChatNI extends View implements Runnable, Observer{
 	public ChatNI(int portUDP, Controller controller,int bufferSize){
 		// associe son controlleur
 		this.controller=controller;
-		//crée son chatNIMessage
-		this.chatNIMessage=new ChatNIMessage(this.socketUDP, bufferSize, ChatSystem.getModelListUsers(), this.userIP, this.userIPBroadcast);
 		//crée son chatNIStreamConnexion
 		//this.chatNIStreamConnexion=new ChatNIStreamConnexion();
 		//initialisation du buffer de reception
@@ -83,6 +81,8 @@ public class ChatNI extends View implements Runnable, Observer{
 		this.portUDP = portUDP;
 		// recuperation de l'IPUser et de l'IPBroadcast
 		this.setlocalIPandBroadcast();
+		System.out.println("local IP : " + this.userIP.toString());
+		System.out.println("local Broadcast : " + this.userIPBroadcast.toString());
 		try {
 			// construction du socket UDP
 			this.socketUDP = new DatagramSocket(this.portUDP,this.userIP);
@@ -95,6 +95,8 @@ public class ChatNI extends View implements Runnable, Observer{
 			sockExc.printStackTrace();
 			this.socketUDP.close();
 		}
+		//crée son chatNIMessage
+		this.chatNIMessage=new ChatNIMessage(this.socketUDP, bufferSize, ChatSystem.getModelListUsers(), this.userIP, this.userIPBroadcast);
 	}
 	
 	public void setlocalIPandBroadcast(){
@@ -114,8 +116,8 @@ public class ChatNI extends View implements Runnable, Observer{
 						if (((InterfaceAddress)intAddr).getBroadcast() != null){
 							this.userIP = ((InterfaceAddress)intAddr).getAddress();
 							this.userIPBroadcast = ((InterfaceAddress)intAddr).getBroadcast();
-							System.out.println("local IP : " + this.userIP.toString());
-							System.out.println("local Broadcast : " + this.userIPBroadcast.toString());									
+							//System.out.println("local IP : " + this.userIP.toString());
+							//System.out.println("local Broadcast : " + this.userIPBroadcast.toString());									
 						}
 					}
 				}
@@ -131,7 +133,7 @@ public class ChatNI extends View implements Runnable, Observer{
 	
 	
 	public void disconnect(String username){
-		this.chatNIMessage.sendBye();
+		this.chatNIMessage.sendBye(username);
 	}
 	
 	

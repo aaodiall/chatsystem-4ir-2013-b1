@@ -6,10 +6,9 @@ package chatSystemIHMs;
 import java.util.Observable;
 import java.util.Observer;
 
-import runChat.ChatSystem;
-
 import chatSystemController.Controller;
-import chatSystemModel.ModelListUsers;
+import chatSystemModel.ModelStates;
+import chatSystemModel.ModelUsername;
 
 /**
  * @author alpha
@@ -35,7 +34,7 @@ public class ChatGUI extends View implements Observer{
 	 */
 	public ChatGUI(Controller controller) {
 		this.wConnect = new InterfaceConnect(controller);;
-		this.wCommunicate = new InterfaceCommunicate(controller,ChatSystem.getModelUsername());
+		this.wCommunicate = new InterfaceCommunicate(controller,wConnect.getTfdUsername());
 	
 	}
 	
@@ -46,8 +45,15 @@ public class ChatGUI extends View implements Observer{
 	public void update(Observable arg0, Object arg1) {
 		// TODO Auto-generated method stub
 		
-		if(arg0.getClass()==ModelListUsers.class){
-			System.out.println("");
+		if(arg0.getClass()==ModelUsername.class){
+			wCommunicate.setVisible(true);
+			wConnect.setVisible(false);
+		}else if (arg0.getClass()==ModelStates.class){
+			if(arg1.equals(false)){
+				wCommunicate.setVisible(false);
+				wConnect.setVisible(true);
+			}
+			
 		}
 		//ainsi de suite
 	}

@@ -20,5 +20,7 @@ public class ModelUsername extends Observable{
 	
 	public void setUsername(String username) {
 		this.username = username;
+		setChanged();
+		notifyObservers(username);
 	}
 }
