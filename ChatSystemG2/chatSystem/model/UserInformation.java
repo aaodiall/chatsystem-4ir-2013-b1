@@ -86,7 +86,7 @@ public class UserInformation extends Model{
                return true;
            if (obj instanceof UserInformation) {
                UserInformation aux = (UserInformation) obj;
-               return (aux.getUsername() == this.username) && (aux.getIP() == this.ip)
+               return (aux.getUsername().equals(this.username)) && (aux.getIP().equals(this.ip))
                        && (aux.getState() == this.state);
            }
            return false;
