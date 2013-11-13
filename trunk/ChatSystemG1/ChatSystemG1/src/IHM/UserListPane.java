@@ -1,5 +1,7 @@
 package IHM;
 
+import java.awt.Color;
+
 import javax.swing.JPanel;
 
 public class UserListPane extends JPanel{
@@ -11,6 +13,8 @@ public class UserListPane extends JPanel{
 
 	public UserListPane() {
 		// TODO Auto-generated constructor stub
+		this.setVisible(true);
+		this.setBackground(Color.black);
 	}
 
 }

@@ -14,11 +14,13 @@ public class Menu extends JMenuBar{
 	public Menu() {
 		// TODO Auto-generated constructor stub
 		
-		this.MGO = new MenuGeneralOperation();
-		this.MOO = new MenuOtherOperation();
+		
 		this.Init();
 	}
 	public void Init(){
+		
+		this.MGO = new MenuGeneralOperation();
+		this.MOO = new MenuOtherOperation();
 		this.add(MGO);
 		this.add(MOO);
 		this.setVisible(true);

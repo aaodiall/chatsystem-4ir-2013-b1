@@ -51,10 +51,7 @@ public class FrontController extends Observer implements Runnable,ActionListener
 			this.mFrame.setVisible(false);
 		}
 		if(e.getSource() == mFrame.getMenu().getMGO().getMenuItemConnect()){
-			if(ChatController.isConnected()){
-				JOptionPane.showMessageDialog(null,
-					    "Vous êtes déjà Connecté","Attention!",JOptionPane.WARNING_MESSAGE);
-			}else{	
+			if(!ChatController.isConnected()){	
 				String s = (String)JOptionPane.showInputDialog(
 						   null,
 						   "Veuillez indiquez votre pseudo",
@@ -70,6 +67,8 @@ public class FrontController extends Observer implements Runnable,ActionListener
 							e1.printStackTrace();
 						}
 						ChatController.PerformConnect();
+						mFrame.getMenu().getMGO().getMenuItemConnect().setEnabled(false);
+						mFrame.getMenu().getMGO().getMenuItemDisconnect().setEnabled(true);
 						}else{
 							JOptionPane.showMessageDialog(null,
 								    "Vous n'avez pas entré de pseudo","Attention!",JOptionPane.WARNING_MESSAGE);
@@ -79,12 +78,11 @@ public class FrontController extends Observer implements Runnable,ActionListener
 			}
 		}
 		if(e.getSource() == mFrame.getMenu().getMGO().getMenuItemDisconnect()){
-			if(!ChatController.isConnected()){
-				JOptionPane.showMessageDialog(null,
-					    "Vous êtes déjà Déconnecté","Attention!",JOptionPane.WARNING_MESSAGE);
-			}else{
+			if(ChatController.isConnected()){
+				
 							ChatController.PerformDisconnect();
-							
+							mFrame.getMenu().getMGO().getMenuItemConnect().setEnabled(true);
+							mFrame.getMenu().getMGO().getMenuItemDisconnect().setEnabled(false);
 
 			}
 			
