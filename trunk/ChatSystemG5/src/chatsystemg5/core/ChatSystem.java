@@ -8,11 +8,11 @@ public class ChatSystem {
         
             // test for an hello emission on localhost
             /*Thread receive = new Thread(new MessageReceptionNI());
-            receive.setName("nom1");
+            receive.setName("receive");
             receive.start();
             
             Thread send = new Thread(new MessageEmissionNI());
-            send.setName("nom2");
+            send.setName("send");
             send.start();*/
             
             MessageEmissionNI msg_rcv = new MessageEmissionNI("boobs");
