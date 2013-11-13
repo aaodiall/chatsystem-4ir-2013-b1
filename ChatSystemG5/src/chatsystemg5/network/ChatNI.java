@@ -1,12 +1,16 @@
 package chatsystemg5.network;
 
-public abstract class ChatNI {
+import chatsystemg5.common.*;
+
+public /*abstract*/ class ChatNI {
 
     public ChatNI() {
     }
 	
-	public void transfer_connection () {}
-        
-        public void transfer_disconnection () {}
+	/*public abstract void transfer_connection (Hello hi) ;
+        public abstract void transfer_disconnection (Goodbye bye) ;
+        public abstract void transfer_send (Message msg) ;
+        public abstract void transfer_file (File fl) ;
+        public abstract void transfer_request (Message msg) ;*/ 
 
 }
