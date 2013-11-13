@@ -29,7 +29,7 @@ public class RemoteSystems extends Model{
      */
     public synchronized void addRemoteSystem(String username, String ip) {
         RemoteSystemInformation newRS = new RemoteSystemInformation(username,ip);
-        String key = newRS.getIdRemoteSystem();
+        String key = newRS.getUsername();//newRS.getIdRemoteSystem();
         if (!this.remoteSystemsInformation.containsKey(key)) {
             this.remoteSystemsInformation.put(key, newRS);
             this.setChanged();

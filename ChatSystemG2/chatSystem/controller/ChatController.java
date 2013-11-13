@@ -52,10 +52,10 @@ public class ChatController extends Controller implements GuiToCont, NiToCont{
 
     @Override
     public void performHelloReceived(String username, String ip) {
-        if(!ip.equals(this.localUser.getIP())){
+        //if(!ip.equals(this.localUser.getIP())){
             System.out.println("Hello received je modif le model");
             this.remoteSystems.addRemoteSystem(username, ip);
-        }
+        //}
     }
 
     @Override

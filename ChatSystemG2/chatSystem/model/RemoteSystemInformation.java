@@ -90,8 +90,8 @@ public class RemoteSystemInformation extends UserInformation {
          * Obtained by joining the ip address and the contact's username
          * @return remote system's id
          */
-	public String getIdRemoteSystem() {
+	/*public String getIdRemoteSystem() {
 		return this.getUsername()+this.getIP();
-	}
+	}*/
 
 }
