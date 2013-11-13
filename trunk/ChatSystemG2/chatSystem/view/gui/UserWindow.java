@@ -5,12 +5,14 @@ import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
 import java.util.Collections;
 import java.util.List;
 
 import javax.swing.*;
 
-public class UserWindow extends JFrame implements ActionListener{
+public class UserWindow extends JFrame implements ActionListener, MouseListener{
 
     /**
      * numéro de version
@@ -83,7 +85,9 @@ public class UserWindow extends JFrame implements ActionListener{
         panel.add(listScroller, c);
 
         this.add(panel, BorderLayout.PAGE_START);
+        this.setDefaultCloseOperation(DO_NOTHING_ON_CLOSE);
         this.deconnectButton.addActionListener(this);
+        this.contactsList.addMouseListener(this);
 
     }
 
@@ -95,7 +99,11 @@ public class UserWindow extends JFrame implements ActionListener{
         }
 
     }
-
+    
+    public void setUsername(String username){
+        this.username.setText(username);
+    }
+    
     @Override
     public void actionPerformed(ActionEvent ae) {
         System.out.println("Entering actionPerformed");
@@ -104,28 +112,33 @@ public class UserWindow extends JFrame implements ActionListener{
         }
     }
     
-    public void setUsername(String username){
-        this.username.setText(username);
+    @Override
+    public void mouseClicked(MouseEvent me) {
+        if(me.getClickCount() == 2){
+            //localisation index du clic
+            int index = this.contactsList.locationToIndex(me.getPoint());
+            //demande d'ouverture de la dialog Window correspondante
+            this.chatGUI.displayDialogWindow(this.contactsList.getModel().getElementAt(index));
+        }
     }
 
-    /*public static void main(String[] args) {
-     List<String> list = new ArrayList<String>();
-     list.add("anthony");
-     list.add("anthony");
-     list.add("alpha");
-     list.add("jules");
-     list.add("yann");
-     list.add("joanna");
-     list.add("guillaume");
-     list.add("pierre");
-     list.add("joffrey");
-     list.add("aymeric");
-     list.add("thomas");
-     UserWindow f = new UserWindow("marjorie");
-     f.setVisible(true);
-     list.add("marie");
-     f.updateContacts(list);
-     list.remove("guillaume");
-     f.updateContacts(list);
-     }*/
+    @Override
+    public void mousePressed(MouseEvent me) {
+       // throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public void mouseReleased(MouseEvent me) {
+        //throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public void mouseEntered(MouseEvent me) {
+        //throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public void mouseExited(MouseEvent me) {
+        //throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
 }

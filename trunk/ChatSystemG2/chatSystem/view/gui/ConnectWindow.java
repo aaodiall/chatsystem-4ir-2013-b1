@@ -83,6 +83,7 @@ public final class ConnectWindow extends JFrame implements ActionListener {
         panel.add(connectButton, c);
 
         this.add(panel, BorderLayout.PAGE_START);
+        this.setDefaultCloseOperation(EXIT_ON_CLOSE);
         this.setVisible(true);
         
         this.connectButton.addActionListener(this);
