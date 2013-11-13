@@ -20,12 +20,12 @@ public class DialogWindow extends JFrame {
 	 */
 	private static final long serialVersionUID = 1L;
 	
-	private String contact;
-	private JTextArea message;
-	private JTextArea conversation;
-	private JButton send;
-	private JButton joinFile;
-	private JProgressBar progression;
+	private final String contact;
+	private final JTextArea message;
+	private final JTextArea conversation;
+	private final JButton send;
+	private final JButton joinFile;
+	private final JProgressBar progression;
 	
 	public DialogWindow (String contact) {
 		this.contact = contact;
@@ -34,10 +34,10 @@ public class DialogWindow extends JFrame {
 		this.send = new JButton("Send");
 		this.joinFile = new JButton("Join File");
 		this.progression = new JProgressBar();
-		InitWindow();
+		initWindow();
 	}
 	
-	private void InitWindow() {
+	private void initWindow() {
 		this.setTitle("Dialogue Window" + this.contact);
 		this.setSize(300, 400);
 		JPanel panel = new JPanel();
@@ -110,7 +110,7 @@ public class DialogWindow extends JFrame {
 		panel.add(this.joinFile, c);
 		
 		this.add(panel, BorderLayout.PAGE_START);
-		this.setDefaultCloseOperation(EXIT_ON_CLOSE);
-		this.setVisible(true);
+		this.setDefaultCloseOperation(DISPOSE_ON_CLOSE);
+		//this.setVisible(true);
 	}
 }
