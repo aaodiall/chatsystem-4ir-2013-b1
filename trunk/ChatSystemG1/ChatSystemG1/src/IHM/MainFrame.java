@@ -57,46 +57,52 @@ public class MainFrame extends JFrame{
         GridBagConstraints c1 = new GridBagConstraints();
         GridBagConstraints c2 = new GridBagConstraints();
         GridBagConstraints c3 = new GridBagConstraints();
-        c1.weighty = 0.75; 
-        c1.weightx = 0.75;
+        c1.weighty = 0.8; 
+        c1.weightx = 1;
         c1.anchor = GridBagConstraints.NORTHWEST;
         c1.gridx = 1;
         c1.gridy = 1;
-        c1.insets = new Insets(12,12,12,0);
+        c1.insets = new Insets(12,12,12,12);
+
         c1.fill = GridBagConstraints.BOTH;
-        
-        
         add(UCpane,c1);
-        c1.weighty = 0.01; 
-        c1.weightx = 0.01;
-        c1.anchor = GridBagConstraints.NORTHWEST;
-        c1.gridx = 2;
+        
+        c1.weighty = 1; 
+        c1.weightx = 1;
+        c1.anchor = GridBagConstraints.NORTHEAST;
+        c1.gridx = 1;
         c1.gridy = 1;
-        c1.insets = new Insets(12,0,12,12);
         c1.fill = GridBagConstraints.NONE;
+        c1.insets = new Insets(12,-12,0,0);
 
         add(new TabButton(UCpane),c1);
         
-        c2.weighty = 0.75; 
-        c2.weightx = 0.25;
-        c2.gridx = 3;
+        c2.weighty = 0; 
+        c2.weightx = 0;
+        c2.gridx = 2;
         c2.gridy = 1;
-        c2.insets = new Insets(12,0,12,12);
+        c2.gridheight = 2;
+        c2.insets = new Insets(12,12,12,12);
         c2.fill = GridBagConstraints.BOTH;
         add(ULpane,c2);
-        c3.weighty = 0.25; 
-        c3.weightx = 1;
+        
+        c3.weighty = 0; 
+        c3.weightx = 0;
         c3.gridx = 1;
         c3.gridy = 2;
-        c3.gridwidth = 3;
-        c3.insets = new Insets(0,12,12,12);
+        c3.gridwidth = 1;
+        c3.insets = new Insets(0,12,12,0);
         c3.fill = GridBagConstraints.BOTH;
         add(MSpane,c3);
         
         setVisible(true);
 	}
 	private class TabButton extends JButton implements ActionListener {
-    	private UserChatPane UCP;
+    	/**
+		 * 
+		 */
+		private static final long serialVersionUID = 1448978011543718242L;
+		private UserChatPane UCP;
         public TabButton(UserChatPane UC) {
         	this.UCP =UC;
             int size = 17;
