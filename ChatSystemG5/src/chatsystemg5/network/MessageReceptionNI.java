@@ -39,14 +39,16 @@ public class MessageReceptionNI extends MessageHandlerNI implements FromRemoteAp
                 buffer = new byte[256];
                 message = new DatagramPacket(buffer, buffer.length);
                 UDP_sock.receive(message);
+                InetAddress IP_dest = message.getAddress();
                 text = new String(buffer) ;
 		text = text.substring(0, message.getLength());
-		System.out.println("Reception du port " + this.message.getPort() + " de la machine " + this.message.getAddress() + " : " + text);
+                // Ca sera inutile ensuite pour le connect
+                System.out.println("Reception from port " + this.message.getPort() + " of machine " + this.message.getAddress() + " : " + text);
 
             }
         }
         catch (IOException exc) {
-            System.out.println("Problème de connection");
+            System.out.println("Connection error");
         }
     }
 
