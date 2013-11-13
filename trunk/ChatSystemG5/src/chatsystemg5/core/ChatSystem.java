@@ -7,15 +7,18 @@ public class ChatSystem {
 	public static void main (String[] args) {
         
             // test for an hello emission on localhost
-            Thread receive = new Thread(new MessageReceptionNI());
+            /*Thread receive = new Thread(new MessageReceptionNI());
             receive.setName("nom1");
             receive.start();
             
             Thread send = new Thread(new MessageEmissionNI());
             send.setName("nom2");
-            send.start();
+            send.start();*/
             
-
+            MessageEmissionNI msg_rcv = new MessageEmissionNI("boobs");
+            while(true) {
+            msg_rcv.run();
+            }
         
         }
 
