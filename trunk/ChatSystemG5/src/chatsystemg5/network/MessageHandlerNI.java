@@ -1,5 +1,5 @@
 package chatsystemg5.network;
 
-public class MessageHandlerNI extends ChatNI {
+public abstract class MessageHandlerNI extends ChatNI implements Runnable{
     
 }
