@@ -98,7 +98,12 @@ public class ChatGUI extends View {
         System.out.println("Entering update Chat GUI");
         if (o instanceof UserInformation) {
             if (arg instanceof String) {
-                this.uWindow = new UserWindow((String) arg, this);
+                if(uWindow == null){//premiere connection
+                //on créée la UserWindow avc le pseudo choisi
+                    this.uWindow = new UserWindow((String) arg, this);
+                }else{
+                    this.uWindow.setUsername((String) arg);
+                }
             } else if (arg instanceof UserState) {
                 if ((UserState) arg == UserState.CONNECTED) {
                     cWindow.setVisible(false);
@@ -106,7 +111,7 @@ public class ChatGUI extends View {
                 } else {
                     cWindow.setVisible(true);
                     uWindow.setVisible(false);
-                    uWindow = null;
+                    //uWindow = null;
                 }
             }
         } else if (o instanceof RemoteSystems) {

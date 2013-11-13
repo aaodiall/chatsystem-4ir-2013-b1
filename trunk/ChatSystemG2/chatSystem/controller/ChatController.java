@@ -10,7 +10,7 @@ import java.net.UnknownHostException;
 
 public class ChatController extends Controller implements GuiToCont, NiToCont{
     
-    private UserInformation localUser;      ///mettre dans une HasMap créée dans la classe mère
+    private UserInformation localUser; //mettre dans une HasMap créée dans la classe mère
     private RemoteSystems remoteSystems;
     
     private final ChatGUI chatGUI;
@@ -40,7 +40,7 @@ public class ChatController extends Controller implements GuiToCont, NiToCont{
     @Override
     public void performConnect(String username) {
         System.out.println("Entering performConnect");
-        this.localUser.setUsername(username);
+        this.localUser.setUsername(username+"@"+this.localUser.getIP());
         this.localUser.setState(UserState.CONNECTED);
     }
 

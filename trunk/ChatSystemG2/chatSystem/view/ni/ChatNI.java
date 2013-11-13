@@ -11,7 +11,7 @@ import chatSystemCommon.*;
 public class ChatNI extends View implements Runnable {
 
     private Thread threadReceiver;
-    private final MessageReceiver messageReceiver;
+    private MessageReceiver messageReceiver;
     private final MessageTransfert messageTransfert;
     private final FileReceiver[] fileReceiver;
     private final FileTransfert[] fileTransfert;
@@ -69,20 +69,24 @@ public class ChatNI extends View implements Runnable {
                     this.usrInfo = (UserInformation)o;
                     //on est connecté, on commence l'écoute
                     if(!(this.threadReceiver.getState() == Thread.State.RUNNABLE)){
+                        System.out.println("Demarrage de la reception");
                         //a changer completement il faudrait pouvoir couper le thread et le lancer comme on veut
                         this.threadReceiver.start();
                     }
+                    //this.messageReceiver = new MessageReceiver(this);
+                    //this.threadReceiver = new Thread(this.messageReceiver);
+                    //this.threadReceiver.start();
                     //et on le guele car on est content :)
                     this.messageTransfert.sendHello(((UserInformation) o).getUsername());
                 }
                 else{
                     //this.threadReceiver.stop(); //il ne faut pas le stopper donc on lui mettra null mais faut changer la gestion de messageReceiver
                     this.messageTransfert.sendGoodbye(((UserInformation) o).getUsername());
+                    //this.threadReceiver = null;
                 }
             }
         }
         else if(o instanceof RemoteSystems){
-            System.out.println("-----------------------------------------------"+arg);
             if(arg instanceof String){
                 this.messageTransfert.sendHello(this.usrInfo.getUsername(),(String)arg);
             }

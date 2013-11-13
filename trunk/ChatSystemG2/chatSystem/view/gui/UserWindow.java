@@ -103,6 +103,10 @@ public class UserWindow extends JFrame implements ActionListener{
             chatGUI.deconnectButtonPressed();
         }
     }
+    
+    public void setUsername(String username){
+        this.username.setText(username);
+    }
 
     /*public static void main(String[] args) {
      List<String> list = new ArrayList<String>();
