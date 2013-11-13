@@ -1,6 +1,6 @@
 package chatsystemg5.network;
 
-public class ChatNI {
+public abstract class ChatNI {
 
     public ChatNI() {
     }
