@@ -1,7 +1,5 @@
 package IHM;
 
-import java.awt.Dimension;
-
 import javax.swing.JList;
 import javax.swing.JScrollPane;
 
@@ -23,6 +21,7 @@ public class UserList_ListPane extends JScrollPane {
 
 	public UserList_ListPane() {
 		// TODO Auto-generated constructor stub
+		
 		this.UserList = new JList();
 		
 		this.setViewportView(UserList);

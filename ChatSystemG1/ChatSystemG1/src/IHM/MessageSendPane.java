@@ -1,12 +1,9 @@
 package IHM;
 
-import java.awt.Color;
-import java.awt.Dimension;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Insets;
 
-import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 
@@ -21,6 +18,13 @@ public class MessageSendPane extends JPanel{
 	 * 
 	 */
 	private static final long serialVersionUID = -1846108878367695819L;
+
+	/**
+	 * @return the mTpane
+	 */
+	public MessageTextPane getMTpane() {
+		return MTpane;
+	}
 
 	public MessageSendPane() {
 		

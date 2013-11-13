@@ -1,6 +1,5 @@
 package IHM;
 
-import java.awt.Color;
 import java.awt.Dimension;
 
 import javax.swing.JScrollPane;
