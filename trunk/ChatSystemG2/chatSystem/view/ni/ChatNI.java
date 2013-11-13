@@ -32,11 +32,13 @@ public class ChatNI extends View implements Runnable {
     }
 
     public void textMessageReceived(String msg, String username, String ip) {
-        ((ChatController) (this.controller)).performMessageReceived(msg, username+ip);
+        //((ChatController) (this.controller)).performMessageReceived(msg, username+ip);
+        ((ChatController) (this.controller)).performMessageReceived(msg, username);
     }
 
     public void goodbyeReceived(String username, String ip) {
-        ((ChatController) (this.controller)).performGoodbyeReceived(username+ip);
+        //((ChatController) (this.controller)).performGoodbyeReceived(username+ip);
+        ((ChatController) (this.controller)).performGoodbyeReceived(username);
     }
 
     public void fileTransfertDemandReceived(FileTransfertDemand msg, String ip) {
