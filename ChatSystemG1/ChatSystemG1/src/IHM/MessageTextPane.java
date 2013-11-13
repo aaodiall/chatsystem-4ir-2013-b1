@@ -1,5 +1,7 @@
 package IHM;
 
+import java.awt.Color;
+
 import javax.swing.JScrollPane;
 
 public class MessageTextPane extends JScrollPane {
@@ -11,6 +13,8 @@ public class MessageTextPane extends JScrollPane {
 
 	public MessageTextPane() {
 		// TODO Auto-generated constructor stub
+		
+
 	}
 
 }

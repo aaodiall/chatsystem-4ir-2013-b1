@@ -27,6 +27,7 @@ public class MenuGeneralOperation extends JMenu {
 	public void Init(){
 		this.add(MenuItemConnect);
 		this.add(MenuItemDisconnect);
+		MenuItemDisconnect.setEnabled(false);
 		this.add(MenuSeparator);
 		this.add(MenuItemClose);
 		this.setVisible(true);

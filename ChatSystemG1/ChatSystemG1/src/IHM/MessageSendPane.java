@@ -1,5 +1,7 @@
 package IHM;
 
+import java.awt.Color;
+
 import javax.swing.JPanel;
 
 public class MessageSendPane extends JPanel{
@@ -11,6 +13,8 @@ public class MessageSendPane extends JPanel{
 
 	public MessageSendPane() {
 		// TODO Auto-generated constructor stub
+		this.setVisible(true);
+		this.setBackground(Color.blue);
 	}
 
 }
