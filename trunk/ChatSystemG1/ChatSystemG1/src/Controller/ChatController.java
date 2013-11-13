@@ -103,7 +103,7 @@ public class ChatController {
 		
 	}
 	
-	public void PerformSendMessage(String text,String[] RemoteUserName){
+	public static void PerformSendMessage(String text,String[] RemoteUserName){
 		Text message = new Text(getLocalUsername(),text);
 		System.out.println("on envoie un message");
 		ChatNi.SendMessage(message, RemoteUserName);

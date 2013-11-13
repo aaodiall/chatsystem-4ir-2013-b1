@@ -1,11 +1,13 @@
 package IHM;
 
+import java.util.ArrayList;
+
 import javax.swing.JTabbedPane;
 
 public class UserChatPane extends JTabbedPane {
 	
 
-	
+	private ArrayList<UserChatTextPane> TextAreas;
 	/**
 	 * 
 	 */
@@ -18,12 +20,15 @@ public class UserChatPane extends JTabbedPane {
 
 		}
 	public void AddTab(String RemoteUsername){
-		this.addTab(RemoteUsername, new UserChatTextPane());
+		UserChatTextPane uctp = new UserChatTextPane();
+		TextAreas.add(uctp);
+		this.addTab(RemoteUsername, uctp);
 	    
 	}
 	public void closeTab(int selectedTab){
 		if(selectedTab != -1){
-		this.removeTabAt(selectedTab);
+			this.TextAreas.remove(this.getComponentAt(selectedTab));
+			this.removeTabAt(selectedTab);
 		}
 	}
 	/**
@@ -32,8 +37,11 @@ public class UserChatPane extends JTabbedPane {
 	public int getSelectedTab() {
 		return this.getSelectedIndex();
 	}
+	public ArrayList<UserChatTextPane> getTextAreas(){
+		return this.TextAreas;
+	}
 	public void Init(){
-		
+		this.TextAreas = new ArrayList<UserChatTextPane>();
 		this.AddTab("bonjour");
 		
 		this.setTabLayoutPolicy(1);

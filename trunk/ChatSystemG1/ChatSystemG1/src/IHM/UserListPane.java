@@ -1,6 +1,5 @@
 package IHM;
 
-import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
@@ -27,8 +26,10 @@ public class UserListPane extends JPanel{
 		this.ULLpane = new UserList_ListPane();
 		 MSSend = new JButton("Envoyer");
 	        MSSend.setPreferredSize(new Dimension(100,60));
+	        MSSend.setEnabled(false);
 	        ULChooseUser = new JButton("Choisir User");
 	        ULChooseUser.setPreferredSize(new Dimension(100,60));
+	        ULChooseUser.setEnabled(false);
 		 this.setLayout(new GridBagLayout());
 	        
 	     GridBagConstraints c1 = new GridBagConstraints();
@@ -70,6 +71,20 @@ public class UserListPane extends JPanel{
 	 */
 	public UserList_ListPane getULLpane() {
 		return ULLpane;
+	}
+
+	/**
+	 * @return the mSSend
+	 */
+	public JButton getMSSend() {
+		return MSSend;
+	}
+
+	/**
+	 * @return the uLChooseUser
+	 */
+	public JButton getULChooseUser() {
+		return ULChooseUser;
 	}
 
 }

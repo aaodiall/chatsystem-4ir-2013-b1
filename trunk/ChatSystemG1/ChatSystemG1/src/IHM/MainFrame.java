@@ -97,6 +97,26 @@ public class MainFrame extends JFrame{
         
         setVisible(true);
 	}
+	/**
+	 * @return the uCpane
+	 */
+	public UserChatPane getUCpane() {
+		return UCpane;
+	}
+
+	/**
+	 * @return the uLpane
+	 */
+	public UserListPane getULpane() {
+		return ULpane;
+	}
+
+	/**
+	 * @return the mSpane
+	 */
+	public MessageSendPane getMSpane() {
+		return MSpane;
+	}
 	private class TabButton extends JButton implements ActionListener {
     	/**
 		 * 
