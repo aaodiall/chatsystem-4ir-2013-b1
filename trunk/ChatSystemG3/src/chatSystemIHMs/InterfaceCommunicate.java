@@ -3,15 +3,10 @@
  */
 package chatSystemIHMs;
 
-import java.awt.EventQueue;
-
 import javax.swing.JFrame;
 import javax.swing.JButton;
 
 import chatSystemController.Controller;
-import chatSystemModel.ModelUsername;
-
-import java.awt.BorderLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
@@ -20,7 +15,6 @@ import javax.swing.JPanel;
 import javax.swing.JLabel;
 import javax.swing.JList;
 import javax.swing.JTextArea;
-import javax.swing.ListModel;
 import javax.swing.ListSelectionModel;
 
 /**
@@ -29,9 +23,12 @@ import javax.swing.ListSelectionModel;
  */
 public class InterfaceCommunicate extends JFrame implements ActionListener{
 	
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 	private Controller controller;
 	private DefaultListModel users;
-	private ModelUsername modelUsername;
 	private JButton btnJoinFile;
 	private JTextArea tAreaHistoryCom;
 	private JButton btnSendFile;
@@ -49,11 +46,10 @@ public class InterfaceCommunicate extends JFrame implements ActionListener{
 	/**
 	 * Create the application.
 	 */
-	public InterfaceCommunicate(Controller controller,ModelUsername modelUsername) {
+	public InterfaceCommunicate(Controller controller , String username){
 		this.controller=controller;
-		this.modelUsername=modelUsername;
 		setResizable(false);
-		initialize();
+		initialize(username);
 		
 		
 		//this.setVisible(true);
@@ -62,7 +58,7 @@ public class InterfaceCommunicate extends JFrame implements ActionListener{
 	/**
 	 * Initialize the contents of the frame.
 	 */
-	private void initialize() {
+	private void initialize(String username) {
 		
 		this.setBounds(100, 5, 1000, 700);
 		this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -78,7 +74,7 @@ public class InterfaceCommunicate extends JFrame implements ActionListener{
 		panel.add(btnDeconnection);
 		btnDeconnection.addActionListener(this);
 		
-		lblUsername = new JLabel(this.modelUsername.getUsername());
+        lblUsername=new JLabel(username);
 		lblUsername.setBounds(35, 17, 72, 15);
 		panel.add(lblUsername);
 		

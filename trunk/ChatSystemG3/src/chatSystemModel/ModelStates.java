@@ -10,9 +10,8 @@ import java.util.Observable;
  *
  */
 public class ModelStates extends Observable {
-	private boolean stateConnected;
+	private Boolean stateConnected;
 
-	
 	/**
 	 * @param stateConnected
 	 */
@@ -20,14 +19,14 @@ public class ModelStates extends Observable {
 		this.stateConnected = false;
 	}
 
-	public boolean isConnected() {
+	public Boolean isConnected() {
 		return stateConnected;
 	}
 
 	public void setState(boolean stateConnected) {
 		this.stateConnected = stateConnected;
 		setChanged();
-		notifyObservers();
+		notifyObservers(stateConnected);
 
 	}
 

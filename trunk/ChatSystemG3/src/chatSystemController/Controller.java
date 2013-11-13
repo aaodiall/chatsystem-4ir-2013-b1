@@ -73,9 +73,10 @@ public class Controller {
 
 	public void performConnect(String username){
 		modelUsername.setUsername(username);
-		ChatSystem.getChatGui().getwCommunicate().setVisible(true);
+		//ChatSystem.getChatGui().getwCommunicate().setVisible(true);
 		ChatSystem.getChatNI().connect(username, false);
 		ChatSystem.getChatGui().getwConnect().setTfdUsername("");;
+		System.out.println(modelUsername.getUsername() + " : connection succeed");
 	}
 	
 	
@@ -83,8 +84,8 @@ public class Controller {
 		ChatSystem.getChatNI().disconnect(modelUsername.getUsername());
 		modelListUsers.clearListUsers();;
 		modelStates.setState(false);
-		ChatSystem.getChatGui().getwCommunicate().setVisible(false);
-		ChatSystem.getChatGui().getwConnect().setVisible(true);
+		//ChatSystem.getChatGui().getwCommunicate().setVisible(false);
+		//ChatSystem.getChatGui().getwConnect().setVisible(true);
 		
 		System.out.println(modelUsername.getUsername() + " : deconnection succeed");
 	}
