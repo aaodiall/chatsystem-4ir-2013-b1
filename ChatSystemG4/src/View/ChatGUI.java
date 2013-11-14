@@ -6,10 +6,15 @@ import java.awt.Dimension;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.KeyAdapter;
+import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
+import java.net.InetAddress;
+import java.net.UnknownHostException;
 
 import javax.swing.JButton;
 import javax.swing.JFrame;
@@ -61,7 +66,11 @@ public class ChatGUI extends JFrame{
 		}
 		
 		//Rend le username unique en lui accolant le nom de la machine
-		//localUsername += "@"+System.getProperty("user.name");
+		try {
+			localUsername += "@"+InetAddress.getLocalHost().getHostAddress();
+		} catch (UnknownHostException e) {
+			e.printStackTrace();
+		}
 		
 		System.out.println("Username : "+ localUsername);		
 		initComponents();
@@ -106,7 +115,9 @@ public class ChatGUI extends JFrame{
 	private void initActions() {
 		sendButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
-				chatController.sendTextMessage(userList.getSelectedValue(), sendTextArea.getText());
+				User selectedUser = userList.getSelectedValue();
+	        	if(selectedUser != null)
+	        		chatController.sendTextMessage(selectedUser, sendTextArea.getText());
 			}
 		});
 		
@@ -114,6 +125,16 @@ public class ChatGUI extends JFrame{
 			public void mouseClicked(MouseEvent evt) {
 				chatTextPane.setText(chatController.getTalk(userList.locationToIndex(evt.getPoint())));
 			}
+		});
+		
+		sendTextArea.addKeyListener(new KeyAdapter() {
+			public void keyPressed(KeyEvent e) {
+		        if (e.getKeyCode() == KeyEvent.VK_ENTER) {
+		        	User selectedUser = userList.getSelectedValue();
+		        	if(selectedUser != null)
+		        		chatController.sendTextMessage(selectedUser, sendTextArea.getText());
+		        }
+		    }
 		});
 		
 		this.addWindowListener(new WindowAdapter() {

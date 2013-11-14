@@ -87,6 +87,9 @@ public class ChatController {
 	}
 	
 	public String getTalk(int index) {
+		if(index==-1)
+			return "";
+		
 		User u = chatModel.get(index);
 		String talk = "";
 		
