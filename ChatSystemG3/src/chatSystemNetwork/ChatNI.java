@@ -6,12 +6,10 @@ package chatSystemNetwork;
 import java.io.IOException;
 import java.net.DatagramSocket;
 import java.net.DatagramPacket;
-import java.net.Inet4Address;
 import java.net.InetAddress;
 import java.net.InterfaceAddress;
 import java.net.NetworkInterface;
 import java.net.SocketException;
-import java.net.UnknownHostException;
 import java.util.ArrayList;
 import java.util.Enumeration;
 import java.util.Iterator;
@@ -83,25 +81,21 @@ public class ChatNI extends View implements Runnable, Observer{
 		this.portUDP = portUDP;
 		// recuperation de l'IPUser et de l'IPBroadcast
 		this.setlocalIPandBroadcast();
-		//System.out.println("local IP : " + this.userIP.toString());
-		//System.out.println("local Broadcast : " + this.userIPBroadcast.toString());
+		
 		try {
 			// construction du socket UDP
 			this.socketUDP = new DatagramSocket(this.portUDP,this.userIP);
 			// initialisation d'un pdu de reception
 			this.streamReceived = new byte[this.socketUDP.getReceiveBufferSize()];
 			this.pduReceived = new DatagramPacket(this.streamReceived,this.streamReceived.length);
-			//cree son chatNIMessage
-			//this.chatNIMessage=new ChatNIMessage(this.socketUDP, bufferSize, ChatSystem.getModelListUsers(), ChatSystem.getModelUsername(),this.userIP, this.userIPBroadcast);
-			//crée son chatNIMessage
-			this.chatNIMessage=new ChatNIMessage(this.socketUDP, this.socketUDP.getReceiveBufferSize(), ChatSystem.getModelListUsers(), ChatSystem.getModelUsername(),this.userIP, this.userIPBroadcast);
 		}catch(SocketException sockExc){
 			if (this.socketUDP == null)
 				System.out.println("socketUDP : socket exception");
 			sockExc.printStackTrace();
 			this.socketUDP.close();
 		}
-		
+		//crée son chatNIMessage
+		this.chatNIMessage=new ChatNIMessage(this.socketUDP, bufferSize, ChatSystem.getModelListUsers(), this.userIP, this.userIPBroadcast);
 	}
 	
 	public void setlocalIPandBroadcast(){
@@ -114,35 +108,18 @@ public class ChatNI extends View implements Runnable, Observer{
 			localInterfaces = NetworkInterface.getNetworkInterfaces();
 			while (localInterfaces.hasMoreElements() && !trouve){
 				ni = localInterfaces.nextElement();
-				//version pour Tests locaux
-				if (ni.isLoopback()){
-					ipAddrEnum = ni.getInterfaceAddresses().iterator();
-					while (ipAddrEnum.hasNext() && !trouve){
-						intAddr = ipAddrEnum.next();
-						if (((InterfaceAddress)intAddr).getAddress().getClass() == Inet4Address.class){
-							//try{
-								this.userIP = ((InterfaceAddress)intAddr).getAddress();//InetAddress.getLocalHost();
-							//}catch (UnknownHostException e){
-								//System.out.println("no host");
-							//}
-							this.userIPBroadcast = ((InterfaceAddress)intAddr).getAddress();
-							System.out.println("local IP : " + this.userIP.toString());
-							System.out.println("local Broadcast : " + this.userIPBroadcast.toString());									
-						}
-					}
-				} // FIN VERSION pour TESTS LOCAUX
-				/*if (ni.isUp() && !ni.isLoopback()){
+				if (ni.isUp()){
 					ipAddrEnum = ni.getInterfaceAddresses().iterator();
 					while (ipAddrEnum.hasNext() && !trouve){
 						intAddr = ipAddrEnum.next();
 						if (((InterfaceAddress)intAddr).getBroadcast() != null){
 							this.userIP = ((InterfaceAddress)intAddr).getAddress();
 							this.userIPBroadcast = ((InterfaceAddress)intAddr).getBroadcast();
-							//System.out.println("local IP : " + this.userIP.toString());
-							//System.out.println("local Broadcast : " + this.userIPBroadcast.toString());									
+							System.out.println("local IP : " + this.userIP.toString());
+							System.out.println("local Broadcast : " + this.userIPBroadcast.toString());									
 						}
 					}
-				}*/
+				}
 			}
 		}catch (SocketException iPAddresses){
 			System.out.println("error : socket exception ip adresses");
@@ -159,8 +136,8 @@ public class ChatNI extends View implements Runnable, Observer{
 	}
 	
 	
-	public void sendMsgText(ArrayList<String> usernameList, String text2Send,String username){
-		this.chatNIMessage.sendText(usernameList, text2Send,username);
+	public void sendMsgText(ArrayList<String> usernameList, String text2Send, String string){
+		this.chatNIMessage.sendText(usernameList, text2Send);
 	}
 	
 	public void sendMsgFile(String recipient_username, String fileName){
@@ -189,17 +166,17 @@ public class ChatNI extends View implements Runnable, Observer{
 	}
 	
 	public void run(){
-		// on se met en attente de reception d'un pdu
-		try {
-			System.out.println("attend pdu");
-			this.socketUDP.receive(this.pduReceived);
-			System.out.println("fin attend pdu");
-			// on a recu un pdu donc on traite le message qu'il contient
-			this.bufferPDUReceived.add(pduReceived);
-			this.pduAnalyze();
-		}catch (IOException sockRec){
-			System.out.println("error receive socket");
-		}			
+		while(true){
+			// on se met en attente de reception d'un pdu
+			try {
+				this.socketUDP.receive(this.pduReceived);
+				// on a recu un pdu donc on traite le message qu'il contient
+				this.bufferPDUReceived.add(pduReceived);
+				this.pduAnalyze();
+			}catch (IOException sockRec){
+				System.out.println("error receive socket");
+			}			
+		}
 	}
 	
 	public String makeUsername(String username, InetAddress ip){		
@@ -209,6 +186,7 @@ public class ChatNI extends View implements Runnable, Observer{
 	/* (non-Javadoc)
 	 * @see java.util.Observer#update(java.util.Observable, java.lang.Object)
 	 */
+	@Override
 	public void update(Observable arg0, Object arg1) {
 		// TODO Auto-generated method stub
 		

@@ -26,7 +26,7 @@ public class ModelListUsers extends Observable {
 	public void addUsernameList(String username,InetAddress addressIP){
 		listUsers.put(username,addressIP);
 		setChanged();
-		notifyObservers();
+		notifyObservers(listUsers);
 	}
 	public void removeUsernameList(String username){
 		this.listUsers.remove(username);

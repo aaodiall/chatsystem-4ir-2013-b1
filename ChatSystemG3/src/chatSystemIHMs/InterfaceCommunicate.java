@@ -7,13 +7,16 @@ import javax.swing.JFrame;
 import javax.swing.JButton;
 
 import chatSystemController.Controller;
+
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.Vector;
 
-import javax.swing.DefaultListModel;
 import javax.swing.JPanel;
 import javax.swing.JLabel;
 import javax.swing.JList;
+import javax.swing.JScrollPane;
+import javax.swing.JTabbedPane;
 import javax.swing.JTextArea;
 import javax.swing.ListSelectionModel;
 
@@ -28,7 +31,7 @@ public class InterfaceCommunicate extends JFrame implements ActionListener{
 	 */
 	private static final long serialVersionUID = 1L;
 	private Controller controller;
-	private DefaultListModel users;
+	private Vector<String> users;
 	private JButton btnJoinFile;
 	private JTextArea tAreaHistoryCom;
 	private JButton btnSendFile;
@@ -38,6 +41,8 @@ public class InterfaceCommunicate extends JFrame implements ActionListener{
 	private JLabel lblUsername;
 	private JButton btnDeconnection;
 	private JPanel panel;
+	private JScrollPane scrollPane;
+	private JScrollPane scrollPane_1;
 
 	/**
 	 * Launch the application.
@@ -60,9 +65,16 @@ public class InterfaceCommunicate extends JFrame implements ActionListener{
 	 */
 	private void initialize(String username) {
 		
+		
+		
+		JTabbedPane tab = new JTabbedPane();
+		tab.setSize(40, 20);
+		tab.add("tab",new JPanel() );
+		
 		this.setBounds(100, 5, 1000, 700);
 		this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		getContentPane().setLayout(null);
+		getContentPane().add(tab);
 		
 		panel = new JPanel();
 		panel.setBounds(621, 25, 365, 501);
@@ -79,19 +91,23 @@ public class InterfaceCommunicate extends JFrame implements ActionListener{
 		panel.add(lblUsername);
 		
 		//test Jlist apres on utilisera un get sur le modeleusers
-		users = new DefaultListModel();
-		users.addElement("alpha");
-		users.addElement("jojo");
+		users = new Vector<String>();
+		//users.addElement("alpha");
+		//users.addElement("jojo");
 				
 		listUsers = new JList(users);
 		listUsers.setBounds(12, 56, 340, 420);
 		listUsers.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 		listUsers.setLayoutOrientation(JList.VERTICAL);
 		panel.add(listUsers);
+		
+		scrollPane = new JScrollPane();
+		scrollPane.setBounds(12, 541, 793, 115);
+		getContentPane().add(scrollPane);
 	
 		tAreaMessageText = new JTextArea();
-		tAreaMessageText.setBounds(12, 541, 793, 115);
-		getContentPane().add(tAreaMessageText);
+		scrollPane.setViewportView(tAreaMessageText);
+		
 		
 		btnSendMessage = new JButton("Send Message");
 		btnSendMessage.setBounds(848, 554, 138, 25);
@@ -101,9 +117,13 @@ public class InterfaceCommunicate extends JFrame implements ActionListener{
 		btnSendFile.setBounds(848, 591, 138, 25);
 		getContentPane().add(btnSendFile);
 		
+		scrollPane_1 = new JScrollPane();
+		scrollPane_1.setBounds(12, 50, 575, 472);
+		getContentPane().add(scrollPane_1);
+		
 		tAreaHistoryCom = new JTextArea();
-		tAreaHistoryCom.setBounds(12, 50, 575, 472);
-		getContentPane().add(tAreaHistoryCom);
+		tAreaHistoryCom.setEditable(false);
+		scrollPane_1.setViewportView(tAreaHistoryCom);
 		
 		btnJoinFile = new JButton("Join File");
 		btnJoinFile.setBounds(848, 634, 138, 25);
@@ -113,6 +133,12 @@ public class InterfaceCommunicate extends JFrame implements ActionListener{
 	
 
 
+
+	public void setUsers(Object[] objects) {
+		for(int i=0;i<objects.length;i++){
+			this.users.addElement((String) objects[i]);
+		}
+	}
 
 	/* (non-Javadoc)
 	 * @see java.awt.event.ActionListener#actionPerformed(java.awt.event.ActionEvent)

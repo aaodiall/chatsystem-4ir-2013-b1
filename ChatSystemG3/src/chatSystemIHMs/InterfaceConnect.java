@@ -16,6 +16,7 @@ import java.awt.Color;
 import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.net.UnknownHostException;
 
 /**
  * @author alpha
@@ -111,7 +112,12 @@ public class InterfaceConnect extends JFrame implements ActionListener{
 		  		//connect();
 		    	  
 		    	
-		  	  controller.performConnect(tfdUsername.getText());
+		  	  try {
+				controller.performConnect(tfdUsername.getText());
+			} catch (UnknownHostException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 		  		
 		   }
 		  }).start();

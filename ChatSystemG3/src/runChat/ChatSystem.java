@@ -1,4 +1,5 @@
 package runChat;
+import java.net.UnknownHostException;
 import java.util.ArrayList;
 
 import chatSystemModel.*;
@@ -35,8 +36,9 @@ public class ChatSystem {
 	
 	/**
 	 * @param args
+	 * @throws UnknownHostException 
 	 */
-	public static void main(String[] args) {
+	public static void main(String[] args) throws UnknownHostException{
 		ArrayList <String> remote = new ArrayList<String>();
 		int portUDP=16001;
 		int bufferSize=10;

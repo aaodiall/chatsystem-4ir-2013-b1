@@ -3,10 +3,15 @@
  */
 package chatSystemIHMs;
 
+import java.util.HashMap;
 import java.util.Observable;
 import java.util.Observer;
+import java.util.Vector;
+
+import javax.swing.DefaultListModel;
 
 import chatSystemController.Controller;
+import chatSystemModel.ModelListUsers;
 import chatSystemModel.ModelStates;
 import chatSystemModel.ModelUsername;
 
@@ -52,8 +57,10 @@ public class ChatGUI extends View implements Observer{
 			if(arg1.equals(false)){
 				wCommunicate.setVisible(false);
 				wConnect.setVisible(true);
-			}
-			
+			}	
+		}
+		else if(arg0.getClass()==ModelListUsers.class){
+			wCommunicate.setUsers(( (HashMap<?, ?>)arg1 ).keySet().toArray()) ;
 		}
 		//ainsi de suite
 	}
