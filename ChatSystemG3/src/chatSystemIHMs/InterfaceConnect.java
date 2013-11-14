@@ -112,12 +112,7 @@ public class InterfaceConnect extends JFrame implements ActionListener{
 		  		//connect();
 		    	  
 		    	
-		  	  try {
-				controller.performConnect(tfdUsername.getText());
-			} catch (UnknownHostException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
+		  	  controller.performConnect(tfdUsername.getText());
 		  		
 		   }
 		  }).start();
