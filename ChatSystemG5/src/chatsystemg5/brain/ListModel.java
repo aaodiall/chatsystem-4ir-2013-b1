@@ -13,6 +13,11 @@ public class ListModel extends ChatModel {
     public void add_user(String username, String IP_addr) {
         hmap_users.put (username + "-" + IP_addr, IP_addr);
     }
+    
+    public void remove_user(String username, String IP_addr) {
+        hmap_users.remove(username + "-" + IP_addr);
+    }
+    
 
     @Override
     public void getState() {
