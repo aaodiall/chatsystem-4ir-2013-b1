@@ -8,7 +8,7 @@ import chatSystem.model.UserState;
 import java.util.Observable;
 import chatSystemCommon.*;
 
-public class ChatNI extends View implements Runnable {
+public class ChatNI extends View {
 
     private Thread threadReceiver;
     private MessageReceiver messageReceiver;
@@ -23,7 +23,7 @@ public class ChatNI extends View implements Runnable {
         this.fileReceiver = new FileReceiver[5];
         this.fileTransfert = new FileTransfert[5];
         this.messageReceiver = new MessageReceiver(this);
-        this.messageTransfert = new MessageTransfert();
+        this.messageTransfert = new MessageTransfert(this.usrInfo, this);
         this.threadReceiver = new Thread(this.messageReceiver);
     }
 
@@ -50,11 +50,11 @@ public class ChatNI extends View implements Runnable {
     }
 
     public void sendHelloMsg(String username, String ip) {
-        this.messageTransfert.sendHello(username, ip);
+        this.messageTransfert.sendHello(ip);
     }
 
     public void sendHelloMsg(String username) {
-        this.messageTransfert.sendHello(username);
+        this.messageTransfert.sendHello();
     }
 
     /**
@@ -79,25 +79,24 @@ public class ChatNI extends View implements Runnable {
                     //this.threadReceiver = new Thread(this.messageReceiver);
                     //this.threadReceiver.start();
                     //et on le guele car on est content :)
-                    this.messageTransfert.sendHello(((UserInformation) o).getUsername());
+                    this.messageTransfert.sendHello();
                 }
                 else{
                     //this.threadReceiver.stop(); //il ne faut pas le stopper donc on lui mettra null mais faut changer la gestion de messageReceiver
-                    this.messageTransfert.sendGoodbye(((UserInformation) o).getUsername());
+                    this.messageTransfert.sendGoodbye();
                     //this.threadReceiver = null;
                 }
             }
         }
         else if(o instanceof RemoteSystems){
             if(arg instanceof String){
-                this.messageTransfert.sendHello(this.usrInfo.getUsername(),(String)arg);
+                this.messageTransfert.sendHello((String)arg);
             }
         }
     }
 
-    @Override
-    public void run() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    public void messageSended () {
+        //this.controller
     }
 
 }
