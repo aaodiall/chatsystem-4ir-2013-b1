@@ -2,6 +2,12 @@
 
 import java.util.Observable;
 
-public class ChatModel extends Observable {
+public abstract class ChatModel extends Observable {
 
+    public abstract void getState();
+    
+    public abstract void setState();
+    
+    public abstract void subjectState();
+    
 }
