@@ -63,8 +63,8 @@ public class RemoteSystemInformation extends UserInformation {
          * Get the message which is to be sent
          * @return message to send
          */
-	public String getMessageToSend() {
-		return "";
+	public List<String> getMessageToSend() {
+		return this.messagesToSend;
 	}
 	
         /**

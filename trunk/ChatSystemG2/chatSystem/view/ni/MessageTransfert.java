@@ -8,6 +8,8 @@ import java.util.Enumeration;
 import java.util.List;
 import java.util.Iterator;
 import chatSystem.model.RemoteSystems;
+import chatSystem.model.RemoteSystemInformation;
+import chatSystem.model.UserInformation;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -21,14 +23,18 @@ public class MessageTransfert implements Runnable {
     
     private DatagramSocket messageSocket;
     private RemoteSystems rmInstance;
+    private UserInformation userInfo;
+    private ChatNI chatni;
     /**
      * Class' constructor
      */
-    public MessageTransfert() {
+    public MessageTransfert(UserInformation userInfo, ChatNI chatni) {
         try{
+            this.userInfo = userInfo;
             this.messageSocket = new DatagramSocket();
             this.messageSocket.setBroadcast(true);
             this.rmInstance = RemoteSystems.getInstance();
+            this.chatni = chatni;
         } catch (SocketException exc) {
             System.out.println("Problème à la création du socket d'envoi de messages");
         }
@@ -70,11 +76,10 @@ public class MessageTransfert implements Runnable {
     /**
      * Send a hello message to all the computers located in the local red
      * Using the broadcast address which has to be determined
-     * @param username username of the person who wants to send the message
      */
-    public void sendHello(String username) {
+    public void sendHello() {
         //hello sent to everyone can only be a hello without ack
-        Hello helloToSend = new Hello(username, false);
+        Hello helloToSend = new Hello(this.userInfo.getUsername(), false);
         InetAddress broadcastAddress = this.determineBroadcastAddress();
         System.out.println("ENVOI : "+helloToSend.toString()+" -> "+broadcastAddress.getHostAddress());
         this.sendPacket(broadcastAddress, helloToSend);
@@ -82,23 +87,21 @@ public class MessageTransfert implements Runnable {
     
     /**
      * Send a hello message to a determined remote system
-     * @param username username of the person who wants to send the message
      * @param ip ip address of the remote system we want to send the message
      */
-    public void sendHello(String username, String ip) {
+    public void sendHello(String ip) {
         //hello sent to one person can only be an ack hello
-        Hello helloToSend = new Hello(username, true);
+        Hello helloToSend = new Hello(this.userInfo.getUsername(), true);
         System.out.println("ENVOI : "+helloToSend.toString()+" -> "+ip);
         this.sendPacket(ip, helloToSend);
     }
     
     /**
      * Send a goodbye message to all the user's contacts
-     * @param username username of the person who wants to send the message
      * @param ipAddresses list of remote systems' ip address
      */
-    public void sendGoodbye(String username, String[] ipAddresses) {
-        Goodbye goodbyeToSend = new Goodbye(username);
+    public void sendGoodbye(String[] ipAddresses) {
+        Goodbye goodbyeToSend = new Goodbye(this.userInfo.getUsername());
         try {
             byte[] buffer = goodbyeToSend.toArray();
             for (String ip: ipAddresses) {
@@ -118,23 +121,21 @@ public class MessageTransfert implements Runnable {
     /**
      * Send a Goodbye message to all the computers located in the local red
      * Using the broadcast address which has to be determined
-     * @param username username of the person who wants to send the message
      */
-    public void sendGoodbye(String username) {
+    public void sendGoodbye() {
         InetAddress broadcastAddress = this.determineBroadcastAddress();
-        Goodbye goodbyeToSend = new Goodbye(username);
+        Goodbye goodbyeToSend = new Goodbye(this.userInfo.getUsername());
         System.out.println("ENVOI : "+goodbyeToSend.toString()+" -> "+broadcastAddress.getHostAddress());
         this.sendPacket(broadcastAddress, goodbyeToSend);
     }
     
     /**
      * Send a text message to someone
-     * @param username username of the person who wants to send the message
      * @param ip ip address of the remote system we want to send the message
      * @param text message content
      */
-    public void sendTextMessage(String username, String ip, String text) {
-        Text textToSend = new Text(username, text);
+    public void sendTextMessage(String ip, String text) {
+        Text textToSend = new Text(this.userInfo.getUsername(), text);
         this.sendPacket(ip, textToSend);
     }
     
@@ -168,10 +169,16 @@ public class MessageTransfert implements Runnable {
         }
     }
     
+    @Override
     public void run() {
-        while(true) {
-            int nbMessagesSent = 0;
-            
+        int nbMessagesSent = 0;
+        for (RemoteSystemInformation rsInfo : this.rmInstance) {
+            nbMessagesSent = 0;
+            while (nbMessagesSent < rsInfo.getMessageToSend().size() && nbMessagesSent < 5) {
+                this.sendTextMessage(rsInfo.getIP(), rsInfo.getMessageToSend().get(nbMessagesSent));
+                nbMessagesSent++;
+                chatni.messageSended();
+            }
         }
     }
 }
