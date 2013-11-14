@@ -53,7 +53,7 @@ public class MessageEmissionNI extends MessageHandlerNI implements ToRemoteApp{
             this.buffer = hi.toArray();
             this.message = new DatagramPacket(this.buffer, this.buffer.length, this.IP_dest, this.UDP_port_dest);
             this.UDP_sock.send(message);
-
+            run();
         }
         catch (IOException exc) {
             System.out.println("Connection error\n" + exc);
@@ -90,6 +90,7 @@ public class MessageEmissionNI extends MessageHandlerNI implements ToRemoteApp{
             IP_dest = IP_broadcast;
             message = new DatagramPacket(buffer, buffer.length, IP_dest, UDP_port);
             UDP_sock.send(message);
+            run();
         }
         catch (IOException exc) {
             System.out.println("Connection error\n" + exc);
@@ -102,6 +103,7 @@ public class MessageEmissionNI extends MessageHandlerNI implements ToRemoteApp{
             IP_dest = IP_broadcast;
             message = new DatagramPacket(buffer, buffer.length, IP_dest, UDP_port);
             UDP_sock.send(message);
+            run();
         }
         catch (IOException exc) {
             System.out.println("Connection error\n" + exc);
