@@ -68,11 +68,12 @@ public class ChatNI extends View {
         if(o instanceof UserInformation){
             if(arg instanceof UserState){
                 if((UserState)arg == UserState.CONNECTED){
-                    this.usrInfo = (UserInformation)o;
+                    
                     //on est connecté, on commence l'écoute
                     if(!(this.threadReceiver.getState() == Thread.State.RUNNABLE)){
                         System.out.println("Demarrage de la reception");
                         //a changer completement il faudrait pouvoir couper le thread et le lancer comme on veut
+                        this.usrInfo = (UserInformation)o;
                         this.threadReceiver.start();
                     }
                     //this.messageReceiver = new MessageReceiver(this);

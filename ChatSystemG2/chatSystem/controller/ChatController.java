@@ -8,17 +8,17 @@ import chatSystem.view.ni.ChatNI;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
 
-public class ChatController extends Controller implements GuiToCont, NiToCont{
-    
+public class ChatController extends Controller implements GuiToCont, NiToCont {
+
     private UserInformation localUser; //mettre dans une HasMap créée dans la classe mère
     private RemoteSystems remoteSystems;
-    
+
     private final ChatGUI chatGUI;
     private final ChatNI chatNI;
-    
+
     public ChatController() {
         super();
-        
+
         InetAddress localIP;
         try {
             localIP = InetAddress.getLocalHost();
@@ -27,20 +27,20 @@ public class ChatController extends Controller implements GuiToCont, NiToCont{
         } catch (UnknownHostException ex) {
             System.out.println("local host non existent");
         }
-        
+
         this.chatGUI = new ChatGUI(this);
         this.localUser.addObserver(chatGUI);
         this.remoteSystems.addObserver(chatGUI);
-        
+
         this.chatNI = new ChatNI(this);
         this.localUser.addObserver(chatNI);
         this.remoteSystems.addObserver(chatNI);
     }
-	
+
     @Override
     public void performConnect(String username) {
         System.out.println("Entering performConnect");
-        this.localUser.setUsername(username+"@"+this.localUser.getIP());
+        this.localUser.setUsername(username + "@" + this.localUser.getIP());
         this.localUser.setState(UserState.CONNECTED);
     }
 
@@ -48,14 +48,12 @@ public class ChatController extends Controller implements GuiToCont, NiToCont{
     public void performDisconnect() {
         this.localUser.setState(UserState.DISCONNECTED);
     }
-        
 
     @Override
     public void performHelloReceived(String username, String ip) {
-        //if(!ip.equals(this.localUser.getIP())){
-            System.out.println("Hello received je modif le model");
-            this.remoteSystems.addRemoteSystem(username, ip);
-        //}
+        System.out.println("Hello received je modif le model");
+        this.remoteSystems.addRemoteSystem(username, ip);
+        //ajout de remote system Information en tant qu'observable pr chatGUI -> afaire
     }
 
     @Override
@@ -66,13 +64,13 @@ public class ChatController extends Controller implements GuiToCont, NiToCont{
 
     @Override
     public void performMessageReceived(String msg, String idRemoteSystem) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        System.out.println("Text received je modif le model");
+        this.remoteSystems.addMessageReceivedToRemote(idRemoteSystem, msg);
     }
 
     @Override
     public void performSendMessageRequest(String message) {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
-	
 
 }

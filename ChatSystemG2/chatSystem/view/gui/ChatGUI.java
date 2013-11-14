@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Observable;
 import chatSystem.controller.ChatController;
+import chatSystem.model.RemoteSystemInformation;
 import chatSystem.model.RemoteSystems;
 import chatSystem.model.UserInformation;
 import chatSystem.model.UserState;
@@ -122,6 +123,8 @@ public class ChatGUI extends View {
             } catch (GUIException ex) {
                 Logger.getLogger(ChatGUI.class.getName()).log(Level.SEVERE, null, ex);
             }
+        }else if (o instanceof RemoteSystemInformation){
+            //vérifier si c'est un message recus ou un message envoyé et afficher dans la bonne dialog Window
         }
     }
 }
