@@ -168,4 +168,40 @@ public class ChatNetwork implements Runnable{
        
         return broadcast;
     }
+
+
+
+	/**
+	 * @return the fileReceiverList
+	 */
+	public ArrayList<FileReceiver> getFileReceiverList() {
+		return FileReceiverList;
+	}
+
+
+
+	/**
+	 * @param fileReceiverList the fileReceiverList to set
+	 */
+	public void setFileReceiverList(ArrayList<FileReceiver> fileReceiverList) {
+		FileReceiverList = fileReceiverList;
+	}
+
+
+
+	/**
+	 * @return the fileSenderList
+	 */
+	public ArrayList<FileSender> getFileSenderList() {
+		return FileSenderList;
+	}
+
+
+
+	/**
+	 * @param fileSenderList the fileSenderList to set
+	 */
+	public void setFileSenderList(ArrayList<FileSender> fileSenderList) {
+		FileSenderList = fileSenderList;
+	}
 }

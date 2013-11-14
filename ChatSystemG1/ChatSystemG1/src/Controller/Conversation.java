@@ -43,12 +43,8 @@ public class Conversation {
 		String retour = "";
 		
 		for(SignedAndDatedMessage sa : this.getMessageList()){
-			if(sa.getUserName().contains(ChatController.getLocalUsername())){
-				retour += "\n" + sa.getDate() + "\\ To " + this.getUserNameList().get(0) + " : \n" + sa.getText() + "\n";  
-			}else{
-				retour += "\n" + sa.getDate() + "\\ From " + this.getUserNameList().get(0) + " : \n" + sa.getText() + "\n";  
-
-			}
+				retour += "\n" + sa.getUserName() +" :\n " + sa.getDate() + " : \n" + sa.getText() + "\n";  
+			
 		}
 		
 		return retour;

@@ -14,6 +14,11 @@ import javax.swing.event.*;
 
 public class FontChooser extends JComponent {
 
+/**
+	 * 
+	 */
+	private static final long serialVersionUID = 7208492889722582137L;
+
 /** The list of possible font sizes. */
 private static final Integer[] SIZES =
         {8, 9, 10, 11, 12, 13, 14, 16, 18, 20, 24, 26, 28, 32, 36, 40, 48, 56, 64, 72};
@@ -221,7 +226,11 @@ public void setPreviewText(String previewText) {
  }
 
  class FontChooserDialog extends JDialog {
- private Font initialFont;
+ /**
+	 * 
+	 */
+	private static final long serialVersionUID = -5246495681306033006L;
+private Font initialFont;
  private FontChooser chooserPane;
 
   public FontChooserDialog(Component c, String title, boolean modal,
@@ -252,7 +261,13 @@ public void setPreviewText(String previewText) {
 
     JButton cancelButton = new JButton(cancelString);
     Action cancelKeyAction = new AbstractAction() {
-        public void actionPerformed(ActionEvent e) {
+        /**
+		 * 
+		 */
+		private static final long serialVersionUID = -7066554109866277246L;
+		
+
+		public void actionPerformed(ActionEvent e) {
             // todo make it in 1.3
         }
     };
@@ -312,14 +327,24 @@ public void reset() {
 }
 
 static class Closer extends WindowAdapter implements Serializable {
-    public void windowClosing(WindowEvent e) {
+    /**
+	 * 
+	 */
+	private static final long serialVersionUID = -8474522916890509822L;
+
+	public void windowClosing(WindowEvent e) {
         Window w = e.getWindow();
         w.setVisible(false);
     }
 }
 
 static class DisposeOnClose extends ComponentAdapter implements Serializable {
-    public void componentHidden(ComponentEvent e) {
+    /**
+	 * 
+	 */
+	private static final long serialVersionUID = -7912589809524832352L;
+
+	public void componentHidden(ComponentEvent e) {
         Window w = (Window) e.getComponent();
         w.dispose();
     }
@@ -328,7 +353,11 @@ static class DisposeOnClose extends ComponentAdapter implements Serializable {
  }
 
   class FontTracker implements ActionListener, Serializable {
-  FontChooser chooser;
+  /**
+	 * 
+	 */
+	private static final long serialVersionUID = -6760280443266616003L;
+FontChooser chooser;
   Font color;
 
   public FontTracker(FontChooser c) {

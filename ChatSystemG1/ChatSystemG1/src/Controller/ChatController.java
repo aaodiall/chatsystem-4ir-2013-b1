@@ -1,6 +1,5 @@
 package Controller;
 
-import java.net.InetAddress;
 import java.net.UnknownHostException;
 import java.util.ArrayList;
 import java.util.Date;
@@ -74,7 +73,7 @@ public class ChatController {
 	public static void MessageProcessing(Text message){
 		String[] remote = new String[1];
 		remote[0] = message.getUsername();
-		UpdateModel(message, remote,from	);
+		UpdateModel(message, remote,from);
 
 		System.out.println("on a recu un message" + message);
 	}
@@ -121,7 +120,7 @@ public class ChatController {
 	
 	public static void PerformSendMessage(String text,String[] RemoteUserName){
 		Text message = new Text(getLocalUsername(),text);
-		UpdateModel(message, RemoteUserName,to	);
+		UpdateModel(message, RemoteUserName,to);
 		System.out.println("on envoie un message");
 		ChatNi.SendMessage(message, RemoteUserName);
 	}
@@ -220,7 +219,7 @@ public class ChatController {
 	
 	public static void UpdateModel(Message m,String[] Remote, boolean from_to){
 		int numConv;
-		if(from){
+		if(from_to){
 			Conversation t = null;
 			boolean exist = false;
 			for(Conversation c : ChatMod.getConversationList()){
