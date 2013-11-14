@@ -30,7 +30,10 @@ public class Receiver implements Runnable{
 	            DatagramPacket packet = new DatagramPacket(buffer, buffer.length);
 	            try {
 	                socket.receive(packet);
-	                this.ReceiveMessage(packet.getData());
+	                Message m = Message.fromArray(packet.getData());
+	                m.setUsername(m.getUsername() + "@" + packet.getAddress().getHostAddress().toString());
+	            	ChatNetwork.NotifyMessageReceive(m);
+	                
 	                
 	            }	
 	            catch(IOException iE) {
@@ -39,14 +42,7 @@ public class Receiver implements Runnable{
 	}
 
 		
-	public void ReceiveMessage(byte[] MessageToConvert){
-		try {
-			ChatNetwork.NotifyMessageReceive(Message.fromArray(MessageToConvert));
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-	}
+	
 	
 	 public void closeReceiveSocket() {
 	        

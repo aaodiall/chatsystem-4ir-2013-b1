@@ -3,12 +3,15 @@ package Controller;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
 import java.util.ArrayList;
-
+import java.util.Date;
 import chatSystemCommon.*;
 import ChatNI.ChatNetwork;
 import IHM.FrontController;
 
 public class ChatController {
+	private static final boolean from = true;
+	private static final boolean to = false;
+	
 	private FrontController ChatGuiFrontController;
 	private static boolean isConnected ;
 	private static ChatNetwork ChatNi;
@@ -69,6 +72,10 @@ public class ChatController {
 	}
 	
 	public static void MessageProcessing(Text message){
+		String[] remote = new String[1];
+		remote[0] = message.getUsername();
+		UpdateModel(message, remote,from	);
+
 		System.out.println("on a recu un message" + message);
 	}
 	public static void FileTransfertDemandProcessing(FileTransfertDemand message){
@@ -114,13 +121,12 @@ public class ChatController {
 	
 	public static void PerformSendMessage(String text,String[] RemoteUserName){
 		Text message = new Text(getLocalUsername(),text);
+		UpdateModel(message, RemoteUserName,to	);
 		System.out.println("on envoie un message");
 		ChatNi.SendMessage(message, RemoteUserName);
 	}
 	
-	public void UpdateModel(Message m){
-		
-	}
+	
 	
 	public static String extractIpFromUserName(String Username){
 		String retour = null;
@@ -211,5 +217,54 @@ public class ChatController {
 		// TODO Auto-generated method stub
 		return ChatMod.getUserNameList();
 	}
+	
+	public static void UpdateModel(Message m,String[] Remote, boolean from_to){
+		int numConv;
+		if(from){
+			Conversation t = null;
+			boolean exist = false;
+			for(Conversation c : ChatMod.getConversationList()){
+				if(c.getUserNameList().get(0).equals(Remote[0])){
+					t = c;
+					exist = true;
+				}
+			}
+			if(!exist){
+				ArrayList<String> usa = new ArrayList<String>();
+				usa.add(Remote[0]);
+				t = new Conversation(usa);
+				
+				ChatMod.getConversationList().add(t);
+			}
+			SignedAndDatedMessage sadm = new SignedAndDatedMessage(new Date(),((Text) m).getText(), Remote[0]);
+			t.getMessageList().add(sadm);
+			numConv = ChatMod.getConversationList().indexOf(t) + 1;
+		}else{
+			Conversation t = null;
+			boolean exist = false;
+			for(Conversation c : ChatMod.getConversationList()){
+				if(c.getUserNameList().get(0).equals(Remote[0])){
+					t = c;
+					exist = true;
+				}
+			}
+			if(!exist){
+				ArrayList<String> usa = new ArrayList<String>();
+				usa.add(Remote[0]);
+				t = new Conversation(usa);
+				
+				ChatMod.getConversationList().add(t);
+			}
+			SignedAndDatedMessage sadm = new SignedAndDatedMessage(new Date(),((Text) m).getText(), getLocalUsername());
+			t.getMessageList().add(sadm);
+			numConv = ChatMod.getConversationList().indexOf(t) + 1;
 
+		}
+		ChatMod.notifyObserver(numConv);
+	}
+
+	public static Conversation getConv(int notif) {
+		// TODO Auto-generated method stub
+		return ChatMod.getConversationList().get(notif);
+	}
 }

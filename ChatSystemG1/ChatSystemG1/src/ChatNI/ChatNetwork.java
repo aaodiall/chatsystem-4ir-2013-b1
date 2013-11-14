@@ -28,7 +28,7 @@ public class ChatNetwork implements Runnable{
 	
 	
 	public static void NotifyMessageReceive(Message message){
-		//if(!message.getUsername().equals(ChatController.getLocalUsername()) ){
+		if(!message.getUsername().equals(ChatController.getLocalUsername()) ){
 			if(message.getClass() == Hello.class){
 				ChatController.HelloProcessing((Hello) message);
 			}else if(message.getClass() == Goodbye.class){
@@ -44,7 +44,7 @@ public class ChatNetwork implements Runnable{
 			}else if(message.getClass() == FileTransfertConfirmation.class){
 				ChatController.FileAcceptanceProcessing((FileTransfertConfirmation)message);
 			}
-		//}
+		}
 	}
 	
 	public void SendBye(){

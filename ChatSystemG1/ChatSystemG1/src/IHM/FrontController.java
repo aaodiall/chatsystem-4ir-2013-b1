@@ -9,6 +9,7 @@ import java.net.UnknownHostException;
 import javax.swing.JOptionPane;
 
 import Controller.ChatController;
+import Controller.Conversation;
 import Controller.Observer;
 
 public class FrontController extends Observer implements Runnable,ActionListener {
@@ -165,8 +166,30 @@ public class FrontController extends Observer implements Runnable,ActionListener
 		if(notif == 0){
 			
 			this.mFrame.getULpane().getULLpane().getUserList().setListData(ChatController.getUserList().toArray());
-		}else if(notif == 1){
+		}else {
 			//conversation ici
+			Conversation c = ChatController.getConv(notif-1);
+			String s = c.getUserNameList().get(0);
+			
+			//chope conv
+			boolean exist = false;
+			int numTab = 0;
+			for(int i = 0;i<this.mFrame.getUCpane().getTabCount();i++){
+				if(this.mFrame.getUCpane().getTitleAt(i) == s){
+					exist = true;
+					numTab = i;
+				}
+			}
+			if(!exist){
+				this.mFrame.getUCpane().AddTab(s);
+				this.mFrame.getUCpane().setSelectedIndex(this.mFrame.getUCpane().getTabCount()-1);
+			}else{
+				this.mFrame.getUCpane().setSelectedIndex(numTab);
+			}
+			
+			//chope onglet ou crée
+			//change text onglet
+			this.mFrame.getUCpane().getTextAreas().get(numTab).getTextArea().setText(c.toString());
 		}
 	}
 

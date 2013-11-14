@@ -5,7 +5,7 @@ import java.util.ArrayList;
 
 public class ChatModel {
     private static final int NOTIF_USERLIST = 0;
-    private static final int NOTIF_CONV = 1;
+    
     
     
     
