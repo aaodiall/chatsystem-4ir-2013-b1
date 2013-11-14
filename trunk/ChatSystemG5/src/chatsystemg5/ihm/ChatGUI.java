@@ -11,7 +11,7 @@ public class ChatGUI {
     public ChatGUI(ChatController chatController){
         this.chatController = chatController;
         //this.connectionWindow = new ConnectionWindow();
-        this.listWindow = new ListWindow(this.chatController.get_listDB());
+        this.listWindow = new ListWindow();
         //this.chatWindow = new ChatWindow();
     }
     

@@ -6,39 +6,38 @@ package chatsystemg5.ihm;
 
 import chatsystemg5.brain.ListModel;
 import java.awt.BorderLayout;
+import java.util.Collection;
+import java.util.HashMap;
 import java.util.Observable;
 import java.util.Observer;
 import java.util.Vector;
+import javax.swing.AbstractListModel;
 import javax.swing.JFrame;
-
-import javax.swing.JList;
+import javax.swing.*;
 
 /**
  *
  * @author joffreydufant
  */
 public class ListWindow extends JFrame implements Observer{
-    private JList list;
-    private ListModel listDB;
+    private JList listDisplay;
+    private HashMap listUser;
     
-    public ListWindow(ListModel listDB){
-        System.out.println("test");
-        this.listDB = listDB;
-        
+    public ListWindow(){
+        this.listUser = new HashMap<String, String>();
     }
 
-    public void update(Observable o, Object o1) {
-        //this.listDB = o;
-        // create vector because of JList argument 
-        Vector v;
-        // juste for test (get only the IP)
-        v = new Vector(this.listDB.get_hashmap_users().values());
+    @Override
+    public void update(Observable obs, Object obj) {
+        // creation of the list
+        // we know that we get an HashMap
+        this.listUser = (HashMap)obj;
         
-        // create the list
-        this.list = new JList(v);     
+        this.listDisplay = new JList(this.listUser.keySet().toArray());
+        
         this.setLayout(new BorderLayout());
-        this.add("West",list);
+        this.add("West",listDisplay);
         this.pack();
-        this.setVisible(true);        
-    }
+        this.setVisible(true);      }
+
 }

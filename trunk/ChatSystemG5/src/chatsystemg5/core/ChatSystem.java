@@ -17,6 +17,9 @@ public class ChatSystem {
 //           while(true){
 //               if(i == 1000000000.0){
                     brain.perform_connection(brain.get_userDB().get_username());
+                    brain.perform_connection("BLT");
+                    brain.perform_connection("DFT");
+
 //                    i = 0;
 //               }
 //               else i++;

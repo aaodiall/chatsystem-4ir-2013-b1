@@ -20,18 +20,16 @@ public class MessageEmissionNI extends MessageHandlerNI implements ToRemoteApp{
     private int UDP_port;
     private int UDP_port_dest;
     private InetAddress IP_dest;
-    private InetAddress IP_broadcast;
     private DatagramSocket UDP_sock;
     private DatagramPacket message;
     //private Message message_to_send;
     private byte[] buffer;
     
     public MessageEmissionNI (String username){
-        
+
         this.username = username;
         this.UDP_port_dest = 16000;
-
-       
+        
         try {
             // create a socket with an address we don't care
             this.UDP_sock = new DatagramSocket();
@@ -46,22 +44,18 @@ public class MessageEmissionNI extends MessageHandlerNI implements ToRemoteApp{
     public void transfer_connection(Hello hi) {
          try {
             
-             if(hi.isAck()){
-                 
-             }
-            // address de brodcast
+            // enable brodcast
             this.UDP_sock.setBroadcast(true);
-            //this.IP_dest = InetAddress.getByName("255.255.255.255");
 
             // Local host :
             this.IP_dest = InetAddress.getByName("127.0.0.1");
             
-            // send the message
+            // send hello
             this.buffer = hi.toArray();
             this.message = new DatagramPacket(this.buffer, this.buffer.length, this.IP_dest, this.UDP_port_dest);
             this.UDP_sock.send(message);
             
-            // disable the broadcast
+            // disable broadcast
             this.UDP_sock.setBroadcast(false);
         }
         catch (IOException exc) {
@@ -72,10 +66,16 @@ public class MessageEmissionNI extends MessageHandlerNI implements ToRemoteApp{
     public void transfer_disconnection(Goodbye bye) {
         
         try {
+            // enable brodcast
+            this.UDP_sock.setBroadcast(true);
+            
+            // send bye
             buffer = bye.toArray();
-            IP_dest = IP_broadcast;
             message = new DatagramPacket(buffer, buffer.length, IP_dest, UDP_port);
             UDP_sock.send(message);
+            System.out.println("test");
+            // disbale brodcast
+            this.UDP_sock.setBroadcast(false);
             
             // close the sender port ??
             UDP_sock.close();
@@ -88,7 +88,6 @@ public class MessageEmissionNI extends MessageHandlerNI implements ToRemoteApp{
     public void send_text (Text txt) {
         try {
             buffer = txt.toArray();
-            IP_dest = IP_broadcast;
             message = new DatagramPacket(buffer, buffer.length, IP_dest, UDP_port);
             UDP_sock.send(message);
             run();

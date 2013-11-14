@@ -4,7 +4,6 @@ import chatsystemg5.ihm.ChatGUI;
 import chatsystemg5.network.*;
 
 import java.net.InetAddress;
-import java.net.SocketException;
 import java.net.UnknownHostException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -20,7 +19,8 @@ public class ChatController {
     
     public ChatController (String username) {
         // initialize view
-        chatGUI = new ChatGUI(this);
+        // TO DO create view at the end
+        chatGUI = new ChatGUI(this);      
         
         // initialize model
         userDB = new UserModel(username);
@@ -32,9 +32,8 @@ public class ChatController {
             // strat listenning the network on port 16000
             receptionNI.start();
             
-            this.emissionNI = new MessageEmissionNI(this.userDB.get_username()); 
-       
-
+            this.emissionNI = new MessageEmissionNI(this.userDB.get_username());
+            
     }
     
     /**************** Connection ****************/
@@ -54,9 +53,10 @@ public class ChatController {
     // Connexion d'un autre user
      public void perform_connection (Hello hi, InetAddress IP_source) {
         // add him to the user list
+        // equivalent of setState()
         listDB.add_user(hi.getUsername(), IP_source.toString());
+        
         // notify the Observer (ListWindow) of the change about ModelList
-        listDB.setState();
         listDB.notifyObservers();
          
         // if remote user first connection
@@ -85,7 +85,10 @@ public class ChatController {
     
     // Déconnection d'un autre user
     public void perform_disconnection (Goodbye bye, InetAddress IP_addr) {
+        // remove the user who disconnected from the list
+        // equivalent of setState()
         listDB.remove_user(bye.getUsername(), IP_addr.toString());
+        listDB.notifyObservers();
     }
     
     /**************** Communication by text ****************/

@@ -1,9 +1,12 @@
 package chatsystemg5.brain;
 
+import java.util.Observer;
+
 public class UserModel extends ChatModel {
     
     private String username;
     private Boolean status;
+    private Observer observer;
     
     public UserModel (String username) {
         this.username = username;
@@ -15,18 +18,13 @@ public class UserModel extends ChatModel {
     }
 
     @Override
-    public void getState() {
+    public void notifyObservers() {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
     @Override
-    public void setState() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
-
-    @Override
-    public void subjectState() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    public void addObserver(Observer o) {
+        this.observer = o;
     }
     
 }

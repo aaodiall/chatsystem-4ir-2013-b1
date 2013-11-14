@@ -5,16 +5,17 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Observable;
 import java.util.Observer;
+import javax.swing.event.ListDataListener;
 
-// implements Observable
+
 public class ListModel extends ChatModel {
     
     private HashMap<String,String> hmap_users;
-    private ArrayList<Observer> observers;
+    private Observer observer;
     
     public ListModel (ChatController chatController) {
         hmap_users = new HashMap();
-        
+
         // add list window as listModel obersver
         this.addObserver(chatController.get_chatGUI().get_listWindow());
     }
@@ -28,25 +29,16 @@ public class ListModel extends ChatModel {
     public void remove_user(String username, String IP_addr) {
         hmap_users.remove(username + "-" + IP_addr);
     }
-    
-    public HashMap get_hashmap_users(){
-        return this.hmap_users;
-    }
 
     @Override
-    public void getState() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
-
-    // TO DO !! find the way to make it work for general purpose : connection, disconnection
-    @Override
-    public void setState() {
-        this.add_user("Joffrey", "34.34.34.34");
-    }
+    public void notifyObservers(){ 
+        // because there is only one observer
+        // if there were several ones we had to implement a loop updating each Observer
+        this.observer.update(this, this.hmap_users);
+    }        
 
     @Override
-    public void subjectState() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    public void addObserver(Observer o) {
+        this.observer = o;
     }
-    
 }
