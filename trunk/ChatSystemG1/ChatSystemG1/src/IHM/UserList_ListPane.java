@@ -28,4 +28,9 @@ public class UserList_ListPane extends JScrollPane {
 		this.setVisible(true);
 	}
 
+	public void setUserList(JList jList) {
+		// TODO Auto-generated method stub
+		this.UserList = jList;
+	}
+
 }

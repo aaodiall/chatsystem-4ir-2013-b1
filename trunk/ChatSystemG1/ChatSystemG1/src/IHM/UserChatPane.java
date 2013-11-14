@@ -43,7 +43,7 @@ public class UserChatPane extends JTabbedPane {
 	public void Init(){
 		this.TextAreas = new ArrayList<UserChatTextPane>();
 		this.AddTab("bonjour");
-		
+		this.TextAreas.get(0).getTextArea().setText("Pour commencer veuillez-vous connecter\n");
 		this.setTabLayoutPolicy(1);
 
 		this.setVisible(true);

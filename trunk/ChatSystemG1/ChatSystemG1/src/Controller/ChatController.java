@@ -2,6 +2,10 @@ package Controller;
 
 import java.net.InetAddress;
 import java.net.UnknownHostException;
+import java.util.ArrayList;
+
+import javax.swing.ListModel;
+import javax.swing.event.ListDataListener;
 
 import chatSystemCommon.*;
 import ChatNI.ChatNetwork;
@@ -12,7 +16,7 @@ public class ChatController {
 	private static boolean isConnected ;
 	private static ChatNetwork ChatNi;
 
-	private ChatModel ChatMod;
+	private static ChatModel ChatMod;
 	private static String localUsername;
 	
 	public ChatController() {
@@ -20,6 +24,9 @@ public class ChatController {
 		isConnected = false;
 		ChatNi = null;
 		localUsername = null;
+		ChatMod = new ChatModel();
+		ChatGuiFrontController = new FrontController();
+		ChatMod.registerObserver(ChatGuiFrontController);
 	}
 	
 	/**
@@ -56,6 +63,9 @@ public class ChatController {
 			System.out.println("on a recu un hello" + message);
 			ChatNi.SendHello(true,message.getUsername());
 			
+		}
+		if(!ChatMod.getUserNameList().contains(message.getUsername())){
+			ChatMod.addUser(message.getUsername());
 		}
 	}
 	
@@ -196,6 +206,11 @@ public class ChatController {
 	public static void FileCancelProcessing(Message message) {
 		// TODO Auto-generated method stub
 		
+	}
+
+	public static ArrayList<String> getUserList() {
+		// TODO Auto-generated method stub
+		return ChatMod.getUserNameList();
 	}
 
 }

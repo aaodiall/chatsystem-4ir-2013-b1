@@ -26,9 +26,9 @@ public class ChatSystem {
 	public static void main(String[] args) throws InterruptedException, UnknownHostException {
 		// TODO Auto-generated method stub
 		ChatController chatC = new ChatController();
-		FrontController fc = new FrontController();
 		
-		while(fc.getmFrame().isVisible()){
+		
+		while(chatC.getChatGuiFrontController().getmFrame().isVisible()){
 			System.out.flush();
 		}
 		System.out.println("on quitte!");
