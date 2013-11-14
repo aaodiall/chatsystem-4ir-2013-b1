@@ -46,11 +46,15 @@ public class MessageEmissionNI extends MessageHandlerNI implements ToRemoteApp{
     public void transfer_connection(Hello hi) {
          try {
             
+             if(hi.isAck()){
+                 
+             }
             // address de brodcast
             this.UDP_sock.setBroadcast(true);
-            this.IP_dest = InetAddress.getByName("255.255.255.255");
+            //this.IP_dest = InetAddress.getByName("255.255.255.255");
+
             // Local host :
-            //this.IP_dest = InetAddress.getByName("127.0.0.1");
+            this.IP_dest = InetAddress.getByName("127.0.0.1");
             
             // send the message
             this.buffer = hi.toArray();
@@ -94,8 +98,10 @@ public class MessageEmissionNI extends MessageHandlerNI implements ToRemoteApp{
         }
     }
     
+    
     @Override
-    public void send(Message msg){
+    public void send(Message msg, InetAddress IP_dest){
+        this.IP_dest = IP_dest;
         // Si le message est de type Hello
         if (msg instanceof Hello) {
             transfer_connection((Hello) msg);
