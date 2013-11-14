@@ -4,12 +4,12 @@ import chatsystemg5.network.*;
 
 public class ChatController {
 
-    String username;
+    UserModel userDB;
     ChatNI chtNI;
     MessageEmissionNI emissionNI;
     
     public ChatController (String username) {
-        this.username = username;
+        userDB = new UserModel(username);
         emissionNI = new MessageEmissionNI(username);
     }
     
