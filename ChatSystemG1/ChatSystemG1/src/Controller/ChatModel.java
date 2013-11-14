@@ -79,4 +79,10 @@ public class ChatModel {
 		notifyObserver(NOTIF_USERLIST);
 		
 	}
+
+	public void RemoveUser(String username) {
+		// TODO Auto-generated method stub
+		UserNameList.remove(username);
+		notifyObserver(NOTIF_USERLIST);
+	}
 }

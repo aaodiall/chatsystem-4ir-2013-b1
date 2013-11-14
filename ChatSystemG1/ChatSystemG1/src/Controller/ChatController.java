@@ -38,7 +38,9 @@ public class ChatController {
 
 	public static void ByeProcessing(Goodbye message){
 		System.out.println("on a reçu un bye" + message);
-
+		if(ChatMod.getUserNameList().contains(message.getUsername())){
+			ChatMod.RemoveUser(message.getUsername());
+		}
 	}
 	
 	public static void FileAcceptanceProcessing(FileTransfertConfirmation message){
