@@ -2,15 +2,15 @@ package chatSystem.model;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 
 /**
  * Keeps and manages the remote system's information
  * @author Marjorie
  */
-public class RemoteSystems extends Model{
+public class RemoteSystems extends Model implements Iterable<RemoteSystemInformation>{
 
     private static RemoteSystems instance;
     private final Map<String,RemoteSystemInformation> remoteSystemsInformation;
@@ -60,7 +60,7 @@ public class RemoteSystems extends Model{
      * @return usernames' list
      */
     public List<String> getUserList() {
-            List<String> userList = new ArrayList<>();
+            List<String> userList = new ArrayList<String>();
             for(String rs: this.remoteSystemsInformation.keySet()) {
                     userList.add(this.remoteSystemsInformation.get(rs).getUsername());
             }
@@ -81,4 +81,35 @@ public class RemoteSystems extends Model{
             }
             return instance;
     }
+    
+        @Override
+    public Iterator<RemoteSystemInformation> iterator() {
+       return new RSIterator();
+    }
+    
+    private class RSIterator implements Iterator<RemoteSystemInformation> {
+
+        //private Set<RemoteSystemInformation> info;
+        private Iterator<String> it;
+        
+        public RSIterator() {
+            this.it = remoteSystemsInformation.keySet().iterator();
+        }
+        @Override
+        public boolean hasNext() {
+            return it.hasNext();
+        }
+
+        @Override
+        public RemoteSystemInformation next() {
+            return remoteSystemsInformation.get(it.next());
+        }
+
+        @Override
+        public void remove() {
+            throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        }
+    }
+
+
 }
