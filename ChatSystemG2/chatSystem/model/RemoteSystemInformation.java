@@ -10,20 +10,18 @@ import java.util.List;
  */
 public class RemoteSystemInformation extends UserInformation {
 	
-	List<String> messagesReceived;
-	List<String> messagesToSend;
-	List<String> messagesSent;
+	private List<String> messagesReceived;
+	private List<String> messagesToSend;
+	private List<String> messagesSent;
 	
         /**
          * Class' constructor
          * @param ip remote system's ip address
          */
-	public RemoteSystemInformation (String ip) {
+	/*public RemoteSystemInformation (String ip) {
 		super(ip);
-		this.messagesReceived = new ArrayList<> ();
-		this.messagesToSend = new ArrayList<> ();
-		this.messagesSent = new ArrayList<> ();
-	}
+		
+	}*/
 	
         /**
          * Class' constructor
@@ -32,9 +30,9 @@ public class RemoteSystemInformation extends UserInformation {
          */
         public RemoteSystemInformation(String username, String ip) {
             super(username,ip);
-            this.messagesReceived = new ArrayList<> ();
-            this.messagesToSend = new ArrayList<> ();
-            this.messagesSent = new ArrayList<> ();
+            this.messagesReceived = new ArrayList<String> ();
+	    this.messagesToSend = new ArrayList<String> ();
+            this.messagesSent = new ArrayList<String> ();
         }
         
         /**

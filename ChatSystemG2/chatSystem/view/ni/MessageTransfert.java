@@ -8,6 +8,8 @@ import java.util.Enumeration;
 import java.util.List;
 import java.util.Iterator;
 import chatSystem.model.RemoteSystems;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  * Class used to send messages
@@ -15,7 +17,7 @@ import chatSystem.model.RemoteSystems;
  */
 public class MessageTransfert {
     
-    final static int portUdpEmission = 16000;
+    final static int portUdpEmission = 16001;
     
     private DatagramSocket messageSocket;
     private RemoteSystems rmInstance;
@@ -38,9 +40,14 @@ public class MessageTransfert {
      * @return broadcast address determined
      */
     public InetAddress determineBroadcastAddress() {
-        boolean found = false;
-        InetAddress broadcast = null;
+       // boolean found = false;
+       InetAddress broadcast = null;
         try {
+            broadcast = InetAddress.getByName("255.255.255.255");
+        } catch (UnknownHostException ex) {
+            Logger.getLogger(MessageTransfert.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        /*try {
             Enumeration<NetworkInterface> interfaces =NetworkInterface.getNetworkInterfaces();
             while (interfaces.hasMoreElements() && !found)  {
                 NetworkInterface ni = interfaces.nextElement();
@@ -56,7 +63,7 @@ public class MessageTransfert {
             }
         } catch (SocketException exc) {
             System.out.println("Cette machine n'a pas d'interface");
-        }
+        }*/
         return broadcast;
     }
     
