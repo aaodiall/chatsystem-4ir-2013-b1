@@ -41,35 +41,31 @@ public class ChatSystem {
 	public static void main(String[] args) throws UnknownHostException{
 		ArrayList <String> remote = new ArrayList<String>();
 		int portUDP=16001;
-		int bufferSize=10;
+		Thread chatNIThread;
 		modelListUsers = new ModelListUsers();
 		modelUsername = new ModelUsername();
 		modelStates = new ModelStates();
 		modelGroupRecipient = new ModelGroupRecipient();
 		modelText = new ModelText();
 		chatController = new Controller(modelListUsers,modelStates , modelText, modelUsername, modelGroupRecipient);
-		//chatGUI=new ChatGUI(chatController);
-		chatNI = new ChatNI(portUDP,chatController,bufferSize);
-		//modelUsername.addObserver(chatNI);
-		//modelListUsers.addObserver(chatGUI);
-		//modelStates.addObserver(chatNI);
-		//modelGroupRecipient.addObserver(chatNI);
+		chatGUI=new ChatGUI(chatController);
+		chatNI = new ChatNI(portUDP,chatController);
+		chatNIThread = new Thread(chatNI);
+		chatNIThread.start();
+		modelUsername.addObserver(chatNI);
+		modelListUsers.addObserver(chatGUI);
+		modelStates.addObserver(chatNI);
+		modelGroupRecipient.addObserver(chatNI);
 		//System.out.println("alpha");
 
 		
 		// TEST de CONNEXION 
-		chatController.performConnect("JongSo");
-		if (modelStates.isConnected()){ chatNI.connect(modelUsername.getUsername(), true); }
-		chatNI.run();
-		chatNI.run();
-		chatNI.connect("toto", false);
-		chatNI.connect("titi", false);
-		chatNI.run();
-		chatNI.run();
-		chatController.performDisconnect();
+		//chatController.performConnect("jo");
+		if (modelStates.isConnected()){ chatNI.connect(modelUsername.getUsername(), false); }
+		
+		//chatController.performDisconnect();
 		if (!modelStates.isConnected()){ chatNI.disconnect(modelUsername.getUsername()); }
-		chatNI.run();
-				
+
 		//chatGui.getwConnect();
 		/*chatController.performDisconnect();*/
 		//if (modelStates.isConnected()){)
