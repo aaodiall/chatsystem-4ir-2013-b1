@@ -1,10 +1,15 @@
 package chatsystemg5.network;
+import chatsystemg5.common.*;
 
+import chatsystemg5.common.Message;
+import static chatsystemg5.common.Message.fromArray;
 import java.io.IOException;
 import java.net.DatagramPacket;
 import java.net.DatagramSocket;
 import java.net.InetAddress;
 import java.net.SocketException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
     
     
@@ -48,6 +53,27 @@ public class MessageReceptionNI extends MessageHandlerNI implements FromRemoteAp
         catch (IOException exc) {
             System.out.println("Connection error\n" + exc);
         }
+    }
+
+    @Override
+    public Message receive (byte[] array) {
+        try {
+            Message msg = Message.fromArray(array);
+            if (msg instanceof Hello) {
+                return ((Hello) msg);
+            }
+            if (msg instanceof Goodbye) {
+                return ((Goodbye) msg);
+            }
+            if (msg instanceof Text) {
+                return  ((Text) msg);
+            }
+        }
+        catch (IOException ex) {
+            Logger.getLogger(MessageReceptionNI.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
     
