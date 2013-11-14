@@ -6,6 +6,7 @@ import java.awt.event.ActionListener;
 
 import java.net.UnknownHostException;
 
+import javax.swing.JList;
 import javax.swing.JOptionPane;
 
 import Controller.ChatController;
@@ -19,6 +20,7 @@ public class FrontController extends Observer implements Runnable,ActionListener
 	
 	public FrontController() {
 		// TODO Auto-generated constructor stub
+		
 		this.mFrame = new MainFrame();
 		mFrame.getMenu().getMOO().getMenuItemAbout().addActionListener(this);
 		mFrame.getMenu().getMOO().getMenuItemSelectFont().addActionListener(this);
@@ -122,6 +124,9 @@ public class FrontController extends Observer implements Runnable,ActionListener
 							e1.printStackTrace();
 						}
 						ChatController.PerformConnect();
+						if(mFrame.getUCpane().getTitleAt(0) == "bonjour"){
+							mFrame.getUCpane().closeTab(0);
+						}
 						mFrame.getMenu().getMGO().getMenuItemConnect().setEnabled(false);
 						mFrame.getMenu().getMGO().getMenuItemDisconnect().setEnabled(true);
 						mFrame.getULpane().getULChooseUser().setEnabled(true);
@@ -153,6 +158,15 @@ public class FrontController extends Observer implements Runnable,ActionListener
 	 */
 	public MainFrame getmFrame() {
 		return mFrame;
+	}
+	
+	public void Notify(int notif){
+		if(notif == 0){
+			
+			this.mFrame.getULpane().getULLpane().getUserList().setListData(ChatController.getUserList().toArray());
+		}else if(notif == 1){
+			
+		}
 	}
 
 	@Override
