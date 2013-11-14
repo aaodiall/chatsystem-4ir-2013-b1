@@ -13,9 +13,14 @@ public class ChatController {
         emissionNI = new MessageEmissionNI(username);
     }
     
-    public void perform_connection () {
+    public void perform_connection (String username) {
         Hello msg = new Hello(username, false);
-        emissionNI.send(msg);
+        emissionNI.send(msg);             
+    }
+    
+     public void perform_connection (Hello hi) {
+        String user_connected = hi.getUsername();
+        
     }
     
     public void perform_disconnection () {
