@@ -1,4 +1,4 @@
-package chatsystemg5.brain;
+    package chatsystemg5.brain;
 
 import chatsystemg5.ihm.ListWindow;
 import java.util.ArrayList;
@@ -28,6 +28,10 @@ public class ListModel extends ChatModel {
     
     public void remove_user(String username, String IP_addr) {
         hmap_users.remove(username + "-" + IP_addr);
+    }
+    
+    public String get_IP_addr (String username) {
+        return hmap_users.get(username);
     }
 
     @Override
