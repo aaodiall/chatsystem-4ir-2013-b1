@@ -1,13 +1,21 @@
 package chatsystemg5.ihm;
 
-import java.util.Observable;
-import java.util.Observer;
+import chatsystemg5.brain.ChatController;
 
-public class ChatGUI implements Observer {
-
-    @Override
-    public void update(Observable o, Object arg) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+public class ChatGUI {
+    private ChatController chatController;
+    //private ConnectionWindow connectionWindow;
+    private ListWindow listWindow;
+    //private ChatWindow chatWindow;
+    
+    public ChatGUI(ChatController chatController){
+        this.chatController = chatController;
+        //this.connectionWindow = new ConnectionWindow();
+        this.listWindow = new ListWindow(this.chatController.get_listDB());
+        //this.chatWindow = new ChatWindow();
     }
-
+    
+    public ListWindow get_listWindow(){
+        return this.listWindow;
+    }
 }

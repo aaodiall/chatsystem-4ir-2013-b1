@@ -2,20 +2,14 @@ package chatsystemg5.network;
 import chatsystemg5.brain.ChatController;
 import chatsystemg5.common.*;
 
-import chatsystemg5.common.Message;
-import static chatsystemg5.common.Message.fromArray;
 import java.io.IOException;
 import java.net.DatagramPacket;
 import java.net.DatagramSocket;
 import java.net.InetAddress;
 import java.net.SocketException;
-import java.util.Observer;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-    
-    
-// observable ?
 public class MessageReceptionNI extends MessageHandlerNI implements FromRemoteApp {
     
     private ChatController chat_control;
@@ -56,13 +50,14 @@ public class MessageReceptionNI extends MessageHandlerNI implements FromRemoteAp
                 // get the IP of the sender
                 this.IP_source = message.getAddress();
                 
+                // send the content of the buffer to the controller
                 this.send_to_controller(buffer, IP_source);
                 // get and convert to string content of the buffer
                 text = new String(buffer);
-                
+
 		text = text.substring(0, message.getLength());
                 // Ca sera inutile ensuite pour le connect
-                System.out.println(text);
+                
 
             }
         } catch (IOException ex) {
@@ -76,6 +71,7 @@ public class MessageReceptionNI extends MessageHandlerNI implements FromRemoteAp
     public void send_to_controller (byte[] array, InetAddress IP_addr) {
         try {
             Message msg = Message.fromArray(array);
+            System.out.println(msg.toString());
             if (msg instanceof Hello) {
                 chat_control.perform_connection((Hello) msg, IP_addr);
             }
