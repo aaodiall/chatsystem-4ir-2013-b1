@@ -4,8 +4,10 @@
 package chatSystemController;
 
 import java.net.InetAddress;
+import java.net.UnknownHostException;
 import java.util.ArrayList;
 import java.util.Iterator;
+
 import chatSystemModel.*;
 import runChat.ChatSystem;
 
@@ -71,7 +73,7 @@ public class Controller {
 	}
 	
 
-	public void performConnect(String username){
+	public void performConnect(String username) throws UnknownHostException{
 		modelUsername.setUsername(username);
 		// l'utilisateur est connecte
 		this.modelStates.setState(true);
@@ -79,6 +81,8 @@ public class Controller {
 		ChatSystem.getChatNI().connect(username, true);
 		ChatSystem.getChatGui().getwConnect().setTfdUsername("");;*/
 		System.out.println(modelUsername.getUsername() + " : connection in progress");
+		//juste pour tester implementation de update pour liste users
+		modelListUsers.addUsernameList("jojo@2.2.2.2", InetAddress.getLocalHost());
 	}
 	
 	
@@ -112,13 +116,20 @@ public class Controller {
 	public void connectReceived(String username,InetAddress ipRemote, boolean ack){
 		//ChatSystem.getChatGui().getwConnect().setVisible(false);
 		// si ack = true c'est une demande de connexion donc on repond	
-		if (ack){
-			ChatSystem.getChatNI().connect(ChatSystem.getModelUsername().getUsername(),false);
+		if (ack=true){
+			if (modelStates.isConnected()){
+				ChatSystem.getChatNI().connect(ChatSystem.getModelUsername().getUsername(),false);
+				
+			}	
 		}
-		if (!modelListUsers.isInListUsers(username)){
-			modelListUsers.addUsernameList(username, ipRemote);
-			System.out.println(username + " est connecté");
+		else{
+			if ((!modelListUsers.isInListUsers(username)) && (modelStates.isConnected() == true)){
+				modelListUsers.addUsernameList(username, ipRemote);
+				
+			}
+			
 		}
+		
 	}
 	public void disconnectReceived(String username){
 		modelListUsers.removeUsernameList(username);

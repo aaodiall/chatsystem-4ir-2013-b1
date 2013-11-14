@@ -7,16 +7,12 @@ import java.io.IOException;
 import java.net.DatagramPacket;
 import java.net.DatagramSocket;
 import java.net.InetAddress;
-import java.net.SocketException;
 import java.util.ArrayList;
-import java.util.Iterator;
 
 import chatSystemCommon.Goodbye;
 import chatSystemCommon.Hello;
 import chatSystemCommon.Message;
-import chatSystemCommon.Text;
 import chatSystemModel.ModelListUsers;
-import chatSystemModel.ModelUsername;
 
 /**
  * @author alpha
@@ -46,25 +42,16 @@ public class ChatNIMessage {
 	
 	private DatagramSocket socketUDP;
 	private ModelListUsers modelListUsers;
-	private ModelUsername modelUsername;
 	private InetAddress userIP;
 	private InetAddress userIPBroadcast;
 	private ArrayList<DatagramPacket> bufferMsg2Send;
 	
-	public ChatNIMessage(DatagramSocket socketChatNIMessage, int bufferSize, ModelListUsers modelListUsers,ModelUsername modelUsername,InetAddress userIP,InetAddress userIPBroadcast){
+	public ChatNIMessage(DatagramSocket socketChatNIMessage, int bufferSize, ModelListUsers modelListUsers,InetAddress userIP,InetAddress userIPBroadcast){
 		this.socketUDP = socketChatNIMessage;
-		// Enable Broadcast
-		try{
-			this.socketUDP.setBroadcast(true);
-			this.bufferMsg2Send = new ArrayList<DatagramPacket>(this.socketUDP.getSendBufferSize());
-		}catch (SocketException e){
-			System.out.println("error : socket exception setBroadcast");
-		}
-		
 		this.modelListUsers = modelListUsers;
-		this.modelUsername = modelUsername;
 		this.userIP=userIP;
 		this.userIPBroadcast=userIPBroadcast;
+		this.bufferMsg2Send = new ArrayList<DatagramPacket>(bufferSize);
 	}
 	
 	public void sendHello(String username, boolean ack){
@@ -75,26 +62,31 @@ public class ChatNIMessage {
 		try {
 			// Objet to byte[]
 			helloStream = ((Message)hello).toArray();
+			// Enable Broadcast
+			this.socketUDP.setBroadcast(true);
 			// make pdu
-			pdu = new DatagramPacket(helloStream,helloStream.length,this.userIPBroadcast,this.socketUDP.getLocalPort());
+			pdu = new DatagramPacket(helloStream,helloStream.length,userIPBroadcast,this.socketUDP.getLocalPort());
 			// add pdu to bufferMessagesToSend
 			this.bufferMsg2Send.add(pdu);
 			// send pdu
-			this.run();		
-		}catch (IOException e){
+			this.run();
+			this.socketUDP.setBroadcast(false);			
+		}catch (Exception e){
 			System.out.println("connection failed");
+			e.printStackTrace();
 		}
 
 	}
 
 	public void sendBye(String username){
-		byte [] byeStream;
+	byte [] byeStream;
 		DatagramPacket pdu;
 		// new Goodbye object
 		Goodbye bye = new Goodbye(username);
 		try{
 			byeStream =((Message)bye).toArray();
-			pdu=new DatagramPacket(byeStream, byeStream.length, this.userIPBroadcast, this.socketUDP.getLocalPort());
+			this.socketUDP.setBroadcast(true);
+			pdu=new DatagramPacket(byeStream,byeStream.length,InetAddress.getLocalHost(),this.socketUDP.getLocalPort());//portUDP);//InetAddress.getByAddress(localNetwork),portUDP);
 			this.bufferMsg2Send.add(pdu);
 			this.run();
 		}catch (IOException e){
@@ -102,24 +94,24 @@ public class ChatNIMessage {
 		}
 	}
 	
-	public void sendText(ArrayList<String> usernameList, String text2Send,String username){
-		InetAddress recipient;
+	public void sendText(ArrayList<String> usernameList, String text2Send){
+		/*InetAddress recipient;
 		Iterator <String> it;
 		DatagramPacket pdu2send;
-		Text messageText = new Text(username,text2Send);
+		String text2Send = ChatSystem.getModelText().getTextToSend();
+		Text messageText = new Text(ChatSystem.getModelUsername().getUsername(),text2Send);
 		try{
 			byte[] messageStream = messageText.toArray();	
-			//it = ChatSystem.getModelGroupRecipient().getGroupRecipients().iterator();
-			it = usernameList.iterator();
+			it = ChatSystem.getModelGroupRecipient().getGroupRecipients().iterator();
 			while(it.hasNext()){
-				recipient = this.modelListUsers.getListUsers().get((String)it.next());
-				pdu2send = new DatagramPacket(messageStream,messageStream.length,recipient,this.socketUDP.getPort());
+				recipient = ChatSystem.getModelListUsers().getListUsers().get((String)it.next());
+				pdu2send = new DatagramPacket(messageStream,messageStream.length,recipient,this.portUDP);
 				this.socketUDP.send(pdu2send);
 				this.run();
 			}
 		}catch(IOException ioExc){
 			System.out.println("error : construction du stream message");
-		}
+		}*/	
 	}
 	
 	public void sendFileTransfertDemand(String recipient, String fileName){
@@ -134,16 +126,20 @@ public class ChatNIMessage {
 		
 	}
 	
+	/*int first = 0;
+	
+	// envoie d'un pdu
+	if (this.bufferMessagesToSend.isEmpty() == false){
+		try{
+			socketUDP.send(this.bufferMessagesToSend.get(first));
+			this.bufferMessagesToSend.remove(first);
+		}catch (IOException sendExc){
+			System.out.println("cannot send the message");
+		}			
+	}*/
+	
 	void run(){
-		int first = 0;
-		// envoie d'un pdu
-		if (this.bufferMsg2Send.isEmpty() == false){
-			try{
-				socketUDP.send(this.bufferMsg2Send.get(first));
-				this.bufferMsg2Send.remove(first);
-			}catch (IOException sendExc){
-				System.out.println("cannot send the message");
-			}			
-		}
-	}	
+		
+	}
+	
 }
