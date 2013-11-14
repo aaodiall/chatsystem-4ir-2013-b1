@@ -23,13 +23,22 @@ public class MessageEmissionNI extends MessageHandlerNI implements ToRemoteApp{
     private InetAddress IP_broadcast;
     private DatagramSocket UDP_sock;
     private DatagramPacket message;
-//    private Message message_to_send;
+    //private Message message_to_send;
     private byte[] buffer;
     
-    public MessageEmissionNI (String username) throws SocketException{
+    public MessageEmissionNI (String username){
+        
         this.username = username;
         this.UDP_port_dest = 16000;
-        this.UDP_sock = new DatagramSocket();
+
+       
+        try {
+            // create a socket with an address we don't care
+            this.UDP_sock = new DatagramSocket();
+        }
+        catch (SocketException ex) {
+            Logger.getLogger(MessageEmissionNI.class.getName()).log(Level.SEVERE, null, ex);
+        }
         
     }
     
@@ -38,16 +47,17 @@ public class MessageEmissionNI extends MessageHandlerNI implements ToRemoteApp{
          try {
             
             // address de brodcast
-            this.IP_dest = InetAddress.getByName("255.255.255.255");
+            this.UDP_sock.setBroadcast(true);
+            //this.IP_dest = InetAddress.getByName("255.255.255.255");
+            this.IP_dest = InetAddress.getByName("127.0.0.1");
             
-            // create a socket with an address we don't care
-            
-
             // send the message
             this.buffer = hi.toArray();
             this.message = new DatagramPacket(this.buffer, this.buffer.length, this.IP_dest, this.UDP_port_dest);
             this.UDP_sock.send(message);
-            run();
+            
+            // disable the broadcast
+            this.UDP_sock.setBroadcast(false);
         }
         catch (IOException exc) {
             System.out.println("Connection error\n" + exc);
@@ -82,10 +92,6 @@ public class MessageEmissionNI extends MessageHandlerNI implements ToRemoteApp{
             System.out.println("Connection error\n" + exc);
         }
     }
-          
-//    public void run() {
-//        this.send(this.message_to_send);
-//    }
     
     @Override
     public void send(Message msg){

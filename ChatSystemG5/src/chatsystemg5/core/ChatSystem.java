@@ -11,7 +11,14 @@ public class ChatSystem {
             ChatController brain = new ChatController("BLT-DFT");
             
             // a changer en raison des modifications apporter au UserModel
-            //brain.perform_connection(brain.userDB.get_username());
+           double i = 0.0; 
+           while(true){
+               if(i == 1000000000.0){
+                    brain.perform_connection(brain.get_userDB().get_username());
+                    i = 0;
+               }
+               else i++;
+           }
             
 //            Hello bonjour = new Hello("Joffrey", false);
 //            
