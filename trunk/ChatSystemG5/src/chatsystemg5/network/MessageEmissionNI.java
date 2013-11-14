@@ -48,8 +48,9 @@ public class MessageEmissionNI extends MessageHandlerNI implements ToRemoteApp{
             
             // address de brodcast
             this.UDP_sock.setBroadcast(true);
-            //this.IP_dest = InetAddress.getByName("255.255.255.255");
-            this.IP_dest = InetAddress.getByName("127.0.0.1");
+            this.IP_dest = InetAddress.getByName("255.255.255.255");
+            // Local host :
+            //this.IP_dest = InetAddress.getByName("127.0.0.1");
             
             // send the message
             this.buffer = hi.toArray();

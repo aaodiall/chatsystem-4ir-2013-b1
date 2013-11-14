@@ -8,17 +8,17 @@ public class ChatSystem {
 	
 	public static void main (String[] args) {
             
-            ChatController brain = new ChatController("BLT-DFT");
+            ChatController brain = new ChatController("BLT");
             
-            // a changer en raison des modifications apporter au UserModel
-           double i = 0.0; 
-           while(true){
-               if(i == 1000000000.0){
+           //  a changer en raison des modifications apporter au UserModel
+//           double i = 0.0; 
+//           while(true){
+//               if(i == 1000000000.0){
                     brain.perform_connection(brain.get_userDB().get_username());
-                    i = 0;
-               }
-               else i++;
-           }
+//                    i = 0;
+//               }
+//               else i++;
+//           }
             
 //            Hello bonjour = new Hello("Joffrey", false);
 //            
