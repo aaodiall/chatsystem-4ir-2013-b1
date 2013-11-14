@@ -14,8 +14,8 @@ import Controller.Observer;
 
 public class FrontController extends Observer implements Runnable,ActionListener {
 	private MainFrame mFrame;
-	private static int fontSize;
-	private static Font selectedFont;
+	
+	private Font selectedFont;
 	
 	
 	public FrontController() {
@@ -30,8 +30,8 @@ public class FrontController extends Observer implements Runnable,ActionListener
 		mFrame.getMenu().getMGO().getMenuItemDisconnect().addActionListener(this);
 		mFrame.getULpane().getULChooseUser().addActionListener(this);
 		mFrame.getULpane().getMSSend().addActionListener(this);
-		this.fontSize = 12;
-		this.selectedFont = new Font("Times New Roman", Font.PLAIN, fontSize);
+		
+		this.selectedFont = new Font("Times New Roman", Font.PLAIN, 12);
 		Thread t = new Thread(this, "Receiver Thread");
 	     t.start(); // Start the thread
 	}
