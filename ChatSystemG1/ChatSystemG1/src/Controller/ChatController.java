@@ -164,7 +164,7 @@ public class ChatController {
 	 * @throws UnknownHostException 
 	 */
 	public static void setLocalUsername(String localusername) throws UnknownHostException {
-		localUsername = localusername+"@"+InetAddress.getLocalHost().getHostAddress().toString();
+		localUsername = localusername;
 	}
 	/**
 	 * @return the chatGuiFrontController
