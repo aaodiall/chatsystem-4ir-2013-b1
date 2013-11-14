@@ -12,6 +12,7 @@ import chatSystemCommon.Goodbye;
 import chatSystemCommon.Hello;
 import chatSystemCommon.Message;
 import chatSystemCommon.Text;
+import Interface.GuiToController;
 import Model.ChatModel;
 import Model.MessageFactory;
 import Model.User;
@@ -19,7 +20,7 @@ import View.ChatGUI;
 import View.ReceivedNI;
 import View.SendNI;
 
-public class ChatController {
+public class ChatController implements GuiToController{
 	private ChatModel chatModel;
 	private ChatGUI chatGui;
 	

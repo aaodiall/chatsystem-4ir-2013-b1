@@ -30,10 +30,11 @@ import javax.swing.text.StyleConstants;
 import javax.swing.text.StyledDocument;
 
 import Controller.ChatController;
+import Interface.ControllerToGui;
 import Model.ChatModel;
 import Model.User;
 
-public class ChatGUI extends JFrame{
+public class ChatGUI extends JFrame implements ControllerToGui{
 	private static final long serialVersionUID = -7473290932142595058L;
 	
 	private final int width = 600;
