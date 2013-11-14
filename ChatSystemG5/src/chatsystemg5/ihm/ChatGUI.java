@@ -3,6 +3,7 @@ package chatsystemg5.ihm;
 import chatsystemg5.brain.ChatController;
 
 public class ChatGUI {
+    
     private ChatController chatController;
     //private ConnectionWindow connectionWindow;
     private ListWindow listWindow;

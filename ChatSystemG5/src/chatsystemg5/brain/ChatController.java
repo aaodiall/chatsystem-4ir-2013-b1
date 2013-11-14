@@ -1,6 +1,7 @@
 package chatsystemg5.brain;
 import chatsystemg5.common.*;
 import chatsystemg5.ihm.ChatGUI;
+import chatsystemg5.ihm.ConnectionWindow;
 import chatsystemg5.network.*;
 
 import java.net.InetAddress;
@@ -17,24 +18,33 @@ public class ChatController {
     MessageEmissionNI emissionNI;
     Thread receptionNI;
     
-    public ChatController (String username) {
+    public ChatController () {
         // initialize view
         // TO DO create view at the end
-        chatGUI = new ChatGUI(this);      
+        chatGUI = new ChatGUI(this);
         
         // initialize model
-        userDB = new UserModel(username);
         listDB = new ListModel(this);
         
-        // initialize network
-            // create receptor part of the app
-            this.receptionNI = new Thread(new MessageReceptionNI(this));
-            // strat listenning the network on port 16000
-            receptionNI.start();
-            
-            this.emissionNI = new MessageEmissionNI(this.userDB.get_username());
+        // initialize interface
+        ConnectionWindow conn_window = new ConnectionWindow(this); 
             
     }
+    
+    /**************** Controller init ****************/
+    public void init_controller (String username) {
+        // On crée la BDD User
+        userDB = new UserModel(username);
+        
+        // initialize network
+        // create receptor part of the app
+        this.receptionNI = new Thread(new MessageReceptionNI(this));
+        // strat listenning the network on port 16000
+        receptionNI.start();
+          
+        this.emissionNI = new MessageEmissionNI(this.userDB.get_username());
+    }
+    
     
     /**************** Connection ****************/
     
@@ -58,7 +68,7 @@ public class ChatController {
         
         // notify the Observer (ListWindow) of the change about ModelList
         listDB.notifyObservers();
-         
+        
         // if remote user first connection
         if(!hi.isAck()){
             // create a new message to sent back ack
@@ -94,17 +104,26 @@ public class ChatController {
     /**************** Communication by text ****************/
     
     // Envoi d'un messsage texte
-    public void perform_send (String text) {
-        Text msg = new Text(this.userDB.get_username(), text);
-        //emissionNI.send(msg)
+    public void perform_send (String IP_addr, String text) {
+        try {
+            //System.out.println(username + text);
+            Text msg = new Text(this.userDB.get_username(), text);
+            //msg.toString();
+            InetAddress IP_dest = InetAddress.getByName(IP_addr);
+            System.out.println("Here Controller : " + IP_dest);
+            emissionNI.send(msg, IP_dest);
+        } catch (UnknownHostException ex) {
+            Logger.getLogger(ChatController.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }
     
     // Réception d'un message
     public void perform_send (Text txt, InetAddress IP_addr) {
-        // plus tard
+        //display_message ()
+        System.out.println(txt.toString());
     }
-    
-    // getters
+        
+    /**************** Getters ****************/
     public UserModel get_userDB(){
         return this.userDB;
     }
