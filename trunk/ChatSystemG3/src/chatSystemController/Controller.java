@@ -117,8 +117,9 @@ public class Controller {
 		//ChatSystem.getChatGui().getwConnect().setVisible(false);
 		// si ack = true c'est une demande de connexion donc on repond	
 		if (ack=true){
-			if (modelStates.isConnected()){
+			if ((!modelListUsers.isInListUsers(username)) && modelStates.isConnected()){
 				ChatSystem.getChatNI().connect(ChatSystem.getModelUsername().getUsername(),false);
+				modelListUsers.addUsernameList(username, ipRemote);
 				
 			}	
 		}
