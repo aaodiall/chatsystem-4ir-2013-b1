@@ -124,8 +124,10 @@ public class FrontController extends Observer implements Runnable,ActionListener
 							e1.printStackTrace();
 						}
 						ChatController.PerformConnect();
+						if(mFrame.getUCpane().getTabCount() != 0){
 						if(mFrame.getUCpane().getTitleAt(0) == "bonjour"){
 							mFrame.getUCpane().closeTab(0);
+						}
 						}
 						mFrame.getMenu().getMGO().getMenuItemConnect().setEnabled(false);
 						mFrame.getMenu().getMGO().getMenuItemDisconnect().setEnabled(true);
