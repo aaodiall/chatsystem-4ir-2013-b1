@@ -17,37 +17,21 @@ public class ChatSystem {
 	private static ModelText modelText;
 	private static ModelGroupRecipient modelGroupRecipient;
 	
-	public static Controller getController(){
-		return chatController;
-	}
+	public static Controller getController(){ return chatController; }
 	
-	public static ChatGUI getChatGui(){
-		return chatGUI;
-	}
+	public static ChatGUI getChatGui(){	return chatGUI;	}
 	
-	public static ChatNI getChatNI(){
-		return chatNI;
-	}
+	public static ChatNI getChatNI(){ return chatNI; }
 	
-	public static ModelListUsers getModelListUsers(){
-		return modelListUsers; 
-	}
+	public static ModelListUsers getModelListUsers(){ return modelListUsers; }
 	
-	public static ModelUsername getModelUsername(){
-		return modelUsername;
-	}
+	public static ModelUsername getModelUsername(){ return modelUsername; }
 	
-	public static ModelStates getModelStates(){
-		return modelStates;
-	}
+	public static ModelStates getModelStates(){	return modelStates;	}
 	
-	public static ModelText getModelText(){
-		return modelText;
-	}
+	public static ModelText getModelText(){	return modelText; }
 	
-	public static ModelGroupRecipient getModelGroupRecipient(){
-		return modelGroupRecipient;
-	}
+	public static ModelGroupRecipient getModelGroupRecipient(){	return modelGroupRecipient; }
 	
 	/**
 	 * @param args
@@ -62,23 +46,36 @@ public class ChatSystem {
 		modelGroupRecipient = new ModelGroupRecipient();
 		modelText = new ModelText();
 		chatController = new Controller(modelListUsers,modelStates , modelText, modelUsername, modelGroupRecipient);
+		//chatGUI=new ChatGUI(chatController);
 		chatNI = new ChatNI(portUDP,chatController,bufferSize);
-		chatGUI=new ChatGUI(chatController);
-		modelUsername.addObserver(chatNI);
-		modelUsername.addObserver(chatGUI);
-		modelListUsers.addObserver(chatGUI);
-		modelStates.addObserver(chatNI);
-		modelStates.addObserver(chatGUI);
-		modelGroupRecipient.addObserver(chatNI);
-		System.out.println("alpha");
+		//modelUsername.addObserver(chatNI);
+		//modelListUsers.addObserver(chatGUI);
+		//modelStates.addObserver(chatNI);
+		//modelGroupRecipient.addObserver(chatNI);
+		//System.out.println("alpha");
+
+		
+		// TEST de CONNEXION 
+		chatController.performConnect("JongSo");
+		if (modelStates.isConnected()){ chatNI.connect(modelUsername.getUsername(), true); }
+		chatNI.run();
+		chatNI.run();
+		chatNI.connect("toto", false);
+		chatNI.connect("titi", false);
+		chatNI.run();
+		chatNI.run();
+		chatController.performDisconnect();
+		if (!modelStates.isConnected()){ chatNI.disconnect(modelUsername.getUsername()); }
+		chatNI.run();
+				
 		//chatGui.getwConnect();
 		/*chatController.performDisconnect();*/
-	/*	if (modelStates.isConnected()){
-		chatController.performConnect("lilou");*/
-		remote.add((String)(ChatSystem.modelListUsers.getListUsers().keySet().iterator().next()));
+		//if (modelStates.isConnected()){)
+		//chatController.performConnect("lilou");
+		//remote.add((String)(ChatSystem.modelListUsers.getListUsers().keySet().iterator().next()));
 		
-		chatController.performSendText("premier message",remote);
-		System.out.println(ChatSystem.getModelUsername().getUsername());
+		//chatController.performSendText("premier message",remote);
+		//System.out.println(ChatSystem.getModelUsername().getUsername());
 		/*chatController.performDisconnect();
 		if (modelStates.isConnected()){
 			System.out.println(modelUsername.getUsername() + " : disconnection succeed");

@@ -73,21 +73,23 @@ public class Controller {
 
 	public void performConnect(String username){
 		modelUsername.setUsername(username);
-		//ChatSystem.getChatGui().getwCommunicate().setVisible(true);
-		ChatSystem.getChatNI().connect(username, false);
-		ChatSystem.getChatGui().getwConnect().setTfdUsername("");;
-		System.out.println(modelUsername.getUsername() + " : connection succeed");
+		// l'utilisateur est connecte
+		this.modelStates.setState(true);
+		/*ChatSystem.getChatGui().getwCommunicate().setVisible(true);
+		ChatSystem.getChatNI().connect(username, true);
+		ChatSystem.getChatGui().getwConnect().setTfdUsername("");;*/
+		System.out.println(modelUsername.getUsername() + " : connection in progress");
 	}
 	
 	
 	public void performDisconnect(){
-		ChatSystem.getChatNI().disconnect(modelUsername.getUsername());
-		modelListUsers.clearListUsers();;
 		modelStates.setState(false);
+		modelListUsers.clearListUsers();
+		//ChatSystem.getChatNI().disconnect(modelUsername.getUsername());
 		//ChatSystem.getChatGui().getwCommunicate().setVisible(false);
 		//ChatSystem.getChatGui().getwConnect().setVisible(true);
 		
-		System.out.println(modelUsername.getUsername() + " : deconnection succeed");
+		System.out.println(modelUsername.getUsername() + " : deconnection in progress");
 	}
 	
 	public void performSendText (String text, ArrayList<String> recipientList){
@@ -98,7 +100,7 @@ public class Controller {
 			recipient = ((String)it.next());
 			modelGroupRecipient.addRecipient(recipient);
 		}
-		ChatSystem.getChatNI().sendMsgText(recipientList, text);
+		ChatSystem.getChatNI().sendMsgText(recipientList, text,this.modelUsername.getUsername());
 	}
 	
 	public void messageReceived(String text, String username){
@@ -108,31 +110,18 @@ public class Controller {
 	}
 	
 	public void connectReceived(String username,InetAddress ipRemote, boolean ack){
-		// si ack = false c'est juste une reponse a un hello 
-		if (ack == false){
-			//si state = disconnected on le passe a connected
-			if (modelStates.isConnected() == false){
-				modelStates.setState(true);
-				System.out.println(modelUsername.getUsername() + " : connection succeed");
-				ChatSystem.getChatGui().getwConnect().setVisible(false);
-				
-			}
-			// on ajoute le remote a la liste
-			modelListUsers.addUsernameList(username, ipRemote);
-			
-		// si ack = true c'est une demande de connexion	
-		}else{
-			System.out.println(username + " est connecté");
-			// si c'est un nouvel utilisateur on l'ajoute et on repond
-			if (modelListUsers.isInListUsers(username)){
-				modelListUsers.addUsernameList(username, ipRemote);
-			
-			}
+		//ChatSystem.getChatGui().getwConnect().setVisible(false);
+		// si ack = true c'est une demande de connexion donc on repond	
+		if (ack){
 			ChatSystem.getChatNI().connect(ChatSystem.getModelUsername().getUsername(),false);
+		}
+		if (!modelListUsers.isInListUsers(username)){
+			modelListUsers.addUsernameList(username, ipRemote);
+			System.out.println(username + " est connecté");
 		}
 	}
 	public void disconnectReceived(String username){
 		modelListUsers.removeUsernameList(username);
-		
+		System.out.println(username + " est deconnecté");		
 	}
 }
