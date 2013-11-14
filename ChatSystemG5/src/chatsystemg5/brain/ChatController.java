@@ -35,8 +35,6 @@ public class ChatController {
         Hello msg = new Hello(username, false);
         this.emissionNI.send(msg);
         // create emmetor part of the app
-        
-
     }
     
     // Connexion d'un autre user

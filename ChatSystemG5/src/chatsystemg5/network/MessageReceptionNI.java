@@ -89,8 +89,6 @@ public class MessageReceptionNI extends MessageHandlerNI implements FromRemoteAp
         catch (IOException ex) {
             Logger.getLogger(MessageReceptionNI.class.getName()).log(Level.SEVERE, null, ex);
         }
-        
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
     
     // for the implementation of Observer pattern
