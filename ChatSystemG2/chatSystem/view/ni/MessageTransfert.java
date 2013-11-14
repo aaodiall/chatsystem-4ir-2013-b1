@@ -15,7 +15,7 @@ import java.util.logging.Logger;
  * Class used to send messages
  * @author Marjorie
  */
-public class MessageTransfert {
+public class MessageTransfert implements Runnable {
     
     final static int portUdpEmission = 16001;
     
@@ -165,6 +165,13 @@ public class MessageTransfert {
             this.messageSocket.send(msgToSend);
         } catch (IOException exc) {
             System.out.println("Probleme à la conversion du message ou à l'envoi du message");
+        }
+    }
+    
+    public void run() {
+        while(true) {
+            int nbMessagesSent = 0;
+            
         }
     }
 }

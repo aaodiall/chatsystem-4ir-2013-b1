@@ -49,7 +49,7 @@ public class MessageReceiver implements Runnable {
     /**
      * Receive a message and analyze it Call for the right chatNI's method
      */
-    public void receiveMessage() {
+    private void receiveMessage() {
         while (true) {
             DatagramPacket packet = new DatagramPacket(this.messageReceived, this.messageReceived.length);
             try {
