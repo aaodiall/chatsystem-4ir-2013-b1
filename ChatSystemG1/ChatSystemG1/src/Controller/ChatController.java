@@ -4,9 +4,6 @@ import java.net.InetAddress;
 import java.net.UnknownHostException;
 import java.util.ArrayList;
 
-import javax.swing.ListModel;
-import javax.swing.event.ListDataListener;
-
 import chatSystemCommon.*;
 import ChatNI.ChatNetwork;
 import IHM.FrontController;

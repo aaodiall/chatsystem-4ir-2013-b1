@@ -6,7 +6,6 @@ import java.awt.event.ActionListener;
 
 import java.net.UnknownHostException;
 
-import javax.swing.JList;
 import javax.swing.JOptionPane;
 
 import Controller.ChatController;
@@ -99,7 +98,7 @@ public class FrontController extends Observer implements Runnable,ActionListener
 			/*
 			 * FileChooser fc = new FileChooser();
 			 * fc.showDialog(null, "Envoyer");
-			 * java.io.File f = fc.getSelectedFile();
+			 *java.io.File f = fc.getSelectedFile();
 			 */
 			
 			
@@ -119,15 +118,15 @@ public class FrontController extends Observer implements Runnable,ActionListener
 						if ((s != null) && (s.length() > 0)){
 						   try {
 							ChatController.setLocalUsername(s);
-						} catch (UnknownHostException e1) {
+						   } catch (UnknownHostException e1) {
 							// TODO Auto-generated catch block
 							e1.printStackTrace();
-						}
+						   }
 						ChatController.PerformConnect();
 						if(mFrame.getUCpane().getTabCount() != 0){
-						if(mFrame.getUCpane().getTitleAt(0) == "bonjour"){
-							mFrame.getUCpane().closeTab(0);
-						}
+							if(mFrame.getUCpane().getTitleAt(0) == "bonjour"){
+								mFrame.getUCpane().closeTab(0);
+							}
 						}
 						mFrame.getMenu().getMGO().getMenuItemConnect().setEnabled(false);
 						mFrame.getMenu().getMGO().getMenuItemDisconnect().setEnabled(true);
@@ -167,7 +166,7 @@ public class FrontController extends Observer implements Runnable,ActionListener
 			
 			this.mFrame.getULpane().getULLpane().getUserList().setListData(ChatController.getUserList().toArray());
 		}else if(notif == 1){
-			
+			//conversation ici
 		}
 	}
 

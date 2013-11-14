@@ -1,15 +1,6 @@
 package Controller;
 
-import java.io.File;
-import java.net.InetAddress;
 import java.net.UnknownHostException;
-
-import javax.swing.JFileChooser;
-import javax.swing.JFrame;
-import javax.swing.JPanel;
-
-import ChatNI.ChatNetwork;
-import IHM.FrontController;
 
 
 public class ChatSystem {
@@ -31,7 +22,7 @@ public class ChatSystem {
 		while(chatC.getChatGuiFrontController().getmFrame().isVisible()){
 			System.out.flush();
 		}
-		System.out.println("on quitte!");
+		
 		System.exit(0);
 		
 		
