@@ -5,6 +5,6 @@ import java.net.SocketException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-public abstract class MessageHandlerNI extends ChatNI implements Runnable{
+public abstract class MessageHandlerNI extends ChatNI {
 
 }
