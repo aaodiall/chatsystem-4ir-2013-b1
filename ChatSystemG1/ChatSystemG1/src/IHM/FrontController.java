@@ -204,7 +204,9 @@ public class FrontController extends Observer implements Runnable,ActionListener
 				e.printStackTrace();
 			}
 		}
-		
+		if(ChatController.isConnected()){
+			ChatController.PerformDisconnect();
+		}
 		
 	}
 	

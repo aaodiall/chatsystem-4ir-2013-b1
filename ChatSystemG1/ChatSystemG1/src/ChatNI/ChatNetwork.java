@@ -4,6 +4,7 @@ import java.net.InetAddress;
 import java.net.InterfaceAddress;
 import java.net.NetworkInterface;
 import java.net.SocketException;
+import java.net.UnknownHostException;
 import java.util.ArrayList;
 import java.util.Enumeration;
 import java.util.List;
@@ -27,8 +28,8 @@ public class ChatNetwork implements Runnable{
 	
 	
 	
-	public static void NotifyMessageReceive(Message message){
-		if(!message.getUsername().equals(ChatController.getLocalUsername()) ){
+	public static void NotifyMessageReceive(Message message) throws UnknownHostException{
+		if(!message.getUsername().equals(ChatController.getLocalUsername()+"@"+InetAddress.getLocalHost().getHostAddress().toString()) ){
 			if(message.getClass() == Hello.class){
 				ChatController.HelloProcessing((Hello) message);
 			}else if(message.getClass() == Goodbye.class){
