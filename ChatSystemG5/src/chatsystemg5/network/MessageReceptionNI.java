@@ -8,23 +8,21 @@ import java.net.DatagramPacket;
 import java.net.DatagramSocket;
 import java.net.InetAddress;
 import java.net.SocketException;
+import java.util.Observer;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
     
     
-    
-public class MessageReceptionNI extends MessageHandlerNI implements FromRemoteApp {
+// observable ?
+public class MessageReceptionNI extends MessageHandlerNI implements FromRemoteApp, Observer {
     
     private int UDP_port;
     private DatagramSocket UDP_sock;
-    private InetAddress IP_dest;
+    private InetAddress IP_source;
     private DatagramPacket message;
     private byte[] buffer; 
     private String text;
-   
-    public MessageReceptionNI() {     
-    }
 
     @Override
     public void run() {
@@ -34,19 +32,24 @@ public class MessageReceptionNI extends MessageHandlerNI implements FromRemoteAp
             // the recepter always listen on the same port 16000
             this.UDP_port = 16000;
             this.UDP_sock = new DatagramSocket(this.UDP_port);
+            this.buffer = new byte[256];
 
              // always listenning
             while(true){
                 
-                this.buffer = new byte[256];
+                
                 this.message = new DatagramPacket(buffer, buffer.length);
                 this.UDP_sock.receive(message);
                 
-                InetAddress IP_dest = message.getAddress();
-                text = new String(buffer) ;
+                // get the IP of the sender
+                this.IP_source = message.getAddress();
+                
+                // get and convert to stirng content of the buffer
+                text = new String(buffer);
+                
 		text = text.substring(0, message.getLength());
                 // Ca sera inutile ensuite pour le connect
-                System.out.println("Reception from port " + this.message.getPort() + " of machine " + this.message.getAddress() + " : " + text);
+                System.out.println(text);
 
             }
         }
@@ -75,6 +78,10 @@ public class MessageReceptionNI extends MessageHandlerNI implements FromRemoteAp
         
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
+    
+    // for the implementation of Observer pattern
+    
+    
 
     
 }

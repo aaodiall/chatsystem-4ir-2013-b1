@@ -2,12 +2,16 @@ package chatsystemg5.brain;
 
 public class UserModel extends ChatModel {
     
-    String username;
-    Boolean status;
+    private String username;
+    private Boolean status;
     
     public UserModel (String username) {
         this.username = username;
         status = true;
+    }
+    
+    public String get_username(){
+        return this.username;
     }
 
     @Override
