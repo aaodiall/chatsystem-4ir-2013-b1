@@ -16,7 +16,7 @@ import java.util.logging.Logger;
     
     
 // observable ?
-public class MessageReceptionNI extends MessageHandlerNI implements FromRemoteApp, Observer {
+public class MessageReceptionNI extends MessageHandlerNI implements FromRemoteApp {
     
     private ChatController chat_control;
     private int UDP_port;
@@ -31,7 +31,9 @@ public class MessageReceptionNI extends MessageHandlerNI implements FromRemoteAp
             this.chat_control = chat_control;
             // the recepter always listen on the same port 16000
             this.UDP_port = 16000;
+            
             this.UDP_sock = new DatagramSocket(this.UDP_port);
+            this.UDP_sock.setBroadcast(true);
             this.buffer = new byte[256];
         }
         catch (IOException exc) {
@@ -47,6 +49,8 @@ public class MessageReceptionNI extends MessageHandlerNI implements FromRemoteAp
             while(true){     
                 
                 this.message = new DatagramPacket(buffer, buffer.length);
+                
+                // listen and receive all the message
                 this.UDP_sock.receive(message);
                 
                 // get the IP of the sender
@@ -62,6 +66,7 @@ public class MessageReceptionNI extends MessageHandlerNI implements FromRemoteAp
 
             }
         } catch (IOException ex) {
+            System.out.println("Connection error");
             Logger.getLogger(MessageReceptionNI.class.getName()).log(Level.SEVERE, null, ex);
         }
        
@@ -89,6 +94,7 @@ public class MessageReceptionNI extends MessageHandlerNI implements FromRemoteAp
     }
     
     // for the implementation of Observer pattern
+
     
     
 
