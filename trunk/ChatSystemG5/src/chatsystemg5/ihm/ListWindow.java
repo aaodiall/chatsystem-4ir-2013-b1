@@ -25,6 +25,7 @@ public class ListWindow extends JFrame implements Observer{
     
     public ListWindow(){
         this.listUser = new HashMap<String, String>();
+        this.listDisplay = new JList();
     }
 
     @Override
@@ -33,7 +34,7 @@ public class ListWindow extends JFrame implements Observer{
         // we know that we get an HashMap
         this.listUser = (HashMap)obj;
         
-        this.listDisplay = new JList(this.listUser.keySet().toArray());
+        this.listDisplay.setListData(this.listUser.keySet().toArray());
         
         this.setLayout(new BorderLayout());
         this.add("West",listDisplay);
