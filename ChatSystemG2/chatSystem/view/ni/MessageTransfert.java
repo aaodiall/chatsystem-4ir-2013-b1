@@ -7,7 +7,7 @@ import java.io.IOException;
 import java.util.Enumeration;
 import java.util.List;
 import java.util.Iterator;
-
+import chatSystem.model.RemoteSystems;
 
 /**
  * Class used to send messages
@@ -18,6 +18,7 @@ public class MessageTransfert {
     final static int portUdpEmission = 16000;
     
     private DatagramSocket messageSocket;
+    private RemoteSystems rmInstance;
     /**
      * Class' constructor
      */
@@ -25,6 +26,7 @@ public class MessageTransfert {
         try{
             this.messageSocket = new DatagramSocket();
             this.messageSocket.setBroadcast(true);
+            this.rmInstance = RemoteSystems.getInstance();
         } catch (SocketException exc) {
             System.out.println("Problème à la création du socket d'envoi de messages");
         }
