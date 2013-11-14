@@ -11,7 +11,9 @@ public class ListModel extends ChatModel {
     }
     
     public void add_user(String username, String IP_addr) {
-        hmap_users.put (username + "-" + IP_addr, IP_addr);
+        if (!this.hmap_users.containsKey(username + "-" + IP_addr)) {
+            hmap_users.put (username + "-" + IP_addr, IP_addr);
+        }
     }
     
     public void remove_user(String username, String IP_addr) {
