@@ -54,6 +54,13 @@ public class RemoteSystems extends Model implements Iterable<RemoteSystemInforma
         this.notifyObservers();
         this.clearChanged();
     }
+    
+    public synchronized void addMessageReceivedToRemote(String idRemoteSystem, String message){
+        this.remoteSystemsInformation.get(idRemoteSystem).addMessageReceived(message);
+       /* this.setChanged();
+        this.notifyObservers();
+        this.clearChanged();*/ //Notif a partir de RemoteSysInformation
+    }
 
     /**
      * Get the contacts username's list
@@ -82,7 +89,7 @@ public class RemoteSystems extends Model implements Iterable<RemoteSystemInforma
             return instance;
     }
     
-        @Override
+    @Override
     public Iterator<RemoteSystemInformation> iterator() {
        return new RSIterator();
     }
