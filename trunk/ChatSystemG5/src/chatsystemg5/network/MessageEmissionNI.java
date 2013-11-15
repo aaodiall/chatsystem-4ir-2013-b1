@@ -12,6 +12,7 @@ import java.net.UnknownHostException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.net.UnknownHostException;      
+import java.nio.Buffer;
 
     
 public class MessageEmissionNI extends MessageHandlerNI implements ToRemoteApp{
@@ -23,7 +24,6 @@ public class MessageEmissionNI extends MessageHandlerNI implements ToRemoteApp{
     private DatagramSocket UDP_sock;
     private DatagramPacket message;
     //private Message message_to_send;
-    private byte[] buffer;
     
     public MessageEmissionNI (String username){
 
@@ -50,8 +50,9 @@ public class MessageEmissionNI extends MessageHandlerNI implements ToRemoteApp{
             }
                     
             // send hello
-            this.buffer = ((Message) hi).toArray();
-            this.message = new DatagramPacket(this.buffer, this.buffer.length, this.IP_dest, this.UDP_port_dest);
+
+            byte[] buffer = ((Message) hi).toArray();
+            this.message = new DatagramPacket(buffer, buffer.length, this.IP_dest, this.UDP_port_dest);
             this.UDP_sock.send(message);
             //System.out.println("Envoi à : " + IP_dest + "\nTaille : " + this.buffer.length);
             
@@ -72,8 +73,8 @@ public class MessageEmissionNI extends MessageHandlerNI implements ToRemoteApp{
             this.UDP_sock.setBroadcast(true);
             
             // send bye
-            this.buffer = ((Message) bye).toArray();
-            this.message = new DatagramPacket(this.buffer, this.buffer.length, this.IP_dest, this.UDP_port);
+            byte[] buffer = ((Message) bye).toArray();
+            this.message = new DatagramPacket(buffer, buffer.length, this.IP_dest, this.UDP_port);
             this.UDP_sock.send(message);
             
             // disbale brodcast
@@ -90,9 +91,10 @@ public class MessageEmissionNI extends MessageHandlerNI implements ToRemoteApp{
     public void send_text (Text txt) {
         try {
             System.out.println("Here send_text : " + IP_dest);
-            buffer = txt.toArray();
+            byte[] buffer = txt.toArray();
             message = new DatagramPacket(buffer, buffer.length, InetAddress.getByName("127.0.0.1"), UDP_port);
             UDP_sock.send(message);
+            
         }
         catch (IOException exc) {
             System.out.println("Connection error!!!!\n" + exc);
