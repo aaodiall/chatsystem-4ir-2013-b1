@@ -24,7 +24,7 @@ public class MessageReceptionNI extends MessageHandlerNI implements FromRemoteAp
         try {
             this.chat_control = chat_control;
             // the recepter always listen on the same port 16000
-            this.UDP_port = 16000;
+            this.UDP_port = 16001;
             
             this.UDP_sock = new DatagramSocket(this.UDP_port, InetAddress.getByName("0.0.0.0"));
             this.UDP_sock.setBroadcast(true);
