@@ -8,15 +8,16 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
-import java.awt.event.KeyListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
+import java.io.File;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
 
 import javax.swing.JButton;
+import javax.swing.JFileChooser;
 import javax.swing.JFrame;
 import javax.swing.JList;
 import javax.swing.JOptionPane;
@@ -56,6 +57,7 @@ public class ChatGUI extends JFrame implements ControllerToGui{
 	private JPanel chatPanel = new JPanel();
 	private JPanel sendPanel = new JPanel();
 	private JPanel formPanel = new JPanel();
+	private JFileChooser fileChooser;
 	
 	public ChatGUI (){
 		
@@ -122,6 +124,20 @@ public class ChatGUI extends JFrame implements ControllerToGui{
 			}
 		});
 		
+		sendFileButton.addActionListener(new ActionListener(){
+			public void actionPerformed(ActionEvent arg0) {
+				fileChooser = new JFileChooser();
+				int returnVal = fileChooser.showOpenDialog(getParent());
+
+		        if (returnVal == JFileChooser.APPROVE_OPTION) {
+		            File selectedFile = fileChooser.getSelectedFile();
+		            chatController.sendFile(userList.getSelectedValue(), selectedFile);
+		        } else {
+		            System.out.println("Open command cancelled by user.");
+		        }
+			}
+		});
+		
 		userList.addMouseListener(new MouseAdapter() {
 			public void mouseClicked(MouseEvent evt) {
 				chatTextPane.setText(chatController.getTalk(userList.locationToIndex(evt.getPoint())));
@@ -152,5 +168,25 @@ public class ChatGUI extends JFrame implements ControllerToGui{
 	
 	public void setChatText(String newTalk) {
 		chatTextPane.setText(newTalk);
+	}
+
+	public int showConfirmationPane(String username) {
+		return JOptionPane.showConfirmDialog(null,
+				"The user "+ username +" wants to send you a file. \nDo you want to accept the file transfer?",
+				"File transfer demand", JOptionPane.YES_NO_OPTION);
+	}
+
+	public String getSavingPath() {
+		fileChooser = new JFileChooser(); 
+		fileChooser.setDialogTitle("Select directory");
+		fileChooser.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
+		fileChooser.setAcceptAllFileFilterUsed(false);
+		
+		int value = fileChooser.showOpenDialog(getParent());
+		while(value != JFileChooser.APPROVE_OPTION){
+			JOptionPane.showMessageDialog(getParent(), "You must select a directory.");
+			value = fileChooser.showOpenDialog(getParent());
+		}
+		return fileChooser.getSelectedFile().toString();
 	}
 }
