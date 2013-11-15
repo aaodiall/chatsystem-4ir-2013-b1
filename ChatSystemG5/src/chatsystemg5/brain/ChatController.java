@@ -52,7 +52,8 @@ public class ChatController {
     public void perform_connection (String username) {
         try {
             Hello msg = new Hello(username, false);
-            InetAddress IP_dest = InetAddress.getByName("255.255.255.255");
+            InetAddress IP_dest = InetAddress.getByName("10.1.255.255");
+            System.out.println("ChatController : " + IP_dest);
             this.emissionNI.send(msg, IP_dest);
             // create emmetor part of the app
         } catch (UnknownHostException ex) {

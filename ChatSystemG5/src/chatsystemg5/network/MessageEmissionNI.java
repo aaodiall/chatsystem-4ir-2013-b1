@@ -44,19 +44,24 @@ public class MessageEmissionNI extends MessageHandlerNI implements ToRemoteApp{
     public void transfer_connection(Hello hi) {
          try {
             
-            // enable brodcast
-            this.UDP_sock.setBroadcast(true);
-
+            if (!hi.isAck()) {
+                // enable brodcast
+                this.UDP_sock.setBroadcast(true);
+            }
+            
             // Local host :
-            this.IP_dest = InetAddress.getByName("127.0.0.1");
+            //this.IP_dest = InetAddress.getByName("127.0.0.1");
             
             // send hello
             this.buffer = hi.toArray();
             this.message = new DatagramPacket(this.buffer, this.buffer.length, this.IP_dest, this.UDP_port_dest);
             this.UDP_sock.send(message);
+            System.out.println("Envoi à : " + IP_dest + "\nTaille : " + this.buffer.length);
             
-            // disable broadcast
-            this.UDP_sock.setBroadcast(false);
+            if (!hi.isAck()) {
+                // disable broadcast
+                this.UDP_sock.setBroadcast(false);
+            }
         }
         catch (IOException exc) {
             System.out.println("Connection error\n" + exc);
@@ -96,6 +101,11 @@ public class MessageEmissionNI extends MessageHandlerNI implements ToRemoteApp{
         catch (IOException exc) {
             System.out.println("Connection error!!!!\n" + exc);
         }
+    }
+    
+    public InetAddress get_broadcast() {
+        
+        return broadcast;
     }
     
     

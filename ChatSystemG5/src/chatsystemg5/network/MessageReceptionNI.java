@@ -26,7 +26,7 @@ public class MessageReceptionNI extends MessageHandlerNI implements FromRemoteAp
             // the recepter always listen on the same port 16000
             this.UDP_port = 16000;
             
-            this.UDP_sock = new DatagramSocket(this.UDP_port);
+            this.UDP_sock = new DatagramSocket(this.UDP_port, InetAddress.getByName("0.0.0.0"));
             this.UDP_sock.setBroadcast(true);
             this.buffer = new byte[256];
         }
@@ -50,14 +50,18 @@ public class MessageReceptionNI extends MessageHandlerNI implements FromRemoteAp
                 // get the IP of the sender
                 this.IP_source = message.getAddress();
                 
-                // send the content of the buffer to the controller
-                this.send_to_controller(buffer, IP_source);
-                // get and convert to string content of the buffer
-                text = new String(buffer);
-
-		text = text.substring(0, message.getLength());
-                // Ca sera inutile ensuite pour le connect
+                //System.out.println(IP_source);
+                //System.out.println(InetAddress.getLocalHost());
                 
+                if (IP_source != InetAddress.getLocalHost()) {
+                    // send the content of the buffer to the controller
+                    this.send_to_controller(buffer, IP_source);
+                    // get and convert to string content of the buffer
+                    text = new String(buffer);
+                    //System.out.println("Marche?");
+                    text = text.substring(0, message.getLength());
+                    // Ca sera inutile ensuite pour le connect
+                }                
 
             }
         } catch (IOException ex) {
