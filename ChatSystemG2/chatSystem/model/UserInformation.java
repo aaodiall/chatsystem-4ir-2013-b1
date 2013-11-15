@@ -51,7 +51,7 @@ public class UserInformation extends Model{
          * Recuperer l'etat de l'utilisateur (connected/disconnected)
          * @return etat de l'utilisateur
          */
-	public UserState getState() {
+	public final UserState getUserState() {
 		return this.state;
 	}
 
@@ -59,7 +59,7 @@ public class UserInformation extends Model{
          * Mettre a jour l'etat de l'utilisateur (connected/disconnected)
          * @param state nouvel etat
          */
-	public void setState(UserState state) {
+	public final void setUserState(UserState state) {
                 System.out.println("Entering setState : le nouvel état est : "+state.toString());
 		this.state = state;
                 this.setChanged();
@@ -87,7 +87,7 @@ public class UserInformation extends Model{
            if (obj instanceof UserInformation) {
                UserInformation aux = (UserInformation) obj;
                return (aux.getUsername().equals(this.username)) && (aux.getIP().equals(this.ip))
-                       && (aux.getState() == this.state);
+                       && (aux.getUserState() == this.state);
            }
            return false;
         }

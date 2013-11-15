@@ -55,6 +55,10 @@ public class RemoteSystems extends Model implements Iterable<RemoteSystemInforma
         this.clearChanged();
     }
     
+    public RemoteSystemInformation getRemoteSystem(String idRemoteSystem){
+        return this.remoteSystemsInformation.get(idRemoteSystem);
+    }
+    
     public synchronized void addMessageReceivedToRemote(String idRemoteSystem, String message){
         this.remoteSystemsInformation.get(idRemoteSystem).addMessageReceived(message);
        /* this.setChanged();
