@@ -51,7 +51,7 @@ public class ListWindow extends JFrame implements Observer, ListSelectionListene
     
     @Override
     public void valueChanged(ListSelectionEvent lse){
-        this.chat_control.get_chatGUI().get_chat_window().update_chat_window(lse.toString());
+        this.chat_control.get_chatGUI().get_chat_window().update_chat_window(this.listDisplay.getSelectedValue().toString());
     }
 
 }
