@@ -20,6 +20,7 @@ public class ChatGUI /*extends Panel*/{
         this.connection_window = new ConnectionWindow(this.chat_control);  
         this.list_window = new ListWindow(this.chat_control);
         this.chat_window = new ChatWindow(this.chat_control);
+        this.list_window.setVisible(false);
         this.chat_window.setVisible(false);
         
         //this.layout.addLayoutComponent(this.connection_window,"north");

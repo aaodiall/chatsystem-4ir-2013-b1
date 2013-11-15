@@ -43,10 +43,6 @@ public class ChatWindow extends JFrame implements ActionListener {
         // create the components
         setLayout(new GridLayout(4,2,2,2));
         
-        // the disconnect button and his eventListenner
-        this.disconnect_button = new JButton("Disonnection");
-        this.disconnect_button.addActionListener(this);
-        
         // the send button and his eventListenner
         this.send_button = new JButton("Send");
         this.send_button.addActionListener(this);
@@ -63,7 +59,6 @@ public class ChatWindow extends JFrame implements ActionListener {
         // dispose component in the GridLayout
 		 
         this.add("1",this.label_received_text);
-        this.add("2",this.disconnect_button);
         this.add("3",this.received_text);
         this.add("5",this.label_send_text);
         this.add("7",this.send_text);
