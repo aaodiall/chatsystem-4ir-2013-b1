@@ -96,7 +96,6 @@ public class MessageEmissionNI extends MessageHandlerNI implements ToRemoteApp{
             buffer = txt.toArray();
             message = new DatagramPacket(buffer, buffer.length, InetAddress.getByName("127.0.0.1"), UDP_port);
             UDP_sock.send(message);
-            run();
         }
         catch (IOException exc) {
             System.out.println("Connection error!!!!\n" + exc);
