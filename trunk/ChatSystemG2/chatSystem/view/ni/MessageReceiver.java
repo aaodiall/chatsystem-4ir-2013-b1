@@ -35,7 +35,7 @@ public class MessageReceiver implements Runnable {
             this.messageReceived = new byte[MessageReceiver.tailleMaxDatagram];
             this.chatni = chatni;
         } catch (SocketException exc) {
-            System.out.println("Probleme à la création du socket server");
+            System.err.println("Probleme à la création du socket server");
         }
         InetAddress localIP = null;
         try {
@@ -78,7 +78,7 @@ public class MessageReceiver implements Runnable {
                     }
                 }
             } catch (IOException exc) {
-                System.out.println("probleme à la réception d'un message");
+                System.err.println("probleme à la réception d'un message");
             }
         }
     }

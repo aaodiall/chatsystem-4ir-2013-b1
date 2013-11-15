@@ -55,8 +55,8 @@ public class RemoteSystemInformation extends UserInformation {
      *
      * @return message to send
      */
-    public ConcurrentLinkedQueue<String> getMessageToSend() {
-        return this.messagesToSend;
+    public String getMessageToSend() {
+        return this.messagesToSend.poll();
     }
 
     /**
