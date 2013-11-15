@@ -33,7 +33,7 @@ public class InterfaceConnect extends JFrame implements ActionListener{
 	private JLabel lblUsername;
 	private JLabel lblWelcome;
 
-	
+
 
 
 	/**
@@ -44,59 +44,59 @@ public class InterfaceConnect extends JFrame implements ActionListener{
 		initialize();
 		setResizable(false);
 		this.setVisible(true);
-		
+
 	}
 
 	/**
 	 * Initialize the contents of the frame.
 	 */
 	private void initialize() {
-		
+
 		this.setBounds(100, 100, 450, 300);
 		this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		
+
 		lblUsername = new JLabel("Enter your login");
-		
+
 		tfdUsername = new JTextField(30);
 		tfdUsername.setColumns(10);
-			
+
 		btnConnect = new JButton("Connect");
 		btnConnect.addActionListener(this);
-		
+
 		lblWelcome = new JLabel("     Welcome to ChatSystem!");
 		lblWelcome.setFont(new Font("Dialog", Font.BOLD, 18));
 		lblWelcome.setForeground(Color.BLACK);
 		GroupLayout groupLayout = new GroupLayout(getContentPane());
 		groupLayout.setHorizontalGroup(
-			groupLayout.createParallelGroup(Alignment.LEADING)
+				groupLayout.createParallelGroup(Alignment.LEADING)
 				.addGroup(groupLayout.createSequentialGroup()
-					.addGroup(groupLayout.createParallelGroup(Alignment.LEADING)
-						.addGroup(groupLayout.createSequentialGroup()
-							.addGap(161)
-							.addGroup(groupLayout.createParallelGroup(Alignment.LEADING)
-								.addComponent(lblUsername)
-								.addComponent(tfdUsername, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)))
-						.addGroup(groupLayout.createSequentialGroup()
-							.addGap(173)
-							.addComponent(btnConnect))
-						.addGroup(groupLayout.createSequentialGroup()
-							.addGap(71)
-							.addComponent(lblWelcome, GroupLayout.PREFERRED_SIZE, 295, GroupLayout.PREFERRED_SIZE)))
-					.addContainerGap(82, Short.MAX_VALUE))
-		);
+						.addGroup(groupLayout.createParallelGroup(Alignment.LEADING)
+								.addGroup(groupLayout.createSequentialGroup()
+										.addGap(161)
+										.addGroup(groupLayout.createParallelGroup(Alignment.LEADING)
+												.addComponent(lblUsername)
+												.addComponent(tfdUsername, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)))
+												.addGroup(groupLayout.createSequentialGroup()
+														.addGap(173)
+														.addComponent(btnConnect))
+														.addGroup(groupLayout.createSequentialGroup()
+																.addGap(71)
+																.addComponent(lblWelcome, GroupLayout.PREFERRED_SIZE, 295, GroupLayout.PREFERRED_SIZE)))
+																.addContainerGap(82, Short.MAX_VALUE))
+				);
 		groupLayout.setVerticalGroup(
-			groupLayout.createParallelGroup(Alignment.LEADING)
+				groupLayout.createParallelGroup(Alignment.LEADING)
 				.addGroup(groupLayout.createSequentialGroup()
-					.addGap(23)
-					.addComponent(lblWelcome, GroupLayout.PREFERRED_SIZE, 28, GroupLayout.PREFERRED_SIZE)
-					.addGap(59)
-					.addComponent(lblUsername)
-					.addGap(12)
-					.addComponent(tfdUsername, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
-					.addGap(18)
-					.addComponent(btnConnect)
-					.addContainerGap(79, Short.MAX_VALUE))
-		);
+						.addGap(23)
+						.addComponent(lblWelcome, GroupLayout.PREFERRED_SIZE, 28, GroupLayout.PREFERRED_SIZE)
+						.addGap(59)
+						.addComponent(lblUsername)
+						.addGap(12)
+						.addComponent(tfdUsername, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+						.addGap(18)
+						.addComponent(btnConnect)
+						.addContainerGap(79, Short.MAX_VALUE))
+				);
 		getContentPane().setLayout(groupLayout);
 	}
 
@@ -106,19 +106,20 @@ public class InterfaceConnect extends JFrame implements ActionListener{
 	@Override
 	public void actionPerformed(ActionEvent e) {
 		// TODO Auto-generated method stub
-		new Thread(new Runnable() {
-		     public void run() {
-		    	 
-		  		//connect();
-		    	  
-		    	
-		  	  controller.performConnect(tfdUsername.getText());
-		  		
-		   }
-		  }).start();
-		
+		//new Thread(new Runnable() {
+		//   public void run() {
+
+		//connect();
+
+		this.tfdUsername.setText("");
+		controller.performConnect(tfdUsername.getText());
+
+
+		//}
+		//}).start();
+
 	}
-	
+
 
 	public String getTfdUsername() {
 		return tfdUsername.getText();
@@ -128,6 +129,6 @@ public class InterfaceConnect extends JFrame implements ActionListener{
 		this.tfdUsername.setText(username);
 	}
 
-	
+
 
 }

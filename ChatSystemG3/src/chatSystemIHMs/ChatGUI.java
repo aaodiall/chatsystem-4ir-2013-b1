@@ -50,17 +50,11 @@ public class ChatGUI extends View implements Observer{
 	public void update(Observable arg0, Object arg1) {
 		// TODO Auto-generated method stub
 		
-		if(arg0.getClass()==ModelUsername.class){
-			wCommunicate.setVisible(true);
-			wConnect.setVisible(false);
-		}else if (arg0.getClass()==ModelStates.class){
-			if(arg1.equals(false)){
-				wCommunicate.setVisible(false);
-				wConnect.setVisible(true);
-			}	
-		}
-		else if(arg0.getClass()==ModelListUsers.class){
+		if(arg0.getClass()==ModelListUsers.class){
 			wCommunicate.setUsers(( (HashMap<?, ?>)arg1 ).keySet().toArray()) ;
+		}
+		if(arg0.getClass().equals(ModelUsername.class)){
+			wCommunicate.setLblUsername((String)arg1);
 		}
 		//ainsi de suite
 	}

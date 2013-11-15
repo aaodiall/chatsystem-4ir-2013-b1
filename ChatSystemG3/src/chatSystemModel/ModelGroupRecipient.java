@@ -3,8 +3,9 @@
  */
 package chatSystemModel;
 
-import java.util.ArrayList;
 import java.util.Observable;
+import java.util.concurrent.ArrayBlockingQueue;
+import java.util.concurrent.BlockingQueue;
 
 /**
  * @author alpha
@@ -12,20 +13,23 @@ import java.util.Observable;
  */
 public class ModelGroupRecipient extends Observable{
 
-	ArrayList<String> groupRecipients;
+	BlockingQueue<String> groupRecipients;
 
 	/**
 	 * @param groupRecipients
 	 */
 	public ModelGroupRecipient() {
-		this.groupRecipients = new ArrayList<String>();
+		this.groupRecipients = new ArrayBlockingQueue<String>(20);
 	}
 	
 	public void addRecipient(String username){
 		this.groupRecipients.add(username);
 	}
+	public void removeRecipient(String username){
+		this.groupRecipients.remove(username);
+	}
 	
-	public ArrayList<String> getGroupRecipients(){
+	public BlockingQueue<String> getGroupRecipients(){
 		return this.groupRecipients;
 	}
 }

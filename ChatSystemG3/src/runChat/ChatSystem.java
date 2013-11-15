@@ -49,20 +49,20 @@ public class ChatSystem {
 		modelGroupRecipient = new ModelGroupRecipient();
 		modelText = new ModelText();
 		chatController = new Controller(modelListUsers,modelStates , modelText, modelUsername, modelGroupRecipient);
-		//chatGUI=new ChatGUI(chatController);
+		chatGUI=new ChatGUI(chatController);
 		chatNI = new ChatNI(portUDP,chatController);
-		//chatController.setChatGUI(chatGUI);
+		chatController.setChatgui(chatGUI);
 		chatController.setChatNI(chatNI);
 		chatNIThread = new Thread(chatNI);
 		chatNIThread.start();
 		modelUsername.addObserver(chatNI);
-		//modelListUsers.addObserver(chatGUI);
+		modelListUsers.addObserver(chatGUI);
 		modelStates.addObserver(chatNI);
 		modelGroupRecipient.addObserver(chatNI);
 
 		
 		// TEST de CONNEXION 
-		chatController.performConnect("jo");
+		//chatController.performConnect("jo");
 		//if (modelStates.isConnected()){ chatNI.connect(modelUsername.getUsername(), false); }
 		//while(modelListUsers.getListUsers().keySet().iterator().hasNext()){//remote.add((String)(ChatSystem.modelListUsers.getListUsers().keySet().iterator().next()));
 			//System.out.println("user : " + modelListUsers.getListUsers().keySet().iterator().next());
