@@ -100,6 +100,7 @@ public class ChatController {
         try {
             //System.out.println(username + text);
             Text msg = new Text(this.userDB.get_username(), text);
+            
             //msg.toString();
             InetAddress IP_dest = InetAddress.getByName(IP_addr);
             emissionNI.send(msg, IP_dest);

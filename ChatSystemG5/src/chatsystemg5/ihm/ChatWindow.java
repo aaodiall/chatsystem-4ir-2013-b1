@@ -18,11 +18,10 @@ import javax.swing.JTextField;
 public class ChatWindow extends JFrame implements ActionListener {
     
     private ChatController chat_control;
-    private String remote_user;
+    private String remote_username;
     
     private GridLayout layout;
 
-    private JButton disconnect_button;
     private JButton send_button;
     
     private JLabel label_send_text ;
@@ -30,8 +29,6 @@ public class ChatWindow extends JFrame implements ActionListener {
     
     private JTextArea received_text;
     private JTextArea send_text;
-    
-    private String remote_username;
     
     //private BufferedWriter writer;
     //private BufferedReader reader;
@@ -78,11 +75,6 @@ public class ChatWindow extends JFrame implements ActionListener {
         // it's the send button which is selected
         if (e.getSource() == this.send_button) {
             this.chat_control.perform_send(this.remote_username, this.send_text.getText());
-        }
-        // it's the disconnect button which is selected
-        else if (e.getSource() == this.disconnect_button) {
-            // send_disconnection
-            this.chat_control.perform_disconnection();
         }
     }
     
