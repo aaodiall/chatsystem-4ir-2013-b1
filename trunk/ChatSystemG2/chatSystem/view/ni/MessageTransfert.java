@@ -193,7 +193,7 @@ public class MessageTransfert implements Runnable {
                     //envoi du message
                     this.sendTextMessage(rsInfo.getIP(), msgToSend);
                     //notification de chatni
-                    chatni.messageSended(msgToSend, rsInfo.getUsername());
+                    chatni.messageSent(msgToSend, rsInfo.getUsername());
                 } while (msgToSend != null);
             }
         }

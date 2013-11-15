@@ -61,19 +61,26 @@ public class ChatController extends Controller implements GuiToCont, NiToCont {
 
     @Override
     public void performGoodbyeReceived(String idRemoteSystem) {
-        System.out.println("Goodbye received je modif le model");
+        System.out.println("Goodbye received, modifying the model");
         this.remoteSystems.deleteRemoteSystem(idRemoteSystem);
     }
 
     @Override
     public void performMessageReceived(String msg, String idRemoteSystem) {
-        System.out.println("Text received je modif le model");
+        System.out.println("Text received, modifying the model");
         this.remoteSystems.addMessageReceivedToRemote(idRemoteSystem, msg);
     }
 
     @Override
-    public void performSendMessageRequest(String message) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    public void performSendMessageRequest(String message, String idRemoteSystem) {
+        System.out.println("Message to be send to " + idRemoteSystem + ", modifying the model");
+        this.remoteSystems.addMessageToSendToRemote(idRemoteSystem, message);
+    }
+
+    @Override
+    public void performSentMessageToRemoteSystem(String message, String idRemoteSystem) {
+        System.out.println("Message sent to " + idRemoteSystem + ", modifying the model");
+       this.remoteSystems.addMessageSentToRemoteSystem(message, idRemoteSystem, this.localUser.getUsername());
     }
 
 }
