@@ -23,7 +23,7 @@ public class ChatNI extends View {
         this.fileReceiver = new FileReceiver[5];
         this.fileTransfert = new FileTransfert[5];
         this.messageReceiver = new MessageReceiver(this);
-        this.messageTransfert = new MessageTransfert(this.usrInfo, this);
+        this.messageTransfert = new MessageTransfert(this);
         this.threadReceiver = new Thread(this.messageReceiver);
     }
 
@@ -98,6 +98,10 @@ public class ChatNI extends View {
 
     public void messageSended () {
         //this.controller
+    }
+    
+    public UserInformation getUserInfo() {
+        return this.usrInfo;
     }
 
 }

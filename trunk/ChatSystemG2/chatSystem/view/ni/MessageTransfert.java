@@ -23,14 +23,12 @@ public class MessageTransfert implements Runnable {
     
     private DatagramSocket messageSocket;
     private RemoteSystems rmInstance;
-    private UserInformation userInfo;
     private ChatNI chatni;
     /**
      * Class' constructor
      */
-    public MessageTransfert(UserInformation userInfo, ChatNI chatni) {
+    public MessageTransfert(ChatNI chatni) {
         try{
-            this.userInfo = userInfo;
             this.messageSocket = new DatagramSocket();
             this.messageSocket.setBroadcast(true);
             this.rmInstance = RemoteSystems.getInstance();
@@ -79,7 +77,7 @@ public class MessageTransfert implements Runnable {
      */
     public void sendHello() {
         //hello sent to everyone can only be a hello without ack
-        Hello helloToSend = new Hello(this.userInfo.getUsername(), false);
+        Hello helloToSend = new Hello(this.chatni.getUserInfo().getUsername(), false);
         InetAddress broadcastAddress = this.determineBroadcastAddress();
         System.out.println("ENVOI : "+helloToSend.toString()+" -> "+broadcastAddress.getHostAddress());
         this.sendPacket(broadcastAddress, helloToSend);
@@ -91,7 +89,7 @@ public class MessageTransfert implements Runnable {
      */
     public void sendHello(String ip) {
         //hello sent to one person can only be an ack hello
-        Hello helloToSend = new Hello(this.userInfo.getUsername(), true);
+        Hello helloToSend = new Hello(this.chatni.getUserInfo().getUsername(), true);
         System.out.println("ENVOI : "+helloToSend.toString()+" -> "+ip);
         this.sendPacket(ip, helloToSend);
     }
@@ -101,7 +99,7 @@ public class MessageTransfert implements Runnable {
      * @param ipAddresses list of remote systems' ip address
      */
     public void sendGoodbye(String[] ipAddresses) {
-        Goodbye goodbyeToSend = new Goodbye(this.userInfo.getUsername());
+        Goodbye goodbyeToSend = new Goodbye(this.chatni.getUserInfo().getUsername());
         try {
             byte[] buffer = goodbyeToSend.toArray();
             for (String ip: ipAddresses) {
@@ -124,7 +122,7 @@ public class MessageTransfert implements Runnable {
      */
     public void sendGoodbye() {
         InetAddress broadcastAddress = this.determineBroadcastAddress();
-        Goodbye goodbyeToSend = new Goodbye(this.userInfo.getUsername());
+        Goodbye goodbyeToSend = new Goodbye(this.chatni.getUserInfo().getUsername());
         System.out.println("ENVOI : "+goodbyeToSend.toString()+" -> "+broadcastAddress.getHostAddress());
         this.sendPacket(broadcastAddress, goodbyeToSend);
     }
@@ -135,7 +133,7 @@ public class MessageTransfert implements Runnable {
      * @param text message content
      */
     public void sendTextMessage(String ip, String text) {
-        Text textToSend = new Text(this.userInfo.getUsername(), text);
+        Text textToSend = new Text(this.chatni.getUserInfo().getUsername(), text);
         this.sendPacket(ip, textToSend);
     }
     
@@ -159,7 +157,7 @@ public class MessageTransfert implements Runnable {
      * @param username username of the person who wants to send the message
      * @param ip ip address of the remote system we want to send the message
      */
-    private void sendPacket(InetAddress ip, Message msg) {
+    private synchronized void sendPacket(InetAddress ip, Message msg) {
         try {
             byte[] buffer = msg.toArray();
             DatagramPacket msgToSend = new DatagramPacket(buffer, buffer.length, ip, MessageTransfert.portUdpEmission);
