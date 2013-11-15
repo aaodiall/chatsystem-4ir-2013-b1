@@ -59,15 +59,17 @@ public class ChatController {
         // add him to the user list
         // equivalent of setState()
         listDB.add_user(hi.getUsername(), IP_source.toString());
-        
-        // notify the Observer (ListWindow) of the change about ModelList
         listDB.notifyObservers();
+
         
         // if remote user first connection
         if(!hi.isAck()){
             // create a new message to sent back ack
             Hello msg = new Hello(this.userDB.get_username(), true);
             this.emissionNI.send(msg, IP_source);
+            
+                    // notify the Observer (ListWindow) of the change about ModelList
+        
         }
         
     }
