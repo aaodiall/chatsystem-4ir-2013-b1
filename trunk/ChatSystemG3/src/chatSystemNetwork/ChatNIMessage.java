@@ -15,6 +15,7 @@ import chatSystemCommon.Goodbye;
 import chatSystemCommon.Hello;
 import chatSystemCommon.Message;
 import chatSystemCommon.Text;
+import chatSystemModel.ModelGroupRecipient;
 import chatSystemModel.ModelListUsers;
 import chatSystemModel.ModelUsername;
 
@@ -107,21 +108,21 @@ public class ChatNIMessage implements Runnable{
 		}
 	}
 	
-	public void sendText(ArrayList<String> usernameList, String text2Send,String username){
-		InetAddress recipient;
-		Iterator <String> it;
+	public void sendText(InetAddress recipient, String text2Send,String username){
+		//InetAddress recipient;
+		//Iterator <String> it;
 		DatagramPacket pdu2send;
 		Text messageText = new Text(username,text2Send);
 		try{
 			byte[] messageStream = messageText.toArray();	
 			//it = ChatSystem.getModelGroupRecipient().getGroupRecipients().iterator();
-			it = usernameList.iterator();
-			while(it.hasNext()){
-				recipient = this.modelListUsers.getListUsers().get((String)it.next());
+		//	it = modelGroupRecipient.;
+			//while(it.hasNext()){
+			//	recipient = this.modelListUsers.getListUsers().get((String)it.next());
 				pdu2send = new DatagramPacket(messageStream,messageStream.length,recipient,this.socketUDP.getLocalPort());
 				this.socketUDP.send(pdu2send);
 				this.run();
-			}
+			
 		}catch(IOException ioExc){
 			System.out.println("error : construction du stream message");
 		}

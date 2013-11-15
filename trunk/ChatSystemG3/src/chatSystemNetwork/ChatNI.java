@@ -18,6 +18,7 @@ import java.util.Observer;
 
 import runChat.ChatSystem;
 import chatSystemIHMs.View;
+import chatSystemModel.ModelGroupRecipient;
 import chatSystemModel.ModelStates;
 import chatSystemModel.ModelUsername;
 import chatSystemCommon.*;
@@ -159,8 +160,8 @@ public class ChatNI extends View implements Runnable, Observer{
 	}
 	
 	
-	public void sendMsgText(ArrayList<String> usernameList, String text2Send, String username){
-		this.chatNIMessage.sendText(usernameList, text2Send, username);
+	public void sendMsgText(InetAddress recipient, String text2Send, String username){
+		this.chatNIMessage.sendText(recipient, text2Send, username);
 	}
 	
 	public void sendMsgFile(String recipient_username, String fileName){

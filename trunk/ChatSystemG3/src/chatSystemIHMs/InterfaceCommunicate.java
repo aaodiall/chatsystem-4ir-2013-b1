@@ -39,6 +39,9 @@ public class InterfaceCommunicate extends JFrame implements ActionListener{
 	private JTextArea tAreaMessageText;
 	private JList listUsers;
 	private JLabel lblUsername;
+	
+
+
 	private JButton btnDeconnection;
 	private JPanel panel;
 	private JScrollPane scrollPane;
@@ -58,6 +61,14 @@ public class InterfaceCommunicate extends JFrame implements ActionListener{
 		
 		
 		//this.setVisible(true);
+	}
+	
+	public String getLblUsername() {
+		return lblUsername.getText();
+	}
+
+	public void setLblUsername(String username) {
+		this.lblUsername.setText(username);
 	}
 
 	/**
@@ -87,7 +98,7 @@ public class InterfaceCommunicate extends JFrame implements ActionListener{
 		btnDeconnection.addActionListener(this);
 		
         lblUsername=new JLabel(username);
-		lblUsername.setBounds(35, 17, 72, 15);
+		lblUsername.setBounds(35, 17, 150, 15);
 		panel.add(lblUsername);
 		
 		//test Jlist apres on utilisera un get sur le modeleusers
@@ -97,7 +108,7 @@ public class InterfaceCommunicate extends JFrame implements ActionListener{
 				
 		listUsers = new JList(users);
 		listUsers.setBounds(12, 56, 340, 420);
-		listUsers.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+		listUsers.setSelectionMode(ListSelectionModel.SINGLE_INTERVAL_SELECTION);
 		listUsers.setLayoutOrientation(JList.VERTICAL);
 		panel.add(listUsers);
 		
@@ -112,6 +123,7 @@ public class InterfaceCommunicate extends JFrame implements ActionListener{
 		btnSendMessage = new JButton("Send Message");
 		btnSendMessage.setBounds(848, 554, 138, 25);
 		getContentPane().add(btnSendMessage);
+		btnSendMessage.addActionListener(this);
 		
 		btnSendFile = new JButton("Send File");
 		btnSendFile.setBounds(848, 591, 138, 25);
@@ -144,16 +156,21 @@ public class InterfaceCommunicate extends JFrame implements ActionListener{
 	 * @see java.awt.event.ActionListener#actionPerformed(java.awt.event.ActionEvent)
 	 */
 	@Override
-	public void actionPerformed(ActionEvent e) {
+	public void actionPerformed(final ActionEvent e) {
 		// TODO Auto-generated method stub
-		new Thread(new Runnable() {
-		      public void run() {
-		    	 
-		  		//connect();
+		//new Thread(new Runnable() {
+		  //    public void run() {
 		    	
+				if(e.getSource()==btnDeconnection){
 		  		controller.performDisconnect();
-		      }
-		  }).start();
+				}
+				else if(e.getSource()==btnSendMessage){
+					controller.performSendText(tAreaMessageText.getText());
+					this.tAreaHistoryCom.setText(this.tAreaHistoryCom.getText()+"You"+" : "+this.tAreaMessageText.getText()+"\n");
+					this.tAreaMessageText.setText("");;
+				}
+		  //    }
+		  //}).start();
 		
 		
 	}
