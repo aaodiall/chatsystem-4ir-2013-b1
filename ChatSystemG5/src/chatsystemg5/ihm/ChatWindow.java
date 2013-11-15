@@ -75,6 +75,7 @@ public class ChatWindow extends JFrame implements ActionListener {
         // it's the send button which is selected
         if (e.getSource() == this.send_button) {
             this.chat_control.perform_send(this.remote_username, this.send_text.getText());
+            //this.chat_control.perform_send("test@/10.1.5.152", this.send_text.getText());
         }
     }
     
