@@ -15,6 +15,7 @@ public class MessageReceptionNI extends MessageHandlerNI implements FromRemoteAp
     private ChatController chat_control;
     private int UDP_port;
     private DatagramSocket UDP_sock;
+    private String localhost;
     private InetAddress IP_source;
     private DatagramPacket message;
     private byte[] buffer; 
@@ -29,6 +30,7 @@ public class MessageReceptionNI extends MessageHandlerNI implements FromRemoteAp
             this.UDP_sock = new DatagramSocket(this.UDP_port, InetAddress.getByName("0.0.0.0"));
             this.UDP_sock.setBroadcast(true);
             this.buffer = new byte[256];
+            this.localhost = (InetAddress.getLocalHost()).getHostAddress();
         }
         catch (IOException exc) {
             System.out.println("Connection error\n" + exc);
@@ -50,16 +52,16 @@ public class MessageReceptionNI extends MessageHandlerNI implements FromRemoteAp
                 // get the IP of the sender
                 this.IP_source = message.getAddress();
                 
-                //System.out.println(IP_source);
-                //System.out.println(InetAddress.getLocalHost());
+                //System.out.println(" I'm Network : From : " + IP_source.getHostAddress().toString());
+                //System.out.println(" I'm Network : I'm : " + (InetAddress.getLocalHost()).getHostAddress().toString());
                 
-                if (IP_source != InetAddress.getLocalHost()) {
+                if (!(IP_source.getHostAddress()).equals(this.localhost)) {
                     // send the content of the buffer to the controller
                     this.send_to_controller(buffer, IP_source);
                     // get and convert to string content of the buffer
-                    text = new String(buffer);
+                    //text = new String(buffer);
                     //System.out.println("Marche?");
-                    text = text.substring(0, message.getLength());
+                    //text = text.substring(0, message.getLength());
                     // Ca sera inutile ensuite pour le connect
                 }                
 

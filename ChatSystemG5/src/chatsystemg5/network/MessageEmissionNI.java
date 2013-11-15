@@ -56,7 +56,7 @@ public class MessageEmissionNI extends MessageHandlerNI implements ToRemoteApp{
             this.buffer = ((Message) hi).toArray();
             this.message = new DatagramPacket(this.buffer, this.buffer.length, this.IP_dest, this.UDP_port_dest);
             this.UDP_sock.send(message);
-            System.out.println("Envoi à : " + IP_dest + "\nTaille : " + this.buffer.length);
+            //System.out.println("Envoi à : " + IP_dest + "\nTaille : " + this.buffer.length);
             
             if (!hi.isAck()) {
                 // disable broadcast

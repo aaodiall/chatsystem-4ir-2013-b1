@@ -49,7 +49,7 @@ public class ChatController {
     public void perform_connection (String username) {
         Hello msg = new Hello(username, false);
         InetAddress IP_dest = emissionNI.get_broadcast();
-        System.out.println("ChatController : " + IP_dest);
+        //System.out.println("ChatController : " + IP_dest);
         this.emissionNI.send(msg, IP_dest);
         // create emmetor part of the app
     }
