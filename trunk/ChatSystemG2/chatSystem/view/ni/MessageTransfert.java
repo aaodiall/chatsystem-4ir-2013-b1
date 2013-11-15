@@ -183,7 +183,7 @@ public class MessageTransfert implements Runnable {
         
         while(true) {
             //fonction bloquante permettant d'attendre qu'un message à envoyer soit disponible
-           
+            this.rmInstance.waitMessageToSend();
             //parcours de tous les RemoteSystemInformation
             for (RemoteSystemInformation rsInfo : this.rmInstance) {
                 //tant qu'il reste des messages à envoyer

@@ -5,6 +5,8 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.BlockingQueue;
+import java.util.concurrent.LinkedBlockingQueue;
 
 /**
  * Keeps and manages the remote system's information
@@ -13,13 +15,15 @@ import java.util.Map;
 public class RemoteSystems extends Model implements Iterable<RemoteSystemInformation>{
 
     private static RemoteSystems instance;
+    private BlockingQueue<Boolean> availableMsg;
     private final Map<String,RemoteSystemInformation> remoteSystemsInformation;
 
     /**
      * Private class' constructor
      */
     private RemoteSystems () {
-            this.remoteSystemsInformation = new HashMap<String, RemoteSystemInformation>();
+        this.availableMsg = new LinkedBlockingQueue<Boolean>();
+        this.remoteSystemsInformation = new HashMap<String, RemoteSystemInformation>();
     }
 
     /**
@@ -67,6 +71,19 @@ public class RemoteSystems extends Model implements Iterable<RemoteSystemInforma
     }
 
     /**
+     * add a message in the message-to-send list of a given remote system
+     * @param idRemoteSystem remote system the message has to be sent to
+     * @param message message which has to be sent
+     */
+    public synchronized void addMessageToSendToRemote(String idRemoteSystem, String message){
+        if(this.remoteSystemsInformation.containsKey(idRemoteSystem)) {          
+            this.remoteSystemsInformation.get(idRemoteSystem).addMessageToSend(message);
+            if (this.availableMsg.isEmpty())
+                this.availableMsg.add(Boolean.TRUE);
+        }
+    }
+    
+    /**
      * Get the contacts username's list
      * @return usernames' list
      */
@@ -91,6 +108,14 @@ public class RemoteSystems extends Model implements Iterable<RemoteSystemInforma
                 }
             }
             return instance;
+    }
+    
+    public void waitMessageToSend () {
+        try {
+            this.availableMsg.take();
+        } catch(InterruptedException exc) {
+            System.err.println("la fonction a été interrompue sans raison");
+        }
     }
     
     @Override
