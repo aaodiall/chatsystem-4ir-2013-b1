@@ -48,7 +48,7 @@ public class ConnectionWindow /*extends ChatGUI*/ extends JFrame implements Acti
         this.setVisible(true);
         
         // the way the window closes
-        this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        //this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
     }
 
     @Override

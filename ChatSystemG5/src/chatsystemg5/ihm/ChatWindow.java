@@ -83,13 +83,6 @@ public class ChatWindow extends JFrame implements ActionListener {
         else if (e.getSource() == this.disconnect_button) {
             // send_disconnection
             this.chat_control.perform_disconnection();
-            
-            // hide chat_window and list_window
-            this.setVisible(false);
-            this.chat_control.get_chatGUI().get_list_window().setVisible(false);
-            
-            // show connection_window
-            this.chat_control.get_chatGUI().get_connection_window().setVisible(true);
         }
     }
     
