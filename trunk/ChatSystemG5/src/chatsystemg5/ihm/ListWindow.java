@@ -38,17 +38,19 @@ public class ListWindow extends JFrame implements Observer, ListSelectionListene
         // we know that we get an HashMap
         this.listUser = (HashMap)obj;
         
-        this.listDisplay = new JList(this.listUser.keySet().toArray());
+        this.listDisplay.setListData(this.listUser.keySet().toArray());
         this.listDisplay.addListSelectionListener(this);
         this.listDisplay.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
         
         this.setLayout(new BorderLayout());
         this.add("West",listDisplay);
         this.pack();
-        this.setVisible(true);      }
-
-    @Override
-    public void valueChanged(ListSelectionEvent lse) {
-              this.chat_control.get_chatGUI().get_chat_window().update_chat_window(lse.toString());
+        this.setVisible(true);
     }
+    
+    @Override
+    public void valueChanged(ListSelectionEvent lse){
+        this.chat_control.get_chatGUI().get_chat_window().update_chat_window(lse.toString());
+    }
+
 }
