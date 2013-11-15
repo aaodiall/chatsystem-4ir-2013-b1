@@ -84,6 +84,17 @@ public class RemoteSystems extends Model implements Iterable<RemoteSystemInforma
     }
     
     /**
+     * add a message in the sent-message list of a given remote system
+     * @param message message that has been sent
+     * @param idRemoteSystem remote system the message has been sent to
+     * @param username username of the person who sent the message
+     */
+    public void addMessageSentToRemoteSystem(String message, String idRemoteSystem, String username) {
+        if(this.remoteSystemsInformation.containsKey(idRemoteSystem))
+            this.remoteSystemsInformation.get(idRemoteSystem).addMessageSent(username + " : " + message);
+    }
+    
+    /**
      * Get the contacts username's list
      * @return usernames' list
      */
@@ -117,6 +128,7 @@ public class RemoteSystems extends Model implements Iterable<RemoteSystemInforma
             System.err.println("la fonction a été interrompue sans raison");
         }
     }
+    
     
     @Override
     public Iterator<RemoteSystemInformation> iterator() {

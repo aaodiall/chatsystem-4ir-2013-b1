@@ -100,8 +100,8 @@ public class ChatNI extends View {
         //il faudrait faire threadMessageTransfert.notify()
     }
 
-    public void messageSended (String msg, String idRemoteSystem) {
-        //this.controller
+    public void messageSent (String msg, String idRemoteSystem) {
+        ((ChatController)this.controller).performSentMessageToRemoteSystem(msg, idRemoteSystem);
     }
     
     public UserInformation getUserInfo() {

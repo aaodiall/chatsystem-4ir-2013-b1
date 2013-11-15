@@ -15,6 +15,8 @@ public interface GuiToCont {
     	public void performConnect(String username);
 	
 	public void performDisconnect();
+        
+        public void performSendMessageRequest(String message, String idRemoteSystem);
 	
 	//public void performFileSended();
     
