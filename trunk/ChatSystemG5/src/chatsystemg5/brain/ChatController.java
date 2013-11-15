@@ -96,13 +96,16 @@ public class ChatController {
     /**************** Communication by text ****************/
     
     // Envoi d'un messsage texte
-    public void perform_send (String IP_addr, String text) {
+    public void perform_send (String username_and_IP, String text) {
         try {
-            //System.out.println(username + text);
+            System.out.println("Test 1");
             Text msg = new Text(this.userDB.get_username(), text);
-            
-            //msg.toString();
-            InetAddress IP_dest = InetAddress.getByName(IP_addr);
+            System.out.println("Test 2");
+            String IP_text = this.listDB.get_IP_addr(username_and_IP);
+            System.out.println("Test 3");
+            InetAddress IP_dest = InetAddress.getByName(IP_text);
+            System.out.println("I'm Controller : Sending message : IP_text : " + IP_text);            
+            System.out.println("I'm Controller : Sending message : IP_dest : " + IP_dest);
             emissionNI.send(msg, IP_dest);
         } catch (UnknownHostException ex) {
             Logger.getLogger(ChatController.class.getName()).log(Level.SEVERE, null, ex);
