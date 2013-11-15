@@ -58,7 +58,7 @@ public class ChatController {
      public void perform_connection (Hello hi, InetAddress IP_source) {
         // add him to the user list
         // equivalent of setState()
-        listDB.add_user(hi.getUsername(), IP_source.toString());
+        listDB.add_user(hi.getUsername(), IP_source.getHostAddress());
         listDB.notifyObservers();
 
         
@@ -98,14 +98,11 @@ public class ChatController {
     // Envoi d'un messsage texte
     public void perform_send (String username_and_IP, String text) {
         try {
-            System.out.println("Test 1");
             Text msg = new Text(this.userDB.get_username(), text);
-            System.out.println("Test 2");
+            // On récupère l'@IP associée à l'username
             String IP_text = this.listDB.get_IP_addr(username_and_IP);
-            System.out.println("Test 3");
+            // On transforme l'@IP de String à InetAddress
             InetAddress IP_dest = InetAddress.getByName(IP_text);
-            System.out.println("I'm Controller : Sending message : IP_text : " + IP_text);            
-            System.out.println("I'm Controller : Sending message : IP_dest : " + IP_dest);
             emissionNI.send(msg, IP_dest);
         } catch (UnknownHostException ex) {
             Logger.getLogger(ChatController.class.getName()).log(Level.SEVERE, null, ex);
