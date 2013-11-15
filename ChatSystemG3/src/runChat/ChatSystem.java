@@ -40,6 +40,7 @@ public class ChatSystem {
 	 */
 	public static void main(String[] args) throws UnknownHostException{
 		ArrayList <String> remote = new ArrayList<String>();
+		// pour des tests locaux demander a l'utilisateur d'entrer un numero de port
 		int portUDP=16001;
 		Thread chatNIThread;
 		modelListUsers = new ModelListUsers();
@@ -48,38 +49,32 @@ public class ChatSystem {
 		modelGroupRecipient = new ModelGroupRecipient();
 		modelText = new ModelText();
 		chatController = new Controller(modelListUsers,modelStates , modelText, modelUsername, modelGroupRecipient);
-		chatGUI=new ChatGUI(chatController);
+		//chatGUI=new ChatGUI(chatController);
 		chatNI = new ChatNI(portUDP,chatController);
+		//chatController.setChatGUI(chatGUI);
+		chatController.setChatNI(chatNI);
 		chatNIThread = new Thread(chatNI);
 		chatNIThread.start();
 		modelUsername.addObserver(chatNI);
-		modelListUsers.addObserver(chatGUI);
+		//modelListUsers.addObserver(chatGUI);
 		modelStates.addObserver(chatNI);
 		modelGroupRecipient.addObserver(chatNI);
-		//System.out.println("alpha");
 
 		
 		// TEST de CONNEXION 
-		//chatController.performConnect("jo");
-		if (modelStates.isConnected()){ chatNI.connect(modelUsername.getUsername(), false); }
-		
+		chatController.performConnect("jo");
+		//if (modelStates.isConnected()){ chatNI.connect(modelUsername.getUsername(), false); }
+		//while(modelListUsers.getListUsers().keySet().iterator().hasNext()){//remote.add((String)(ChatSystem.modelListUsers.getListUsers().keySet().iterator().next()));
+			//System.out.println("user : " + modelListUsers.getListUsers().keySet().iterator().next());
+		//}
+		//chatController.performSendText("premier message",remote);	
 		//chatController.performDisconnect();
-		if (!modelStates.isConnected()){ chatNI.disconnect(modelUsername.getUsername()); }
+		//if (!modelStates.isConnected()){ chatNI.disconnect(modelUsername.getUsername()); }
 
 		//chatGui.getwConnect();
 		/*chatController.performDisconnect();*/
 		//if (modelStates.isConnected()){)
-		//chatController.performConnect("lilou");
-		//remote.add((String)(ChatSystem.modelListUsers.getListUsers().keySet().iterator().next()));
-		
-		//chatController.performSendText("premier message",remote);
-		//System.out.println(ChatSystem.getModelUsername().getUsername());
-		/*chatController.performDisconnect();
-		if (modelStates.isConnected()){
-			System.out.println(modelUsername.getUsername() + " : disconnection succeed");
-		}else{
-			System.out.println(modelUsername.getUsername() + " : disconnection failed");
-		}*/
+		//chatController.performConnect("lilou");		
 	}
 
 }
