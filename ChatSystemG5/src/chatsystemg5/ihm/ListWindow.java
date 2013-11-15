@@ -30,7 +30,7 @@ public class ListWindow extends JFrame implements Observer, ListSelectionListene
     public ListWindow(ChatController chat_control){
         this.chat_control = chat_control;
         this.listUser = new HashMap<String, String>();
-        new JList();
+        this.listDisplay = new JList();
     }
 
     @Override
