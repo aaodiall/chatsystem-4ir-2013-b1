@@ -79,15 +79,11 @@ public class ChatController {
      
     // Déconnection du local user
     public void perform_disconnection () {
-        try {
-            Goodbye msg = new Goodbye(this.userDB.get_username());
-            InetAddress IP_dest = InetAddress.getByName("255.255.255.255");
-            this.emissionNI.send(msg, IP_dest);
-            // create emmetor part of the app
-        } catch (UnknownHostException ex) {
-            Logger.getLogger(ChatController.class.getName()).log(Level.SEVERE, null, ex);
-        }
-    }
+        Goodbye msg = new Goodbye(this.userDB.get_username());
+        InetAddress IP_dest = emissionNI.get_broadcast();
+        this.emissionNI.send(msg, IP_dest);
+        // create emmetor part of the app
+     }
     
     // Déconnection d'un autre user
     public void perform_disconnection (Goodbye bye, InetAddress IP_addr) {

@@ -48,10 +48,7 @@ public class MessageEmissionNI extends MessageHandlerNI implements ToRemoteApp{
                 // enable brodcast
                 this.UDP_sock.setBroadcast(true);
             }
-            
-            // Local host :
-            //this.IP_dest = InetAddress.getByName("127.0.0.1");
-            
+                    
             // send hello
             this.buffer = ((Message) hi).toArray();
             this.message = new DatagramPacket(this.buffer, this.buffer.length, this.IP_dest, this.UDP_port_dest);
@@ -75,18 +72,18 @@ public class MessageEmissionNI extends MessageHandlerNI implements ToRemoteApp{
             this.UDP_sock.setBroadcast(true);
             
             // send bye
-            buffer = ((Message) bye).toArray();
-            message = new DatagramPacket(buffer, buffer.length, IP_dest, UDP_port);
-            UDP_sock.send(message);
+            this.buffer = ((Message) bye).toArray();
+            this.message = new DatagramPacket(this.buffer, this.buffer.length, this.IP_dest, this.UDP_port);
+            this.UDP_sock.send(message);
             
             // disbale brodcast
             this.UDP_sock.setBroadcast(false);
             
             // close the sender port ??
-            UDP_sock.close();
+            //UDP_sock.close();
         }
         catch (IOException exc) {
-            System.out.println("Connection error\n" + exc);
+            System.out.println("Connection error for disconnection\n" + exc);
         }
     }
     
