@@ -10,7 +10,8 @@ import chatSystemCommon.*;
 
 public class ChatNI extends View {
 
-    private Thread threadReceiver;
+    private Thread threadMessageReceiver;
+    private Thread threadMessageTransfert;
     private MessageReceiver messageReceiver;
     private final MessageTransfert messageTransfert;
     private final FileReceiver[] fileReceiver;
@@ -24,7 +25,8 @@ public class ChatNI extends View {
         this.fileTransfert = new FileTransfert[5];
         this.messageReceiver = new MessageReceiver(this);
         this.messageTransfert = new MessageTransfert(this);
-        this.threadReceiver = new Thread(this.messageReceiver);
+        this.threadMessageReceiver = new Thread(this.messageReceiver);
+        this.threadMessageTransfert = new Thread(this.messageTransfert);
     }
 
     public void helloReceived(String username, String ip) {
@@ -70,11 +72,11 @@ public class ChatNI extends View {
                 if((UserState)arg == UserState.CONNECTED){
                     
                     //on est connecté, on commence l'écoute
-                    if(!(this.threadReceiver.getState() == Thread.State.RUNNABLE)){
+                    if(!(this.threadMessageReceiver.getState() == Thread.State.RUNNABLE)){
                         System.out.println("Demarrage de la reception");
                         //a changer completement il faudrait pouvoir couper le thread et le lancer comme on veut
                         this.usrInfo = (UserInformation)o;
-                        this.threadReceiver.start();
+                        this.threadMessageReceiver.start();
                     }
                     //this.messageReceiver = new MessageReceiver(this);
                     //this.threadReceiver = new Thread(this.messageReceiver);
@@ -94,9 +96,11 @@ public class ChatNI extends View {
                 this.messageTransfert.sendHello((String)arg);
             }
         }
+        //quand l'update concerne l'envoi par l'utilisateur local d'un nouveau message à un remote system donné
+        //il faudrait faire threadMessageTransfert.notify()
     }
 
-    public void messageSended () {
+    public void messageSended (String msg, String idRemoteSystem) {
         //this.controller
     }
     
