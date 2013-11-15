@@ -52,10 +52,12 @@ public class ConnectionWindow /*extends ChatGUI*/ extends JFrame implements Acti
         chat_control.perform_connection(username);
         
         // On lance la fenetre de chat
-        ChatWindow chat_wdw = new ChatWindow(chat_control);
+        ChatWindow chat_wdw = new ChatWindow(chat_control, this);
         
-        // On ferme la fenetre immédiatement
-        
+        // On ferme la fenetre immédiatement et on vide la zone de texte
+        this.setVisible(false);
+        // Vider la zone de texte
+ 
         
         // La fenetre se ferme totalement
         this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE) ; 
