@@ -41,19 +41,22 @@ public class ChatController extends Controller implements GuiToCont, NiToCont {
     public void performConnect(String username) {
         System.out.println("Entering performConnect");
         this.localUser.setUsername(username + "@" + this.localUser.getIP());
-        this.localUser.setState(UserState.CONNECTED);
+        this.localUser.setUserState(UserState.CONNECTED);
     }
 
     @Override
     public void performDisconnect() {
-        this.localUser.setState(UserState.DISCONNECTED);
+        this.localUser.setUserState(UserState.DISCONNECTED);
     }
 
     @Override
     public void performHelloReceived(String username, String ip) {
         System.out.println("Hello received je modif le model");
         this.remoteSystems.addRemoteSystem(username, ip);
-        //ajout de remote system Information en tant qu'observable pr chatGUI -> afaire
+        
+        //ajout de remote system Information en tant qu'observable pr chatGUI
+        this.remoteSystems.getRemoteSystem(username+"@"+ip).addObserver(this.chatGUI);
+        
     }
 
     @Override

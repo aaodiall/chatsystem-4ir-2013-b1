@@ -60,6 +60,13 @@ public class ChatGUI extends View {
     }
 
     public void listUser(List<String> newList) throws GUIException {
+        /*
+        SwingUtilities.invokeLater(new Runnable() {
+    public void run() {
+        createAndShowGUI();
+    }
+});
+        */
         for (String contact : newList) {
             if (!(this.dWindows.containsKey(contact))) {
                 this.dWindows.put(contact, null);
