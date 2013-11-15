@@ -17,7 +17,7 @@ public class ListModel extends ChatModel {
         hmap_users = new HashMap();
 
         // add list window as listModel obersver
-        this.addObserver(chatController.get_chatGUI().get_listWindow());
+        this.addObserver(chatController.get_chatGUI().get_list_window());
     }
     
     public void add_user(String username, String IP_addr) {

@@ -1,6 +1,7 @@
 package chatsystemg5.brain;
 import chatsystemg5.common.*;
 import chatsystemg5.ihm.ChatGUI;
+import chatsystemg5.ihm.ChatWindow;
 import chatsystemg5.ihm.ConnectionWindow;
 import chatsystemg5.network.*;
 
@@ -24,11 +25,7 @@ public class ChatController {
         chatGUI = new ChatGUI(this);
         
         // initialize model
-        listDB = new ListModel(this);
-        
-        // initialize interface
-        ConnectionWindow conn_window = new ConnectionWindow(this); 
-            
+        listDB = new ListModel(this);            
     }
     
     /**************** Controller init ****************/
@@ -107,7 +104,6 @@ public class ChatController {
             Text msg = new Text(this.userDB.get_username(), text);
             //msg.toString();
             InetAddress IP_dest = InetAddress.getByName(IP_addr);
-            System.out.println("Here Controller : " + IP_dest);
             emissionNI.send(msg, IP_dest);
         } catch (UnknownHostException ex) {
             Logger.getLogger(ChatController.class.getName()).log(Level.SEVERE, null, ex);
