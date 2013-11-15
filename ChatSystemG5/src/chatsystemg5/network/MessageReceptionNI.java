@@ -80,6 +80,7 @@ public class MessageReceptionNI extends MessageHandlerNI implements FromRemoteAp
                 chat_control.perform_connection((Hello) msg, IP_addr);
             }
             if (msg instanceof Goodbye) {
+                System.out.println("I'm Network : Goodbye received.");
                 chat_control.perform_disconnection((Goodbye) msg, IP_addr);
             }
             if (msg instanceof Text) {
