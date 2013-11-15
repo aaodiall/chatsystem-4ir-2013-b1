@@ -12,7 +12,7 @@ import java.util.List;
 
 import javax.swing.*;
 
-public class UserWindow extends JFrame implements ActionListener, MouseListener{
+public class UserWindow extends JFrame implements ActionListener, MouseListener {
 
     /**
      * numéro de version
@@ -23,17 +23,17 @@ public class UserWindow extends JFrame implements ActionListener, MouseListener{
     private final JLabel username;
     private final JList<String> contactsList;
     private final DefaultListModel<String> contactsName;
-    
+
     private final ChatGUI chatGUI;
 
-    public UserWindow(String username,ChatGUI chatGUI) {
-        
+    public UserWindow(String username, ChatGUI chatGUI) {
+
         this.username = new JLabel(username);
         this.deconnectButton = new JButton("Deconnect");
         this.contactsName = new DefaultListModel<>();
 
         this.contactsList = new JList<>(this.contactsName);
-        
+
         this.chatGUI = chatGUI;
         this.initWindow();
     }
@@ -97,13 +97,17 @@ public class UserWindow extends JFrame implements ActionListener, MouseListener{
         for (String name : newContacts) {
             this.contactsName.addElement(name);
         }
-
+        /*SwingUtilities.invokeLater(new Runnable() {
+            public void run() {
+                do();
+            }
+        });*/
     }
-    
-    public void setUsername(String username){
+
+    public void setUsername(String username) {
         this.username.setText(username);
     }
-    
+
     @Override
     public void actionPerformed(ActionEvent ae) {
         System.out.println("Entering actionPerformed");
@@ -111,20 +115,20 @@ public class UserWindow extends JFrame implements ActionListener, MouseListener{
             chatGUI.deconnectButtonPressed();
         }
     }
-    
+
     @Override
     public void mouseClicked(MouseEvent me) {
-        if(me.getClickCount() == 2){
+        if (me.getClickCount() == 2) {
             //localisation index du clic
             int index = this.contactsList.locationToIndex(me.getPoint());
             //demande d'ouverture de la dialog Window correspondante
-            this.chatGUI.displayDialogWindow(this.contactsList.getModel().getElementAt(index));
+            String idRemoteSystem = this.contactsList.getModel().getElementAt(index);
         }
     }
 
     @Override
     public void mousePressed(MouseEvent me) {
-       // throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        // throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
     @Override
