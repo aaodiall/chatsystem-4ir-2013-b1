@@ -60,6 +60,7 @@ public class MessageEmissionNI extends MessageHandlerNI implements ToRemoteApp{
                 // disable broadcast
                 this.UDP_sock.setBroadcast(false);
             }
+            
         }
         catch (IOException exc) {
             System.out.println("Connection error\n" + exc);
@@ -90,9 +91,8 @@ public class MessageEmissionNI extends MessageHandlerNI implements ToRemoteApp{
     
     public void send_text (Text txt) {
         try {
-            System.out.println("Here send_text : " + IP_dest);
             byte[] buffer = txt.toArray();
-            message = new DatagramPacket(buffer, buffer.length, InetAddress.getByName("127.0.0.1"), UDP_port);
+            message = new DatagramPacket(buffer, buffer.length, IP_dest, UDP_port);
             UDP_sock.send(message);
             
         }
@@ -124,7 +124,6 @@ public class MessageEmissionNI extends MessageHandlerNI implements ToRemoteApp{
         }
         if (msg instanceof Text) {
             send_text((Text) msg);
-            System.out.println("Here sendNI : " + IP_dest);
         }
 
     }
