@@ -3,6 +3,8 @@ package chatSystem.model;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.ConcurrentLinkedQueue;
+import javax.swing.DefaultListModel;
+
 
 /**
  * Keeps and manages all the information about a remote system (Username,
@@ -14,8 +16,8 @@ public class RemoteSystemInformation extends UserInformation {
 
    //faire une seule liste et faire unJlist ds la fenetre pour afficher directement la liste
     
-    private final ConcurrentLinkedQueue<String> messagesToSend;
-    private final ConcurrentLinkedQueue<String> messages;
+    private final  ConcurrentLinkedQueue<String>messagesToSend;
+    private final DefaultListModel<String> messages;
 
     /**
      * Class' constructor
@@ -27,7 +29,7 @@ public class RemoteSystemInformation extends UserInformation {
         super(username, ip);
         
         this.messagesToSend = new ConcurrentLinkedQueue<String>();
-        this.messages = new ConcurrentLinkedQueue<String>();
+        this.messages = new DefaultListModel<String>();
         
     }
 
@@ -37,7 +39,7 @@ public class RemoteSystemInformation extends UserInformation {
      * @param message new received message
      */
     public void addMessageReceived(String message) {
-        this.messages.add(message); //rajouter id devant pr identifier
+        this.messages.addElement(message); //rajouter id devant pr identifier
     }
 
 
@@ -65,8 +67,12 @@ public class RemoteSystemInformation extends UserInformation {
      * @param message sent message
      */
     public void addMessageSent(String message) {
-        this.messages.add(message); //rajouter username
+        this.messages.addElement(message); //rajouter username
         
+    }
+    
+    public DefaultListModel<String> getMessages(){
+        return this.messages;
     }
 
     /**

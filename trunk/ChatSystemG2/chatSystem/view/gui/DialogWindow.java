@@ -5,9 +5,11 @@ import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import javax.swing.DefaultListModel;
 
 import javax.swing.JButton;
 import javax.swing.JFrame;
+import javax.swing.JList;
 import javax.swing.JPanel;
 import javax.swing.JProgressBar;
 import javax.swing.JScrollBar;
@@ -24,15 +26,17 @@ public class DialogWindow extends JFrame implements ActionListener {
 
     private final String contact;
     private final JTextArea message;
-    private final JTextArea conversation;
+    private final JList<String> conversation;
+    //private final DefaultListModel<String> conversationModel;
     private final JButton send;
     private final JButton joinFile;
     private final JProgressBar progression;
 
-    public DialogWindow(String contact) {
+    public DialogWindow(String contact, DefaultListModel<String> conversationModel) {
         this.contact = contact;
         this.message = new JTextArea();
-        this.conversation = new JTextArea();
+        //this.conversationModel = conversationModel;
+        this.conversation = new JList<>(conversationModel);
         this.send = new JButton("Send");
         this.joinFile = new JButton("Join File");
         this.progression = new JProgressBar();
@@ -50,7 +54,7 @@ public class DialogWindow extends JFrame implements ActionListener {
         JScrollPane scrollConv = new JScrollPane(this.conversation);
         scrollConv.setVerticalScrollBar(new JScrollBar(JScrollBar.VERTICAL));
         scrollConv.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED);
-        this.conversation.setEditable(false);
+        //this.conversation.setEditable(false);
 
         c.gridx = 0;
         c.gridy = 0;

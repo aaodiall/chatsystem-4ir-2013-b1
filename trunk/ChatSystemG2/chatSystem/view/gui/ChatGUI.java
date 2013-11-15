@@ -11,6 +11,7 @@ import chatSystem.model.UserState;
 import java.util.HashMap;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.swing.DefaultListModel;
 
 public class ChatGUI extends View {
 
@@ -39,7 +40,7 @@ public class ChatGUI extends View {
         if (this.dWindows.containsKey(contact)) {
             if (this.dWindows.get(contact) == null) {
                 this.dWindows.remove(contact);
-                this.dWindows.put(contact, new DialogWindow(contact));
+                this.dWindows.put(contact, new DialogWindow(contact, RemoteSystems.getInstance().getRemoteSystem(contact).getMessages()));
             } else {
                 this.dWindows.get(contact).setVisible(true);
                 //this.dWindows.get(contact).setEnabled(true);
@@ -60,13 +61,7 @@ public class ChatGUI extends View {
     }
 
     public void listUser(List<String> newList) throws GUIException {
-        /*
-        SwingUtilities.invokeLater(new Runnable() {
-    public void run() {
-        createAndShowGUI();
-    }
-});
-        */
+
         for (String contact : newList) {
             if (!(this.dWindows.containsKey(contact))) {
                 this.dWindows.put(contact, null);
@@ -75,7 +70,7 @@ public class ChatGUI extends View {
         if (this.uWindow == null) {
             throw new GUIException();
         } else {
-            this.uWindow.updateContacts(newList);
+            //this.uWindow.updateContacts(newList);
         }
     }
 
@@ -106,10 +101,10 @@ public class ChatGUI extends View {
         System.out.println("Entering update Chat GUI");
         if (o instanceof UserInformation) {
             if (arg instanceof String) {
-                if(uWindow == null){//premiere connection
-                //on créée la UserWindow avc le pseudo choisi
+                if (uWindow == null) {//premiere connection
+                    //on créée la UserWindow avc le pseudo choisi
                     this.uWindow = new UserWindow((String) arg, this);
-                }else{
+                } else {
                     this.uWindow.setUsername((String) arg);
                 }
             } else if (arg instanceof UserState) {
@@ -130,7 +125,7 @@ public class ChatGUI extends View {
             } catch (GUIException ex) {
                 Logger.getLogger(ChatGUI.class.getName()).log(Level.SEVERE, null, ex);
             }
-        }else if (o instanceof RemoteSystemInformation){
+        } else if (o instanceof RemoteSystemInformation) {
             //vérifier si c'est un message recus ou un message envoyé et afficher dans la bonne dialog Window
         }
     }
