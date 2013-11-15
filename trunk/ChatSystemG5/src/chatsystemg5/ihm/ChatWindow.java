@@ -16,11 +16,13 @@ import javax.swing.JTextField;
 public class ChatWindow extends JFrame implements ActionListener {
     
     private ChatController chat_control;
+    private ConnectionWindow connect_window;
     private JButton disconnect_button;
     
-    public ChatWindow (ChatController chat_control) {
+    public ChatWindow (ChatController chat_control, ConnectionWindow connect_window) {
 
         this.chat_control = chat_control;
+        this.connect_window = connect_window;
         // create the components
         // a new button identified as Connection
         disconnect_button = new JButton("Disonnection");
@@ -43,7 +45,13 @@ public class ChatWindow extends JFrame implements ActionListener {
         
         // On lance la déconnection
         chat_control.perform_disconnection();
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        
+        // On ferme la fenetre
+        this.setVisible(false);
+        
+        // On réouvre la fenetre de connection
+        connect_window.setVisible(true);
+        
     }
     
 }
