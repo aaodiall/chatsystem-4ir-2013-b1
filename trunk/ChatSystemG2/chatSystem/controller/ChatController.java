@@ -51,11 +51,11 @@ public class ChatController extends Controller implements GuiToCont, NiToCont {
 
     @Override
     public void performHelloReceived(String username, String ip) {
-        System.out.println("Hello received je modif le model");
+        System.out.println("Hello received, modifying the model");
         this.remoteSystems.addRemoteSystem(username, ip);
         
         //ajout de remote system Information en tant qu'observable pr chatGUI
-        this.remoteSystems.getRemoteSystem(username+"@"+ip).addObserver(this.chatGUI);
+        //this.remoteSystems.getRemoteSystem(username+"@"+ip).addObserver(this.chatGUI);
         
     }
 
