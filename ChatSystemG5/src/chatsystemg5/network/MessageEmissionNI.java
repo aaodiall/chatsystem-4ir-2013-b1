@@ -72,12 +72,10 @@ public class MessageEmissionNI extends MessageHandlerNI implements ToRemoteApp{
         try {
             // enable brodcast
             this.UDP_sock.setBroadcast(true);
-            
             // send bye
             byte[] buffer = ((Message) bye).toArray();
-            this.message = new DatagramPacket(buffer, buffer.length, this.IP_dest, this.UDP_port);
+            this.message = new DatagramPacket(buffer, buffer.length, this.IP_dest, this.UDP_port_dest);
             this.UDP_sock.send(message);
-            
             // disbale brodcast
             this.UDP_sock.setBroadcast(false);
             
@@ -92,7 +90,7 @@ public class MessageEmissionNI extends MessageHandlerNI implements ToRemoteApp{
     public void send_text (Text txt) {
         try {
             byte[] buffer = txt.toArray();
-            message = new DatagramPacket(buffer, buffer.length, IP_dest, UDP_port);
+            message = new DatagramPacket(buffer, buffer.length, IP_dest, UDP_port_dest);
             UDP_sock.send(message);
             
         }
@@ -104,7 +102,7 @@ public class MessageEmissionNI extends MessageHandlerNI implements ToRemoteApp{
     public InetAddress get_broadcast() {
         InetAddress broadcast = null;
         try {
-            broadcast = InetAddress.getByName("10.1.255.255");
+            broadcast = InetAddress.getByName("192.168.1.255");
         } catch (UnknownHostException ex) {
             Logger.getLogger(MessageEmissionNI.class.getName()).log(Level.SEVERE, null, ex);
         }
