@@ -77,7 +77,7 @@ public class MessageReceptionNI extends MessageHandlerNI implements FromRemoteAp
     public void send_to_controller (byte[] array, InetAddress IP_addr) {
         try {
             Message msg = Message.fromArray(array);
-            System.out.println(msg.toString());
+            //System.out.println(msg.toString());
             if (msg instanceof Hello) {
                 System.out.println("I'm Network " + this.localhost + " : Hello received.");
                 chat_control.perform_connection((Hello) msg, IP_addr);
@@ -88,6 +88,7 @@ public class MessageReceptionNI extends MessageHandlerNI implements FromRemoteAp
             }
             if (msg instanceof Text) {
                 chat_control.perform_send((Text) msg, IP_addr);
+                System.out.println("I'm Network " + this.localhost + " : Text received.");
             }
         }
         catch (IOException ex) {
