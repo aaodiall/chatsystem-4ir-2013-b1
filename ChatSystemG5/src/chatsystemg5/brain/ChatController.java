@@ -112,7 +112,7 @@ public class ChatController {
     // Réception d'un message
     public void perform_send (Text txt, InetAddress IP_addr) {
         //display_message ()
-        System.out.println(txt.toString());
+        System.out.println("I'm Controller, receiving : " + txt.toString());
     }
         
     /**************** Getters ****************/
