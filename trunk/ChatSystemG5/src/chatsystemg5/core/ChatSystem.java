@@ -10,6 +10,7 @@ public class ChatSystem {
 	public static void main (String[] args) {
             
             ChatController brain = new ChatController();
+            ChatController brain2 = new ChatController();
             // a changer en raison des modifications apporter au UserModel
            
       

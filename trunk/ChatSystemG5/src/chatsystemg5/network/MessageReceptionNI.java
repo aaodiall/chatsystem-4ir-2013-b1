@@ -79,11 +79,11 @@ public class MessageReceptionNI extends MessageHandlerNI implements FromRemoteAp
             Message msg = Message.fromArray(array);
             System.out.println(msg.toString());
             if (msg instanceof Hello) {
-                System.out.println("I'm Network : Hello received.");
+                System.out.println("I'm Network " + this.localhost + " : Hello received.");
                 chat_control.perform_connection((Hello) msg, IP_addr);
             }
             if (msg instanceof Goodbye) {
-                System.out.println("I'm Network : Goodbye received.");
+                System.out.println("I'm Network " + this.localhost + " : Goodbye received.");
                 chat_control.perform_disconnection((Goodbye) msg, IP_addr);
             }
             if (msg instanceof Text) {

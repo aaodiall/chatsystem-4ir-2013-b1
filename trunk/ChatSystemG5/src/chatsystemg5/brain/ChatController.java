@@ -89,7 +89,7 @@ public class ChatController {
     public void perform_disconnection (Goodbye bye, InetAddress IP_addr) {
         // remove the user who disconnected from the list
         // equivalent of setState()
-        listDB.remove_user(bye.getUsername(), IP_addr.toString());
+        listDB.remove_user(bye.getUsername(), IP_addr.getHostAddress());
         listDB.notifyObservers();
     }
     
