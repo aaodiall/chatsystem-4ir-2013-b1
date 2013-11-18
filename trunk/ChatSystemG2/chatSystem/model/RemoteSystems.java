@@ -32,7 +32,7 @@ public class RemoteSystems extends Model implements Iterable<RemoteSystemInforma
      * @param ip remote system's ip address
      */
     public synchronized void addRemoteSystem(String username, String ip) {
-        System.out.println("Ajout utilisateur : "+ip);
+        System.out.println("Ajout utilisateur : "+username + "     " +ip);
         RemoteSystemInformation newRS = new RemoteSystemInformation(username,ip);
         String key = newRS.getUsername();//newRS.getIdRemoteSystem();
         if (!this.remoteSystemsInformation.containsKey(key)) {
