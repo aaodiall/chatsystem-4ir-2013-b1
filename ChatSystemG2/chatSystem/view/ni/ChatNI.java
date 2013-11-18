@@ -49,6 +49,7 @@ public class ChatNI extends View {
     }
 
     public void fileTransfertConfirmationReceived(FileTransfertConfirmation msg, String ip) {
+        
         //((ChatController) (this.controller)).perform
 
     }

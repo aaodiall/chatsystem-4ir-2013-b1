@@ -1,7 +1,8 @@
 package chatSystem.model;
 
 import java.util.ArrayList;
-import java.util.List;
+import java.util.Map;
+import java.util.HashMap;
 
 /**
  * Keeps and manages all the file's tranfers
@@ -10,36 +11,40 @@ import java.util.List;
 public class FileTransferts extends Model{
 	
     private static FileTransferts instance;
-    private List<FileTransfertInformation> FileModel;
+    private Map<Integer, FileTransfertInformation> fileModel;
 
     /**
      * Private class' constructor
      */
     private FileTransferts() {
-            this.FileModel = new ArrayList<FileTransfertInformation>();
+            this.fileModel = new HashMap<Integer, FileTransfertInformation>();
     }
 
     /**
      * Adding a new file's transfer
      * @param name file's name
-     * @param extension file's extension
-     * @param taille file's size
+     * @param size file's size
      * @param idRemoteSystem sender's id
      * @param idTransfert id given to the transfer
      */
-    public void addTransfert(String name, long size, String idRemoteSystem, int idTransfert) {
-            this.FileModel.add(new FileTransfertInformation(size,idRemoteSystem, name, idTransfert));
+    public synchronized void addTransfert(String name, long size, String idRemoteSystem, int idTransfert) {
+        if (this.fileModel.containsKey(idTransfert)) {
+            this.fileModel.remove(idTransfert);
+        }
+        this.fileModel.put(idTransfert, new FileTransfertInformation(size,idRemoteSystem, name, idTransfert));
     }
 
     /**
      * Remove a file's transfer
      * @param idTransfert transfer's id
      */
-    public void deleteTransfert(int idTransfert) {
+    public synchronized void deleteTransfert(int idTransfert) {
+        this.fileModel.remove(idTransfert);
     }
 
 
-    public void getFileTransfertInformation() {
+    public FileTransfertInformation getFileTransfertInformation(int idTransfert) {
+        return this.fileModel.get(idTransfert);
     }
 
     /**

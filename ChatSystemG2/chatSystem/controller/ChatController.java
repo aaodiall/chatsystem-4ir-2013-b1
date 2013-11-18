@@ -1,5 +1,6 @@
 package chatSystem.controller;
 
+import chatSystem.model.FileState;
 import chatSystem.model.RemoteSystems;
 import chatSystem.model.UserInformation;
 import chatSystem.model.UserState;
@@ -106,7 +107,13 @@ public class ChatController extends Controller implements GuiToCont, NiToCont {
 
     @Override
     public void performConfirmationReceived(String idRemoteSystem, int idTransfert, boolean accepted) {
-        
+        if (accepted) {
+            this.fileTransferts.getFileTransfertInformation(idTransfert).setState(FileState.ACCEPTED);
+        }
+        else {
+            this.fileTransferts.getFileTransfertInformation(idTransfert).setState(FileState.DECLINED);
+        }
+            
     }
 
 }
