@@ -1,5 +1,6 @@
 package Controller;
 
+import java.io.File;
 import java.net.UnknownHostException;
 import java.util.ArrayList;
 import java.util.Date;
@@ -45,7 +46,7 @@ public class ChatController {
 	public static void FileAcceptanceProcessing(FileTransfertConfirmation message){
 		if(message.isAccepted()){
 			System.out.println("yahou ils ont accepté!" + message);
-			PerformSendFile(ChatMod.getById(message.getIdDemand()), message.getUsername());
+			PerformSendFile(ChatMod.getById(message.getIdDemand()), message.getUsername(),ChatMod.getPortByID(message.getIdDemand()));
 		}else{
 			System.out.println("oh non ils ont refusé" + message);
 			ChatMod.removeByID(message.getIdDemand());
@@ -114,7 +115,7 @@ public class ChatController {
 		}*/
 		
 		FileTransfertDemand ftd = new FileTransfertDemand(getLocalUsername(),name,  bytes,getFirstFreePort());
-		ChatMod.getFileDemandList().add(new FileDemand(ftd.getId(), f));
+		ChatMod.getFileDemandList().add(new FileDemand(ftd.getId(), f,ftd.getPortClient()));
 		ChatNi.SendFileAcceptance(ftd,RemoteUsername);
 	}
 	
@@ -124,10 +125,30 @@ public class ChatController {
 		return 16002;
 	}
 
-	public static void PerformSendFile(java.io.File f,String RemoteUserName){
+	public static void PerformSendFile(java.io.File f,String RemoteUserName,int portEnvoi){
 		System.out.println("on envoie un fichier");
+		ArrayList<byte[]> split  = SplitFile(f);
+		ChatNi.SendFile(split,RemoteUserName,portEnvoi);
+		
+		
 	}
 	
+	private static ArrayList<byte[]> SplitFile(File f) {
+		// TODO Auto-generated method stub
+		ArrayList<byte[]> retour = new ArrayList<byte[]>();
+		byte[] bFile = new byte[(int) f.length()];
+		int increment = 0;
+		do{
+			byte[] part = new byte[1024];
+			for(byte e : part){
+				e = bFile[increment];
+				increment++;
+			}
+			retour.add(part);
+		}while(f.length() - increment < 1024);
+		return retour;
+	}
+
 	public static void PerformSendMessage(String text,String[] RemoteUserName){
 		Text message = new Text(getLocalUsername(),text);
 		UpdateModel(message, RemoteUserName,to);

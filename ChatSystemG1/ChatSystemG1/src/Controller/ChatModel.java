@@ -122,4 +122,9 @@ public class ChatModel {
 		}
 		FileDemandList.remove(toremove);
 	}
+
+	public int getPortByID(int idDemand) {
+		// TODO Auto-generated method stub
+		return 0;
+	}
 }
