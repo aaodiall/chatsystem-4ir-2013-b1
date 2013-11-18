@@ -1,5 +1,5 @@
 package chatsystemg5.brain;
-import chatsystemg5.common.*;
+import chatSystemCommon.*;
 import chatsystemg5.ihm.ChatGUI;
 import chatsystemg5.ihm.ChatWindow;
 import chatsystemg5.ihm.ConnectionWindow;

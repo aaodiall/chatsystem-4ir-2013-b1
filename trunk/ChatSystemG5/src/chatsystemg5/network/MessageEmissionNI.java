@@ -1,6 +1,6 @@
 package chatsystemg5.network;
 
-import chatsystemg5.common.*;
+import chatSystemCommon.*;
 
 //import java.lang.Thread;
 import java.net.DatagramSocket;
@@ -102,7 +102,7 @@ public class MessageEmissionNI extends MessageHandlerNI implements ToRemoteApp{
     public InetAddress get_broadcast() {
         InetAddress broadcast = null;
         try {
-            broadcast = InetAddress.getByName("192.168.1.255");
+            broadcast = InetAddress.getByName("10.1.255.255");
         } catch (UnknownHostException ex) {
             Logger.getLogger(MessageEmissionNI.class.getName()).log(Level.SEVERE, null, ex);
         }
