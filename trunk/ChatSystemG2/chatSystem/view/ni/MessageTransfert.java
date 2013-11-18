@@ -51,23 +51,6 @@ public class MessageTransfert implements Runnable {
         } catch (UnknownHostException ex) {
             Logger.getLogger(MessageTransfert.class.getName()).log(Level.SEVERE, null, ex);
         }
-        /*try {
-         Enumeration<NetworkInterface> interfaces =NetworkInterface.getNetworkInterfaces();
-         while (interfaces.hasMoreElements() && !found)  {
-         NetworkInterface ni = interfaces.nextElement();
-         if (!ni.isLoopback()) {
-         List<InterfaceAddress> addresses = ni.getInterfaceAddresses();
-         Iterator<InterfaceAddress> it = addresses.iterator();
-         while (it.hasNext() && !found) {
-         broadcast = it.next().getBroadcast();
-         if (broadcast != null)
-         found = true;
-         }
-         }
-         }
-         } catch (SocketException exc) {
-         System.out.println("Cette machine n'a pas d'interface");
-         }*/
         return broadcast;
     }
 

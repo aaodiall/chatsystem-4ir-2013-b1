@@ -67,10 +67,10 @@ public class MessageReceiver implements Runnable {
                         this.chatni.helloReceived(helloReceived.getUsername(), from);
                     } else if (msgClass == Text.class) {
                         Text msgText = (Text) msg;
-                        this.chatni.textMessageReceived(msgText.getText(), msgText.getUsername());
+                        this.chatni.textMessageReceived(msgText.getText(), msgText.getUsername()+"@"+from);
                     } else if (msgClass == Goodbye.class) {
                         Goodbye gbReceived = (Goodbye) msg;
-                        this.chatni.goodbyeReceived(gbReceived.getUsername());
+                        this.chatni.goodbyeReceived(gbReceived.getUsername()+"@"+from);
                     } else if (msgClass == FileTransfertDemand.class) {
                         FileTransfertDemand ftd = (FileTransfertDemand) msg;
                         this.chatni.fileTransfertDemandReceived(ftd, from);

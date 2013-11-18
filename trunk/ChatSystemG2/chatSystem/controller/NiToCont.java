@@ -19,7 +19,7 @@ public interface NiToCont {
 	
 	public void performMessageReceived(String msg, String idRemoteSystem);
 	
-        public void performSentMessageToRemoteSystem(String message, String idRemoteSystem);
+        public void performMessageSent(String message, String idRemoteSystem);
 	
 	public void performSuggestionReceived(String name, long size, String idRemoteSystem, int idTransfert);
         
