@@ -32,6 +32,7 @@ public class RemoteSystems extends Model implements Iterable<RemoteSystemInforma
      * @param ip remote system's ip address
      */
     public synchronized void addRemoteSystem(String username, String ip) {
+        System.out.println("Ajout utilisateur : "+ip);
         RemoteSystemInformation newRS = new RemoteSystemInformation(username,ip);
         String key = newRS.getUsername();//newRS.getIdRemoteSystem();
         if (!this.remoteSystemsInformation.containsKey(key)) {
@@ -76,10 +77,14 @@ public class RemoteSystems extends Model implements Iterable<RemoteSystemInforma
      * @param message message which has to be sent
      */
     public synchronized void addMessageToSendToRemote(String idRemoteSystem, String message){
+        System.out.println("Nouveau message a envoyer");
         if(this.remoteSystemsInformation.containsKey(idRemoteSystem)) {          
             this.remoteSystemsInformation.get(idRemoteSystem).addMessageToSend(message);
-            if (this.availableMsg.isEmpty())
-                this.availableMsg.add(Boolean.TRUE);
+            if (this.availableMsg.isEmpty()){
+                  System.out.println("Ajout True dans available message");
+                  this.availableMsg.add(Boolean.TRUE);
+            }
+                
         }
     }
     
@@ -122,6 +127,7 @@ public class RemoteSystems extends Model implements Iterable<RemoteSystemInforma
     }
     
     public void waitMessageToSend () {
+        System.out.println("Message Transfert : J'attends un message");
         try {
             this.availableMsg.take();
         } catch(InterruptedException exc) {
