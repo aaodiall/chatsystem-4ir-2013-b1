@@ -1,5 +1,5 @@
 package chatsystemg5.network;
-import chatsystemg5.common.*;
+import chatSystemCommon.*;
 import java.net.InetAddress;
 
 public interface FromRemoteApp {
