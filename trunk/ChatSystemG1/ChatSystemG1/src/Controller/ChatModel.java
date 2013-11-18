@@ -1,5 +1,6 @@
 package Controller;
 
+import java.io.File;
 import java.util.ArrayList;
 
 
@@ -11,7 +12,7 @@ public class ChatModel {
     
     
 	private ArrayList<Conversation> ConversationList;
-
+	private ArrayList<FileDemand> FileDemandList;
 	
 
 	private ArrayList<Observer> ObserverCollections;
@@ -22,6 +23,7 @@ public class ChatModel {
 		// TODO Auto-generated constructor stub
 		this.ConversationList = new ArrayList<Conversation>();
 		this.ObserverCollections = new ArrayList<Observer>();
+		this.FileDemandList = new ArrayList<FileDemand>();
 		this.UserNameList = new ArrayList<String>();
 		
 		
@@ -84,5 +86,40 @@ public class ChatModel {
 		// TODO Auto-generated method stub
 		UserNameList.remove(username);
 		notifyObserver(NOTIF_USERLIST);
+	}
+
+	/**
+	 * @return the fileDemandList
+	 */
+	public ArrayList<FileDemand> getFileDemandList() {
+		return FileDemandList;
+	}
+
+	/**
+	 * @param fileDemandList the fileDemandList to set
+	 */
+	public void setFileDemandList(ArrayList<FileDemand> fileDemandList) {
+		FileDemandList = fileDemandList;
+	}
+
+	public File getById(int idDemand) {
+		// TODO Auto-generated method stub
+		for(FileDemand fd : this.FileDemandList){
+			if(fd.getDemandId() == idDemand){
+				return fd.getFichier();
+			}
+		}
+		return null;
+	}
+
+	public void removeByID(int idDemand) {
+		// TODO Auto-generated method stub
+		FileDemand toremove = null;
+		for(FileDemand fd : this.FileDemandList){
+			if(fd.getDemandId() == idDemand){
+				toremove = fd;
+			}
+		}
+		FileDemandList.remove(toremove);
 	}
 }

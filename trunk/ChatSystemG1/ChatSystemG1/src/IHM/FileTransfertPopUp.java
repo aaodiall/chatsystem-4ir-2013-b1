@@ -14,6 +14,7 @@ public class FileTransfertPopUp extends JFrame implements ActionListener,Runnabl
 
 	public FileTransfertPopUp() {
 		// TODO Auto-generated constructor stub
+		
 	}
 
 	@Override
