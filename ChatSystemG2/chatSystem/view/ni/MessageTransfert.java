@@ -78,10 +78,11 @@ public class MessageTransfert implements Runnable {
     /**
      * Send a hello message to all the computers located in the local red Using
      * the broadcast address which has to be determined
+     * @param username username of the person who wants to send the hello message
      */
-    public void sendHello() {
+    public void sendHello(String username) {
         //hello sent to everyone can only be a hello without ack
-        Hello helloToSend = new Hello(this.chatni.getUserInfo().getUsername(), false);
+        Hello helloToSend = new Hello(username, false);
         InetAddress broadcastAddress = this.determineBroadcastAddress();
         System.out.println("ENVOI : " + helloToSend.toString() + " -> " + broadcastAddress.getHostAddress());
         this.sendPacket(broadcastAddress, helloToSend);
@@ -89,46 +90,24 @@ public class MessageTransfert implements Runnable {
 
     /**
      * Send a hello message to a determined remote system
-     *
+     * @param username username of the person who wants to send the hello message
      * @param ip ip address of the remote system we want to send the message
      */
-    public void sendHello(String ip) {
+    public void sendHello(String username, String ip) {
         //hello sent to one person can only be an ack hello
-        Hello helloToSend = new Hello(this.chatni.getUserInfo().getUsername(), true);
+        Hello helloToSend = new Hello(username, true);
         System.out.println("ENVOI : " + helloToSend.toString() + " -> " + ip);
         this.sendPacket(ip, helloToSend);
     }
 
     /**
-     * Send a goodbye message to all the user's contacts
-     *
-     * @param ipAddresses list of remote systems' ip address
-     */
-    public void sendGoodbye(String[] ipAddresses) {
-        Goodbye goodbyeToSend = new Goodbye(this.chatni.getUserInfo().getUsername());
-        try {
-            byte[] buffer = goodbyeToSend.toArray();
-            for (String ip : ipAddresses) {
-                try {
-                    InetAddress ipAddress = InetAddress.getByName(ip);
-                    DatagramPacket goodbyeMessage = new DatagramPacket(buffer, buffer.length, ipAddress, MessageTransfert.portUdpEmission);
-                    this.messageSocket.send(goodbyeMessage);
-                } catch (UnknownHostException e) {
-                    System.err.println("Erreur d'adresse ip");
-                }
-            }
-        } catch (IOException e) {
-            System.out.println("Probleme à la conversion du message hello ou à l'envoi du message");
-        }
-    }
-
-    /**
      * Send a Goodbye message to all the computers located in the local red
      * Using the broadcast address which has to be determined
+     * @param username username of the person who wants to send the hello message
      */
-    public void sendGoodbye() {
+    public void sendGoodbye(String username) {
         InetAddress broadcastAddress = this.determineBroadcastAddress();
-        Goodbye goodbyeToSend = new Goodbye(this.chatni.getUserInfo().getUsername());
+        Goodbye goodbyeToSend = new Goodbye(username);
         System.out.println("ENVOI : " + goodbyeToSend.toString() + " -> " + broadcastAddress.getHostAddress());
         this.sendPacket(broadcastAddress, goodbyeToSend);
     }
@@ -144,6 +123,21 @@ public class MessageTransfert implements Runnable {
         this.sendPacket(ip, textToSend);
     }
 
+    /**
+     * Send a request in order to send a file to a remote system
+     * @param username username of the person who wants to send the hello message
+     * @param name file's name
+     * @param size file's size
+     * @param idTransfert file transfert's id
+     * @param idRemoteSystem remote system id
+     * @param portClient port used for the transfert
+     */
+    public void sendFileTransfertDemand(String username, String name, long size, int idTransfert, String idRemoteSystem, int portClient) {
+        String ip = this.rmInstance.getRemoteSystem(idRemoteSystem).getIP();
+        FileTransfertDemand ftd = new FileTransfertDemand(username, name, size, portClient);
+        this.sendPacket(ip, ftd);
+    }
+    
     /**
      * Private function used to send a Message to someone
      *

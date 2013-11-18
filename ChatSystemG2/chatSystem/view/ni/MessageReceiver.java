@@ -63,6 +63,7 @@ public class MessageReceiver implements Runnable {
                         Hello helloReceived = (Hello) msg;
                         this.chatni.helloReceived(helloReceived.getUsername(), from);
                     } else if (msgClass == Text.class) {
+                        System.out.println("RECEPTION : " + msg.toString() + " <- " + from + " je passe a chatNI");
                         Text msgText = (Text) msg;
                         this.chatni.textMessageReceived(msgText.getText(), msgText.getUsername(), from);
                     } else if (msgClass == Goodbye.class) {
@@ -74,7 +75,7 @@ public class MessageReceiver implements Runnable {
                         this.chatni.fileTransfertDemandReceived(ftd, from);
                     } else if (msgClass == FileTransfertConfirmation.class) {
                         FileTransfertConfirmation ftc = (FileTransfertConfirmation) msg;
-                        this.chatni.fileTransfetConfirmationReceived(ftc, from);
+                        this.chatni.fileTransfertConfirmationReceived(ftc, from);
                     }
                 }
             } catch (IOException exc) {
