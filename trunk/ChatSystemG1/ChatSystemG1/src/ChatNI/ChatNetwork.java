@@ -1,5 +1,6 @@
 package ChatNI;
 
+import java.io.IOException;
 import java.net.InetAddress;
 import java.net.InterfaceAddress;
 import java.net.NetworkInterface;
@@ -57,7 +58,22 @@ public class ChatNetwork implements Runnable{
 		
 	}
 	
-	public void SendFile(){
+	public void SendFile(ArrayList<byte[]> split, String remoteUserName, int portEnvoi){
+		FileSender FS = new FileSender(portEnvoi);
+		this.FileSenderList.add(FS);int i =0;
+		for(byte[] part : split){
+			
+			FilePart Fp = new FilePart(remoteUserName, part,(i == split.size()-1));
+			
+			try {
+				FS.SendFilePart(Fp);
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			i++;
+		}
+		
 		
 	}
 	

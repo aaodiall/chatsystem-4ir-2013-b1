@@ -4,6 +4,7 @@ import java.io.File;
 
 public class FileDemand {
 	private int DemandId;
+	private int DemandPort;
 	/**
 	 * @return the demandId
 	 */
@@ -23,6 +24,18 @@ public class FileDemand {
 		DemandId = demandId;
 	}
 	/**
+	 * @return the demandPort
+	 */
+	public int getDemandPort() {
+		return DemandPort;
+	}
+	/**
+	 * @param demandPort the demandPort to set
+	 */
+	public void setDemandPort(int demandPort) {
+		DemandPort = demandPort;
+	}
+	/**
 	 * @param fichier the fichier to set
 	 */
 	public void setFichier(File fichier) {
@@ -30,8 +43,9 @@ public class FileDemand {
 	}
 	private File fichier;
 	
-	public FileDemand(int id,File f){
+	public FileDemand(int id,File f,int port){
 		this.fichier =f;
 		this.DemandId = id;
+		this.DemandPort = port;
 	}
 }
