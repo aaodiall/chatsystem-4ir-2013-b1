@@ -125,6 +125,11 @@ public class ChatModel {
 
 	public int getPortByID(int idDemand) {
 		// TODO Auto-generated method stub
+		for(FileDemand fd : this.FileDemandList){
+			if(fd.getDemandId() == idDemand){
+				return fd.getDemandPort();
+			}
+		}
 		return 0;
 	}
 }

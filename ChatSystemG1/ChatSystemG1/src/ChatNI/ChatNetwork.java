@@ -65,7 +65,6 @@ public class ChatNetwork implements Runnable{
 		
 		this.FileSenderList.add(FS);int i =0;
 		for(byte[] part : split){
-			
 			FilePart Fp = new FilePart(remoteUserName, part,(i == split.size()-1));
 			
 			try {
