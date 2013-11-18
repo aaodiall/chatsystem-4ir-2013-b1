@@ -65,11 +65,11 @@ public class MessageReceiver implements Runnable {
                     } else if (msgClass == Text.class) {
                         System.out.println("RECEPTION : " + msg.toString() + " <- " + from + " je passe a chatNI");
                         Text msgText = (Text) msg;
-                        this.chatni.textMessageReceived(msgText.getText(), msgText.getUsername(), from);
+                        this.chatni.textMessageReceived(msgText.getText(), msgText.getUsername());
                     } else if (msgClass == Goodbye.class) {
                         System.out.println("RECEPTION : " + msg.toString() + " <- " + from + " je passe a chatNI");
                         Goodbye gbReceived = (Goodbye) msg;
-                        this.chatni.goodbyeReceived(gbReceived.getUsername(), from);
+                        this.chatni.goodbyeReceived(gbReceived.getUsername());
                     } else if (msgClass == FileTransfertDemand.class) {
                         FileTransfertDemand ftd = (FileTransfertDemand) msg;
                         this.chatni.fileTransfertDemandReceived(ftd, from);

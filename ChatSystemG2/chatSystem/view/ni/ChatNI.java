@@ -36,17 +36,17 @@ public class ChatNI extends View {
         ((ChatController) (this.controller)).performHelloReceived(username, ip);
     }
 
-    public void textMessageReceived(String msg, String username, String ip) {
-        //((ChatController) (this.controller)).performMessageReceived(msg, username+ip);
+    public void textMessageReceived(String msg, String username) {
         ((ChatController) (this.controller)).performMessageReceived(msg, username);
     }
 
-    public void goodbyeReceived(String username, String ip) {
-        //((ChatController) (this.controller)).performGoodbyeReceived(username+ip);
+    public void goodbyeReceived(String username) {
         ((ChatController) (this.controller)).performGoodbyeReceived(username);
     }
 
     public void fileTransfertDemandReceived(FileTransfertDemand msg, String ip) {
+        ((ChatController) (this.controller)).performSuggestionReceived(msg.getName(), msg.getSize(), msg.getUsername(), msg.getId());
+        //String name, long size, String idRemoteSystem, int idTransfert
 
     }
 
@@ -67,8 +67,8 @@ public class ChatNI extends View {
         this.portClient ++;
     }
     
-    public void sendFileTransfertConfirmation(boolean isAccepted, int idTransfert) {
-        
+    public void sendFileTransfertConfirmation(boolean isAccepted, int idTransfert, String idRemoteSystem) {
+        this.messageTransfert.sendFileTransfertConfirmation(this.usrInfo.getUsername(), isAccepted, idTransfert, idRemoteSystem);
     }
             
     
