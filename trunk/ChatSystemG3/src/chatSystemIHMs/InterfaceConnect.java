@@ -111,9 +111,9 @@ public class InterfaceConnect extends JFrame implements ActionListener{
 
 		//connect();
 
-		this.tfdUsername.setText("");
+		
 		controller.performConnect(tfdUsername.getText());
-
+		//this.tfdUsername.setText("");
 
 		//}
 		//}).start();
