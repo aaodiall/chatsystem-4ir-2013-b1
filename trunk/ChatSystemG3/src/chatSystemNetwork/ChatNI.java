@@ -118,7 +118,7 @@ public class ChatNI extends View implements Runnable, Observer{
 			localInterfaces = NetworkInterface.getNetworkInterfaces();
 			while (localInterfaces.hasMoreElements() && !trouve){
 				ni = localInterfaces.nextElement();				
-				if (ni.isUp() && !ni.isLoopback()){
+				if (!ni.isLoopback()){//ni.isUp() && !ni.isLoopback()){
 					ipAddrEnum = ni.getInterfaceAddresses().iterator();
 					while (ipAddrEnum.hasNext() && !trouve){
 						intAddr = ipAddrEnum.next();
@@ -169,7 +169,6 @@ public class ChatNI extends View implements Runnable, Observer{
 		if (!this.userIP.equals(ipRemoteAddr)){
 			try {
 				pdureceived = this.bufferPDUReceived.poll();
-				System.out.println("size R pdu : " + pdureceived.getLength());
 				receivedMsg = Message.fromArray(pdureceived.getData());
 				// si c'est un hello on fait le signale au controller
 				if (receivedMsg.getClass() == Hello.class){

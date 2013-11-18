@@ -107,7 +107,7 @@ public class Controller {
 			e.printStackTrace();
 		}*/		
 		//ChatSystem.getChatGui().getwConnect().setTfdUsername("");
-		System.out.println(this.modelUsername.getUsername() + " : connected");
+		System.out.println( "toto " +this.modelUsername.getUsername() + " : connected");
 	}
 	
 	public void performDisconnect(){
@@ -117,8 +117,8 @@ public class Controller {
 		this.modelListUsers.clearListUsers();
 		// on lance la deconnexion
 		this.chatNI.disconnect(this.modelUsername.getUsername());
-		/*this.chatgui.getwCommunicate().setVisible(false);
-		this.chatgui.getwConnect().setVisible(true);*/
+		this.chatgui.getwCommunicate().setVisible(false);
+		this.chatgui.getwConnect().setVisible(true);
 		System.out.println(this.modelUsername.getUsername() + " : disconnected");
 	}
 
