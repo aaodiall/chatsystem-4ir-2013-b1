@@ -41,10 +41,9 @@ public class ChatGUI extends View {
             if (this.dWindows.get(contact) == null) {
                 this.dWindows.remove(contact);
                 this.dWindows.put(contact, new DialogWindow(contact, RemoteSystems.getInstance().getRemoteSystem(contact).getMessages(),this));
-            } else {
-                this.dWindows.get(contact).setVisible(true);
-                //this.dWindows.get(contact).setEnabled(true);
             }
+            this.dWindows.get(contact).setVisible(true);
+
         }
     }
 

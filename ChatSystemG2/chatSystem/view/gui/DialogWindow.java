@@ -15,6 +15,7 @@ import javax.swing.JProgressBar;
 import javax.swing.JScrollBar;
 import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
+import javax.swing.JTextField;
 import javax.swing.ScrollPaneConstants;
 
 public class DialogWindow extends JFrame implements ActionListener {
@@ -81,10 +82,9 @@ public class DialogWindow extends JFrame implements ActionListener {
         panel.add(this.progression, c);
 
         //contraintes pour le text message
-        JScrollPane scrollMess = new JScrollPane(this.conversation);
+        JScrollPane scrollMess = new JScrollPane(this.message);
         scrollMess.setVerticalScrollBar(new JScrollBar(JScrollBar.VERTICAL));
         scrollMess.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED);
-        this.message.setEditable(true);
 
         c.gridx = 0;
         c.gridy = 22;
@@ -120,6 +120,7 @@ public class DialogWindow extends JFrame implements ActionListener {
 
         this.add(panel, BorderLayout.PAGE_START);
         this.setDefaultCloseOperation(DISPOSE_ON_CLOSE);
+        this.send.addActionListener(this);
         //this.setVisible(true);
     }
 
