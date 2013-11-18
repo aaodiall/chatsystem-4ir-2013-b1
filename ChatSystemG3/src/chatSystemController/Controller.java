@@ -53,6 +53,8 @@ public class Controller {
 	private ModelText modelText;
 	private ModelUsername modelUsername;
 	private ModelGroupRecipient modelGroupRecipient;
+	private ModelFileInformation modelFileInformation;
+	private ModelFile modelFile;
 	private ChatGUI chatgui;
 	private ChatNI chatNI;
 
@@ -94,9 +96,10 @@ public class Controller {
 		this.modelStates.setState(true);
 		// lancement de la connexion
 		this.chatNI.connect(username, false);
+		System.out.println( this.modelUsername.getUsername() + " : connected");
 		// affichage graphique de la fenêtre de communication
-		this.chatgui.getwConnect().setVisible(false);
-		this.chatgui.getwCommunicate().setVisible(true);
+		/*this.chatgui.getwConnect().setVisible(false);
+		this.chatgui.getwCommunicate().setVisible(true);*/
 		//test pour modelistusers update
 		/*try {
 			this.modelListUsers.addUsernameList("alpha", InetAddress.getLocalHost());
@@ -107,7 +110,7 @@ public class Controller {
 			e.printStackTrace();
 		}*/		
 		//ChatSystem.getChatGui().getwConnect().setTfdUsername("");
-		System.out.println( "toto " +this.modelUsername.getUsername() + " : connected");
+		
 	}
 	
 	public void performDisconnect(){
@@ -117,8 +120,8 @@ public class Controller {
 		this.modelListUsers.clearListUsers();
 		// on lance la deconnexion
 		this.chatNI.disconnect(this.modelUsername.getUsername());
-		this.chatgui.getwCommunicate().setVisible(false);
-		this.chatgui.getwConnect().setVisible(true);
+		/*this.chatgui.getwCommunicate().setVisible(false);
+		this.chatgui.getwConnect().setVisible(true);*/
 		System.out.println(this.modelUsername.getUsername() + " : disconnected");
 	}
 
@@ -158,7 +161,10 @@ public class Controller {
 	 * @param username
 	 */
 	public void performPropositionFile(String username){
-		
+		this.modelFileInformation = new ModelFileInformation();
+		String fileName = this.modelFileInformation.getName();
+		long size = this.modelFileInformation.getSize();
+		this.chatNI.sendPropositionFile(username, fileName, size);
 	}
 	
 	/**
@@ -195,8 +201,7 @@ public class Controller {
 		System.out.println (username + " : " + text);
 	}
 	
-	public void connectReceived(String username,InetAddress ipRemote, boolean ack){
-		//ChatSystem.getChatGui().getwConnect().setVisible(false);		
+	public void connectReceived(String username,InetAddress ipRemote, boolean ack){		
 		if (modelStates.isConnected()){
 			// si ack = false c'est une demande de connexion donc on repond	
 			if (!ack){

@@ -1,6 +1,9 @@
 package runChat;
+import java.io.IOException;
+import java.net.InetAddress;
 import java.net.UnknownHostException;
 import java.util.ArrayList;
+import java.util.Scanner;
 
 import chatSystemModel.*;
 import chatSystemNetwork.*;
@@ -42,7 +45,7 @@ public class ChatSystem {
 		ArrayList <String> remote = new ArrayList<String>();
 		// pour des tests locaux demander a l'utilisateur d'entrer un numero de port
 		int portUDP=16001;
-		int bufferSize = 30;
+		int bufferSize = 50;
 		Thread chatNIThread;
 		modelListUsers = new ModelListUsers();
 		modelUsername = new ModelUsername();
@@ -50,26 +53,38 @@ public class ChatSystem {
 		modelGroupRecipient = new ModelGroupRecipient();
 		modelText = new ModelText();
 		chatController = new Controller(modelListUsers,modelStates , modelText, modelUsername, modelGroupRecipient);
-		chatGUI=new ChatGUI(chatController);
 		chatNI = new ChatNI(portUDP,bufferSize,chatController);
-		chatController.setChatgui(chatGUI);
 		chatController.setChatNI(chatNI);
 		chatNIThread = new Thread(chatNI);
 		chatNIThread.start();
 		modelUsername.addObserver(chatNI);
-		modelListUsers.addObserver(chatGUI);
 		modelStates.addObserver(chatNI);
 		modelGroupRecipient.addObserver(chatNI);
-
+		// TEST du System avec GUI -> modifier aussi le ChatController
+		/*chatGUI=new ChatGUI(chatController);
+		chatController.setChatgui(chatGUI);
+		modelListUsers.addObserver(chatGUI);*/
 		
-		// TEST de CONNEXION 
-		//chatController.performConnect("jo");
+		// TEST de CONNEXION sans GUI -> modifier aussi le ChatController
+		String pseudo;
+		String text = "";
+		Scanner sc = new Scanner(System.in);
+		System.out.println("entre un pseudo : ");
+		pseudo = sc.nextLine();
+		chatController.performConnect(pseudo);
+		chatController.connectReceived("alpha",InetAddress.getByName("alpha"), false);
+		chatController.performAddURecipient("alpha");
+		System.out.println("entre un message : ");
+		text =sc.nextLine();
+		chatController.performSendText(text);
+		chatController.messageReceived(text, "alpha");
+		chatController.performDisconnect();
 		//if (modelStates.isConnected()){ chatNI.connect(modelUsername.getUsername(), false); }
 		//while(modelListUsers.getListUsers().keySet().iterator().hasNext()){//remote.add((String)(ChatSystem.modelListUsers.getListUsers().keySet().iterator().next()));
 			//System.out.println("user : " + modelListUsers.getListUsers().keySet().iterator().next());
 		//}
 		//chatController.performSendText("premier message",remote);	
-		//chatController.performDisconnect();
+		//
 		//if (!modelStates.isConnected()){ chatNI.disconnect(modelUsername.getUsername()); }
 
 		//chatGui.getwConnect();

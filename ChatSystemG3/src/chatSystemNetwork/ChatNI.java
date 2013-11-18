@@ -38,7 +38,7 @@ public class ChatNI extends View implements Runnable, Observer{
 	 * final int portUDP;
 	 * Controller controller;
 	 * ChatNIMessage chatNIMessage;
-	 * ChatNIStreamConnexion chatNIStreamConnexion;
+	 * ChatNIStreamConnection chatNIStreamConnection;
 	 * DatagramSocket socketUDP
 	 * InetAddress userIP
 	 * InetAddress userIPBroadcast
@@ -47,7 +47,7 @@ public class ChatNI extends View implements Runnable, Observer{
 	 * DatagramPacket pduReceived;
 	 * 
 	 * METHODES A IMPLEMENTER
-	 * public ChatNI(int portUDP, Controller controller, ChatNIMessage chatNIMessage, ChatNIStreamConnexion chatNIStreamConnexion);
+	 * public ChatNI(int portUDP, Controller controller, ChatNIMessage chatNIMessage, ChatNIStreamConnection chatNIStreamConnection);
 	 * public void setlocalIPandBroadcast();
 	 * public void connect(String username, boolean ack);
 	 * public void disconnect();
@@ -60,10 +60,11 @@ public class ChatNI extends View implements Runnable, Observer{
 	
 	
 	private final int portUDP;
+	private int portTCPServer;
 	private int bufferSize;
 	private Controller controller;
 	private ChatNIMessage chatNIMessage; 
-	private ChatNIStreamConnexion chatNIStreamConnexion;
+	private ChatNIStreamConnection chatNIStreamConnection;
 	private DatagramSocket socketUDP;
 	private InetAddress userIP;
 	private InetAddress userIPBroadcast;
@@ -71,16 +72,18 @@ public class ChatNI extends View implements Runnable, Observer{
 	private byte[] streamReceived;
 	private DatagramPacket pduReceived;
 	private Thread chatNIMessageThread;
-	private Thread chatNIStreamConnexionThread;
+	private Thread chatNIStreamConnectionThread;
 
 
 	public ChatNI(int portUDP,int bufferSize, Controller controller){
 		// associe son controlleur
 		this.controller=controller;
-		//cree son chatNIStreamConnexion
-		this.chatNIStreamConnexion = new ChatNIStreamConnexion();
 		// initialisation du port UDP de ChatNI
 		this.portUDP = portUDP;
+		// initialisation du portTCPServer
+		this.portTCPServer = 8000;
+		//cree son chatNIStreamConnection
+		//this.chatNIStreamConnection = new ChatNIStreamConnection(this.portTCPServer);
 		// recuperation de l'IPUser et de l'IPBroadcast
 		this.setlocalIPandBroadcast();
 		// on dimensionne le buffer de reception
@@ -89,7 +92,7 @@ public class ChatNI extends View implements Runnable, Observer{
 			// construction du socket UDP
 			this.socketUDP = new DatagramSocket(this.portUDP);
 			//initialisation du buffer de reception
-			this.bufferPDUReceived = new ArrayBlockingQueue<DatagramPacket>(this.socketUDP.getReceiveBufferSize()) ;
+			this.bufferPDUReceived = new ArrayBlockingQueue<DatagramPacket>(this.bufferSize) ;
 			// initialisation d'un pdu de reception
 			this.streamReceived = new byte[this.socketUDP.getReceiveBufferSize()];
 			this.pduReceived = new DatagramPacket(this.streamReceived,this.streamReceived.length);
@@ -101,8 +104,8 @@ public class ChatNI extends View implements Runnable, Observer{
 		}
 		//cree son chatNIMessage
 		this.chatNIMessage = new ChatNIMessage(this.bufferSize,this.socketUDP, ChatSystem.getModelListUsers(), this.userIPBroadcast);
-		// cree son chatNIStreamConnexion
-		this.chatNIStreamConnexion = new ChatNIStreamConnexion();
+		// cree son chatNIStreamConnection
+		this.chatNIStreamConnection = new ChatNIStreamConnection(this.portTCPServer);
 		//lance le thread de chatNIMessage
 		this.chatNIMessageThread = new Thread(this.chatNIMessage);
 		this.chatNIMessageThread.start();
@@ -117,8 +120,8 @@ public class ChatNI extends View implements Runnable, Observer{
 		try{
 			localInterfaces = NetworkInterface.getNetworkInterfaces();
 			while (localInterfaces.hasMoreElements() && !trouve){
-				ni = localInterfaces.nextElement();				
-				if (!ni.isLoopback()){//ni.isUp() && !ni.isLoopback()){
+				ni = localInterfaces.nextElement();
+				if (ni.isUp() && !ni.isLoopback()){
 					ipAddrEnum = ni.getInterfaceAddresses().iterator();
 					while (ipAddrEnum.hasNext() && !trouve){
 						intAddr = ipAddrEnum.next();
@@ -152,13 +155,16 @@ public class ChatNI extends View implements Runnable, Observer{
 	}
 	
 	public void sendPropositionFile(String recipientUsername, String fileName, long size){
-		//this.chatNIMessage.sendFileTransfertDemand();
+		// on lance l'envoi de la demande
+		this.chatNIMessage.sendFileTransfertDemand(recipientUsername, fileName, size,this.portTCPServer);
+		// on crée le socket 
+		this.portTCPServer++;
 	}
 	
 	public void sendMsgFile(){
-		// on lance le Thread de ChatNIStreamConnexion
-		//Thread chatNIStreamConnexionThread = new Thread(this.chatNIStreamConnexion);
-		//chatNIStreamConnexionThread.start();
+		// on lance le Thread de ChatNIStreamConnection
+		//Thread chatNIStreamConnectionThread = new Thread(this.chatNIStreamConnection);
+		//chatNIStreamConnectionThread.start();
 	}
 	
 	public void pduAnalyze(){

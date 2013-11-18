@@ -14,4 +14,12 @@ public class ModelFileInformation {
 	private String path;
 	private boolean isAccepted;
 	
+	public String getName(){
+		return this.name;
+	}
+	
+	public long getSize(){
+		return this.size;
+	}
+	
 }
