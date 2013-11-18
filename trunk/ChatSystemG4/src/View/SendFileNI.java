@@ -6,6 +6,7 @@ import java.io.ObjectOutputStream;
 import java.net.InetAddress;
 import java.net.Socket;
 
+import Controller.StateTransfert;
 import chatSystemCommon.FilePart;
 
 public final class SendFileNI extends Thread{
@@ -13,9 +14,23 @@ public final class SendFileNI extends Thread{
 	
 	//private DatagramSocket datagramSocket;
 	private Socket socket;
-	private FilePart fileToSend;
+	public StateTransfert getFileTransfertState() {
+		return fileTransfertState;
+	}
+
+	public void setFileTransfertState(StateTransfert fileTransfertState) {
+		this.fileTransfertState = fileTransfertState;
+	}
+
+	private StateTransfert fileTransfertState = StateTransfert.WAITING_INIT;
 	
 	private SendFileNI() {
+		//try {
+			//datagramSocket = new DatagramSocket(16000);
+			//datagramSocket.setBroadcast(true);
+		//} catch (SocketException e) {
+		//	e.printStackTrace();
+		//}
 	}
 	
 	public final static SendFileNI getInstance() {
@@ -30,7 +45,6 @@ public final class SendFileNI extends Thread{
 	
 	synchronized public void sendFile(FilePart file, InetAddress address){
 		try {
-			fileToSend = file;
 			socket = new Socket(address, 16000);
 			this.start();
 		} catch (IOException e) {
@@ -44,9 +58,10 @@ public final class SendFileNI extends Thread{
 		try {
 			fos = (FileOutputStream) socket.getOutputStream();
 			oos = new ObjectOutputStream(fos);
-			oos.writeObject(fileToSend);
+			//oos.writeObject(fileToSend);
 			oos.close();
 		} catch (IOException e) {
+			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 	}
