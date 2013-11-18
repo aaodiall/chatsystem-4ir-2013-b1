@@ -99,8 +99,9 @@ public class ChatController extends Controller implements GuiToCont, NiToCont {
     }
 
     @Override
-    public void performSuggestionReceived(FileTransfertDemand suggestion) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    public void performSuggestionReceived(String name, long size, String idRemoteSystem, int idTransfert) {
+        System.out.println("Receiving a file transfert request from " + idRemoteSystem + ", modifying the model");
+        this.fileTransferts.addTransfert(name, size, idRemoteSystem, idTransfert);
     }
 
 }

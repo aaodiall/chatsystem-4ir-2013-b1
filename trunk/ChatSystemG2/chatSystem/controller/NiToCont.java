@@ -21,7 +21,7 @@ public interface NiToCont {
 	
         public void performSentMessageToRemoteSystem(String message, String idRemoteSystem);
 	
-	public void performSuggestionReceived(FileTransfertDemand suggestion);
+	public void performSuggestionReceived(String name, long size, String idRemoteSystem, int idTransfert);
 	
 	/*public void performAcceptSuggestion();
 	
