@@ -91,17 +91,24 @@ public class UserWindow extends JFrame implements ActionListener, MouseListener 
 
     }
 
+    List<String> toUp;// = new List<String>();
+
     public void updateContacts(List<String> newContacts) {
+        this.toUp = newContacts;
+        SwingUtilities.invokeLater(new Runnable() {
+            public void run() {
+                updateContactsSwing();
+            }
+        });
+
+    }
+
+    public void updateContactsSwing() {
         (this.contactsName).removeAllElements();
-        Collections.sort(newContacts);
-        for (String name : newContacts) {
+        Collections.sort(this.toUp);
+        for (String name : this.toUp) {
             this.contactsName.addElement(name);
         }
-        /*SwingUtilities.invokeLater(new Runnable() {
-            public void run() {
-                do();
-            }
-        });*/
     }
 
     public void setUsername(String username) {
