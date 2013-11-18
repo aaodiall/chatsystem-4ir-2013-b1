@@ -28,6 +28,7 @@ public class ChatNI extends View {
         this.messageTransfert = new MessageTransfert(this);
         this.threadMessageReceiver = new Thread(this.messageReceiver);
         this.threadMessageTransfert = new Thread(this.messageTransfert);
+        this.threadMessageTransfert.start();
         this.portClient = 1024;
     }
 

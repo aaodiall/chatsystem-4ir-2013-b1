@@ -129,6 +129,7 @@ public class DialogWindow extends JFrame implements ActionListener {
         System.out.println("Entering actionPerformed DialogWindow");
         if(ae.getSource() == this.send){
             this.chatGUI.sendButtonPressed(this.message.getText(),this.contact);
+            this.message.setText("");
         }
     }
 }
