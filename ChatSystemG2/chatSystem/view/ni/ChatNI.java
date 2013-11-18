@@ -46,11 +46,10 @@ public class ChatNI extends View {
 
     public void fileTransfertDemandReceived(FileTransfertDemand msg, String ip) {
         ((ChatController) (this.controller)).performSuggestionReceived(msg.getName(), msg.getSize(), msg.getUsername(), msg.getId());
-        //String name, long size, String idRemoteSystem, int idTransfert
-
     }
 
     public void fileTransfertConfirmationReceived(FileTransfertConfirmation msg, String ip) {
+        //((ChatController) (this.controller)).perform
 
     }
 
@@ -69,9 +68,15 @@ public class ChatNI extends View {
     
     public void sendFileTransfertConfirmation(boolean isAccepted, int idTransfert, String idRemoteSystem) {
         this.messageTransfert.sendFileTransfertConfirmation(this.usrInfo.getUsername(), isAccepted, idTransfert, idRemoteSystem);
+        //this
     }
             
-    
+    /*public void createNewFileTransfert() {
+       int i = 0;
+       boolean fileTransfertCreated = false;
+       while (i < 4 && (!fileTransfertCreated)) {
+           if (this.fileTransfert[i] != null && )
+       }*/
     /**
      *
      * @param o : part of the model which send a the notification

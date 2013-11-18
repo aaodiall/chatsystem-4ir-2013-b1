@@ -22,10 +22,10 @@ public interface NiToCont {
         public void performSentMessageToRemoteSystem(String message, String idRemoteSystem);
 	
 	public void performSuggestionReceived(String name, long size, String idRemoteSystem, int idTransfert);
+        
+        public void performConfirmationReceived(String idRemoteSystem, int idTransfert, boolean accepted);
 	
-	/*public void performAcceptSuggestion();
-	
-	public void performDeclinedSuggestion();
+	/*
 	
 	public void performFileReceived(File f);*/
 }

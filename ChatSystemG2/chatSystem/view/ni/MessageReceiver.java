@@ -43,7 +43,10 @@ public class MessageReceiver implements Runnable {
         } catch (UnknownHostException ex) {
             Logger.getLogger(MessageReceiver.class.getName()).log(Level.SEVERE, null, ex);
         }
-        this.ipLocal = localIP.getHostAddress();
+        if (localIP != null)
+            this.ipLocal = localIP.getHostAddress();
+        else 
+            this.ipLocal = null;
     }
 
     /**
@@ -58,16 +61,14 @@ public class MessageReceiver implements Runnable {
                 String from = packet.getAddress().getHostAddress();
                 if (!from.equals(this.ipLocal)) {
                     Class msgClass = msg.getClass();
+                    System.out.println("RECEPTION : " + msg.toString() + " <- " + from + " je passe à chatNI");
                     if (msgClass == Hello.class) {
-                        System.out.println("RECEPTION : " + msg.toString() + " <- " + from + " je passe a chatNI");
                         Hello helloReceived = (Hello) msg;
                         this.chatni.helloReceived(helloReceived.getUsername(), from);
                     } else if (msgClass == Text.class) {
-                        System.out.println("RECEPTION : " + msg.toString() + " <- " + from + " je passe a chatNI");
                         Text msgText = (Text) msg;
                         this.chatni.textMessageReceived(msgText.getText(), msgText.getUsername());
                     } else if (msgClass == Goodbye.class) {
-                        System.out.println("RECEPTION : " + msg.toString() + " <- " + from + " je passe a chatNI");
                         Goodbye gbReceived = (Goodbye) msg;
                         this.chatni.goodbyeReceived(gbReceived.getUsername());
                     } else if (msgClass == FileTransfertDemand.class) {
