@@ -188,14 +188,17 @@ public class MessageTransfert implements Runnable {
             //parcours de tous les RemoteSystemInformation
             for (RemoteSystemInformation rsInfo : this.rmInstance) {
                 //tant qu'il reste des messages à envoyer
-                do {
-                    //récupération du message à envoyer
-                    msgToSend = rsInfo.getMessageToSend();
+                //récupération du message à envoyer
+                msgToSend = rsInfo.getMessageToSend();
+                while (msgToSend != null) {
+                    
                     //envoi du message
                     this.sendTextMessage(rsInfo.getIP(), msgToSend);
                     //notification de chatni
-                    chatni.messageSent(msgToSend, rsInfo.getUsername());
-                } while (msgToSend != null);
+                    chatni.messageSent(msgToSend, rsInfo.getIdRemoteSystem());
+                    //récupération du message à envoyer
+                    msgToSend = rsInfo.getMessageToSend();
+                } 
             }
         }
     }

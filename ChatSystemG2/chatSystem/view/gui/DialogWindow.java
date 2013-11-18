@@ -27,18 +27,18 @@ public class DialogWindow extends JFrame implements ActionListener {
 
     private final String contact;
     private final JTextArea message;
-    private final JList<String> conversation;
+    private final JList conversation;
     //private final DefaultListModel<String> conversationModel;
     private final JButton send;
     private final JButton joinFile;
     private final JProgressBar progression;
     private final ChatGUI chatGUI;
 
-    public DialogWindow(String contact, DefaultListModel<String> conversationModel, ChatGUI chatGUI) {
+    public DialogWindow(String contact, DefaultListModel conversationModel, ChatGUI chatGUI) {
         this.contact = contact;
         this.message = new JTextArea();
         //this.conversationModel = conversationModel;
-        this.conversation = new JList<>(conversationModel);
+        this.conversation = new JList(conversationModel);
         this.send = new JButton("Send");
         this.joinFile = new JButton("Join File");
         this.progression = new JProgressBar();

@@ -21,8 +21,8 @@ public class UserWindow extends JFrame implements ActionListener, MouseListener 
 
     private final JButton deconnectButton;
     private final JLabel username;
-    private final JList<String> contactsList;
-    private final DefaultListModel<String> contactsName;
+    private final JList contactsList;
+    private final DefaultListModel contactsName;
 
     private final ChatGUI chatGUI;
 
@@ -30,9 +30,9 @@ public class UserWindow extends JFrame implements ActionListener, MouseListener 
 
         this.username = new JLabel(username);
         this.deconnectButton = new JButton("Deconnect");
-        this.contactsName = new DefaultListModel<>();
+        this.contactsName = new DefaultListModel();
 
-        this.contactsList = new JList<>(this.contactsName);
+        this.contactsList = new JList(this.contactsName);
 
         this.chatGUI = chatGUI;
         this.initWindow();
@@ -129,7 +129,7 @@ public class UserWindow extends JFrame implements ActionListener, MouseListener 
             //localisation index du clic
             int index = this.contactsList.locationToIndex(me.getPoint());
             //demande d'ouverture de la dialog Window correspondante
-            String idRemoteSystem = this.contactsList.getModel().getElementAt(index);
+            String idRemoteSystem = (String)this.contactsList.getModel().getElementAt(index);
             this.chatGUI.displayDialogWindow(idRemoteSystem);
         }
     }

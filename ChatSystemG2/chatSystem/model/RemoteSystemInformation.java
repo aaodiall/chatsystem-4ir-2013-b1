@@ -1,12 +1,7 @@
 package chatSystem.model;
 
-import java.util.ArrayList;
-import java.util.List;
 import java.util.concurrent.ConcurrentLinkedQueue;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.swing.DefaultListModel;
-
 
 /**
  * Keeps and manages all the information about a remote system (Username,
@@ -16,10 +11,9 @@ import javax.swing.DefaultListModel;
  */
 public class RemoteSystemInformation extends UserInformation {
 
-   //faire une seule liste et faire unJlist ds la fenetre pour afficher directement la liste
-    
-    private final  ConcurrentLinkedQueue<String>messagesToSend;
-    private final DefaultListModel<String> messages;
+    //faire une seule liste et faire unJlist ds la fenetre pour afficher directement la liste
+    private final ConcurrentLinkedQueue<String> messagesToSend;
+    private final DefaultListModel messages;
 
     /**
      * Class' constructor
@@ -31,8 +25,8 @@ public class RemoteSystemInformation extends UserInformation {
         super(username, ip);
 
         this.messagesToSend = new ConcurrentLinkedQueue<String>();
-        this.messages = new DefaultListModel<String>();
-        
+        this.messages = new DefaultListModel();
+
     }
 
     /**
@@ -41,9 +35,8 @@ public class RemoteSystemInformation extends UserInformation {
      * @param message new received message
      */
     public void addMessageReceived(String message) {
-        this.messages.addElement(message); //rajouter id devant pr identifier
+        this.messages.addElement(this.getIdRemoteSystem() + " : " +message); 
     }
-
 
     /**
      * Add a message in the to-send messages' list
@@ -51,7 +44,7 @@ public class RemoteSystemInformation extends UserInformation {
      * @param message message to send
      */
     public void addMessageToSend(String message) {
-        this.messagesToSend.add(message); 
+        this.messagesToSend.add(message);
     }
 
     /**
@@ -69,11 +62,11 @@ public class RemoteSystemInformation extends UserInformation {
      * @param message sent message
      */
     public void addMessageSent(String message) {
-        this.messages.addElement(message); //rajouter username
-        
+        this.messages.addElement(this.getIdRemoteSystem() + " : " +message); 
+
     }
-    
-    public DefaultListModel<String> getMessages(){
+
+    public DefaultListModel getMessages() {
         return this.messages;
     }
 
@@ -83,7 +76,7 @@ public class RemoteSystemInformation extends UserInformation {
      *
      * @return remote system's id
      */
-    /*public String getIdRemoteSystem() {
-     return this.getUsername()+this.getIP();
-     }*/
+    public String getIdRemoteSystem() {
+        return this.getUsername() + "@" + this.getIP();
+    }
 }
