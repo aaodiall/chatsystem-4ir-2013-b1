@@ -130,6 +130,7 @@ public class UserWindow extends JFrame implements ActionListener, MouseListener 
             int index = this.contactsList.locationToIndex(me.getPoint());
             //demande d'ouverture de la dialog Window correspondante
             String idRemoteSystem = this.contactsList.getModel().getElementAt(index);
+            this.chatGUI.displayDialogWindow(idRemoteSystem);
         }
     }
 
