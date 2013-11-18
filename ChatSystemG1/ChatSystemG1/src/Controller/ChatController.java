@@ -1,6 +1,7 @@
 package Controller;
 
 import java.io.File;
+import java.io.IOException;
 import java.net.UnknownHostException;
 import java.util.ArrayList;
 import java.util.Date;
@@ -128,7 +129,12 @@ public class ChatController {
 	public static void PerformSendFile(java.io.File f,String RemoteUserName,int portEnvoi){
 		System.out.println("on envoie un fichier");
 		ArrayList<byte[]> split  = SplitFile(f);
-		ChatNi.SendFile(split,RemoteUserName,portEnvoi);
+		try {
+			ChatNi.SendFile(split,RemoteUserName,portEnvoi);
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 		
 		
 	}

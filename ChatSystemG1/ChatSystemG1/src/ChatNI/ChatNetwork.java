@@ -60,8 +60,9 @@ public class ChatNetwork implements Runnable{
 		
 	}
 	
-	public void SendFile(ArrayList<byte[]> split, String remoteUserName, int portEnvoi){
+	public void SendFile(ArrayList<byte[]> split, String remoteUserName, int portEnvoi) throws IOException{
 		FileSender FS = new FileSender(portEnvoi);
+		
 		this.FileSenderList.add(FS);int i =0;
 		for(byte[] part : split){
 			
