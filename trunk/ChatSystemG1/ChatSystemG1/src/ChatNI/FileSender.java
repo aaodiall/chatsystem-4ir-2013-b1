@@ -1,6 +1,7 @@
 package ChatNI;
 
 import java.io.BufferedWriter;
+import java.io.DataOutputStream;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.net.ServerSocket;
@@ -13,34 +14,37 @@ public class FileSender implements Runnable {
 	
 	private ServerSocket servSock;
 	private Socket clientSocket;
-	public FileSender(int portEnvoi) {
+	public FileSender(int portEnvoi) throws IOException {
 		// TODO Auto-generated constructor stub
 		this.port = portEnvoi;
-		
-		Thread t = new Thread();
-		t.start();
+		this.servSock = new ServerSocket(port);
+		System.out.println("on est la!!");
+		clientSocket = servSock.accept();
+		Thread a = new Thread(this, "sENDER tHREAD");
+		a.start();
 				
 	}
 
 	@Override
 	public void run() {
 		// TODO Auto-generated method stub
-		try {
-			this.servSock = new ServerSocket(port);
-			 clientSocket = servSock.accept();
+		
+			
+
+			
 			while(!servSock.isClosed()){
-				
+				System.out.println("on est la!!");
 			}
 			
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+		
 		
 	}
 	
 	public void SendFilePart(FilePart fp) throws IOException{
-		clientSocket.getOutputStream().write(fp.toArray());
+		
+        
+        DataOutputStream outToClient = new DataOutputStream(clientSocket.getOutputStream());
+		outToClient.write(fp.toArray());
 		if(fp.isLast()){
 			servSock.close();
 		}

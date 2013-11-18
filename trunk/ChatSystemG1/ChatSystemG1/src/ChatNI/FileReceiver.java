@@ -18,7 +18,7 @@ public class FileReceiver implements Runnable{
 		// TODO Auto-generated constructor stub
 		this.port = portClient;
 		this.ip = remoteUser;
-		Thread t = new Thread();
+		Thread t = new Thread(this, "fILEReceiver Thread");
 		t.start();
 	}
 
@@ -26,6 +26,9 @@ public class FileReceiver implements Runnable{
 	public void run() {
 		// TODO Auto-generated method stub
 		try {
+			
+			  
+			  
 			this.clientSocket = new Socket(ip, port);
 			while(!clientSocket.isClosed()){
 				byte[] mes = new byte[1024];
