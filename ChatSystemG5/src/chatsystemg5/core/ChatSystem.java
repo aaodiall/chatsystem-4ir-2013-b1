@@ -1,7 +1,7 @@
     package chatsystemg5.core;
 
 import chatsystemg5.network.*;
-import chatsystemg5.common.*;
+import chatSystemCommon.*;
 import chatsystemg5.brain.*;
 import chatsystemg5.ihm.ConnectionWindow;
 

@@ -1,6 +1,6 @@
 package chatsystemg5.network;
 
-import chatsystemg5.common.*;
+import chatSystemCommon.*;
 import java.util.Observable;
 
 import java.util.Observer;
