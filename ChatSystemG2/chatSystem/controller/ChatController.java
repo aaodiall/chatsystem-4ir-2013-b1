@@ -5,6 +5,7 @@ import chatSystem.model.UserInformation;
 import chatSystem.model.UserState;
 import chatSystem.view.gui.ChatGUI;
 import chatSystem.view.ni.ChatNI;
+import chatSystemCommon.FileTransfertDemand;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
 
@@ -81,6 +82,16 @@ public class ChatController extends Controller implements GuiToCont, NiToCont {
     public void performSentMessageToRemoteSystem(String message, String idRemoteSystem) {
         System.out.println("Message sent to " + idRemoteSystem + ", modifying the model");
        this.remoteSystems.addMessageSentToRemoteSystem(message, idRemoteSystem, this.localUser.getUsername());
+    }
+
+    @Override
+    public void performSendFileRequest(String idRemoteSystem) {
+       System.out.println("Send file request to be send to " + idRemoteSystem + ", modifying the model");
+    }
+
+    @Override
+    public void performSuggestionReceived(FileTransfertDemand suggestion) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
 }
