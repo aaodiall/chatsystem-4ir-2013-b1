@@ -27,8 +27,8 @@ public class FileTransferts extends Model{
      * @param idRemoteSystem sender's id
      * @param idTransfert id given to the transfer
      */
-    public void addTransfert(String name, String extension, int taille, String idRemoteSystem, int idTransfert) {
-            this.FileModel.add(new FileTransfertInformation(taille,idRemoteSystem, name, extension, idTransfert));
+    public void addTransfert(String name, int size, String idRemoteSystem, int idTransfert) {
+            this.FileModel.add(new FileTransfertInformation(size,idRemoteSystem, name, idTransfert));
     }
 
     /**

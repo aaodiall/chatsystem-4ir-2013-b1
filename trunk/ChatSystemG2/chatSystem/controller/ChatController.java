@@ -8,34 +8,41 @@ import chatSystem.view.ni.ChatNI;
 import chatSystemCommon.FileTransfertDemand;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
+import chatSystem.model.FileTransferts;
 
 public class ChatController extends Controller implements GuiToCont, NiToCont {
 
+    private int transfertID; 
     private UserInformation localUser; //mettre dans une HasMap créée dans la classe mère
     private RemoteSystems remoteSystems;
-
+    private FileTransferts fileTransferts;
     private final ChatGUI chatGUI;
     private final ChatNI chatNI;
 
     public ChatController() {
         super();
-
+        
         InetAddress localIP;
         try {
             localIP = InetAddress.getLocalHost();
             this.localUser = new UserInformation(localIP.getHostAddress());
             this.remoteSystems = RemoteSystems.getInstance();
+            this.fileTransferts = FileTransferts.getInstance();
+            
         } catch (UnknownHostException ex) {
-            System.out.println("local host non existent");
+            System.err.println("local host non existent");
         }
-
+        
+        this.transfertID = 0;
         this.chatGUI = new ChatGUI(this);
         this.localUser.addObserver(chatGUI);
         this.remoteSystems.addObserver(chatGUI);
+        this.fileTransferts.addObserver(chatGUI);
 
         this.chatNI = new ChatNI(this);
         this.localUser.addObserver(chatNI);
         this.remoteSystems.addObserver(chatNI);
+        this.fileTransferts.addObserver(chatNI);
     }
 
     @Override
@@ -85,8 +92,10 @@ public class ChatController extends Controller implements GuiToCont, NiToCont {
     }
 
     @Override
-    public void performSendFileRequest(String idRemoteSystem) {
+    public void performSendFileRequest(String name, int size, String idRemoteSystem) {
        System.out.println("Send file request to be send to " + idRemoteSystem + ", modifying the model");
+       this.fileTransferts.addTransfert(name, size, idRemoteSystem, this.transfertID);
+       this.transfertID ++;
     }
 
     @Override
