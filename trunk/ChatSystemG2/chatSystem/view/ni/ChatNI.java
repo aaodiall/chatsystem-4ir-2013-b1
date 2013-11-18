@@ -17,6 +17,7 @@ public class ChatNI extends View {
     private final FileReceiver[] fileReceiver;
     private final FileTransfert[] fileTransfert;
     private UserInformation usrInfo;
+    private int portClient;
 
     public ChatNI(ChatController controller) {
         super(controller);
@@ -27,6 +28,7 @@ public class ChatNI extends View {
         this.messageTransfert = new MessageTransfert(this);
         this.threadMessageReceiver = new Thread(this.messageReceiver);
         this.threadMessageTransfert = new Thread(this.messageTransfert);
+        this.portClient = 1024;
     }
 
     public void helloReceived(String username, String ip) {
@@ -47,18 +49,28 @@ public class ChatNI extends View {
 
     }
 
-    public void fileTransfetConfirmationReceived(FileTransfertConfirmation msg, String ip) {
+    public void fileTransfertConfirmationReceived(FileTransfertConfirmation msg, String ip) {
 
     }
 
-    public void sendHelloMsg(String username, String ip) {
-        this.messageTransfert.sendHello(ip);
+    public void sendHelloMsg(String ip) {
+        this.messageTransfert.sendHello(this.usrInfo.getUsername(), ip);
     }
 
-    public void sendHelloMsg(String username) {
-        this.messageTransfert.sendHello();
+    public void sendHelloMsg() {
+        this.messageTransfert.sendHello(this.usrInfo.getUsername());
     }
 
+    public void sendFileTransfertDemand(String name, long size, int idTransfert, String idRemoteSystem) {
+        this.messageTransfert.sendFileTransfertDemand(this.usrInfo.getUsername(), name, size, idTransfert, idRemoteSystem, portClient);
+        this.portClient ++;
+    }
+    
+    public void sendFileTransfertConfirmation(boolean isAccepted, int idTransfert) {
+        
+    }
+            
+    
     /**
      *
      * @param o : part of the model which send a the notification
@@ -82,11 +94,11 @@ public class ChatNI extends View {
                     //this.threadReceiver = new Thread(this.messageReceiver);
                     //this.threadReceiver.start();
                     //et on le guele car on est content :)
-                    this.messageTransfert.sendHello();
+                    this.messageTransfert.sendHello(this.usrInfo.getUsername());
                 }
                 else{
                     //this.threadReceiver.stop(); //il ne faut pas le stopper donc on lui mettra null mais faut changer la gestion de messageReceiver
-                    this.messageTransfert.sendGoodbye();
+                    this.messageTransfert.sendGoodbye(this.usrInfo.getUsername());
                     //this.threadReceiver = null;
                 }
             }

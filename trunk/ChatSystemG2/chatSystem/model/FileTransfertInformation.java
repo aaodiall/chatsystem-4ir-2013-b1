@@ -2,7 +2,7 @@ package chatSystem.model;
 
 public class FileTransfertInformation extends Model{
 	
-	private int taille;
+	private long taille;
 	private String idRemoteSystem;
 	private FileState state;
 	private String name;
@@ -17,7 +17,7 @@ public class FileTransfertInformation extends Model{
          * @param name file's name
          * @param idTransfert id given to the transfer
          */
-	public FileTransfertInformation(int taille, String idRemoteSystem, String name, int idTransfert) {
+	public FileTransfertInformation(long taille, String idRemoteSystem, String name, int idTransfert) {
 		this.taille = taille;
 		this.idRemoteSystem = idRemoteSystem;
 		this.name = name;
