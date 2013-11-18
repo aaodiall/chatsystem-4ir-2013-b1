@@ -1,6 +1,7 @@
 package ChatNI;
 
 import java.io.BufferedWriter;
+import java.io.ByteArrayOutputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
 import java.io.PrintWriter;
@@ -11,16 +12,15 @@ import chatSystemCommon.FilePart;
 
 public class FileSender implements Runnable {
 	private int port;
-	
+	private int compteurpart = 0;
 	private ServerSocket servSock;
 	private Socket clientSocket;
 	public FileSender(int portEnvoi) throws IOException {
 		// TODO Auto-generated constructor stub
 		this.port = portEnvoi;
 		this.servSock = new ServerSocket(port);
-		System.out.println("on est la!!");
 		clientSocket = servSock.accept();
-		Thread a = new Thread(this, "sENDER tHREAD");
+		Thread a = new Thread(this, "SENDER THREAD");
 		a.start();
 				
 	}
@@ -33,19 +33,30 @@ public class FileSender implements Runnable {
 
 			
 			while(!servSock.isClosed()){
-				System.out.println("on est la!!");
+				
 			}
-			
+			System.out.println("on ferme ce thread");
 		
 		
 	}
 	
 	public void SendFilePart(FilePart fp) throws IOException{
 		
-        
-        DataOutputStream outToClient = new DataOutputStream(clientSocket.getOutputStream());
-		outToClient.write(fp.toArray());
+		ByteArrayOutputStream byteStream = new ByteArrayOutputStream(clientSocket.getPort());
+       
+        byteStream.flush();
+        byteStream.write(fp.toArray());
+        System.out.println("taille du fp : " + fp.toArray().length);
+       
+        byteStream.flush();
+		
+		
+        //DataOutputStream outToClient = new DataOutputStream(clientSocket.getOutputStream());
+		//outToClient.write(fp.toArray());
+		
+		System.out.println("on envoie la part numero : " + compteurpart++);
 		if(fp.isLast()){
+			clientSocket.close();
 			servSock.close();
 		}
 		 

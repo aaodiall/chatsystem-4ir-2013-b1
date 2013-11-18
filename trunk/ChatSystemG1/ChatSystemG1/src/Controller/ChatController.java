@@ -87,7 +87,7 @@ public class ChatController {
 		
 		
 		FileTransfertConfirmation ftco = ChatGuiFrontController.GeneratePopUp(message);
-		 
+
 		ChatNi.SendFileTransfertConfirmation(ftco, remoteUsername,message.getPortClient());
 		
 	}
@@ -143,15 +143,23 @@ public class ChatController {
 		// TODO Auto-generated method stub
 		ArrayList<byte[]> retour = new ArrayList<byte[]>();
 		byte[] bFile = new byte[(int) f.length()];
-		int increment = 0;
-		do{
+		int lastSize = ((int) f.length())%1024;
+		int nbPart = ((int) f.length())/1024;
+		for(int i = 0;i<nbPart;i++){
 			byte[] part = new byte[1024];
-			for(byte e : part){
-				e = bFile[increment];
-				increment++;
+			for(int j = 0;j<1024;j++){
+				part[j] =bFile[j+1024*i];
 			}
 			retour.add(part);
-		}while(f.length() - increment < 1024);
+		}
+		byte[] part = new byte[lastSize];
+		for(int i = 0;i<lastSize-1;i++){
+			
+			
+				part[i] =bFile[i+1024*nbPart];
+			
+		}
+		retour.add(part);
 		return retour;
 	}
 
