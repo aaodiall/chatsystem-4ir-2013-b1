@@ -10,37 +10,37 @@ import java.util.concurrent.LinkedBlockingQueue;
 
 /**
  * Keeps and manages the remote system's information
+ *
  * @author Marjorie
  */
-public class RemoteSystems extends Model implements Iterable<RemoteSystemInformation>{
+public class RemoteSystems extends Model implements Iterable<RemoteSystemInformation> {
 
     private static RemoteSystems instance;
     private BlockingQueue<Boolean> availableMsg;
-    private final Map<String,RemoteSystemInformation> remoteSystemsInformation;
+    private final Map<String, RemoteSystemInformation> remoteSystemsInformation;
 
     /**
      * Private class' constructor
      */
-    private RemoteSystems () {
+    private RemoteSystems() {
         this.availableMsg = new LinkedBlockingQueue<Boolean>();
         this.remoteSystemsInformation = new HashMap<String, RemoteSystemInformation>();
     }
 
     /**
      * Add a remote system in the remote system's list
+     *
      * @param username contact's username
      * @param ip remote system's ip address
      */
     public synchronized void addRemoteSystem(String username, String ip) {
-        System.out.println("Ajout utilisateur : "+username + "     " +ip);
-        RemoteSystemInformation newRS = new RemoteSystemInformation(username,ip);
-        String key = newRS.getUsername();//newRS.getIdRemoteSystem();
+        System.out.println("Ajout utilisateur : " + username + "     " + ip);
+        RemoteSystemInformation newRS = new RemoteSystemInformation(username, ip);
+        String key = newRS.getIdRemoteSystem();
         if (!this.remoteSystemsInformation.containsKey(key)) {
             this.remoteSystemsInformation.put(key, newRS);
+
             this.setChanged();
-            //this.notifyObservers(new ArrayList<String>(this.remoteSystemsInformation.keySet()));
-            //Quand on ajoute un Remote System on passe en argument l'ip pour que ChatNI réponde Hello
-            //ChatGUI lui fait tjrs getUserList
             this.notifyObservers(ip);
             this.clearChanged();
         }
@@ -48,107 +48,106 @@ public class RemoteSystems extends Model implements Iterable<RemoteSystemInforma
 
     /**
      * Remove a remote system from the list
+     *
      * @param idRemoteSystem id of the remote system to be removed
      */
     public synchronized void deleteRemoteSystem(String idRemoteSystem) {
         this.remoteSystemsInformation.remove(idRemoteSystem);
+
         this.setChanged();
-        //this.notifyObservers(new ArrayList<String>(this.remoteSystemsInformation.keySet()));
-        //Quand on enleve un Remote System on passe rien car ChatNI n'a rien a faire
-        //ChatGUI lui fait tjrs getUserList
         this.notifyObservers();
         this.clearChanged();
     }
-    
-    public RemoteSystemInformation getRemoteSystem(String idRemoteSystem){
+
+    public RemoteSystemInformation getRemoteSystem(String idRemoteSystem) {
         return this.remoteSystemsInformation.get(idRemoteSystem);
     }
-    
-    public synchronized void addMessageReceivedToRemote(String idRemoteSystem, String message){
-        this.remoteSystemsInformation.get(idRemoteSystem).addMessageReceived(message);
-       /* this.setChanged();
-        this.notifyObservers();
-        this.clearChanged();*/ //Notif a partir de RemoteSysInformation
+
+    public synchronized void addMessageReceivedToRemote(String idRemoteSystem, String message) {
+        this.remoteSystemsInformation.get(idRemoteSystem).addMessageReceived(idRemoteSystem + " " + message);
     }
 
     /**
      * add a message in the message-to-send list of a given remote system
+     *
      * @param idRemoteSystem remote system the message has to be sent to
      * @param message message which has to be sent
      */
-    public synchronized void addMessageToSendToRemote(String idRemoteSystem, String message){
-        System.out.println("Nouveau message a envoyer");
-        if(this.remoteSystemsInformation.containsKey(idRemoteSystem)) {          
+    public synchronized void addMessageToSendToRemote(String idRemoteSystem, String message) {
+        if (this.remoteSystemsInformation.containsKey(idRemoteSystem)) {
             this.remoteSystemsInformation.get(idRemoteSystem).addMessageToSend(message);
-            if (this.availableMsg.isEmpty()){
-                  System.out.println("Ajout True dans available message");
-                  this.availableMsg.add(Boolean.TRUE);
+            if (this.availableMsg.isEmpty()) {
+                this.availableMsg.add(Boolean.TRUE);
             }
-                
+
         }
     }
-    
+
     /**
      * add a message in the sent-message list of a given remote system
+     *
      * @param message message that has been sent
      * @param idRemoteSystem remote system the message has been sent to
      * @param username username of the person who sent the message
      */
     public void addMessageSentToRemoteSystem(String message, String idRemoteSystem, String username) {
-        if(this.remoteSystemsInformation.containsKey(idRemoteSystem))
-            this.remoteSystemsInformation.get(idRemoteSystem).addMessageSent(username + " : " + message);
+        if (this.remoteSystemsInformation.containsKey(idRemoteSystem)) {
+            this.remoteSystemsInformation.get(idRemoteSystem).addMessageSent(message);
+        }
     }
-    
+
     /**
      * Get the contacts username's list
+     *
      * @return usernames' list
      */
     public List<String> getUserList() {
-            List<String> userList = new ArrayList<String>();
-            for(String rs: this.remoteSystemsInformation.keySet()) {
-                    userList.add(this.remoteSystemsInformation.get(rs).getUsername());
-            }
-            return userList;
+        List<String> userList = new ArrayList<String>();
+        for (String rs : this.remoteSystemsInformation.keySet()) {
+            userList.add(this.remoteSystemsInformation.get(rs).getIdRemoteSystem());
+        }
+        return userList;
     }
 
     /**
      * Static method to obtain an instance of the class RemoteSystems
+     *
      * @return RemoteSystems unique instance
      */
     public final static RemoteSystems getInstance() {
-            if (instance == null) {
-                synchronized(RemoteSystems.class) {
-                    if (instance == null) {
-                        instance = new RemoteSystems();
-                    }
+        if (instance == null) {
+            synchronized (RemoteSystems.class) {
+                if (instance == null) {
+                    instance = new RemoteSystems();
                 }
             }
-            return instance;
+        }
+        return instance;
     }
-    
-    public void waitMessageToSend () {
+
+    public void waitMessageToSend() {
         System.out.println("Message Transfert : J'attends un message");
         try {
             this.availableMsg.take();
-        } catch(InterruptedException exc) {
+        } catch (InterruptedException exc) {
             System.err.println("la fonction a été interrompue sans raison");
         }
     }
-    
-    
+
     @Override
     public Iterator<RemoteSystemInformation> iterator() {
-       return new RSIterator();
+        return new RSIterator();
     }
-    
+
     private class RSIterator implements Iterator<RemoteSystemInformation> {
 
         //private Set<RemoteSystemInformation> info;
         private Iterator<String> it;
-        
+
         public RSIterator() {
             this.it = remoteSystemsInformation.keySet().iterator();
         }
+
         @Override
         public boolean hasNext() {
             return it.hasNext();
@@ -164,6 +163,4 @@ public class RemoteSystems extends Model implements Iterable<RemoteSystemInforma
             throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
         }
     }
-
-
 }
