@@ -48,7 +48,7 @@ public class ChatController extends Controller implements GuiToCont, NiToCont {
     @Override
     public void performConnect(String username) {
         System.out.println("Entering performConnect");
-        this.localUser.setUsername(username + "@" + this.localUser.getIP());
+        this.localUser.setUsername(username);
         this.localUser.setUserState(UserState.CONNECTED);
     }
 
@@ -102,6 +102,11 @@ public class ChatController extends Controller implements GuiToCont, NiToCont {
     public void performSuggestionReceived(String name, long size, String idRemoteSystem, int idTransfert) {
         System.out.println("Receiving a file transfert request from " + idRemoteSystem + ", modifying the model");
         this.fileTransferts.addTransfert(name, size, idRemoteSystem, idTransfert);
+    }
+
+    @Override
+    public void performConfirmationReceived(String idRemoteSystem, int idTransfert, boolean accepted) {
+        
     }
 
 }

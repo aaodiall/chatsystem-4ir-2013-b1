@@ -20,6 +20,10 @@ public interface GuiToCont {
         
         public void performSendFileRequest(String name, long size, String idRemoteSystem);
 	
+        //public void performAcceptSuggestion(String name, String idRemoteSystem);
+	
+	//public void performDeclinedSuggestion();
+        
 	//public void performFileSended();
     
 }
