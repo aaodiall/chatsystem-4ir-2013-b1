@@ -7,7 +7,6 @@ public class FileTransfertInformation extends Model{
 	private FileState state;
 	private String name;
 	private String path;
-	private String extension;
 	private int idTransfert;
 	private int tailleRecup;
 	
@@ -16,16 +15,13 @@ public class FileTransfertInformation extends Model{
          * @param taille file's size
          * @param idRemoteSystem id of the sending remote system
          * @param name file's name
-         * @param extension file's extension
          * @param idTransfert id given to the transfer
          */
-	public FileTransfertInformation(int taille, String idRemoteSystem, String name, String extension, int idTransfert) {
+	public FileTransfertInformation(int taille, String idRemoteSystem, String name, int idTransfert) {
 		this.taille = taille;
 		this.idRemoteSystem = idRemoteSystem;
 		this.name = name;
-		this.extension = extension;
-		this.idTransfert = idTransfert;
-		
+		this.idTransfert = idTransfert;	
 		this.state = FileState.WAITANSWER;
 		this.tailleRecup = 0;
 		this.path = null;
