@@ -145,21 +145,23 @@ public class ChatNIMessage implements Runnable{
 	public void run(){
 		System.out.println("thread send active");
 		while(true){
-			// envoie d'un pdu
-			if (this.bufferMsg2Send.isEmpty() == false){
-				try{
-					Thread.sleep(100);
-					this.socketUDP.send(this.bufferMsg2Send.poll());
-					System.out.println("message envoyé");				
-				}catch (InterruptedException e) {
-					System.out.println("sleep interrupted in S-Thread");
-					e.printStackTrace();
-				}catch (IOException sendExc){
-					System.out.println("cannot send the message");
-					sendExc.printStackTrace();
+			// il dort
+			try{
+				Thread.sleep(100);
+				// envoie d'un pdu si le buffer n'est pas vide
+				if (this.bufferMsg2Send.isEmpty() == false){
+					try{
+						this.socketUDP.send(this.bufferMsg2Send.poll());
+						System.out.println("message envoyé");				
+					}catch (IOException sendExc){
+						System.out.println("cannot send the message");
+						sendExc.printStackTrace();
+					}
 				}
-			}
+			}catch (InterruptedException e) {
+				System.out.println("sleep interrupted in S-Thread");
+				e.printStackTrace();
+			}			
 		}
-	
 	}	
 }
