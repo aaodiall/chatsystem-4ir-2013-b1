@@ -23,6 +23,8 @@ public class ChatNetwork implements Runnable{
 	
 	public ChatNetwork() {
 		// TODO Auto-generated constructor stub
+		FileReceiverList = new ArrayList<FileReceiver>();
+		FileSenderList = new ArrayList<FileSender>();
 		setMessageReceiver(new Receiver());
 		MessageSender = new Sender();
 	}
@@ -81,9 +83,12 @@ public class ChatNetwork implements Runnable{
 		System.out.println("on envoie un ftca");
 		MessageSender.SendMessage(ftca,ChatController.extractIpFromUserName(remoteUsername));
 	}
-	public void SendFileTransfertConfirmation(FileTransfertConfirmation ftco,String remoteUsername){
+	public void SendFileTransfertConfirmation(FileTransfertConfirmation ftco,String remoteUsername,int portClient){
 		System.out.println("on envoie un ftco");
 		MessageSender.SendMessage(ftco,ChatController.extractIpFromUserName(remoteUsername));
+		if(ftco.isAccepted()){
+			this.FileReceiverList.add(new FileReceiver(ChatController.extractIpFromUserName(remoteUsername),portClient));
+		}
 	}
 	public void SendFileAcceptance(FileTransfertDemand ftd, String remoteUsername){
 		System.out.println("on envoie un ftd");

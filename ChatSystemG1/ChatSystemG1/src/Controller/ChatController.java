@@ -54,7 +54,7 @@ public class ChatController {
 	}
 	
 	public static void FileProcessing(FilePart message){
-		
+		System.out.println("on a recu un bout de File : " + message.toString());
 	}
 	
 	public static void HelloProcessing(Hello message){
@@ -87,7 +87,7 @@ public class ChatController {
 		
 		FileTransfertConfirmation ftco = ChatGuiFrontController.GeneratePopUp(message);
 		 
-		ChatNi.SendFileTransfertConfirmation(ftco, remoteUsername);
+		ChatNi.SendFileTransfertConfirmation(ftco, remoteUsername,message.getPortClient());
 		
 	}
 	public static void PerformConnect(){
