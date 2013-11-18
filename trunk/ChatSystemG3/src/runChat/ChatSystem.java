@@ -42,6 +42,7 @@ public class ChatSystem {
 		ArrayList <String> remote = new ArrayList<String>();
 		// pour des tests locaux demander a l'utilisateur d'entrer un numero de port
 		int portUDP=16001;
+		int bufferSize = 30;
 		Thread chatNIThread;
 		modelListUsers = new ModelListUsers();
 		modelUsername = new ModelUsername();
@@ -50,7 +51,7 @@ public class ChatSystem {
 		modelText = new ModelText();
 		chatController = new Controller(modelListUsers,modelStates , modelText, modelUsername, modelGroupRecipient);
 		chatGUI=new ChatGUI(chatController);
-		chatNI = new ChatNI(portUDP,chatController);
+		chatNI = new ChatNI(portUDP,bufferSize,chatController);
 		chatController.setChatgui(chatGUI);
 		chatController.setChatNI(chatNI);
 		chatNIThread = new Thread(chatNI);

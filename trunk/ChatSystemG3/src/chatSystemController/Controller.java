@@ -83,48 +83,51 @@ public class Controller {
 		this.chatgui = chatgui;
 	}
 
+	public void setChatNI(ChatNI chatNI) {
+		this.chatNI = chatNI;
+	}
+	
 	public void performConnect(String username){
-		modelUsername.setUsername(username);
-		// l'utilisateur est connecte
+		// enregistrement du pseudo
+		this.modelUsername.setUsername(username);
+		// passage dans l'etat connecte
 		this.modelStates.setState(true);
+		// lancement de la connexion
+		this.chatNI.connect(username, false);
+		// affichage graphique de la fenêtre de communication
 		this.chatgui.getwConnect().setVisible(false);
 		this.chatgui.getwCommunicate().setVisible(true);
 		//test pour modelistusers update
-		try {
+		/*try {
 			this.modelListUsers.addUsernameList("alpha", InetAddress.getLocalHost());
 			this.modelListUsers.addUsernameList("alpha", InetAddress.getLocalHost());
 			this.modelListUsers.addUsernameList("alpha", InetAddress.getLocalHost());
 		} catch (UnknownHostException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
-		}
-
-		/*ChatSystem.getChatGui().getwCommunicate().setVisible(true);
-		ChatSystem.getChatNI().connect(username, true);
-		ChatSystem.getChatGui().getwConnect().setTfdUsername("");;*/
-		System.out.println(modelUsername.getUsername() + " : connection in progress");
+		}*/		
+		//ChatSystem.getChatGui().getwConnect().setTfdUsername("");
+		System.out.println(this.modelUsername.getUsername() + " : connected");
 	}
-
-
+	
 	public void performDisconnect(){
-		modelStates.setState(false);
-		modelListUsers.clearListUsers();
-		this.chatgui.getwCommunicate().setVisible(false);
-		this.chatgui.getwConnect().setVisible(true);
-
-		//ChatSystem.getChatNI().disconnect(modelUsername.getUsername());
-		//ChatSystem.getChatGui().getwCommunicate().setVisible(false);
-		//ChatSystem.getChatGui().getwConnect().setVisible(true);
-
-		System.out.println(modelUsername.getUsername() + " : deconnection in progress");
+		// on passe l'etat a deconnecte
+		this.modelStates.setState(false);
+		// on reinitialise la liste des utilisateurs distants
+		this.modelListUsers.clearListUsers();
+		// on lance la deconnexion
+		this.chatNI.disconnect(this.modelUsername.getUsername());
+		/*this.chatgui.getwCommunicate().setVisible(false);
+		this.chatgui.getwConnect().setVisible(true);*/
+		System.out.println(this.modelUsername.getUsername() + " : disconnected");
 	}
 
 	public void performAddURecipient(String username){
-		modelGroupRecipient.addRecipient(username);
+		this.modelGroupRecipient.addRecipient(username);
 	}
 
 	public void performRemoveRecipient(String username){
-		modelGroupRecipient.removeRecipient(username);
+		this.modelGroupRecipient.removeRecipient(username);
 	}
 
 	public void performSendText (String text){
@@ -132,7 +135,7 @@ public class Controller {
 		String recipient;
 		modelText.setTextToSend(text);
 		while (it.hasNext()){
-			recipient = ((String)it.next());
+			recipient = it.next();
 			modelGroupRecipient.addRecipient(recipient);
 		}*/
 		InetAddress ipRecipient;
@@ -142,33 +145,72 @@ public class Controller {
 		}
 
 	}
-
+	
+	/**
+	 * Demande à la GUI de lancer le processus de récupération de choix de fichier à envoyer
+	 */
+	public void performJoinFile(){
+		
+	}
+	
+	/**
+	 * Permet de proposer le fichier choisi a une personne connectée
+	 * @param username
+	 */
+	public void performPropositionFile(String username){
+		
+	}
+	
+	/**
+	 * Permet d'envoyer la réponse de l'utilisateur à une demande d'envoi de fichier
+	 */
+	public void performFileAnswer(){
+		
+	}
+	
+	/**
+	 * Permet de signaler à l'utilisateur une demande d'envoi de fichier
+	 */
+	public void propositionFileReceived(){
+		
+	}
+	
+	/**
+	 * Permet de signaler à l'utilisateur la réponse de l'utilisateur distant
+	 */
+	public void fileAnswerReceived(){
+		
+	}
+	
+	/**
+	 * permet d'arrêter un téléchargement en cours
+	 */
+	public void fileTranfertCancelReceived(){
+		
+	}
+	
 	public void messageReceived(String text, String username){
-		modelText.setTextReceived(text);
-		modelText.setRemote(username);
+		this.modelText.setTextReceived(text);
+		this.modelText.setRemote(username);
 		System.out.println (username + " : " + text);
 	}
-
+	
 	public void connectReceived(String username,InetAddress ipRemote, boolean ack){
-		//ChatSystem.getChatGui().getwConnect().setVisible(false);
-		// si ack = true c'est une demande de connexion donc on repond	
-		if (ack){
-			ChatSystem.getChatNI().connect(ChatSystem.getModelUsername().getUsername(),false);
-		}
-		if (!modelListUsers.isInListUsers(username)){
-			modelListUsers.addUsernameList(username, ipRemote);
-			System.out.println(username + " est connecté");
+		//ChatSystem.getChatGui().getwConnect().setVisible(false);		
+		if (modelStates.isConnected()){
+			// si ack = false c'est une demande de connexion donc on repond	
+			if (!ack){
+				ChatSystem.getChatNI().connect(this.modelUsername.getUsername(),true);
+			}
+			if ((!modelListUsers.isInListUsers(username)) ){					
+				modelListUsers.addUsernameList(username, ipRemote);
+				System.out.println(username + " s'est connecté");
+			}	
 		}
 	}
+	
 	public void disconnectReceived(String username){
-		modelListUsers.removeUsernameList(username);
-		System.out.println(username + " est deconnecté");		
-	}
-	/**
-	 * @param chatNI2
-	 */
-	public void setChatNI(ChatNI chatNI2) {
-		// TODO Auto-generated method stub
-		
+		this.modelListUsers.removeUsernameList(username);
+		System.out.println(username + " s'est deconnecté");		
 	}
 }

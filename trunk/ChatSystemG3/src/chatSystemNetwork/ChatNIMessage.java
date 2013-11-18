@@ -11,13 +11,13 @@ import java.net.SocketException;
 import java.util.ArrayList;
 import java.util.Iterator;
 
+import chatSystemCommon.FileTransfertDemand;
 import chatSystemCommon.Goodbye;
 import chatSystemCommon.Hello;
 import chatSystemCommon.Message;
 import chatSystemCommon.Text;
-import chatSystemModel.ModelGroupRecipient;
 import chatSystemModel.ModelListUsers;
-import chatSystemModel.ModelUsername;
+import java.util.concurrent.ArrayBlockingQueue;
 
 /**
  * @author alpha
@@ -47,31 +47,22 @@ public class ChatNIMessage implements Runnable{
 	
 	private DatagramSocket socketUDP;
 	private ModelListUsers modelListUsers;
-	private ModelUsername modelUsername;
-	private InetAddress userIP;
 	private InetAddress userIPBroadcast;
-	private ArrayList<DatagramPacket> bufferMsg2Send;
-	private Thread chatNIMessageThread;
+	private ArrayBlockingQueue <DatagramPacket> bufferMsg2Send;
+	private int bufferSize;
 	
-	public ChatNIMessage(DatagramSocket socketChatNIMessage, ModelListUsers modelListUsers,ModelUsername modelUsername,InetAddress userIP,InetAddress userIPBroadcast){
+	public ChatNIMessage(int bufferSize, DatagramSocket socketChatNIMessage, ModelListUsers modelListUsers,InetAddress userIPBroadcast){
 		this.socketUDP = socketChatNIMessage;
+		this.bufferSize = bufferSize;
 		// Enable Broadcast
 		try{
 			this.socketUDP.setBroadcast(true);
-			this.bufferMsg2Send = new ArrayList<DatagramPacket>(this.socketUDP.getSendBufferSize());
+			this.modelListUsers = modelListUsers;
+			this.userIPBroadcast=userIPBroadcast;
+			this.bufferMsg2Send = new ArrayBlockingQueue<DatagramPacket>(this.bufferSize);
 		}catch (SocketException e){
 			System.out.println("error : socket exception setBroadcast");
-		}
-		
-		this.modelListUsers = modelListUsers;
-		this.modelUsername = modelUsername;
-		this.userIP=userIP;
-		this.userIPBroadcast=userIPBroadcast;
-		this.chatNIMessageThread = new Thread();
-	}
-	
-	public Thread getThreadChatNIMessage(){
-		return this.chatNIMessageThread;
+		}		
 	}
 	
 	public void sendHello(String username, boolean ack){
@@ -82,12 +73,12 @@ public class ChatNIMessage implements Runnable{
 		System.out.println("dans sendHello");
 		try {
 			// Objet to byte[]
-			helloStream = ((Message)hello).toArray();
+			helloStream = hello.toArray();
 			// make pdu
 			pdu = new DatagramPacket(helloStream,helloStream.length,this.userIPBroadcast,this.socketUDP.getLocalPort());
 			// add pdu to bufferMessagesToSend
-			this.bufferMsg2Send.add(pdu);	
-			System.out.println("port" + this.socketUDP.getLocalPort());
+			this.bufferMsg2Send.add(pdu);
+			System.out.println("size of Sbuffer : " + this.bufferMsg2Send.size());
 		}catch (IOException e){
 			System.out.println("connection failed");
 		}
@@ -100,7 +91,7 @@ public class ChatNIMessage implements Runnable{
 		// new Goodbye object
 		Goodbye bye = new Goodbye(username);
 		try{
-			byeStream =((Message)bye).toArray();
+			byeStream =bye.toArray();
 			pdu=new DatagramPacket(byeStream, byeStream.length, this.userIPBroadcast, this.socketUDP.getLocalPort());
 			this.bufferMsg2Send.add(pdu);
 		}catch (IOException e){
@@ -116,20 +107,31 @@ public class ChatNIMessage implements Runnable{
 		try{
 			byte[] messageStream = messageText.toArray();	
 			//it = ChatSystem.getModelGroupRecipient().getGroupRecipients().iterator();
-		//	it = modelGroupRecipient.;
+			//it = usernameList.iterator();
 			//while(it.hasNext()){
-			//	recipient = this.modelListUsers.getListUsers().get((String)it.next());
+				//recipient = this.modelListUsers.getListUsers().get((String)it.next());
 				pdu2send = new DatagramPacket(messageStream,messageStream.length,recipient,this.socketUDP.getLocalPort());
 				this.socketUDP.send(pdu2send);
-				this.run();
-			
+			//}
 		}catch(IOException ioExc){
 			System.out.println("error : construction du stream message");
+			ioExc.printStackTrace();
 		}
 	}
 	
-	public void sendFileTransfertDemand(String recipient, String fileName){
-		
+	public void sendFileTransfertDemand(String username, String name, long size,int PortClient){
+		//FileTransfertDemand demand = new FileTransfertDemand();
+		byte[] demandStream;
+		InetAddress ipRemoteAddr;
+		DatagramPacket pdu2send;
+		/*try{
+			demandStream = demand.toArray();
+			pdu2send = new DatagramPacket(demandStream,demandStream.length,ipRemoteAddr,this.socketUDP.getLocalPort());
+			this.socketUDP.send(pdu2send);
+		}catch(IOException ioExc){
+			System.out.println("error : construction du fileTransfertDemand");
+			ioExc.printStackTrace();
+		}*/
 	}
 	
 	public void sendFileTransfertConfirmation(String recipient, String fileName, boolean response){
@@ -141,18 +143,21 @@ public class ChatNIMessage implements Runnable{
 	}
 	
 	public void run(){
-		int first = 0;
 		System.out.println("thread send active");
 		while(true){
 			// envoie d'un pdu
 			if (this.bufferMsg2Send.isEmpty() == false){
 				try{
-					socketUDP.send(this.bufferMsg2Send.get(first));
-					this.bufferMsg2Send.remove(first);
-					System.out.println("message envoyé");
+					Thread.sleep(100);
+					this.socketUDP.send(this.bufferMsg2Send.poll());
+					System.out.println("message envoyé");				
+				}catch (InterruptedException e) {
+					System.out.println("sleep interrupted in S-Thread");
+					e.printStackTrace();
 				}catch (IOException sendExc){
 					System.out.println("cannot send the message");
-				}			
+					sendExc.printStackTrace();
+				}
 			}
 		}
 	
