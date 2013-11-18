@@ -1,17 +1,11 @@
 package Controller;
 
 import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.IOException;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
 import java.text.SimpleDateFormat;
-import java.util.Arrays;
 import java.util.Date;
 import java.util.logging.Level;
-
-import com.sun.istack.internal.logging.Logger;
 
 import Interface.GuiToController;
 import Model.ChatModel;
@@ -19,9 +13,7 @@ import Model.MessageFactory;
 import Model.User;
 import View.ChatGUI;
 import View.ReceivedMessageNI;
-import View.SendFileNI;
 import View.SendMessageNI;
-import chatSystemCommon.FilePart;
 import chatSystemCommon.FileTransfertCancel;
 import chatSystemCommon.FileTransfertConfirmation;
 import chatSystemCommon.FileTransfertDemand;
@@ -29,6 +21,8 @@ import chatSystemCommon.Goodbye;
 import chatSystemCommon.Hello;
 import chatSystemCommon.Message;
 import chatSystemCommon.Text;
+
+import com.sun.istack.internal.logging.Logger;
 
 public class ChatController implements GuiToController{
 	private ChatModel chatModel;
