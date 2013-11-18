@@ -3,6 +3,8 @@ package chatSystem.model;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.ConcurrentLinkedQueue;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.DefaultListModel;
 
 
@@ -27,7 +29,7 @@ public class RemoteSystemInformation extends UserInformation {
      */
     public RemoteSystemInformation(String username, String ip) {
         super(username, ip);
-        
+
         this.messagesToSend = new ConcurrentLinkedQueue<String>();
         this.messages = new DefaultListModel<String>();
         
