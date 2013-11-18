@@ -8,6 +8,9 @@ import java.net.UnknownHostException;
 
 import javax.swing.JOptionPane;
 
+import chatSystemCommon.FileTransfertConfirmation;
+import chatSystemCommon.FileTransfertDemand;
+
 import Controller.ChatController;
 import Controller.Conversation;
 import Controller.Observer;
@@ -94,14 +97,17 @@ public class FrontController extends Observer implements Runnable,ActionListener
 		}
 		
 		if(e.getSource() == mFrame.getMenu().getMOO().getMenuItemSendFile()){
-			JOptionPane.showMessageDialog(null,
-				    "Bientot ici choix pour envoyer des Fichiers","File",JOptionPane.INFORMATION_MESSAGE);
-			/*
-			 * FileChooser fc = new FileChooser();
-			 * fc.showDialog(null, "Envoyer");
-			 *java.io.File f = fc.getSelectedFile();
-			 */
 			
+			
+			  FileChooser fc = new FileChooser();
+			  fc.showDialog(null, "Envoyer");
+			 java.io.File f = fc.getSelectedFile();
+			 if (mFrame.getUCpane().getSelectedTab() == -1){
+				 JOptionPane.showMessageDialog(null,
+						    "Vous n'avez pas selection d'User","Attention!",JOptionPane.WARNING_MESSAGE);
+			 }else{
+				 ChatController.PerformFileAcceptance(f, mFrame.getUCpane().getTitleAt(mFrame.getUCpane().getSelectedTab()));
+			 }
 			
 		}
 		if(e.getSource() == mFrame.getMenu().getMGO().getMenuItemClose()){
@@ -206,6 +212,23 @@ public class FrontController extends Observer implements Runnable,ActionListener
 		}
 		if(ChatController.isConnected()){
 			ChatController.PerformDisconnect();
+		}
+		
+	}
+
+	public FileTransfertConfirmation GeneratePopUp(FileTransfertDemand message) {
+		// TODO Auto-generated method stub
+		int n = JOptionPane.showConfirmDialog(
+			    null,
+			    "Would you like to accept this file from " + message.getUsername()+"\nFile name :"+message.getName()+" File Size : " + message.getSize()+"Octets",
+			    "File request",
+			    JOptionPane.YES_NO_OPTION);
+		if(n == JOptionPane.YES_OPTION){
+			return new FileTransfertConfirmation(ChatController.getLocalUsername(),true, message.getId());
+		 
+		}else{
+			return new FileTransfertConfirmation(ChatController.getLocalUsername(),false, message.getId());
+
 		}
 		
 	}

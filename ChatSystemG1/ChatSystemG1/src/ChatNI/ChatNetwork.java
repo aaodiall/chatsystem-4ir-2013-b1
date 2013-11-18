@@ -29,15 +29,15 @@ public class ChatNetwork implements Runnable{
 	
 	
 	public static void NotifyMessageReceive(Message message) throws UnknownHostException{
-		if(!message.getUsername().equals(ChatController.getLocalUsername()+"@"+InetAddress.getLocalHost().getHostAddress().toString()) ){
+		//if(!message.getUsername().equals(ChatController.getLocalUsername()+"@"+InetAddress.getLocalHost().getHostAddress().toString()) ){
 			if(message.getClass() == Hello.class){
 				ChatController.HelloProcessing((Hello) message);
 			}else if(message.getClass() == Goodbye.class){
 				ChatController.ByeProcessing((Goodbye) message);
 			}else if(message.getClass() == Text.class){
 				ChatController.MessageProcessing((Text) message);
-			}else if(message.getClass() == File.class){
-				ChatController.FileProcessing((File) message);
+			}else if(message.getClass() == FilePart.class){
+				ChatController.FileProcessing((FilePart) message);
 			}else if(message.getClass() == FileTransfertDemand.class){
 				ChatController.FileTransfertDemandProcessing((FileTransfertDemand) message);
 			}else if(message.getClass() == FileTransfertCancel.class){
@@ -45,7 +45,7 @@ public class ChatNetwork implements Runnable{
 			}else if(message.getClass() == FileTransfertConfirmation.class){
 				ChatController.FileAcceptanceProcessing((FileTransfertConfirmation)message);
 			}
-		}
+		//}
 	}
 	
 	public void SendBye(){

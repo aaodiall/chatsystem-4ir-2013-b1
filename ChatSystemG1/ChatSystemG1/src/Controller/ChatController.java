@@ -11,7 +11,7 @@ public class ChatController {
 	private static final boolean from = true;
 	private static final boolean to = false;
 	
-	private FrontController ChatGuiFrontController;
+	private static FrontController ChatGuiFrontController;
 	private static boolean isConnected ;
 	private static ChatNetwork ChatNi;
 
@@ -45,13 +45,14 @@ public class ChatController {
 	public static void FileAcceptanceProcessing(FileTransfertConfirmation message){
 		if(message.isAccepted()){
 			System.out.println("yahou ils ont accepté!" + message);
-			
+			PerformSendFile(ChatMod.getById(message.getIdDemand()), message.getUsername());
 		}else{
 			System.out.println("oh non ils ont refusé" + message);
+			ChatMod.removeByID(message.getIdDemand());
 		}
 	}
 	
-	public static void FileProcessing(File message){
+	public static void FileProcessing(FilePart message){
 		
 	}
 	
@@ -80,11 +81,12 @@ public class ChatController {
 	public static void FileTransfertDemandProcessing(FileTransfertDemand message){
 		System.out.println("on a recu une ftd" + message);
 		//demand de transfert
-		boolean transfertacceptance = false;
-		FileTransfertConfirmation ftco = new FileTransfertConfirmation(getLocalUsername(),transfertacceptance, message.getId());
+		String remoteUsername = message.getUsername();
 		
-			
-		ChatNi.SendFileTransfertConfirmation(ftco, message.getUsername());
+		
+		FileTransfertConfirmation ftco = ChatGuiFrontController.GeneratePopUp(message);
+		 
+		ChatNi.SendFileTransfertConfirmation(ftco, remoteUsername);
 		
 	}
 	public static void PerformConnect(){
@@ -100,22 +102,30 @@ public class ChatController {
 		ChatNi.getMessageSender().closeSendSocket();
 	}
 	
-	public void PerformFileAcceptance(java.io.File f,String RemoteUsername){
-		double bytes = f.length();
+	public static void PerformFileAcceptance(java.io.File f,String RemoteUsername){
+		long bytes = f.length();
+		
 		String name = f.getName();
-		String extension = null;
+		/*String extension = null;
 		for(int i = 0; i <name.length();i++ ){
 			if(name.charAt(i) == '.'){
 				extension = name.substring(i+1);
 			}
-		}
+		}*/
 		
-		FileTransfertDemand ftd = new FileTransfertDemand(getLocalUsername(), name, extension,(int) bytes);
+		FileTransfertDemand ftd = new FileTransfertDemand(getLocalUsername(),name,  bytes,getFirstFreePort());
+		ChatMod.getFileDemandList().add(new FileDemand(ftd.getId(), f));
 		ChatNi.SendFileAcceptance(ftd,RemoteUsername);
 	}
 	
-	public void PerformSendFile(java.io.File f,String RemoteUserName){
+	private static int getFirstFreePort() {
+		// TODO Auto-generated method stub
 		
+		return 16002;
+	}
+
+	public static void PerformSendFile(java.io.File f,String RemoteUserName){
+		System.out.println("on envoie un fichier");
 	}
 	
 	public static void PerformSendMessage(String text,String[] RemoteUserName){
