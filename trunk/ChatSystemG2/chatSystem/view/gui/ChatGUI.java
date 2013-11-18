@@ -40,7 +40,7 @@ public class ChatGUI extends View {
         if (this.dWindows.containsKey(contact)) {
             if (this.dWindows.get(contact) == null) {
                 this.dWindows.remove(contact);
-                this.dWindows.put(contact, new DialogWindow(contact, RemoteSystems.getInstance().getRemoteSystem(contact).getMessages()));
+                this.dWindows.put(contact, new DialogWindow(contact, RemoteSystems.getInstance().getRemoteSystem(contact).getMessages(),this));
             } else {
                 this.dWindows.get(contact).setVisible(true);
                 //this.dWindows.get(contact).setEnabled(true);
@@ -89,6 +89,10 @@ public class ChatGUI extends View {
 
     public void deconnectButtonPressed() {
         ((ChatController) this.controller).performDisconnect();
+    }
+    
+    public void sendButtonPressed(String text,String idRemoteSystem){
+        ((ChatController) this.controller).performSendMessageRequest(text,idRemoteSystem);
     }
 
     /**

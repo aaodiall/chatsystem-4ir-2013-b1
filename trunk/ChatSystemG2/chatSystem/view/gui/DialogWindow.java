@@ -31,8 +31,9 @@ public class DialogWindow extends JFrame implements ActionListener {
     private final JButton send;
     private final JButton joinFile;
     private final JProgressBar progression;
+    private final ChatGUI chatGUI;
 
-    public DialogWindow(String contact, DefaultListModel<String> conversationModel) {
+    public DialogWindow(String contact, DefaultListModel<String> conversationModel, ChatGUI chatGUI) {
         this.contact = contact;
         this.message = new JTextArea();
         //this.conversationModel = conversationModel;
@@ -40,6 +41,8 @@ public class DialogWindow extends JFrame implements ActionListener {
         this.send = new JButton("Send");
         this.joinFile = new JButton("Join File");
         this.progression = new JProgressBar();
+        
+        this.chatGUI = chatGUI;
         initWindow();
     }
 
@@ -124,7 +127,7 @@ public class DialogWindow extends JFrame implements ActionListener {
     public void actionPerformed(ActionEvent ae) {
         System.out.println("Entering actionPerformed DialogWindow");
         if(ae.getSource() == this.send){
-            //appeler chatGUI
+            this.chatGUI.sendButtonPressed(this.message.getText(),this.contact);
         }
     }
 }
