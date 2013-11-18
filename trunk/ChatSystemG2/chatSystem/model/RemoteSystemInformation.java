@@ -13,7 +13,7 @@ public class RemoteSystemInformation extends UserInformation {
 
     //faire une seule liste et faire unJlist ds la fenetre pour afficher directement la liste
     private final ConcurrentLinkedQueue<String> messagesToSend;
-    private final DefaultListModel messages;
+    private final DefaultListModel messages; //passer à autre chose et gérer tout dans le update comme pour la liste utilisateur
 
     /**
      * Class' constructor
