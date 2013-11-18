@@ -154,6 +154,28 @@ public class ChatGUI extends JFrame implements ControllerToGui{
 		    }
 		});
 		
+		sendFileButton.addActionListener(new ActionListener(){
+			public void actionPerformed(ActionEvent arg0) {
+				JFileChooser fileChooser = new JFileChooser();
+				int returnVal = fileChooser.showOpenDialog(getParent());
+
+		        if (returnVal == JFileChooser.APPROVE_OPTION) {
+		            java.io.File selectedFile = fileChooser.getSelectedFile();
+		            chatController.sendFile(userList.getSelectedValue(), selectedFile);
+		        } else {
+		            System.out.println("Open command cancelled by user.");
+		        }
+				
+			}
+		});
+		
+		Runtime.getRuntime().addShutdownHook(new Thread() {
+			@Override
+			public void run() {
+				chatController.sendGoodbyeMessage(chatController.getLocalUser());
+			}
+		});
+		
 		this.addWindowListener(new WindowAdapter() {
 			@Override
 			public void windowClosing(WindowEvent evt) {

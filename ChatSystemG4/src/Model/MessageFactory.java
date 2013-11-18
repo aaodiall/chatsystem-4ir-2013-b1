@@ -3,7 +3,7 @@
  */
 package Model;
 
-import chatSystemCommon.File;
+import chatSystemCommon.FilePart;
 import chatSystemCommon.FileTransfertCancel;
 import chatSystemCommon.FileTransfertConfirmation;
 import chatSystemCommon.FileTransfertDemand;
@@ -17,7 +17,7 @@ import chatSystemCommon.Hello;
 public class MessageFactory {
 	private static Hello hello = null;
 	private static Goodbye bye = null;
-	private static File file = null;
+	private static FilePart file = null;
 	private static FileTransfertCancel fileTransfertCancel = null;
 	private static FileTransfertConfirmation fileTransfertConfirmation = null;
 	private static FileTransfertDemand fileTransfertDemand = null;
@@ -43,9 +43,9 @@ public class MessageFactory {
 		return bye;
 	}
 	
-	public static File getFileMessage(String username, byte[] filePart, boolean isLast) {
+	public static FilePart getFileMessage(String username, byte[] filePart, boolean isLast) {
 		if(file == null) {
-			file = new File(username,filePart,isLast);
+			file = new FilePart(username,filePart,isLast);
 		}
 		else {
 			file.setUsername(username);
@@ -78,15 +78,15 @@ public class MessageFactory {
 		return fileTransfertConfirmation;
 	}
 	
-	public static FileTransfertDemand getFileTransfertDemandMessage(String username, String name, String extension, int size) {
+	public static FileTransfertDemand getFileTransfertDemandMessage(String username, String name, long size,int portClient) {
 		if(fileTransfertDemand == null) {
-			fileTransfertDemand = new FileTransfertDemand(username,name,extension,size);
+			fileTransfertDemand = new FileTransfertDemand(username,name,size,portClient);
 		}
 		else {
 			fileTransfertDemand.setUsername(username);
 			fileTransfertDemand.setName(name);
-			fileTransfertDemand.setExtension(extension);
 			fileTransfertDemand.setSize(size);
+			fileTransfertDemand.setPortClient(portClient);
 		}
 		return fileTransfertDemand;
 	}
