@@ -4,12 +4,8 @@ import java.net.DatagramPacket;
 import java.net.*;
 import chatSystemCommon.*;
 import java.io.IOException;
-//import java.util.Enumeration;
-//import java.util.List;
-//import java.util.Iterator;
 import chatSystem.model.RemoteSystems;
 import chatSystem.model.RemoteSystemInformation;
-//import chatSystem.model.UserInformation;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -103,7 +99,7 @@ public class MessageTransfert implements Runnable {
     /**
      * Send a Goodbye message to all the computers located in the local red
      * Using the broadcast address which has to be determined
-     * @param username username of the person who wants to send the hello message
+     * @param username username of the person who wants to send the goodbye message
      */
     public void sendGoodbye(String username) {
         InetAddress broadcastAddress = this.determineBroadcastAddress();
@@ -125,7 +121,7 @@ public class MessageTransfert implements Runnable {
 
     /**
      * Send a request in order to send a file to a remote system
-     * @param username username of the person who wants to send the hello message
+     * @param username username of the person who wants to send the request
      * @param name file's name
      * @param size file's size
      * @param idTransfert file transfert's id
@@ -139,8 +135,20 @@ public class MessageTransfert implements Runnable {
     }
     
     /**
+     * Send a confirmation to a remote system which sent a file transfert request
+     * @param username username of the person who wants to send the confirmation
+     * @param isAccepted boolean indicating if the request was accepted or refused
+     * @param idTransfert file transfert's id
+     * @param idRemoteSystem remote system id
+     */
+    public void sendFileTransfertConfirmation(String username, boolean isAccepted, int idTransfert, String idRemoteSystem) {
+        String ip = this.rmInstance.getRemoteSystem(idRemoteSystem).getIP(); 
+        FileTransfertConfirmation ftc = new FileTransfertConfirmation(username, isAccepted, idTransfert);
+        this.sendPacket(ip, ftc);
+    }
+    
+    /**
      * Private function used to send a Message to someone
-     *
      * @param ip ip address of the remote system we want to send the message
      * @param msg Message already built we want to send
      */
@@ -156,9 +164,8 @@ public class MessageTransfert implements Runnable {
 
     /**
      * Private function used to send a Message
-     *
-     * @param username username of the person who wants to send the message
      * @param ip ip address of the remote system we want to send the message
+     * @param msg Message already built we want to send
      */
     private synchronized void sendPacket(InetAddress ip, Message msg) {
         try {
