@@ -62,10 +62,6 @@ public class ChatController extends Controller implements GuiToCont, NiToCont {
     public void performHelloReceived(String username, String ip) {
         System.out.println("Hello received, modifying the model");
         this.remoteSystems.addRemoteSystem(username, ip);
-        
-        //ajout de remote system Information en tant qu'observable pr chatGUI
-        //this.remoteSystems.getRemoteSystem(username+"@"+ip).addObserver(this.chatGUI);
-        
     }
 
     @Override
@@ -77,7 +73,7 @@ public class ChatController extends Controller implements GuiToCont, NiToCont {
     @Override
     public void performMessageReceived(String msg, String idRemoteSystem) {
         System.out.println("Text received, modifying the model");
-        this.remoteSystems.addMessageReceivedToRemote(idRemoteSystem, msg);
+        this.remoteSystems.addMessageReceivedToRemote(idRemoteSystem, idRemoteSystem + " : " +msg);
     }
 
     @Override
@@ -87,9 +83,9 @@ public class ChatController extends Controller implements GuiToCont, NiToCont {
     }
 
     @Override
-    public void performSentMessageToRemoteSystem(String message, String idRemoteSystem) {
+    public void performMessageSent(String message, String idRemoteSystem) {
         System.out.println("Message sent to " + idRemoteSystem + ", modifying the model");
-       this.remoteSystems.addMessageSentToRemoteSystem(message, idRemoteSystem, this.localUser.getUsername());
+       this.remoteSystems.addMessageSentToRemoteSystem(this.localUser.getUsername() + " : " +message, idRemoteSystem);
     }
 
     @Override

@@ -35,7 +35,7 @@ public class RemoteSystemInformation extends UserInformation {
      * @param message new received message
      */
     public void addMessageReceived(String message) {
-        this.messages.addElement(this.getIdRemoteSystem() + " : " +message); 
+        this.messages.addElement(message); 
     }
 
     /**
@@ -62,7 +62,7 @@ public class RemoteSystemInformation extends UserInformation {
      * @param message sent message
      */
     public void addMessageSent(String message) {
-        this.messages.addElement(this.getIdRemoteSystem() + " : " +message); 
+        this.messages.addElement(message); 
 
     }
 

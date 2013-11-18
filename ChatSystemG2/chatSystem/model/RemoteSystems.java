@@ -64,7 +64,7 @@ public class RemoteSystems extends Model implements Iterable<RemoteSystemInforma
     }
 
     public synchronized void addMessageReceivedToRemote(String idRemoteSystem, String message) {
-        this.remoteSystemsInformation.get(idRemoteSystem).addMessageReceived(idRemoteSystem + " " + message);
+        this.remoteSystemsInformation.get(idRemoteSystem).addMessageReceived(message);
     }
 
     /**
@@ -90,7 +90,7 @@ public class RemoteSystems extends Model implements Iterable<RemoteSystemInforma
      * @param idRemoteSystem remote system the message has been sent to
      * @param username username of the person who sent the message
      */
-    public void addMessageSentToRemoteSystem(String message, String idRemoteSystem, String username) {
+    public void addMessageSentToRemoteSystem(String message, String idRemoteSystem) {
         if (this.remoteSystemsInformation.containsKey(idRemoteSystem)) {
             this.remoteSystemsInformation.get(idRemoteSystem).addMessageSent(message);
         }

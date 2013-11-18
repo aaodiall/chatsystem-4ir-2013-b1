@@ -112,7 +112,7 @@ public class ChatNI extends View {
         }
         else if(o instanceof RemoteSystems){
             if(arg instanceof String){
-                this.messageTransfert.sendHello((String)arg);
+                this.messageTransfert.sendHello(this.usrInfo.getUsername(),(String)arg);
             }
         }
         //quand l'update concerne l'envoi par l'utilisateur local d'un nouveau message à un remote system donné
@@ -120,7 +120,7 @@ public class ChatNI extends View {
     }
 
     public void messageSent (String msg, String idRemoteSystem) {
-        ((ChatController)this.controller).performSentMessageToRemoteSystem(msg, idRemoteSystem);
+        ((ChatController)this.controller).performMessageSent(msg, idRemoteSystem);
     }
     
     public UserInformation getUserInfo() {
