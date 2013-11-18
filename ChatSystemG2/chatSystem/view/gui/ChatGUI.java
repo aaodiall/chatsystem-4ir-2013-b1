@@ -70,7 +70,7 @@ public class ChatGUI extends View {
         if (this.uWindow == null) {
             throw new GUIException();
         } else {
-            //this.uWindow.updateContacts(newList);
+            this.uWindow.updateContacts(newList);
         }
     }
 
