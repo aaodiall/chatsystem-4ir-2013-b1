@@ -50,6 +50,15 @@ public class FileTransferts extends Model{
         return this.fileModel.get(idTransfert);
     }
 
+    public void setFileTransfertInformationState(int idTransfert, FileState state) {
+        if (this.fileModel.containsKey(idTransfert)) {
+            this.fileModel.get(idTransfert).setState(state);
+            this.setChanged();
+            this.notifyObservers(state);
+            this.clearChanged();
+        }
+    }
+    
     /**
      * Static method to obtain an instance of the classe
      * @return FileTransferts' unique instance

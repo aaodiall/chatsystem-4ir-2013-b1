@@ -117,10 +117,10 @@ public class ChatController extends Controller implements GuiToCont, NiToCont {
     public void performConfirmationReceived(String idRemoteSystem, int idTransfert, boolean accepted) {
         System.out.println("Receiving a file transfert request from " + idRemoteSystem + ", modifying the model");
         if (accepted) {
-            this.fileTransferts.getFileTransfertInformation(idTransfert).setState(FileState.ACCEPTED);
+            this.fileTransferts.setFileTransfertInformationState(idTransfert, FileState.ACCEPTED);
         }
         else {
-            this.fileTransferts.getFileTransfertInformation(idTransfert).setState(FileState.DECLINED);
+            this.fileTransferts.setFileTransfertInformationState(idTransfert, FileState.DECLINED);
         }            
     }
 
