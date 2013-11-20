@@ -10,20 +10,20 @@ import java.net.UnknownHostException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-public class MessageHandlerNI /*extends ChatNI*/ {
+public class MessageHandlerNI {
     
     private int UDP_port;
-    private ChatController chat_control;
+    private ChatNI chatNI;
     String username;
     InetAddress IP_dest;
     private MessageEmissionNI msg_emission;
     private Thread msg_reception;
     
-    public MessageHandlerNI (ChatController chat_control) {
+    public MessageHandlerNI (ChatNI chatNI) {
         
         UDP_port = 16001;
-        this.chat_control = chat_control;
-        username = chat_control.get_userDB().get_username();
+        this.chatNI = chatNI;
+        username = chatNI.get_user();
   
         // Creation de la rececption
         msg_reception = new Thread(new MessageReceptionNI(this, UDP_port));
@@ -36,28 +36,30 @@ public class MessageHandlerNI /*extends ChatNI*/ {
     
     /******************************************************************/
     
-    // Gère la liaison reception-controller
+    // Gère la liaison reception-chatNI
     
     public void receive (Message msg, InetAddress IP_source) {
         String IP_text = IP_source.getHostAddress();
         if (msg instanceof Hello) {
             System.out.println("I'm MsgHandler : Hello received.");
-            chat_control.perform_connection(msg.getUsername(), IP_text, ((Hello) msg).isAck());
+            System.out.println("I'm MsgHandler : remote user : " + msg.getUsername());
+            chatNI.from_connection(msg.getUsername(), IP_text, ((Hello) msg).isAck());
+            System.out.println("Test 1");
         }
         if (msg instanceof Goodbye) {
             System.out.println("I'm MsgHandler : Goodbye received.");
-            chat_control.perform_disconnection(msg.getUsername(), IP_text);
+            chatNI.from_disconnection(msg.getUsername(), IP_text);
         }
         if (msg instanceof Text) {
             System.out.println("I'm MsgHandler : Text received.");
-            chat_control.perform_send(msg.getUsername(), ((Text) msg).getText(), IP_text);
+            chatNI.from_receive_text(msg.getUsername(), ((Text) msg).getText(), IP_text);
         }
     }
     
 
     /******************************************************************/    
     
-    // Gère la liaison controller-emission
+    // Gère la liaison chatNI-emission
     
     public void send(Message msg, InetAddress IP_dest){
         this.IP_dest = IP_dest;
@@ -74,6 +76,7 @@ public class MessageHandlerNI /*extends ChatNI*/ {
     }
     
     public void send_connection(Boolean alrdythere) {
+        //System.out.println("I'm MsgHandler : username : " + username);
         Hello msg = new Hello(username, alrdythere);
         IP_dest = msg_emission.get_broadcast();
         send(msg, IP_dest);
@@ -85,17 +88,9 @@ public class MessageHandlerNI /*extends ChatNI*/ {
         send(msg, IP_dest);
      }
     
-    public void send_text(String username_and_IP, String txt) {
-        try {
-            Text msg = new Text(username, txt);
-            // On récupère l'@IP associée à l'username
-            String IP_text = chat_control.get_listDB().get_IP_addr(username_and_IP);
-            // On transforme l'@IP de String à InetAddress
-            IP_dest = InetAddress.getByName(IP_text);
-            send(msg, IP_dest);
-        } catch (UnknownHostException ex) {
-            Logger.getLogger(MessageHandlerNI.class.getName()).log(Level.SEVERE, null, ex);
-        }
+    public void send_text(InetAddress IP_dest, String txt) {
+        Text msg = new Text(username, txt);
+        send(msg, IP_dest);
      }
     
 }

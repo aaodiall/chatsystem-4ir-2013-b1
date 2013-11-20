@@ -1,31 +1,77 @@
 package chatsystemg5.network;
 
 import chatSystemCommon.*;
+import chatsystemg5.brain.ChatController;
+import java.net.InetAddress;
+import java.net.UnknownHostException;
 import java.util.Observable;
 
 import java.util.Observer;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
-public /*abstract*/ class ChatNI implements Runnable, Observer {
+public /*abstract*/ class ChatNI implements Observer {
     
+    private ChatController chat_control;
     private MessageHandlerNI msg_handler;
+    //private FileHandlerNI file_handler;
+    private String username;
 
-    public ChatNI() {
+    public ChatNI(ChatController chat_control) {
         
-        //msg_handler = new MessageHandlerNI();
-        
-    }
-	
-	/*public abstract void transfer_connection (Hello hi) ;
-        public abstract void transfer_disconnection (Goodbye bye) ;
-        public abstract void transfer_send (Message msg) ;
-        public abstract void transfer_file (File fl) ;
-        public abstract void transfer_request (Message msg) ;*/ 
-
-    @Override
-    public void run() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        username = chat_control.get_userDB().get_username();
+        msg_handler = new MessageHandlerNI(this);
+        //file_handler = new FileHandlerNI(this);
+        System.out.println("I'm ChatNI : username : " + username);
     }
 
+    /******************************************************************/
+    
+    // PARTIE MESSAGE EMISSION
+    
+    public void to_connection(Boolean alrdythere) {
+        msg_handler.send_connection(alrdythere);
+    }
+    
+    public void to_disconnection() {
+        msg_handler.send_disconnection();
+    }
+    
+    public void to_send_text(String username_and_IP, String text) {
+        try {
+            // On récupère l'@IP associée à l'username
+            String IP_text = chat_control.get_listDB().get_IP_addr(username_and_IP);
+            // On transforme l'@IP de String à InetAddress
+            InetAddress IP_dest = InetAddress.getByName(IP_text);
+            msg_handler.send_text(IP_dest, text);
+        } catch (UnknownHostException ex) {
+            Logger.getLogger(ChatNI.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+    
+    
+    /******************************************************************/
+    
+    // PARTIE MESSAGE RECEPTION
+    
+    public void from_connection(String remote_user, String IP_text, Boolean alrdythere) {
+        chat_control.perform_connection(remote_user, IP_text, alrdythere);
+    }
+    
+    public void from_disconnection(String remote_user, String IP_text) {
+        chat_control.perform_disconnection(remote_user, IP_text);
+    }
+    
+    public void from_receive_text(String remote_user, String txt, String IP_text) {
+        chat_control.perform_send(remote_user, txt, IP_text);
+    }
+    
+    
+    
+    public String get_user() {
+        return username;
+    }
+    
     @Override
     public void update(Observable o, Object o1) {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
