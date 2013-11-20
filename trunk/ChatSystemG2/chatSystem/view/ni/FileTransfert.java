@@ -3,38 +3,55 @@ package chatSystem.view.ni;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.io.IOException;
-import java.io.BufferedWriter;
-import java.io.OutputStreamWriter;
 import chatSystem.model.FileTransfertInformation;
 import chatSystem.model.FileTransferts;
+import chatSystemCommon.FilePart;
+import chatSystemCommon.Message;
+import java.io.ByteArrayOutputStream;
+import java.io.DataOutputStream;
+import java.io.OutputStream;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 //SERVEUR
 public class FileTransfert implements Runnable {
-    
-    private ServerSocket serverSocket = null;
-    private Socket echoSocket = null;
-    BufferedWriter writer = null;
+
+    private ServerSocket serverSocket;
+    private Socket clientSocket;
+
+    OutputStream writer; // buffered or not buffered that is the question !
     FileTransfertInformation fileToSend;
-    
+
     public FileTransfert(int port, int idTransfert) {
         try {
             this.serverSocket = new ServerSocket(port);
-            this.serverSocket.accept();
-            writer = new BufferedWriter(new OutputStreamWriter(echoSocket.getOutputStream()));
-            this.fileToSend = FileTransferts.getInstance().getFileTransfertInformation(idTransfert);                   
-        } catch(IOException e) {
-            System.err.println("Could not listen on port or accept a connection from outside");
+        } catch (IOException ex) {
+            Logger.getLogger(FileTransfert.class.getName()).log(Level.SEVERE, null, ex);
         }
+        this.fileToSend = FileTransferts.getInstance().getFileTransfertInformation(idTransfert);
     }
-
 
     public void SendFile() {
         //this.fileToSend.getFilePart()
     }
+
     @Override
     public void run() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        do {
+            try {
+                this.clientSocket = this.serverSocket.accept();
+                this.writer = clientSocket.getOutputStream();
+
+
+                Message msg = new FilePart("username", this.fileToSend.getFilePart(), this.fileToSend.isLast());//a changer mais je vais vite
+                this.writer.write(msg.toArray());
+                this.writer.flush(); // utile ?
+                
+            } catch (IOException ex) {
+                Logger.getLogger(FileTransfert.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        } while (!this.fileToSend.isLast());
+
     }
-    
 
 }
