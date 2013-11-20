@@ -32,6 +32,10 @@ public class FileTransferts extends Model{
             this.fileModel.remove(idTransfert);
         }
         this.fileModel.put(idTransfert, new FileTransfertInformation(size,idRemoteSystem, name, idTransfert));
+        
+       this.setChanged();
+       this.notifyObservers(idTransfert);
+       this.clearChanged();
     }
 
     /**
