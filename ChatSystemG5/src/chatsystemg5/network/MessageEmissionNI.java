@@ -15,7 +15,7 @@ import java.net.UnknownHostException;
 import java.nio.Buffer;
 
     
-public class MessageEmissionNI /*extends MessageHandlerNI*/ implements ToRemoteApp{
+public class MessageEmissionNI implements ToRemoteApp{
 
     private int UDP_port_dest;
     //private InetAddress IP_dest;

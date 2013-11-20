@@ -10,7 +10,7 @@ import java.net.SocketException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-public class MessageReceptionNI /*extends MessageHandlerNI*/ implements Runnable, FromRemoteApp {
+public class MessageReceptionNI implements Runnable, FromRemoteApp {
     
     private MessageHandlerNI msg_handler;
     private int UDP_port;

@@ -1,6 +1,6 @@
 package chatsystemg5.network;
 
-public abstract class FileHandlerNI extends ChatNI {
+public class FileHandlerNI {
     
     // A gérer plus tard
     

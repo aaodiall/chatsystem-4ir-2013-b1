@@ -18,7 +18,7 @@ public class ChatController {
     String username;
     
     ChatGUI chatGUI;
-    MessageHandlerNI msg_handler;
+    ChatNI chatNI;
     
     public ChatController () {
         // initialize view
@@ -38,7 +38,7 @@ public class ChatController {
         username = this.userDB.get_username();
         
         // initialize network
-        msg_handler = new MessageHandlerNI(this);
+        chatNI = new ChatNI(this);
     }
     
     
@@ -46,7 +46,7 @@ public class ChatController {
     
     // Connexion du local user
     public void perform_connection () {
-        msg_handler.send_connection(false);
+        chatNI.to_connection(false);
     }
     
     // Connexion d'un autre user
@@ -58,7 +58,7 @@ public class ChatController {
         // if remote user first connection
         if(!alrdythere){
             // create a new message to sent back ack
-            msg_handler.send_connection(true);       
+            chatNI.to_connection(true);       
         }
      }
     
@@ -67,7 +67,7 @@ public class ChatController {
      
     // Déconnection du local user
     public void perform_disconnection () {
-        msg_handler.send_disconnection();
+        chatNI.to_disconnection();
      }
     
     // Déconnection d'un autre user
@@ -81,7 +81,7 @@ public class ChatController {
     
     // Envoi d'un messsage texte
     public void perform_send (String username_and_IP, String text) {
-        msg_handler.send_text(username_and_IP, text);
+        chatNI.to_send_text(username_and_IP, text);
     }
     
     // Réception d'un message
@@ -92,6 +92,7 @@ public class ChatController {
     }
         
     /**************** Getters ****************/
+    
     public UserModel get_userDB(){
         return this.userDB;
     }
