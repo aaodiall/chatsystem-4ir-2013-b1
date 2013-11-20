@@ -94,7 +94,19 @@ public class ChatController extends Controller implements GuiToCont, NiToCont {
        this.fileTransferts.addTransfert(name, size, idRemoteSystem, this.transfertID);
        this.transfertID ++;
     }
-
+    
+    @Override
+    public void performAcceptSuggestion(int idTransfert) {
+        System.out.println("Send file accepted notification, modifying the model");
+        this.fileTransferts.getFileTransfertInformation(idTransfert).setState(FileState.ACCEPTED);
+    }
+	
+    @Override
+    public void performDeclinedSuggestion(int idTransfert) {
+        System.out.println("Send file declined notification, modifying the model");
+        this.fileTransferts.getFileTransfertInformation(idTransfert).setState(FileState.DECLINED);
+    }
+    
     @Override
     public void performSuggestionReceived(String name, long size, String idRemoteSystem, int idTransfert) {
         System.out.println("Receiving a file transfert request from " + idRemoteSystem + ", modifying the model");
