@@ -11,7 +11,6 @@ import javax.swing.event.ListDataListener;
 public class ListModel extends ChatModel {
     
     private HashMap<String,String> hmap_users;
-    private Observer observer;
     
     public ListModel (ChatController chatController) {
         hmap_users = new HashMap();
@@ -40,9 +39,4 @@ public class ListModel extends ChatModel {
         // if there were several ones we had to implement a loop updating each Observer
         this.observer.update(this, this.hmap_users);
     }        
-
-    @Override
-    public void addObserver(Observer o) {
-        this.observer = o;
-    }
 }
