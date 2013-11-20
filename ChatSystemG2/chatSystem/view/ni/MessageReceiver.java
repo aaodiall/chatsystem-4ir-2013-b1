@@ -1,5 +1,6 @@
 package chatSystem.view.ni;
 
+import chatSystem.model.RemoteSystemInformation;
 import java.net.*;
 import java.io.IOException;
 import chatSystemCommon.*;
@@ -67,10 +68,10 @@ public class MessageReceiver implements Runnable {
                         this.chatni.helloReceived(helloReceived.getUsername(), from);
                     } else if (msgClass == Text.class) {
                         Text msgText = (Text) msg;
-                        this.chatni.textMessageReceived(msgText.getText(), msgText.getUsername()+"@"+from);
+                        this.chatni.textMessageReceived(msgText.getText(), RemoteSystemInformation.generateID(msg.getUsername(), from));
                     } else if (msgClass == Goodbye.class) {
                         Goodbye gbReceived = (Goodbye) msg;
-                        this.chatni.goodbyeReceived(gbReceived.getUsername()+"@"+from);
+                        this.chatni.goodbyeReceived(RemoteSystemInformation.generateID(gbReceived.getUsername(),from));
                     } else if (msgClass == FileTransfertDemand.class) {
                         FileTransfertDemand ftd = (FileTransfertDemand) msg;
                         this.chatni.fileTransfertDemandReceived(ftd, from);

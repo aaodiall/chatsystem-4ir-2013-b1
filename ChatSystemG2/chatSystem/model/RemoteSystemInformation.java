@@ -77,6 +77,10 @@ public class RemoteSystemInformation extends UserInformation {
      * @return remote system's id
      */
     public String getIdRemoteSystem() {
-        return this.getUsername() + "@" + this.getIP();
+        return RemoteSystemInformation.generateID(this.getUsername(),this.getIP());
+    }
+    
+    public static String generateID(String username, String ip) {
+        return username + "@" + ip;
     }
 }
