@@ -28,6 +28,7 @@ public class ChatController {
         // initialize model
         listDB = new ListModel(this);
         convDB = new ConversationModel(this);
+        
     }
     
     /**************** Controller init ****************/

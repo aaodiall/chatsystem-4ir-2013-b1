@@ -6,10 +6,14 @@ import java.util.Observer;
 
 public abstract class ChatModel extends Observable {
     
+    protected Observer observer;
+    
     public ChatModel (){
     }
 
     public abstract void notifyObservers();
-    public abstract void addObserver(Observer o);
+    public void addObserver(Observer o) {
+        this.observer = o;
+    }
     
 }

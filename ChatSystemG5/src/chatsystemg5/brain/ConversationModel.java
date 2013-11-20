@@ -7,15 +7,15 @@ package chatsystemg5.brain;
 import chatsystemg5.ihm.ChatWindow;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.LinkedList;
 import java.util.Observer;
 
 
 public class ConversationModel extends ChatModel{
-    private HashMap<String, ArrayList<String>> conversation;
-    private Observer observer;
+    private HashMap<String, LinkedList<String>> conversation;
     
     ConversationModel (ChatController chat_control){
-        this.conversation = new HashMap<String, ArrayList<String>>();
+        this.conversation = new HashMap<String, LinkedList<String>>();
         
         // add list window as listModel obersver
         //this.addObserver(chat_control.get_chatGUI().get_chat_window());
@@ -28,16 +28,11 @@ public class ConversationModel extends ChatModel{
             this.conversation.get(remote_user).add(text);
         }
         else {
-            ArrayList messages = new ArrayList<String>();
+            LinkedList messages = new LinkedList<String>();
             messages.add(text);
             this.conversation.put(remote_user, messages);
         }
         this.notifyObservers();
-    }
-
-    @Override
-    public void addObserver(Observer o) {
-        this.observer = o;
     }
 
     @Override
