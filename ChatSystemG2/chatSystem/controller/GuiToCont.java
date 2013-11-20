@@ -23,6 +23,7 @@ public interface GuiToCont {
         public void performAcceptSuggestion(int idTransfert);
 	
 	public void performDeclinedSuggestion(int idTransfert);
-	//public void performFileSended();
+	
+        //public void performFileSended();
     
 }

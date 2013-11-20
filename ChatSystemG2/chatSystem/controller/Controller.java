@@ -5,10 +5,7 @@
  */
 
 package chatSystem.controller;
-import java.net.InetAddress;
-import java.net.UnknownHostException;
 
-import chatSystem.model.*;
 /**
  *
  * @author Marjorie

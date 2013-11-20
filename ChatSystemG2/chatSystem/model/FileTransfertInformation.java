@@ -47,8 +47,10 @@ public class FileTransfertInformation extends Model{
          * Obtaining the next file's part to send
          * @return file's part
          */
-	public String getFilePart() {
-		return "";
+	public byte[] getFilePart() {
+            //juste pour que ça compile mais en fait je sais pas quoi faire :p
+            //et oui je suis fière de mon implémentation :p
+		return "".getBytes();
 	}
 	
         /**
