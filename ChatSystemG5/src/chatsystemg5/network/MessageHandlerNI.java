@@ -58,17 +58,18 @@ public class MessageHandlerNI /*extends ChatNI*/ {
     /******************************************************************/    
     
     // Gère la liaison controller-emission
+    
     public void send(Message msg, InetAddress IP_dest){
         this.IP_dest = IP_dest;
         // Si le message est de type Hello
         if (msg instanceof Hello) {
-            msg_emission.transfer_connection((Hello) msg);
+            msg_emission.transfer_connection((Hello) msg, IP_dest);
         }
         if (msg instanceof Goodbye) {
-            msg_emission.transfer_disconnection((Goodbye) msg);
+            msg_emission.transfer_disconnection((Goodbye) msg, IP_dest);
         }
         if (msg instanceof Text) {
-            msg_emission.send_text((Text) msg);
+            msg_emission.send_text((Text) msg, IP_dest);
         }
     }
     
