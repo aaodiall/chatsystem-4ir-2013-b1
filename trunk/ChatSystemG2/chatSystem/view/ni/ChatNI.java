@@ -4,13 +4,12 @@ import chatSystem.view.gui.View;
 import chatSystem.controller.ChatController;
 import chatSystem.model.*;
 import java.util.Observable;
-import chatSystemCommon.*;
 
 public class ChatNI extends View {
 
-    private Thread threadMessageReceiver;
-    private Thread threadMessageTransfert;
-    private MessageReceiver messageReceiver;
+    private final Thread threadMessageReceiver;
+    private final Thread threadMessageTransfert;
+    private final MessageReceiver messageReceiver;
     private final MessageTransfert messageTransfert;
     private final FileReceiver[] fileReceiver;
     private final FileTransfert[] fileTransfert;
@@ -26,7 +25,7 @@ public class ChatNI extends View {
         this.messageTransfert = new MessageTransfert(this);
         this.threadMessageReceiver = new Thread(this.messageReceiver);
         this.threadMessageTransfert = new Thread(this.messageTransfert);
-        this.threadMessageTransfert.start();
+        
         this.portClient = 1024;
     }
 
@@ -91,6 +90,7 @@ public class ChatNI extends View {
                         //a changer completement il faudrait pouvoir couper le thread et le lancer comme on veut
                         this.usrInfo = (UserInformation)o;
                         this.threadMessageReceiver.start();
+                        this.threadMessageTransfert.start();
                     }
                     //this.messageReceiver = new MessageReceiver(this);
                     //this.threadReceiver = new Thread(this.messageReceiver);
@@ -113,7 +113,7 @@ public class ChatNI extends View {
                 RemoteSystemInformation aux = (RemoteSystemInformation) arg;
                 String msgToSend = aux.getMessageToSend();
                 if (msgToSend != null)
-                    this.messageTransfert.setTextMessageTask(aux.getIP(),msgToSend);
+                    this.messageTransfert.setTextMessageTask(aux.getIP(), aux.getIdRemoteSystem(),msgToSend);
             }
         }
         else if (o instanceof FileTransferts) {
