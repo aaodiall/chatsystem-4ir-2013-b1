@@ -57,7 +57,7 @@ public class ConnectionWindow /*extends ChatGUI*/ extends JFrame implements Acti
             String username = this.text.getText();
             // On initialise et on met en place la connexion
             chat_control.init_controller(username);
-            chat_control.perform_connection(username);
+            chat_control.perform_connection();
             this.getContentPane().removeAll();
             this.getContentPane().invalidate();
             this.remove(this.text);

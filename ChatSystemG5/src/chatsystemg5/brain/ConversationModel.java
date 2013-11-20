@@ -18,19 +18,19 @@ public class ConversationModel extends ChatModel{
         this.conversation = new HashMap<String, ArrayList<String>>();
         
         // add list window as listModel obersver
-        this.addObserver(chat_control.get_chatGUI().get_chat_window());
+        //this.addObserver(chat_control.get_chatGUI().get_chat_window());
     }
     
-    public void add_conversation(String username, String text) {
+    public void add_conversation(String remote_user, String IP_text, String text) {
         // if username already in the list
-        if (this.conversation.containsKey(username)) {
+        if (this.conversation.containsKey(remote_user)) {
             // just add the message at the end of his message list
-            this.conversation.get(username).add(text);
+            this.conversation.get(remote_user).add(text);
         }
         else {
             ArrayList messages = new ArrayList<String>();
             messages.add(text);
-            this.conversation.put(username, messages);
+            this.conversation.put(remote_user, messages);
         }
         this.notifyObservers();
     }

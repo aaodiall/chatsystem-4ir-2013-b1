@@ -6,8 +6,13 @@ import java.util.Observable;
 import java.util.Observer;
 
 public /*abstract*/ class ChatNI implements Runnable, Observer {
+    
+    private MessageHandlerNI msg_handler;
 
     public ChatNI() {
+        
+        //msg_handler = new MessageHandlerNI();
+        
     }
 	
 	/*public abstract void transfer_connection (Hello hi) ;
