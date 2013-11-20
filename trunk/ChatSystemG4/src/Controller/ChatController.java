@@ -7,6 +7,8 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.logging.Level;
 
+import javax.swing.JOptionPane;
+
 import Interface.GuiToController;
 import Model.ChatModel;
 import Model.MessageFactory;
@@ -30,7 +32,7 @@ public class ChatController implements GuiToController{
 	private FileTransfertController fileTransfertController;
 	
 	public ChatController(ChatModel chatModel,ChatGUI chatGui) {
-		fileTransfertController = new FileTransfertController();
+		fileTransfertController = new FileTransfertController(this);
 		this.chatModel = chatModel;
 		this.chatGui = chatGui;
 		Thread th = new Thread(ReceivedMessageNI.getInstance(this));
@@ -67,16 +69,9 @@ public class ChatController implements GuiToController{
 				if(chatModel.get(selectedIndex).equals(user))
 					chatGui.setChatText(getTalk(selectedIndex));
 		}
-		else if(msg instanceof FileTransfertCancel) {
-			//System.out.println("FileTransfertCancel");
-		}
-		else if(msg instanceof FileTransfertConfirmation) {
-			//System.out.println("FileTransfertConfirmation");
-		}
-		else if(msg instanceof FileTransfertDemand) {
-			//System.out.println("FileTransfertDemand");
-		}	
-		
+		else
+			fileTransfertController.receivedMessage(user, msg);
+			
 		return 1;
 	}
 	
