@@ -11,16 +11,16 @@ public class ChatNI extends View {
     private final Thread threadMessageTransfert;
     private final MessageReceiver messageReceiver;
     private final MessageTransfert messageTransfert;
-    private final FileReceiver[] fileReceiver;
-    private final FileTransfert[] fileTransfert;
+    private final FileReceiver[] fileReceivers;
+    private final FileTransfert[] fileTransferts;
     private UserInformation usrInfo;
     private int portClient;
 
     public ChatNI(ChatController controller) {
         super(controller);
      
-        this.fileReceiver = new FileReceiver[5];
-        this.fileTransfert = new FileTransfert[5];
+        this.fileReceivers = new FileReceiver[5];
+        this.fileTransferts = new FileTransfert[5];
         this.messageReceiver = new MessageReceiver(this);
         this.messageTransfert = new MessageTransfert(this);
         this.threadMessageReceiver = new Thread(this.messageReceiver);
@@ -59,6 +59,7 @@ public class ChatNI extends View {
 
     public void sendFileTransfertDemand(String name, long size, int idTransfert, String idRemoteSystem) {
         this.messageTransfert.setFileDemandTask(name, size, idTransfert, idRemoteSystem, portClient);
+        this.fileTransferts[0] = new FileTransfert(portClient,idTransfert);
         this.portClient ++;
     }
     
@@ -118,6 +119,12 @@ public class ChatNI extends View {
         }
         else if (o instanceof FileTransferts) {
             if (arg instanceof FileState) {
+                if(((FileState)arg).equals(FileState.ACCEPTED)){
+                    Thread fileSender = new Thread(this.fileTransferts[0]);
+                    fileSender.start();
+                }else if(((FileState)arg).equals(FileState.DECLINED)){
+                    this.fileTransferts[0] = null;
+                }
             }
             
         }
