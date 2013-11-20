@@ -6,7 +6,6 @@ import chatSystem.model.UserInformation;
 import chatSystem.model.UserState;
 import chatSystem.view.gui.ChatGUI;
 import chatSystem.view.ni.ChatNI;
-import chatSystemCommon.FileTransfertDemand;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
 import chatSystem.model.FileTransferts;
@@ -55,6 +54,7 @@ public class ChatController extends Controller implements GuiToCont, NiToCont {
 
     @Override
     public void performDisconnect() {
+        System.out.println("Entering performDisConnect");
         this.localUser.setUserState(UserState.DISCONNECTED);
     }
 
@@ -103,13 +103,13 @@ public class ChatController extends Controller implements GuiToCont, NiToCont {
 
     @Override
     public void performConfirmationReceived(String idRemoteSystem, int idTransfert, boolean accepted) {
+        System.out.println("Receiving a file transfert request from " + idRemoteSystem + ", modifying the model");
         if (accepted) {
             this.fileTransferts.getFileTransfertInformation(idTransfert).setState(FileState.ACCEPTED);
         }
         else {
             this.fileTransferts.getFileTransfertInformation(idTransfert).setState(FileState.DECLINED);
-        }
-            
+        }            
     }
 
 }

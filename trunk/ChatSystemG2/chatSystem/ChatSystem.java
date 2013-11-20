@@ -4,7 +4,7 @@ import chatSystem.controller.ChatController;
 
 public class ChatSystem {
     
-    public static void main(String[] args) {
+   public static void main(String[] args) {
         
         ChatController chatController = new ChatController();
         

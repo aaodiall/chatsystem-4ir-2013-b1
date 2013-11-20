@@ -43,7 +43,7 @@ public class RemoteSystemInformation extends UserInformation {
      *
      * @param message message to send
      */
-    public void addMessageToSend(String message) {
+    public void addMessageToSend(String message) {        
         this.messagesToSend.add(message);
     }
 
