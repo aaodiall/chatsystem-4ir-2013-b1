@@ -87,7 +87,7 @@ public class ChatController {
     public void perform_send (String remote_user, String txt, String IP_text) {
         //display_message ()
         System.out.println("I'm Controller, receiving : " + txt.toString());
-        convDB.add_conversation(remote_user, IP_text, txt);        
+        //convDB.add_conversation(remote_user, IP_text, txt);        
     }
         
     /**************** Getters ****************/
