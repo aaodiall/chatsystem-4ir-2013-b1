@@ -14,10 +14,11 @@ public class ChatController {
 
     UserModel userDB;
     ListModel listDB;
+    ConversationModel convDB;
+    String username;
     
     ChatGUI chatGUI;
-    MessageEmissionNI emissionNI;
-    Thread receptionNI;
+    MessageHandlerNI msg_handler;
     
     public ChatController () {
         // initialize view
@@ -25,71 +26,53 @@ public class ChatController {
         chatGUI = new ChatGUI(this);
         
         // initialize model
-        listDB = new ListModel(this);            
+        listDB = new ListModel(this);
+        convDB = new ConversationModel(this);
     }
     
     /**************** Controller init ****************/
     public void init_controller (String username) {
         // On crée la BDD User
         userDB = new UserModel(username);
+        username = this.userDB.get_username();
         
         // initialize network
-        // create receptor part of the app
-        this.receptionNI = new Thread(new MessageReceptionNI(this));
-        // strat listenning the network on port 16000
-        receptionNI.start();
-          
-        this.emissionNI = new MessageEmissionNI(this.userDB.get_username());
+        msg_handler = new MessageHandlerNI(this);
     }
     
     
     /**************** Connection ****************/
     
     // Connexion du local user
-    public void perform_connection (String username) {
-        Hello msg = new Hello(username, false);
-        InetAddress IP_dest = emissionNI.get_broadcast();
-        //System.out.println("ChatController : " + IP_dest);
-        this.emissionNI.send(msg, IP_dest);
-        // create emmetor part of the app
+    public void perform_connection () {
+        msg_handler.send_connection(false);
     }
     
     // Connexion d'un autre user
-     public void perform_connection (Hello hi, InetAddress IP_source) {
-        // add him to the user list
-        // equivalent of setState()
-        listDB.add_user(hi.getUsername(), IP_source.getHostAddress());
+     public void perform_connection (String r_user, String IP_text, Boolean alrdythere) {
+        // Ajouter utilisateur au model
+        listDB.add_user(r_user, IP_text);
         listDB.notifyObservers();
-
-        
+   
         // if remote user first connection
-        if(!hi.isAck()){
+        if(!alrdythere){
             // create a new message to sent back ack
-            Hello msg = new Hello(this.userDB.get_username(), true);
-            this.emissionNI.send(msg, IP_source);
-            
-                    // notify the Observer (ListWindow) of the change about ModelList
-        
+            msg_handler.send_connection(true);       
         }
-        
-    }
+     }
     
      
     /**************** Disonnection ****************/
      
     // Déconnection du local user
     public void perform_disconnection () {
-        Goodbye msg = new Goodbye(this.userDB.get_username());
-        InetAddress IP_dest = emissionNI.get_broadcast();
-        this.emissionNI.send(msg, IP_dest);
-        // create emmetor part of the app
+        msg_handler.send_disconnection();
      }
     
     // Déconnection d'un autre user
-    public void perform_disconnection (Goodbye bye, InetAddress IP_addr) {
+    public void perform_disconnection (String remote_user, String IP_text) {
         // remove the user who disconnected from the list
-        // equivalent of setState()
-        listDB.remove_user(bye.getUsername(), IP_addr.getHostAddress());
+        listDB.remove_user(remote_user, IP_text);
         listDB.notifyObservers();
     }
     
@@ -97,22 +80,14 @@ public class ChatController {
     
     // Envoi d'un messsage texte
     public void perform_send (String username_and_IP, String text) {
-        try {
-            Text msg = new Text(this.userDB.get_username(), text);
-            // On récupère l'@IP associée à l'username
-            String IP_text = this.listDB.get_IP_addr(username_and_IP);
-            // On transforme l'@IP de String à InetAddress
-            InetAddress IP_dest = InetAddress.getByName(IP_text);
-            emissionNI.send(msg, IP_dest);
-        } catch (UnknownHostException ex) {
-            Logger.getLogger(ChatController.class.getName()).log(Level.SEVERE, null, ex);
-        }
+        msg_handler.send_text(username_and_IP, text);
     }
     
     // Réception d'un message
-    public void perform_send (Text txt, InetAddress IP_addr) {
+    public void perform_send (String remote_user, String txt, String IP_text) {
         //display_message ()
         System.out.println("I'm Controller, receiving : " + txt.toString());
+        convDB.add_conversation(remote_user, IP_text, txt);        
     }
         
     /**************** Getters ****************/

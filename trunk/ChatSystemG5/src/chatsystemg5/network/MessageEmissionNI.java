@@ -15,20 +15,17 @@ import java.net.UnknownHostException;
 import java.nio.Buffer;
 
     
-public class MessageEmissionNI extends MessageHandlerNI implements ToRemoteApp{
+public class MessageEmissionNI /*extends MessageHandlerNI*/ implements ToRemoteApp{
 
-    private String username;
-    private int UDP_port;
     private int UDP_port_dest;
     private InetAddress IP_dest;
     private DatagramSocket UDP_sock;
     private DatagramPacket message;
     //private Message message_to_send;
     
-    public MessageEmissionNI (String username){
-
-        this.username = username;
-        this.UDP_port_dest = 16001;
+    public MessageEmissionNI (int UDP_port) {
+        
+        this.UDP_port_dest = UDP_port;
         
         try {
             // create a socket with an address we don't care
@@ -83,7 +80,7 @@ public class MessageEmissionNI extends MessageHandlerNI implements ToRemoteApp{
             //UDP_sock.close();
         }
         catch (IOException exc) {
-            System.out.println("Connection error for disconnection\n" + exc);
+            System.out.println("Disonnection error\n" + exc);
         }
     }
     
@@ -95,7 +92,7 @@ public class MessageEmissionNI extends MessageHandlerNI implements ToRemoteApp{
             
         }
         catch (IOException exc) {
-            System.out.println("Connection error!!!!\n" + exc);
+            System.out.println("Send text error\n" + exc);
         }
     }
     
@@ -108,22 +105,10 @@ public class MessageEmissionNI extends MessageHandlerNI implements ToRemoteApp{
         }
         return broadcast;
     }
-    
-    
-    @Override
-    public void send(Message msg, InetAddress IP_dest){
-        this.IP_dest = IP_dest;
-        // Si le message est de type Hello
-        if (msg instanceof Hello) {
-            transfer_connection((Hello) msg);
-        }
-        if (msg instanceof Goodbye) {
-            transfer_disconnection((Goodbye) msg);
-        }
-        if (msg instanceof Text) {
-            send_text((Text) msg);
-        }
 
+    @Override
+    public void send(Message msg, InetAddress IP_dest) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
     
 }

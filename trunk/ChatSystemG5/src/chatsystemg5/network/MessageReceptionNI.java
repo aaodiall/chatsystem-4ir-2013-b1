@@ -10,9 +10,9 @@ import java.net.SocketException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-public class MessageReceptionNI extends MessageHandlerNI implements FromRemoteApp {
+public class MessageReceptionNI /*extends MessageHandlerNI*/ implements Runnable, FromRemoteApp {
     
-    private ChatController chat_control;
+    private MessageHandlerNI msg_handler;
     private int UDP_port;
     private DatagramSocket UDP_sock;
     private String localhost;
@@ -21,11 +21,11 @@ public class MessageReceptionNI extends MessageHandlerNI implements FromRemoteAp
     private byte[] buffer; 
     private String text;
     
-    public MessageReceptionNI (ChatController chat_control) {
+    public MessageReceptionNI (MessageHandlerNI msg_handler, int UDP_port) {
         try {
-            this.chat_control = chat_control;
+            this.msg_handler = msg_handler;
             // the recepter always listen on the same port 16001
-            this.UDP_port = 16001;
+            this.UDP_port = UDP_port;
             
             this.UDP_sock = new DatagramSocket(this.UDP_port, InetAddress.getByName("0.0.0.0"));
             this.UDP_sock.setBroadcast(true);
@@ -57,12 +57,8 @@ public class MessageReceptionNI extends MessageHandlerNI implements FromRemoteAp
                 
                 if (!(IP_source.getHostAddress()).equals(this.localhost)) {
                     // send the content of the buffer to the controller
-                    this.send_to_controller(buffer, IP_source);
-                    // get and convert to string content of the buffer
-                    //text = new String(buffer);
-                    //System.out.println("Marche?");
-                    //text = text.substring(0, message.getLength());
-                    // Ca sera inutile ensuite pour le connect
+                    Message msg = Message.fromArray(buffer);
+                    msg_handler.receive(msg, IP_source);  
                 }                
 
             }
@@ -74,32 +70,8 @@ public class MessageReceptionNI extends MessageHandlerNI implements FromRemoteAp
     }
 
     @Override
-    public void send_to_controller (byte[] array, InetAddress IP_addr) {
-        try {
-            Message msg = Message.fromArray(array);
-            //System.out.println(msg.toString());
-            if (msg instanceof Hello) {
-                System.out.println("I'm Network " + this.localhost + " : Hello received.");
-                chat_control.perform_connection((Hello) msg, IP_addr);
-            }
-            if (msg instanceof Goodbye) {
-                System.out.println("I'm Network " + this.localhost + " : Goodbye received.");
-                chat_control.perform_disconnection((Goodbye) msg, IP_addr);
-            }
-            if (msg instanceof Text) {
-                chat_control.perform_send((Text) msg, IP_addr);
-                System.out.println("I'm Network " + this.localhost + " : Text received.");
-            }
-        }
-        catch (IOException ex) {
-            Logger.getLogger(MessageReceptionNI.class.getName()).log(Level.SEVERE, null, ex);
-        }
+    public void send_to_controller(byte[] array, InetAddress IP_addr) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
-    
-    // for the implementation of Observer pattern
-
-    
-    
-
     
 }
