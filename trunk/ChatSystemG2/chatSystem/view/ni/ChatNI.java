@@ -117,6 +117,8 @@ public class ChatNI extends View {
             }
         }
         else if (o instanceof FileTransferts) {
+            if (arg instanceof FileState) {
+            }
             
         }
     }
