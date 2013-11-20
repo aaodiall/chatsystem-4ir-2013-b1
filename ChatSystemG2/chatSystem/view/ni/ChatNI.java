@@ -2,9 +2,7 @@ package chatSystem.view.ni;
 
 import chatSystem.view.gui.View;
 import chatSystem.controller.ChatController;
-import chatSystem.model.RemoteSystems;
-import chatSystem.model.UserInformation;
-import chatSystem.model.UserState;
+import chatSystem.model.*;
 import java.util.Observable;
 import chatSystemCommon.*;
 
@@ -55,21 +53,20 @@ public class ChatNI extends View {
     }
 
     public void sendHelloMsg(String ip) {
-        this.messageTransfert.sendHello(this.usrInfo.getUsername(), ip);
+        this.messageTransfert.setHelloTask(ip);
     }
 
     public void sendHelloMsg() {
-        this.messageTransfert.sendHello(this.usrInfo.getUsername());
+        this.messageTransfert.setHelloTask();
     }
 
     public void sendFileTransfertDemand(String name, long size, int idTransfert, String idRemoteSystem) {
-        this.messageTransfert.sendFileTransfertDemand(this.usrInfo.getUsername(), name, size, idTransfert, idRemoteSystem, portClient);
+        this.messageTransfert.setFileDemandTask(name, size, idTransfert, idRemoteSystem, portClient);
         this.portClient ++;
     }
     
     public void sendFileTransfertConfirmation(boolean isAccepted, int idTransfert, String idRemoteSystem) {
-        this.messageTransfert.sendFileTransfertConfirmation(this.usrInfo.getUsername(), isAccepted, idTransfert, idRemoteSystem);
-        //this
+        this.messageTransfert.setFileConfirmationTask(idTransfert, idRemoteSystem, isAccepted);
     }
             
     /*public void createNewFileTransfert() {
@@ -101,22 +98,29 @@ public class ChatNI extends View {
                     //this.threadReceiver = new Thread(this.messageReceiver);
                     //this.threadReceiver.start();
                     //et on le guele car on est content :)
-                    this.messageTransfert.sendHello(this.usrInfo.getUsername());
+                    this.messageTransfert.setHelloTask();
                 }
                 else{
                     //this.threadReceiver.stop(); //il ne faut pas le stopper donc on lui mettra null mais faut changer la gestion de messageReceiver
-                    this.messageTransfert.sendGoodbye(this.usrInfo.getUsername());
+                    this.messageTransfert.setGoodbyeTask();
                     //this.threadReceiver = null;
                 }
             }
         }
         else if(o instanceof RemoteSystems){
             if(arg instanceof String){
-                this.messageTransfert.sendHello(this.usrInfo.getUsername(),(String)arg);
+                this.messageTransfert.setHelloTask((String)arg);
+            }
+            else if (arg instanceof RemoteSystemInformation) {
+                RemoteSystemInformation aux = (RemoteSystemInformation) arg;
+                String msgToSend = aux.getMessageToSend();
+                if (msgToSend != null)
+                    this.messageTransfert.setTextMessageTask(aux.getIP(),msgToSend);
             }
         }
-        //quand l'update concerne l'envoi par l'utilisateur local d'un nouveau message à un remote system donné
-        //il faudrait faire threadMessageTransfert.notify()
+        else if (o instanceof FileTransferts) {
+            
+        }
     }
 
     public void messageSent (String msg, String idRemoteSystem) {

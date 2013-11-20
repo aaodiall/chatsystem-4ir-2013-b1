@@ -16,14 +16,12 @@ import java.util.concurrent.LinkedBlockingQueue;
 public class RemoteSystems extends Model implements Iterable<RemoteSystemInformation> {
 
     private static RemoteSystems instance;
-    private BlockingQueue<Boolean> availableMsg;
     private final Map<String, RemoteSystemInformation> remoteSystemsInformation;
 
     /**
      * Private class' constructor
      */
     private RemoteSystems() {
-        this.availableMsg = new LinkedBlockingQueue<Boolean>();
         this.remoteSystemsInformation = new HashMap<String, RemoteSystemInformation>();
     }
 
@@ -76,19 +74,16 @@ public class RemoteSystems extends Model implements Iterable<RemoteSystemInforma
     public synchronized void addMessageToSendToRemote(String idRemoteSystem, String message) {
         if (this.remoteSystemsInformation.containsKey(idRemoteSystem)) {
             this.remoteSystemsInformation.get(idRemoteSystem).addMessageToSend(message);
-            if (this.availableMsg.isEmpty()) {
-                this.availableMsg.add(Boolean.TRUE);
-            }
-
+            this.setChanged();
+            this.notifyObservers(this.remoteSystemsInformation.get(idRemoteSystem));
+            this.clearChanged();
         }
     }
 
     /**
      * add a message in the sent-message list of a given remote system
-     *
      * @param message message that has been sent
      * @param idRemoteSystem remote system the message has been sent to
-     * @param username username of the person who sent the message
      */
     public void addMessageSentToRemoteSystem(String message, String idRemoteSystem) {
         if (this.remoteSystemsInformation.containsKey(idRemoteSystem)) {
@@ -123,15 +118,6 @@ public class RemoteSystems extends Model implements Iterable<RemoteSystemInforma
             }
         }
         return instance;
-    }
-
-    public void waitMessageToSend() {
-        System.out.println("Message Transfert : J'attends un message");
-        try {
-            this.availableMsg.take();
-        } catch (InterruptedException exc) {
-            System.err.println("la fonction a été interrompue sans raison");
-        }
     }
 
     @Override

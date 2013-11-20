@@ -21,6 +21,9 @@ public class MessageTransfert implements Runnable {
     private DatagramSocket messageSocket;
     private RemoteSystems rmInstance;
     private ChatNI chatni;
+    
+    //tasks' file
+    private FileWithPriority<Task> fileTask; 
 
     /**
      * Class' constructor
@@ -32,6 +35,7 @@ public class MessageTransfert implements Runnable {
             this.messageSocket.setBroadcast(true);
             this.rmInstance = RemoteSystems.getInstance();
             this.chatni = chatni;
+            this.fileTask = new FileWithPriority<Task>();
         } catch (SocketException exc) {
             System.out.println("Problème à la création du socket d'envoi de messages");
         }
@@ -43,7 +47,7 @@ public class MessageTransfert implements Runnable {
      *
      * @return broadcast address determined
      */
-    public InetAddress determineBroadcastAddress() {
+    private InetAddress determineBroadcastAddress() {
         // boolean found = false;
         InetAddress broadcast = null;
         try {
@@ -57,11 +61,10 @@ public class MessageTransfert implements Runnable {
     /**
      * Send a hello message to all the computers located in the local red Using
      * the broadcast address which has to be determined
-     * @param username username of the person who wants to send the hello message
      */
-    public void sendHello(String username) {
+    private void sendHello() {
         //hello sent to everyone can only be a hello without ack
-        Hello helloToSend = new Hello(username, false);
+        Hello helloToSend = new Hello(this.chatni.getUserInfo().getUsername(), false);
         InetAddress broadcastAddress = this.determineBroadcastAddress();
         System.out.println("ENVOI : " + helloToSend.toString() + " -> " + broadcastAddress.getHostAddress());
         this.sendPacket(broadcastAddress, helloToSend);
@@ -69,12 +72,11 @@ public class MessageTransfert implements Runnable {
 
     /**
      * Send a hello message to a determined remote system
-     * @param username username of the person who wants to send the hello message
      * @param ip ip address of the remote system we want to send the message
      */
-    public void sendHello(String username, String ip) {
+    private void sendHello(String ip) {
         //hello sent to one person can only be an ack hello
-        Hello helloToSend = new Hello(username, true);
+        Hello helloToSend = new Hello(this.chatni.getUserInfo().getUsername(), true);
         System.out.println("ENVOI : " + helloToSend.toString() + " -> " + ip);
         this.sendPacket(ip, helloToSend);
     }
@@ -82,11 +84,10 @@ public class MessageTransfert implements Runnable {
     /**
      * Send a Goodbye message to all the computers located in the local red
      * Using the broadcast address which has to be determined
-     * @param username username of the person who wants to send the goodbye message
      */
-    public void sendGoodbye(String username) {
+    private void sendGoodbye() {
         InetAddress broadcastAddress = this.determineBroadcastAddress();
-        Goodbye goodbyeToSend = new Goodbye(username);
+        Goodbye goodbyeToSend = new Goodbye(this.chatni.getUserInfo().getUsername());
         System.out.println("ENVOI : " + goodbyeToSend.toString() + " -> " + broadcastAddress.getHostAddress());
         this.sendPacket(broadcastAddress, goodbyeToSend);
     }
@@ -97,36 +98,34 @@ public class MessageTransfert implements Runnable {
      * @param ip ip address of the remote system we want to send the message
      * @param text message content
      */
-    public void sendTextMessage(String ip, String text) {
+    private void sendTextMessage(String ip, String text) {
         Text textToSend = new Text(this.chatni.getUserInfo().getUsername(), text);
         this.sendPacket(ip, textToSend);
     }
 
     /**
      * Send a request in order to send a file to a remote system
-     * @param username username of the person who wants to send the request
      * @param name file's name
      * @param size file's size
      * @param idTransfert file transfert's id
      * @param idRemoteSystem remote system id
      * @param portClient port used for the transfert
      */
-    public void sendFileTransfertDemand(String username, String name, long size, int idTransfert, String idRemoteSystem, int portClient) {
+    private void sendFileTransfertDemand(String name, long size, int idTransfert, String idRemoteSystem, int portClient) {
         String ip = this.rmInstance.getRemoteSystem(idRemoteSystem).getIP();
-        FileTransfertDemand ftd = new FileTransfertDemand(username, name, size, portClient);
+        FileTransfertDemand ftd = new FileTransfertDemand(this.chatni.getUserInfo().getUsername(), name, size, portClient);
         this.sendPacket(ip, ftd);
     }
     
     /**
      * Send a confirmation to a remote system which sent a file transfert request
-     * @param username username of the person who wants to send the confirmation
      * @param isAccepted boolean indicating if the request was accepted or refused
      * @param idTransfert file transfert's id
      * @param idRemoteSystem remote system id
      */
-    public void sendFileTransfertConfirmation(String username, boolean isAccepted, int idTransfert, String idRemoteSystem) {
+    private void sendFileTransfertConfirmation(boolean isAccepted, int idTransfert, String idRemoteSystem) {
         String ip = this.rmInstance.getRemoteSystem(idRemoteSystem).getIP(); 
-        FileTransfertConfirmation ftc = new FileTransfertConfirmation(username, isAccepted, idTransfert);
+        FileTransfertConfirmation ftc = new FileTransfertConfirmation(this.chatni.getUserInfo().getUsername(), isAccepted, idTransfert);
         this.sendPacket(ip, ftc);
     }
     
@@ -160,29 +159,125 @@ public class MessageTransfert implements Runnable {
         }
     }
     
+    
+    public void setHelloTask(String ip) {
+        this.fileTask.addUrgentTask(new sendHelloTask(ip));
+    }
+    
+    public void setHelloTask() {
+        this.fileTask.addUrgentTask(new sendHelloTask());
+    }
+    
+    public void setGoodbyeTask() {
+        this.fileTask.addUrgentTask(new sendGoodbyeTask());
+    }
+    
+    public void setTextMessageTask(String ip, String text) {
+        this.fileTask.addTask(new sendTextTask(ip,text));
+    }
+    
+    public void setFileDemandTask(String name, long size, int idTransfert, String idRemoteSystem, int portClient) {
+        this.fileTask.addTask(new sendFileTransfertDemandTask(name,size,idTransfert,idRemoteSystem,portClient));
+    }
+    
+    public void setFileConfirmationTask(int idTransfert, String idRemoteSystem, boolean isAccepted) {
+        this.fileTask.addTask(new sendFileTransfertConfirmationTask(idTransfert,idRemoteSystem,isAccepted));
+    }
+    
     @Override
     public void run() {
-        
-        String msgToSend = null;
-        
         while(true) {
-            //fonction bloquante permettant d'attendre qu'un message à envoyer soit disponible
-            this.rmInstance.waitMessageToSend();
-            //parcours de tous les RemoteSystemInformation
-            for (RemoteSystemInformation rsInfo : this.rmInstance) {
-                //tant qu'il reste des messages à envoyer
-                //récupération du message à envoyer
-                msgToSend = rsInfo.getMessageToSend();
-                while (msgToSend != null) {
-                    
-                    //envoi du message
-                    this.sendTextMessage(rsInfo.getIP(), msgToSend);
-                    //notification de chatni
-                    chatni.messageSent(msgToSend, rsInfo.getIdRemoteSystem());
-                    //récupération du message à envoyer
-                    msgToSend = rsInfo.getMessageToSend();
-                } 
+            while(!this.fileTask.isEmpty()) {
+                this.fileTask.getNextTask().execute();
             }
         }
+    }
+    
+    private abstract class Task {        
+        public abstract void execute();       
+    }
+    
+    private class sendHelloTask extends Task {
+
+        private String ip;
+        
+        public sendHelloTask(String ip) {
+            this.ip = ip;
+        }
+        
+        public sendHelloTask() {
+            this.ip = null;
+        }
+        
+        @Override
+        public void execute() {
+            if (ip == null)
+                sendHello();
+            else
+                sendHello(ip);
+        }
+    }
+    
+    private class sendGoodbyeTask extends Task {
+        
+        public sendGoodbyeTask() {}
+        
+        @Override
+        public void execute() {
+           sendGoodbye();
+        }
+    }
+    
+    private class sendTextTask extends Task {        
+        private String ip;
+        private String text;
+        
+        public sendTextTask(String ip, String text) {
+            this.ip = ip;
+            this.text = text;
+        }      
+
+        @Override
+        public void execute() {
+            sendTextMessage(ip, text);
+            chatni.messageSent(ip, text);
+        }
+    }
+    
+    private class sendFileTransfertDemandTask extends Task {
+        private String name;
+        private long size;
+        private int idTransfert;
+        private String idRemoteSystem;
+        private int portClient;
+        
+        public sendFileTransfertDemandTask(String name, long size, int idTransfert, String idRemoteSystem, int portClient) {
+            this.name = name;
+            this.size = size;
+            this.idTransfert = idTransfert;
+            this.idRemoteSystem = idRemoteSystem;
+            this.portClient = portClient;
+        }
+        
+        @Override
+        public void execute() {
+            sendFileTransfertDemand(name, size, idTransfert, idRemoteSystem, portClient);
+        }
+    }
+    
+    private class sendFileTransfertConfirmationTask extends Task {
+        private int idTransfert;
+        private String idRemoteSystem;
+        private boolean isAccepted;
+        
+        public sendFileTransfertConfirmationTask(int idTransfert, String idRemoteSystem, boolean isAccepted) {
+            this.idTransfert = idTransfert;
+            this.idRemoteSystem = idRemoteSystem;
+            this.isAccepted = isAccepted;
+        }
+        @Override
+        public void execute() {
+            sendFileTransfertConfirmation(isAccepted,idTransfert,idRemoteSystem);
+        }      
     }
 }
