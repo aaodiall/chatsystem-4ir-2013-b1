@@ -42,14 +42,12 @@ public class ChatNI extends View {
         ((ChatController) (this.controller)).performGoodbyeReceived(username);
     }
 
-    public void fileTransfertDemandReceived(FileTransfertDemand msg, String ip) {
-        ((ChatController) (this.controller)).performSuggestionReceived(msg.getName(), msg.getSize(), msg.getUsername(), msg.getId());
+    public void fileTransfertDemandReceived(String name, String ip, long size, int id) {
+        ((ChatController) (this.controller)).performSuggestionReceived(name, size, ip, id);
     }
 
-    public void fileTransfertConfirmationReceived(FileTransfertConfirmation msg, String ip) {
-        
-        //((ChatController) (this.controller)).perform
-
+    public void fileTransfertConfirmationReceived(String ip, int idTransfert, boolean accepted) {
+        ((ChatController) (this.controller)).performConfirmationReceived(ip, idTransfert, accepted);
     }
 
     public void sendHelloMsg(String ip) {
