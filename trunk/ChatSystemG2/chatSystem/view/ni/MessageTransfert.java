@@ -160,27 +160,27 @@ public class MessageTransfert implements Runnable {
     }
     
     
-    public void setHelloTask(String ip) {
+    public synchronized void setHelloTask(String ip) {
         this.fileTask.addUrgentTask(new sendHelloTask(ip));
     }
     
-    public void setHelloTask() {
+    public synchronized void setHelloTask() {
         this.fileTask.addUrgentTask(new sendHelloTask());
     }
     
-    public void setGoodbyeTask() {
+    public synchronized void setGoodbyeTask() {
         this.fileTask.addUrgentTask(new sendGoodbyeTask());
     }
     
-    public void setTextMessageTask(String ip, String text) {
+    public synchronized void setTextMessageTask(String ip, String text) {
         this.fileTask.addTask(new sendTextTask(ip,text));
     }
     
-    public void setFileDemandTask(String name, long size, int idTransfert, String idRemoteSystem, int portClient) {
+    public synchronized void setFileDemandTask(String name, long size, int idTransfert, String idRemoteSystem, int portClient) {
         this.fileTask.addTask(new sendFileTransfertDemandTask(name,size,idTransfert,idRemoteSystem,portClient));
     }
     
-    public void setFileConfirmationTask(int idTransfert, String idRemoteSystem, boolean isAccepted) {
+    public synchronized void setFileConfirmationTask(int idTransfert, String idRemoteSystem, boolean isAccepted) {
         this.fileTask.addTask(new sendFileTransfertConfirmationTask(idTransfert,idRemoteSystem,isAccepted));
     }
     

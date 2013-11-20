@@ -74,10 +74,10 @@ public class MessageReceiver implements Runnable {
                         this.chatni.goodbyeReceived(RemoteSystemInformation.generateID(gbReceived.getUsername(),from));
                     } else if (msgClass == FileTransfertDemand.class) {
                         FileTransfertDemand ftd = (FileTransfertDemand) msg;
-                        this.chatni.fileTransfertDemandReceived(ftd, from);
+                        this.chatni.fileTransfertDemandReceived(ftd.getName(), from, ftd.getSize(), ftd.getId());
                     } else if (msgClass == FileTransfertConfirmation.class) {
                         FileTransfertConfirmation ftc = (FileTransfertConfirmation) msg;
-                        this.chatni.fileTransfertConfirmationReceived(ftc, from);
+                        this.chatni.fileTransfertConfirmationReceived(from, ftc.getIdDemand(), ftc.isAccepted());
                     }
                 }
             } catch (IOException exc) {
