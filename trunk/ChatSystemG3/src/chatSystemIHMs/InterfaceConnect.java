@@ -23,17 +23,13 @@ import java.net.UnknownHostException;
  *
  */
 public class InterfaceConnect extends JFrame implements ActionListener{
-	/**
-	 * 
-	 */
+	
 	private static final long serialVersionUID = 1L;
 	private Controller controller;
 	private JTextField tfdUsername;
 	private JButton btnConnect;
 	private JLabel lblUsername;
 	private JLabel lblWelcome;
-
-
 
 
 	/**

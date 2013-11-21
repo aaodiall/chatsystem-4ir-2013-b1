@@ -11,6 +11,8 @@ import java.net.SocketException;
 import java.util.ArrayList;
 import java.util.Iterator;
 
+import chatSystemCommon.FileTransfertCancel;
+import chatSystemCommon.FileTransfertConfirmation;
 import chatSystemCommon.FileTransfertDemand;
 import chatSystemCommon.Goodbye;
 import chatSystemCommon.Hello;
@@ -40,32 +42,34 @@ public class ChatNIMessage implements Runnable{
 	 * public void sendBye();
 	 * public void sendText(ArrayList<String> usernameList, String text2Send);
 	 * public void sendFileTransfertDemand(String recipient, String fileName);
-	 * public void sendFileTransfertConfirmation(String recipient, String fileName, boolean response);
+	 * public void sendFileTransfertConfirmation(String recipient, String fileName, boolean answer);
 	 * public void sendTransfertCancel(String recipient, String fileName);
 	 * public void run();
 	*/
 	
 	private DatagramSocket socketUDP;
-	private ModelListUsers modelListUsers;
-	private InetAddress userIPBroadcast;
 	private ArrayBlockingQueue <DatagramPacket> bufferMsg2Send;
-	private int bufferSize;
+	private int numMsgMax;
 	
-	public ChatNIMessage(int bufferSize, DatagramSocket socketChatNIMessage, ModelListUsers modelListUsers,InetAddress userIPBroadcast){
+	public ChatNIMessage(int numMsgMax, DatagramSocket socketChatNIMessage){
 		this.socketUDP = socketChatNIMessage;
-		this.bufferSize = bufferSize;
+		this.numMsgMax = numMsgMax;
 		// Enable Broadcast
 		try{
 			this.socketUDP.setBroadcast(true);
-			this.modelListUsers = modelListUsers;
-			this.userIPBroadcast=userIPBroadcast;
-			this.bufferMsg2Send = new ArrayBlockingQueue<DatagramPacket>(this.bufferSize);
+			this.bufferMsg2Send = new ArrayBlockingQueue<DatagramPacket>(this.numMsgMax);
 		}catch (SocketException e){
 			System.out.println("error : socket exception setBroadcast");
 		}		
 	}
 	
-	public void sendHello(String username, boolean ack){
+	/**
+	 * 
+	 * @param username
+	 * @param ack
+	 * @param broadcast
+	 */
+	public void sendHello(String username, boolean ack, InetAddress broadcast){
 		byte [] helloStream;
 		DatagramPacket pdu;
 		// new Hello object
@@ -75,30 +79,40 @@ public class ChatNIMessage implements Runnable{
 			// Objet to byte[]
 			helloStream = hello.toArray();
 			// make pdu
-			pdu = new DatagramPacket(helloStream,helloStream.length,this.userIPBroadcast,this.socketUDP.getLocalPort());
+			pdu = new DatagramPacket(helloStream,helloStream.length,broadcast,this.socketUDP.getLocalPort());
 			// add pdu to bufferMessagesToSend
 			this.bufferMsg2Send.add(pdu);
-			System.out.println("size of Sbuffer : " + this.bufferMsg2Send.size());
 		}catch (IOException e){
 			System.out.println("connection failed");
 		}
 
 	}
 
-	public void sendBye(String username){
+	/**
+	 * 
+	 * @param username
+	 * @param broadcast
+	 */
+	public void sendBye(String username, InetAddress broadcast){
 		byte [] byeStream;
 		DatagramPacket pdu;
 		// new Goodbye object
 		Goodbye bye = new Goodbye(username);
 		try{
 			byeStream =bye.toArray();
-			pdu=new DatagramPacket(byeStream, byeStream.length, this.userIPBroadcast, this.socketUDP.getLocalPort());
+			pdu=new DatagramPacket(byeStream, byeStream.length,broadcast, this.socketUDP.getLocalPort());
 			this.bufferMsg2Send.add(pdu);
 		}catch (IOException e){
 			e.printStackTrace();
 		}
 	}
 	
+	/**
+	 * 
+	 * @param recipient
+	 * @param text2Send
+	 * @param username
+	 */
 	public void sendText(InetAddress recipient, String text2Send,String username){
 		//InetAddress recipient;
 		//Iterator <String> it;
@@ -119,27 +133,67 @@ public class ChatNIMessage implements Runnable{
 		}
 	}
 	
-	public void sendFileTransfertDemand(String username, String name, long size,int PortClient){
-		//FileTransfertDemand demand = new FileTransfertDemand();
+	/**
+	 * 
+	 * @param username
+	 * @param recipient
+	 * @param name
+	 * @param size
+	 * @param portTCPLocal
+	 */
+	public void sendFileTransfertDemand(String username,InetAddress recipient,String name,long size,int portTCPLocal){		
+		FileTransfertDemand demand = new FileTransfertDemand(username,name,size,portTCPLocal);
 		byte[] demandStream;
-		InetAddress ipRemoteAddr;
 		DatagramPacket pdu2send;
-		/*try{
+		try{
 			demandStream = demand.toArray();
-			pdu2send = new DatagramPacket(demandStream,demandStream.length,ipRemoteAddr,this.socketUDP.getLocalPort());
+			pdu2send = new DatagramPacket(demandStream,demandStream.length,recipient,this.socketUDP.getLocalPort());
 			this.socketUDP.send(pdu2send);
 		}catch(IOException ioExc){
 			System.out.println("error : construction du fileTransfertDemand");
 			ioExc.printStackTrace();
-		}*/
+		}
 	}
 	
-	public void sendFileTransfertConfirmation(String recipient, String fileName, boolean response){
-		
+	/**
+	 * 
+	 * @param username
+	 * @param recipient
+	 * @param answer
+	 * @param idDemand
+	 */
+	public void sendFileTransfertConfirmation(String username, InetAddress recipient, boolean answer, int idDemand){
+		FileTransfertConfirmation conf = new FileTransfertConfirmation(username,answer, idDemand);
+		byte[] confStream;
+		DatagramPacket pdu2send;
+		try{
+			confStream = conf.toArray();
+			pdu2send = new DatagramPacket(confStream,confStream.length,recipient,this.socketUDP.getLocalPort());
+			this.socketUDP.send(pdu2send);
+		}catch(IOException ioExc){
+			System.out.println("error : construction du fileTransfertDemand");
+			ioExc.printStackTrace();
+		}
 	}
 	
-	public void sendTransfertCancel(String recipient, String fileName){
-		
+	/**
+	 * 
+	 * @param username
+	 * @param recipient
+	 * @param idDemand
+	 */
+	public void sendTransfertCancel(String username,InetAddress recipient,int idDemand){
+		FileTransfertCancel cancel = new FileTransfertCancel(username,idDemand);
+		byte[] cancelStream;
+		DatagramPacket pdu2send;
+		try{
+			cancelStream = cancel.toArray();
+			pdu2send = new DatagramPacket(cancelStream,cancelStream.length,recipient,this.socketUDP.getLocalPort());
+			this.socketUDP.send(pdu2send);
+		}catch(IOException ioExc){
+			System.out.println("error : construction du fileTransfertDemand");
+			ioExc.printStackTrace();
+		}
 	}
 	
 	public void run(){
