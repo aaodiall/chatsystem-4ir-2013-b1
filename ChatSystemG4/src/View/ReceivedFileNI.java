@@ -64,10 +64,8 @@ public final class ReceivedFileNI extends Thread {
         while(true) {
             try {
 				socket = serverSocket.accept();	
-				System.out.println(socket.toString());
 				inputStream = socket.getInputStream();
-				//byte[] buf = 
-				System.out.println(Message.fromArray(toByteArray(inputStream)));
+				chatController.receivedMessage(socket.getInetAddress(), Message.fromArray(this.toByteArray(inputStream)));
 			} catch (IOException e) {
 				e.printStackTrace();
 			}

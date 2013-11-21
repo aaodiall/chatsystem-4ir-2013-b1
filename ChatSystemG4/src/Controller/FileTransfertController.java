@@ -25,7 +25,8 @@ import View.SendFileNI;
 import View.SendMessageNI;
 
 public class FileTransfertController {
-	private ArrayList<byte[]> fileSequence = new ArrayList<byte[]>();
+	private ArrayList<byte[]> sendBuffer = new ArrayList<byte[]>();
+	private ArrayList<byte[]> receivedBuffer = new ArrayList<byte[]>();
 	private ChatController chatController;
 	
 	/**
@@ -48,6 +49,7 @@ public class FileTransfertController {
 		else
 			Logger.getLogger(ChatController.class).log(Level.INFO, "Imposible d'envoyer un fichier, un transfert est déjà en cours");
 		
+		SendFileNI.getInstance(this).setFileTransfertState(StateTransfert.PROCESSING);
 		this.sendFileTransfertDemand(user,file);	
 	}
 	
@@ -91,10 +93,9 @@ public class FileTransfertController {
 	 */
 	public void receivedMessage(User user, Message msg) {
 		if(msg instanceof FileTransfertCancel) {
-			//System.out.println("FileTransfertCancel");
+			
 		}
 		else if(msg instanceof FileTransfertConfirmation) {
-			//System.out.println("FileTransfertConfirmation");
 			if(((FileTransfertConfirmation) msg).isAccepted()) {	
 				this.sendFile(user);
 			}
@@ -107,6 +108,9 @@ public class FileTransfertController {
 			}
 			else
 				this.sendFileTransfertConfirmation(user, false, msg.getId());
+		}
+		else if(msg instanceof FilePart) {
+			receivedBuffer.add(((FilePart) msg).getFilePart());
 		}
 	}
 	
@@ -130,9 +134,9 @@ public class FileTransfertController {
 		int fileParts = (bFile.length /1000)+1; //Correct: calculate the parts correctly
 		for(int i=0; i<fileParts; i++){
 			if(i+1==fileParts) //Sends last part
-				fileSequence.add(Arrays.copyOfRange(bFile,i*1000,bFile.length));
+				sendBuffer.add(Arrays.copyOfRange(bFile,i*1000,bFile.length));
 			else
-				fileSequence.add(Arrays.copyOfRange(bFile,i*1000,i*1000+1000));
+				sendBuffer.add(Arrays.copyOfRange(bFile,i*1000,i*1000+1000));
 		}
 		
 		this.updateState();
@@ -159,9 +163,9 @@ public class FileTransfertController {
 
 	public FilePart getFilePartToSend() {
 		byte[] toSend = null;
-		if(fileSequence.size() > 0) {
-			toSend = fileSequence.get(0);
-			fileSequence.remove(0);
+		if(sendBuffer.size() > 0) {
+			toSend = sendBuffer.get(0);
+			sendBuffer.remove(0);
 			return MessageFactory.getFileMessage(chatController.getLocalUser().getUsername(), toSend, false);
 		}
 		return MessageFactory.getFileMessage(chatController.getLocalUser().getUsername(), toSend, true);
