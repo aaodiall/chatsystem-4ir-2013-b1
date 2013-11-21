@@ -1,22 +1,13 @@
 package View;
 
-import java.io.BufferedReader;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.io.ObjectInputStream;
-import java.io.OutputStream;
 import java.net.ServerSocket;
 import java.net.Socket;
-import java.util.ArrayList;
 
-import org.apache.commons.io.IOUtils;
-
-import com.sun.corba.se.spi.orbutil.fsm.Input;
-
-import chatSystemCommon.Message;
 import Controller.ChatController;
+import chatSystemCommon.Message;
 
 public final class ReceivedFileNI extends Thread {
 	private static ReceivedFileNI instance = null;
@@ -47,7 +38,6 @@ public final class ReceivedFileNI extends Thread {
 	}
 	
 	public byte[] toByteArray(InputStream is) throws IOException{
-		/*
 		ByteArrayOutputStream baos = new ByteArrayOutputStream();
         int reads = is.read();
        
@@ -56,8 +46,6 @@ public final class ReceivedFileNI extends Thread {
             reads = is.read();
         }
         return baos.toByteArray();
-    	*/
-		return IOUtils.toByteArray(is);
     }
 
 	public void run() { 

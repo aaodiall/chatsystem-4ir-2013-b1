@@ -19,14 +19,6 @@ public final class SendFileNI extends Thread{
 	private Socket socket;
 	private User remoteUser;
 
-	public StateTransfert getFileTransfertState() {
-		return fileTransfertState;
-	}
-
-	public void setFileTransfertState(StateTransfert fileTransfertState) {
-		this.fileTransfertState = fileTransfertState;
-	}
-
 	private StateTransfert fileTransfertState = StateTransfert.WAITING_INIT;
 	private FileTransfertController fileTransfertController;
 
@@ -44,7 +36,6 @@ public final class SendFileNI extends Thread{
 		return SendFileNI.instance;
 	}
 
-
 	synchronized public void sendFile(User user){
 		Logger.getLogger(SendFileNI.class).log(Level.INFO,"SendFile method called >> "+ user.toString());
 		this.remoteUser = user;
@@ -57,21 +48,25 @@ public final class SendFileNI extends Thread{
 			try {
 				socket = new Socket(remoteUser.getAddress(), 16001);
 				os = socket.getOutputStream();
+				
 				FilePart fp = fileTransfertController.getFilePartToSend();
-				if(fp.isLast())
-					this.fileTransfertState = StateTransfert.TERMINATED;
 				os.write(fileTransfertController.getFilePartToSend().toArray());
 				os.flush();
 				os.close();
+				
+				if(fp.isLast())
+					fileTransfertController.fileTransfertProtocol(remoteUser, null, fp);
 			} catch (IOException e) {
-				e.printStackTrace();
+				Logger.getLogger(SendFileNI.class).log(Level.SEVERE,null,e);
 			}
 		}
-		try {
-			os.close();
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+	}
+
+	public StateTransfert getFileTransfertState() {
+		return fileTransfertState;
+	}
+
+	public void setFileTransfertState(StateTransfert fileTransfertState) {
+		this.fileTransfertState = fileTransfertState;
 	}
 }
