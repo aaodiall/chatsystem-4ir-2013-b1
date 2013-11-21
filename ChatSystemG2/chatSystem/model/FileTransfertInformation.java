@@ -1,34 +1,38 @@
 package chatSystem.model;
 
-import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
-import java.io.FileReader;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+/*
+ *  Scinder cette classe en deux -> une qui permet d'écrire un fichier recus et une qui permet de lire un fichier a envoyer ? 
+ */
 public class FileTransfertInformation extends Model {
 
     private static int idCpt;
     private static final int tailleSegment = 1024;
     
-    private final long taille;
+    private final int idTransfert;
     private final String idRemoteSystem;
     private FileState state;
     private final String name;
+    private final long taille;
     private String path;
-    private final int idTransfert;
+    
     private final int tailleRecup;
     private boolean isLast;
     
     private File fileDescriptor;
     
     private FileInputStream reader;
+    private FileOutputStream writer;
 
     /**
-     * Class' constructor for sending the file
+     * Class' constructor to send the file
      *
      * @param idRemoteSystem id of the sending remote system
      * @param name file's name
@@ -54,23 +58,34 @@ public class FileTransfertInformation extends Model {
     }
     
     /**
-     * Class' constructor for sending the file
+     * Class' constructor to receive the file
      *
      * @param taille file's size
      * @param idRemoteSystem id of the sending remote system
      * @param name file's name
      */
     public FileTransfertInformation(String idRemoteSystem, long taille, String name) {
-        this.taille = taille;
+        
         this.idRemoteSystem = idRemoteSystem;
-        this.name = name;
         this.idTransfert = FileTransfertInformation.idCpt++;
-        this.state = FileState.WAITANSWER;
+        
+        this.name = name;
+        this.taille = taille;
+        
+        this.state = FileState.ACCEPTED;
         this.tailleRecup = 0;
-        //this.path = null; in name ..
+        this.path = null; //in name or to define
         this.isLast = false;
+        
+        this.fileDescriptor = new File(name);
         try {
-            this.reader = new FileInputStream(path);
+            this.fileDescriptor.createNewFile();
+        } catch (IOException ex) {
+            Logger.getLogger(FileTransfertInformation.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        
+        try {
+            this.writer = new FileOutputStream(name);
         } catch (FileNotFoundException ex) {
             Logger.getLogger(FileTransfertInformation.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -151,7 +166,13 @@ public class FileTransfertInformation extends Model {
     /**
      * Add a new file part
      */
-    public void addFilePart() {
+    public void addFilePart(byte[] filePart) {
+        try {
+            this.writer.write(filePart);
+
+        } catch (IOException ex) {
+            Logger.getLogger(FileTransfertInformation.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }
     
     public int getId(){
