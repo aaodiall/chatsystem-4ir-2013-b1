@@ -95,7 +95,7 @@ public class Controller {
 		// passage dans l'etat connecte
 		this.modelStates.setState(true);
 		// lancement de la connexion
-		this.chatNI.connect(username, false);
+		this.chatNI.connect(false);
 		System.out.println( this.modelUsername.getUsername() + " : connected");
 		// affichage graphique de la fenêtre de communication
 		/*this.chatgui.getwConnect().setVisible(false);
@@ -114,25 +114,31 @@ public class Controller {
 	}
 	
 	public void performDisconnect(){
-		// on passe l'etat a deconnecte
-		this.modelStates.setState(false);
-		// on reinitialise la liste des utilisateurs distants
-		this.modelListUsers.clearListUsers();
-		// on lance la deconnexion
-		this.chatNI.disconnect(this.modelUsername.getUsername());
-		/*this.chatgui.getwCommunicate().setVisible(false);
-		this.chatgui.getwConnect().setVisible(true);*/
-		System.out.println(this.modelUsername.getUsername() + " : disconnected");
+		if (this.modelStates.isConnected()){
+			// on passe l'etat a deconnecte
+			this.modelStates.setState(false);
+			// on reinitialise la liste des utilisateurs distants
+			this.modelListUsers.clearListUsers();
+			// on lance la deconnexion
+			this.chatNI.disconnect();
+			/*this.chatgui.getwCommunicate().setVisible(false);
+			this.chatgui.getwConnect().setVisible(true);*/
+			System.out.println(this.modelUsername.getUsername() + " : disconnected");
+		}
 	}
 
 	public void performAddURecipient(String username){
-		this.modelGroupRecipient.addRecipient(username);
+		if (this.modelStates.isConnected()){
+			this.modelGroupRecipient.addRecipient(username);
+		}
 	}
 
 	public void performRemoveRecipient(String username){
-		this.modelGroupRecipient.removeRecipient(username);
+		if (this.modelStates.isConnected()){
+			this.modelGroupRecipient.removeRecipient(username);
+		}
 	}
-
+	
 	public void performSendText (String text){
 		/*Iterator<String> it = recipientList.iterator();
 		String recipient;
@@ -141,12 +147,13 @@ public class Controller {
 			recipient = it.next();
 			modelGroupRecipient.addRecipient(recipient);
 		}*/
-		InetAddress ipRecipient;
-		for(int i=0; i < this.modelGroupRecipient.getGroupRecipients().size();i++){
-			ipRecipient=this.modelListUsers.getListUsers().get(this.modelGroupRecipient.getGroupRecipients().poll());
-			chatNI.sendMsgText(ipRecipient, text,this.modelUsername.getUsername());
+		if (this.modelStates.isConnected()){
+			InetAddress ipRecipient;
+			for(int i=0; i < this.modelGroupRecipient.getGroupRecipients().size();i++){
+				ipRecipient=this.modelListUsers.getListUsers().get(this.modelGroupRecipient.getGroupRecipients().poll());
+				this.chatNI.sendMsgText(ipRecipient, text);
+			}
 		}
-
 	}
 	
 	/**
@@ -161,61 +168,72 @@ public class Controller {
 	 * @param username
 	 */
 	public void performPropositionFile(String username){
+		// il faut récupérer l'ip correspondant au username
 		this.modelFileInformation = new ModelFileInformation();
 		String fileName = this.modelFileInformation.getName();
 		long size = this.modelFileInformation.getSize();
-		this.chatNI.sendPropositionFile(username, fileName, size);
+		//this.chatNI.sendPropositionFile(username, fileName, size);
 	}
 	
 	/**
 	 * Permet d'envoyer la réponse de l'utilisateur à une demande d'envoi de fichier
 	 */
-	public void performFileAnswer(){
+	public void performFileAnswer(boolean answer){
 		
 	}
 	
 	/**
 	 * Permet de signaler à l'utilisateur une demande d'envoi de fichier
 	 */
-	public void propositionFileReceived(){
-		
+	public void filePropositionReceived(String remote, String file, long size){
+		System.out.println("Do you accept to receive the file " + file + " from "+ remote +" ?");
+		System.out.println("size of file : " + size);
 	}
 	
 	/**
 	 * Permet de signaler à l'utilisateur la réponse de l'utilisateur distant
 	 */
-	public void fileAnswerReceived(){
-		
+	public void fileAnswerReceived(String remote,int idDemand,boolean isAccepted){
+		if (isAccepted){
+			System.out.println(remote + "has accepted your file");
+			System.out.println("Transfert in progress");
+		}else{
+			System.out.println(remote + "has refused your file");
+		}
 	}
 	
 	/**
 	 * permet d'arrêter un téléchargement en cours
 	 */
-	public void fileTranfertCancelReceived(){
-		
+	public void fileTranfertCancelReceived(String remote, int idDemand){
+		System.out.println(remote + "has cancelled the transfert");
 	}
 	
 	public void messageReceived(String text, String username){
-		this.modelText.setTextReceived(text);
-		this.modelText.setRemote(username);
-		System.out.println (username + " : " + text);
+		if (modelStates.isConnected()){
+			this.modelText.setTextReceived(text);
+			this.modelText.setRemote(username);
+			System.out.println (username + " : " + text);
+		}
 	}
 	
 	public void connectReceived(String username,InetAddress ipRemote, boolean ack){		
 		if (modelStates.isConnected()){
 			// si ack = false c'est une demande de connexion donc on repond	
 			if (!ack){
-				ChatSystem.getChatNI().connect(this.modelUsername.getUsername(),true);
+				this.chatNI.connect(true);
 			}
 			if ((!modelListUsers.isInListUsers(username)) ){					
-				modelListUsers.addUsernameList(username, ipRemote);
+				this.modelListUsers.addUsernameList(username, ipRemote);
 				System.out.println(username + " s'est connecté");
 			}	
 		}
 	}
 	
 	public void disconnectReceived(String username){
-		this.modelListUsers.removeUsernameList(username);
-		System.out.println(username + " s'est deconnecté");		
+		if (modelStates.isConnected()){
+			this.modelListUsers.removeUsernameList(username);
+			System.out.println(username + " s'est deconnecté");	
+		}			
 	}
 }

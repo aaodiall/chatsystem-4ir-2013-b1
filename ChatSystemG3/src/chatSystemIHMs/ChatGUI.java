@@ -6,6 +6,7 @@ package chatSystemIHMs;
 import java.util.HashMap;
 import java.util.Observable;
 import java.util.Observer;
+import java.util.Scanner;
 import java.util.Vector;
 
 import javax.swing.DefaultListModel;
@@ -22,6 +23,7 @@ import chatSystemModel.ModelUsername;
 public class ChatGUI extends View implements Observer{
 	private InterfaceConnect wConnect;
 	private InterfaceCommunicate wCommunicate;
+	private CommandLine cmd;
 	
 	//private ToUser toUser;
 	//private FromUser fromUser;
@@ -38,9 +40,28 @@ public class ChatGUI extends View implements Observer{
 	 * @param wCommunicate
 	 */
 	public ChatGUI(Controller controller) {
-		this.wConnect = new InterfaceConnect(controller);;
-		this.wCommunicate = new InterfaceCommunicate(controller,wConnect.getTfdUsername());
+		Scanner sc = new Scanner(System.in);
+		System.out.println("Choose the mode : 1 for graphical , 0 for command line");
+		int a = sc.nextInt();
+		if (a == 1){
+			this.wConnect = new InterfaceConnect(controller);;
+			this.wCommunicate = new InterfaceCommunicate(controller,wConnect.getTfdUsername());
+		}else{
+			this.cmd = new CommandLine(controller);
+			this.cmd.initConnection();
+		}
+		
+		
 	
+	}
+	
+	
+	public void cmdUpdate(Observable arg0, Object arg1){
+		if(arg0.getClass()==ModelListUsers.class){
+			
+		}else if(arg0.getClass().equals(ModelUsername.class)){
+			
+		}
 	}
 	
 	/* (non-Javadoc)

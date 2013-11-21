@@ -21,7 +21,7 @@ public class ChatSystem {
 	private static ModelText modelText;
 	private static ModelGroupRecipient modelGroupRecipient;
 	
-	public static Controller getController(){ return chatController; }
+	/*public static Controller getController(){ return chatController; }
 	
 	public static ChatGUI getChatGui(){	return chatGUI;	}
 	
@@ -35,14 +35,13 @@ public class ChatSystem {
 	
 	public static ModelText getModelText(){	return modelText; }
 	
-	public static ModelGroupRecipient getModelGroupRecipient(){	return modelGroupRecipient; }
+	public static ModelGroupRecipient getModelGroupRecipient(){	return modelGroupRecipient; }*/
 	
 	/**
 	 * @param args
 	 * @throws UnknownHostException 
 	 */
 	public static void main(String[] args) throws UnknownHostException{
-		ArrayList <String> remote = new ArrayList<String>();
 		// pour des tests locaux demander a l'utilisateur d'entrer un numero de port
 		int portUDP=16001;
 		int bufferSize = 50;
@@ -60,37 +59,18 @@ public class ChatSystem {
 		modelUsername.addObserver(chatNI);
 		modelStates.addObserver(chatNI);
 		modelGroupRecipient.addObserver(chatNI);
-		// TEST du System avec GUI -> modifier aussi le ChatController
-		/*chatGUI=new ChatGUI(chatController);
+		chatGUI=new ChatGUI(chatController);
 		chatController.setChatgui(chatGUI);
-		modelListUsers.addObserver(chatGUI);*/
-		
-		// TEST de CONNEXION sans GUI -> modifier aussi le ChatController
-		String pseudo;
-		String text = "";
-		Scanner sc = new Scanner(System.in);
-		System.out.println("entre un pseudo : ");
-		pseudo = sc.nextLine();
-		chatController.performConnect(pseudo);
-		chatController.connectReceived("alpha",InetAddress.getByName("alpha"), false);
-		chatController.performAddURecipient("alpha");
-		System.out.println("entre un message : ");
-		text =sc.nextLine();
-		chatController.performSendText(text);
-		chatController.messageReceived(text, "alpha");
-		chatController.performDisconnect();
-		//if (modelStates.isConnected()){ chatNI.connect(modelUsername.getUsername(), false); }
-		//while(modelListUsers.getListUsers().keySet().iterator().hasNext()){//remote.add((String)(ChatSystem.modelListUsers.getListUsers().keySet().iterator().next()));
-			//System.out.println("user : " + modelListUsers.getListUsers().keySet().iterator().next());
-		//}
-		//chatController.performSendText("premier message",remote);	
-		//
-		//if (!modelStates.isConnected()){ chatNI.disconnect(modelUsername.getUsername()); }
-
-		//chatGui.getwConnect();
-		/*chatController.performDisconnect();*/
-		//if (modelStates.isConnected()){)
-		//chatController.performConnect("lilou");		
-	}
-
+		modelListUsers.addObserver(chatGUI);
+		/*
+		 				/\
+		  			   /  \				Je n'ai pas implémenter la relation de mon interface commandeLine
+		 			  /	|  \			avec le ChatGui et le ChatGui ne tient pas encore compte
+		             /  |	\			de CommandLine dans son update, on peut peut-être utiliser
+		            /	|	 \			un attribut Mode dans ChatGUI et écrire deux fonctions de traitement. 
+		           /	|	  \ 		Comme ça dans le update on a juste si mode == .. ->f1 sinon f2
+		          /   	.	   \		 
+		         /______________\    	
+	*/
+	}	
 }
