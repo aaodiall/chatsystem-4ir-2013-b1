@@ -123,5 +123,16 @@ public class ChatController extends Controller implements GuiToCont, NiToCont {
             this.fileTransferts.setFileTransfertInformationState(idTransfert, FileState.DECLINED);
         }            
     }
+    
+    /**
+     *
+     * @param filePart
+     * @param isLast
+     */
+    @Override
+    public void performFilePartReceived(byte[] filePart, boolean isLast){
+        this.fileTransferts.getFileTransfertInformation(0).addFilePart(filePart);
+        this.fileTransferts.getFileTransfertInformation(0).setIsLast(isLast);
+    }
 
 }

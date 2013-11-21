@@ -44,18 +44,22 @@ public class ChatNI extends View {
     }
 
     public void fileTransfertDemandReceived(String name, String username, String ip, long size, int id, int portClient) {
-        //((ChatController) (this.controller)).performSuggestionReceived(name, size, ip, id);
+        ((ChatController) (this.controller)).performSuggestionReceived(name, size, ip, id);
         //pour test quand on recoit on accepte
         System.out.println("Envoi rep demande ok ");
         this.messageTransfert.setFileConfirmationTask(id, RemoteSystemInformation.generateID(username, ip), true);
         
-        Thread fileReceiver = new Thread(new FileReceiver(ip, portClient));
+        Thread fileReceiver = new Thread(new FileReceiver(ip, portClient,this));
         fileReceiver.start();
         
     }
 
     public void fileTransfertConfirmationReceived(String ip, int idTransfert, boolean accepted) {
         ((ChatController) (this.controller)).performConfirmationReceived(ip, idTransfert, accepted);
+    }
+    
+    public void filePartReceived(byte[] filePart, boolean isLast){
+        ((ChatController) (this.controller)).performFilePartReceived(filePart,isLast);
     }
 
  /*   public void sendHelloMsg(String ip) {

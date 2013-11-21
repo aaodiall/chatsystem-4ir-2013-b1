@@ -13,13 +13,15 @@ public class FileReceiver implements Runnable {
 
     private final String ipServer;
     private final int portServer;
+    private final ChatNI chatNI;
     
     private Socket socketClient;
     private ObjectInputStream reader;
 
-    public FileReceiver(String ipServer, int portServer) {
+    public FileReceiver(String ipServer, int portServer, ChatNI chatNI) {
         this.ipServer = ipServer;
         this.portServer = portServer;
+        this.chatNI = chatNI;
     }
 
     @Override
@@ -41,10 +43,11 @@ public class FileReceiver implements Runnable {
             Object msg;
             do{
                 msg = reader.readObject();
-            
+                
+                this.chatNI.filePartReceived(((FilePart)msg).getFilePart(),((FilePart)msg).isLast());
                 System.out.println("RECU : "+msg.toString());
             }while(!((FilePart)msg).isLast());
-            
+            System.out.println("-------------------FICHIER RECU----------------------");
         } catch (IOException ex) {
             Logger.getLogger(FileReceiver.class.getName()).log(Level.SEVERE, null, ex);
         } catch (ClassNotFoundException ex) {
