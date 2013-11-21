@@ -48,6 +48,7 @@ public class ChatWindow extends JFrame implements Observer, ActionListener, Wind
     public ChatWindow (ChatController chat_control, String remote_username) {
         this.chat_control = chat_control;
         this.remote_username = remote_username;
+        this.chat_control.get_convDB().addObserver(this);
         
         initComponents();
         this.setVisible(true);
@@ -66,7 +67,7 @@ public class ChatWindow extends JFrame implements Observer, ActionListener, Wind
     
     @Override
     public void update(Observable obs, Object obj){
-        this.received_text.append(((ConversationModel)obj).get_last_text_by_user(this.remote_username));
+        this.received_text.append(((ConversationModel)obs).get_last_text_by_user(this.remote_username));
         this.received_text.updateUI();
     }
 
@@ -80,6 +81,7 @@ public class ChatWindow extends JFrame implements Observer, ActionListener, Wind
     @Override
     public RuntimeException windowClosingDelivered(WindowEvent we) {
         this.chat_control.get_chatGUI().delete_chat_window(this.remote_username);
+        this.chat_control.get_convDB().deleteObserver(this);
         RuntimeException e = new RuntimeException();
         return e;
     }

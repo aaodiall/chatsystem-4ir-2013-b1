@@ -47,6 +47,7 @@ public class ChatController {
     
     // Connexion du local user
     public void perform_connection () {
+        System.out.println("test1");
         chatNI.to_connection(false);
     }
     
@@ -54,7 +55,7 @@ public class ChatController {
      public void perform_connection (String r_user, String IP_text, Boolean alrdythere) {
         // Ajouter utilisateur au model
         listDB.add_user(r_user, IP_text);
-        listDB.notifyObservers();
+
    
         // if remote user first connection
         if(!alrdythere){
@@ -75,7 +76,6 @@ public class ChatController {
     public void perform_disconnection (String remote_user, String IP_text) {
         // remove the user who disconnected from the list
         listDB.remove_user(remote_user, IP_text);
-        listDB.notifyObservers();
     }
     
     /**************** Communication by text ****************/
