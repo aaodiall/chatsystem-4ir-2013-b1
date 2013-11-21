@@ -5,16 +5,19 @@ import java.io.IOException;
 import java.io.ObjectOutputStream;
 import java.net.InetAddress;
 import java.net.Socket;
+import java.util.logging.Level;
+
+import com.sun.istack.internal.logging.Logger;
 
 import Controller.FileTransfertController;
 import Controller.StateTransfert;
 import Model.User;
 import chatSystemCommon.FilePart;
+import chatSystemCommon.Message;
 
 public final class SendFileNI extends Thread{
 	private static SendFileNI instance = null;
 	
-	//private DatagramSocket datagramSocket;
 	private Socket socket;
 	
 	public StateTransfert getFileTransfertState() {
@@ -30,12 +33,6 @@ public final class SendFileNI extends Thread{
 	
 	private SendFileNI(FileTransfertController fileTransfertController) {
 		this.fileTransfertController = fileTransfertController;
-		//try {
-			//datagramSocket = new DatagramSocket(16000);
-			//datagramSocket.setBroadcast(true);
-		//} catch (SocketException e) {
-		//	e.printStackTrace();
-		//}
 	}
 	
 	public final static SendFileNI getInstance(FileTransfertController fileTransfertController) {
@@ -51,7 +48,8 @@ public final class SendFileNI extends Thread{
 	
 	synchronized public void sendFile(User user){
 		try {
-			socket = new Socket(user.getAddress(), 16000);
+			Logger.getLogger(SendFileNI.class).log(Level.INFO,"SendFile method called >> "+ user.toString());
+			socket = new Socket(user.getAddress(), 16001);
 			this.start();
 		} catch (IOException e) {
 			e.printStackTrace();
@@ -64,8 +62,9 @@ public final class SendFileNI extends Thread{
 		try {
 			fos = (FileOutputStream) socket.getOutputStream();
 			oos = new ObjectOutputStream(fos);
-			oos.write(fileTransfertController.getFilePartToSend().getFilePart());
+			oos.write(fileTransfertController.getFilePartToSend().toArray());
 			oos.close();
+			fos.close();
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
