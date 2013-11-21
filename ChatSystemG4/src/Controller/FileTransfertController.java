@@ -102,7 +102,7 @@ public class FileTransfertController {
 		else if(msg instanceof FileTransfertDemand) {
 			int option = JOptionPane.showConfirmDialog(null, "Vous avez reçu une demande de transfert de fichier de la part de "+msg.getUsername()+"\n Nom du fichier : "+ ((FileTransfertDemand) msg).getName()+"\nTaille (en byte) : "+((FileTransfertDemand) msg).getSize()+"\n\nVoulez-vous accepter le fichier ?", "Demande de transfert de fichier reçue", JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE);
 			if(option == JOptionPane.OK_OPTION) {
-				ReceivedFileNI.getInstance(chatController).start();
+				ReceivedFileNI.getInstance(chatController,((FileTransfertDemand) msg).getPortClient()).start();
 				this.sendFileTransfertConfirmation(user, true, msg.getId());
 			}
 			else
@@ -144,7 +144,7 @@ public class FileTransfertController {
 	 * @param file
 	 */
 	public void sendFileTransfertDemand(User user,File file) {
-		SendMessageNI.getInstance().sendMessage(MessageFactory.getFileTransfertDemandMessage(chatController.getLocalUser().getUsername(), file.getName(), file.length(),16000), user.getAddress());
+		SendMessageNI.getInstance().sendMessage(MessageFactory.getFileTransfertDemandMessage(chatController.getLocalUser().getUsername(), file.getName(), file.length(),16001), user.getAddress());
 	}
 
 	/**

@@ -27,26 +27,26 @@ public final class ReceivedFileNI extends Thread {
     private Socket socket;
     private InputStream inputStream;	
 	
-	private ReceivedFileNI(ChatController chatController) {
+	private ReceivedFileNI(ChatController chatController, int portClient) {
 		this.chatController = chatController;
 		try {
-			serverSocket = new ServerSocket(16001);
+			serverSocket = new ServerSocket(portClient);
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
 	}
 	
-	public final static ReceivedFileNI getInstance(ChatController chatController) {
+	public final static ReceivedFileNI getInstance(ChatController chatController, int portClient) {
 		if(ReceivedFileNI.instance == null) {
 			synchronized(ReceivedFileNI.class) {
 				if(ReceivedFileNI.instance == null)
-					ReceivedFileNI.instance = new ReceivedFileNI(chatController);
+					ReceivedFileNI.instance = new ReceivedFileNI(chatController,portClient);
 			}
 		}
 		return ReceivedFileNI.instance;
 	}
 	
-	public byte[] toByteArrayUsingJava(InputStream is) throws IOException{
+	public byte[] toByteArray(InputStream is) throws IOException{
 		/*
 		ByteArrayOutputStream baos = new ByteArrayOutputStream();
         int reads = is.read();
@@ -67,7 +67,7 @@ public final class ReceivedFileNI extends Thread {
 				System.out.println(socket.toString());
 				inputStream = socket.getInputStream();
 				//byte[] buf = 
-				//System.out.println(Message.fromArray(buf));
+				System.out.println(Message.fromArray(toByteArray(inputStream)));
 			} catch (IOException e) {
 				e.printStackTrace();
 			}
