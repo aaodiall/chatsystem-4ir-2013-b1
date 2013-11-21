@@ -11,7 +11,5 @@ public class Goodbye extends Message{
 	@Override
 	public String toString() {
 		return "Goodbye [id=" + id + ", username=" + username  +"]";
-	}
-
-	
+	}	
 }
