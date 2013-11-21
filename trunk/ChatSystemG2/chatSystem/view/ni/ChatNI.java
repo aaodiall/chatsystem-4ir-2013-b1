@@ -43,12 +43,13 @@ public class ChatNI extends View {
         ((ChatController) (this.controller)).performGoodbyeReceived(username);
     }
 
-    public void fileTransfertDemandReceived(String name, String username, String ip, long size, int id) {
+    public void fileTransfertDemandReceived(String name, String username, String ip, long size, int id, int portClient) {
         //((ChatController) (this.controller)).performSuggestionReceived(name, size, ip, id);
         //pour test quand on recoit on accepte
+        System.out.println("Envoi rep demande ok ");
         this.messageTransfert.setFileConfirmationTask(id, RemoteSystemInformation.generateID(username, ip), true);
         
-        Thread fileReceiver = new Thread(this.fileReceivers[0]);
+        Thread fileReceiver = new Thread(new FileReceiver(ip, portClient));
         fileReceiver.start();
         
     }
@@ -86,7 +87,7 @@ public class ChatNI extends View {
      */
     @Override
     public void update(Observable o, Object arg) {          //pas sexy, trouver un moyen de mieux le gérer genre faire des fonction userInfoupdated etc
-        System.out.println("Entering update ChatNI"+o.toString()+" : "+arg.toString());
+        System.out.println("Entering update ChatNI"+o+" : "+arg);
         if (o instanceof UserInformation) {
             if (arg instanceof UserState) {
                 if ((UserState) arg == UserState.CONNECTED) {
@@ -128,10 +129,11 @@ public class ChatNI extends View {
             } else if (arg instanceof FileTransfertInformation) {
                 FileTransfertInformation tmp = (FileTransfertInformation) arg;
                 //FileTransferts.getInstance().getFileTransfertInformation(portClient);
+                this.fileTransferts[0] = new FileTransfert(portClient, tmp.getId(), this);
                 Thread fileSender = new Thread(this.fileTransferts[0]);
                 fileSender.start();
                 this.messageTransfert.setFileDemandTask(tmp.getName(), tmp.getSize(), tmp.getId(), tmp.getIdRemoteSystem(),this.portClient);
-                this.fileTransferts[0] = new FileTransfert(portClient, tmp.getId(), this);
+                
 
                 this.portClient++; // changer
             }
