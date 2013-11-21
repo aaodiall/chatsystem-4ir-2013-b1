@@ -24,34 +24,67 @@ import javax.swing.event.ListSelectionListener;
  */
 public class ListWindow extends JFrame implements Observer, ListSelectionListener {
     private ChatController chat_control;
-    private JList listDisplay;
-    private HashMap listUser;
+    
+    // Variables declaration - do not modify                     
+    private javax.swing.JLabel list_label;
+    private javax.swing.JList list_display;
+    private javax.swing.JScrollPane jScrollPane1;
+    // End of variables declaration  
     
     public ListWindow(ChatController chat_control){
         this.chat_control = chat_control;
-        this.listUser = new HashMap<String, String>();
-        this.listDisplay = new JList();
+        
+        initComponents();
+        this.setVisible(true);
     }
 
     @Override
     public void update(Observable obs, Object obj) {
         // creation of the list
         // we know that we get an HashMap
-        this.listUser = (HashMap)obj;
-        
-        this.listDisplay.setListData(this.listUser.keySet().toArray());
-        this.listDisplay.addListSelectionListener(this);
-        this.listDisplay.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
-        
-        this.setLayout(new BorderLayout());
-        this.add("West",listDisplay);
-        this.pack();
-        this.setVisible(true);
+        this.list_display.setListData(((ListModel)obj).get_hmap_users().keySet().toArray());
+        this.list_display.updateUI();
     }
     
     @Override
     public void valueChanged(ListSelectionEvent lse){
-        this.chat_control.get_chatGUI().get_chat_window().update_chat_window(this.listDisplay.getSelectedValue().toString());
+        this.chat_control.get_chatGUI().create_chat_window(this.list_display.getSelectedValue().toString());
     }
+    
+    private void initComponents() {
 
+        jScrollPane1 = new javax.swing.JScrollPane();
+        list_display = new javax.swing.JList();
+        list_label = new javax.swing.JLabel();
+
+        setDefaultCloseOperation(javax.swing.WindowConstants.HIDE_ON_CLOSE);
+
+        list_display.setSelectionMode(javax.swing.ListSelectionModel.SINGLE_SELECTION);
+        jScrollPane1.setViewportView(list_display);
+
+        list_label.setText("Connected users");
+
+        org.jdesktop.layout.GroupLayout layout = new org.jdesktop.layout.GroupLayout(getContentPane());
+        getContentPane().setLayout(layout);
+        layout.setHorizontalGroup(
+            layout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
+            .add(layout.createSequentialGroup()
+                .addContainerGap()
+                .add(layout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
+                    .add(list_label)
+                    .add(jScrollPane1, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, 122, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE))
+                .addContainerGap(org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+        );
+        layout.setVerticalGroup(
+            layout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
+            .add(layout.createSequentialGroup()
+                .addContainerGap()
+                .add(list_label, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, 28, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
+                .add(jScrollPane1, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 254, Short.MAX_VALUE)
+                .addContainerGap())
+        );
+
+        pack();
+    }
 }

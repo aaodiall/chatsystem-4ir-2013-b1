@@ -3,37 +3,43 @@ package chatsystemg5.ihm;
 import chatsystemg5.brain.ChatController;
 import java.awt.BorderLayout;
 import java.awt.Panel;
+import java.util.ArrayList;
+import java.util.HashMap;
+import javax.swing.JFrame;
 
-public class ChatGUI /*extends Panel*/{
+public class ChatGUI extends JFrame{
     
     private ChatController chat_control;
-    //private Panel layout;
     private ConnectionWindow connection_window;
     private ListWindow list_window;
-    private ChatWindow chat_window;
+    private HashMap<String, ChatWindow> chat_windows;
     
     public ChatGUI(ChatController chat_control){
         this.chat_control = chat_control;
-        //this.layout = new Panel();
-        //this.layout.setLayout(new BorderLayout());
-        
+        this.chat_windows = new HashMap<String, ChatWindow>();
         this.connection_window = new ConnectionWindow(this.chat_control);  
-        this.list_window = new ListWindow(this.chat_control);
-        this.chat_window = new ChatWindow(this.chat_control);
-        this.list_window.setVisible(false);
-        this.chat_window.setVisible(false);
-        
-        //this.layout.addLayoutComponent(this.connection_window,"north");
-        //this.layout.addLayoutComponent(this.list_window.get_JList(),BorderLayout.CENTER);
-        //this.layout.add(this.chat_window,BorderLayout.SOUTH);
+
+    }
+    
+    public void create_chat_window(String remote_username){
+        ChatWindow chat_window = new ChatWindow(this.chat_control, remote_username);
+        this.chat_windows.put(remote_username, chat_window);
+    }
+    
+    public void delete_chat_window(String remote_username){
+        this.chat_windows.remove(remote_username);
     }
     
     public ListWindow get_list_window(){
         return this.list_window;
     }
     
-    public ChatWindow get_chat_window(){
-        return this.chat_window;
+    public void init_list_window(){
+        this.list_window = new ListWindow(this.chat_control);
+    }
+    
+    public ChatWindow get_chat_window(String remote_username){
+        return this.chat_windows.get(remote_username);
     }
     
     public ConnectionWindow get_connection_window(){
