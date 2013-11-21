@@ -27,10 +27,11 @@ public class FileTransferts extends Model{
     public synchronized void addTransfert(String name, String idRemoteSystem) {
         
        FileTransfertInformation newFileTransfert = new FileTransfertInformation(idRemoteSystem, name);
+       System.out.println("Ajout du transfertModel : "+newFileTransfert.getId());
        this.fileModel.put(newFileTransfert.getId(), newFileTransfert);
         
        this.setChanged();
-       this.notifyObservers(newFileTransfert.getId());
+       this.notifyObservers(newFileTransfert);
        this.clearChanged();
     }
     
@@ -46,7 +47,7 @@ public class FileTransferts extends Model{
        this.fileModel.put(newFileTransfert.getId(), newFileTransfert);
         
        this.setChanged();
-       this.notifyObservers(newFileTransfert.getId());
+       this.notifyObservers(newFileTransfert);
        this.clearChanged();
     }
 
@@ -64,7 +65,8 @@ public class FileTransferts extends Model{
     }
 
     public void setFileTransfertInformationState(int idTransfert, FileState state) {
-        if (this.fileModel.containsKey(idTransfert)) {
+        System.out.println("Modif State du transfertModel : "+idTransfert);
+        if (this.fileModel.containsKey((Integer)idTransfert)) {
             this.fileModel.get(idTransfert).setState(state);
             this.setChanged();
             this.notifyObservers(state);

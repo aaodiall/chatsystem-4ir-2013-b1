@@ -161,4 +161,12 @@ public class FileTransfertInformation extends Model {
     public String getName(){
         return this.name;
     }
+    
+    public long getSize(){
+        return this.taille;
+    }
+    
+    public String getIdRemoteSystem(){
+        return this.idRemoteSystem;
+    }
 }

@@ -22,6 +22,7 @@ public class FileTransfert implements Runnable {
     FileTransfertInformation fileToSend;
 
     public FileTransfert(int port, int idTransfert, ChatNI chatNI) {
+        System.out.println("Init serveur envoi de fichier");
         try {
             this.serverSocket = new ServerSocket(port);
         } catch (IOException ex) {
@@ -39,7 +40,9 @@ public class FileTransfert implements Runnable {
     public void run() {
         do {
             try {
+                System.out.println("Démarrage écoute Serveur envoi de fichier");
                 this.clientSocket = this.serverSocket.accept();
+                System.out.println("Démarrage envoi de fichier");
                 this.writer = new ObjectOutputStream(clientSocket.getOutputStream());
 
                 Message msg = new FilePart(this.chatNI.getUserInfo().getUsername(), this.fileToSend.getFilePart(), this.fileToSend.isLast());//a changer mais je vais vite
