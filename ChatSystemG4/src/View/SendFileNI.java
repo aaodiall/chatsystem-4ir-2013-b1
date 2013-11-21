@@ -3,6 +3,7 @@ package View;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.ObjectOutputStream;
+import java.io.OutputStream;
 import java.net.InetAddress;
 import java.net.Socket;
 import java.util.logging.Level;
@@ -57,14 +58,11 @@ public final class SendFileNI extends Thread{
 	}
 	
 	public void run(){
-		FileOutputStream fos;
-        ObjectOutputStream oos;
+        OutputStream oo;
 		try {
-			fos = (FileOutputStream) socket.getOutputStream();
-			oos = new ObjectOutputStream(fos);
-			oos.write(fileTransfertController.getFilePartToSend().toArray());
-			oos.close();
-			fos.close();
+			oo = socket.getOutputStream();
+			oo.write(fileTransfertController.getFilePartToSend().toArray());
+			oo.close();
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
