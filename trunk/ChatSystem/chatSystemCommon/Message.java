@@ -41,9 +41,12 @@ public abstract class Message implements Serializable{
         ObjectOutputStream oout = new ObjectOutputStream(output);
         
         oout.writeObject(this);
+        byte[] b = output.toByteArray();
+        
+        output.close();
         oout.close();
         
-        return output.toByteArray();
+        return b;
     }
     
     public static Message fromArray(byte[] array) throws IOException{
@@ -52,9 +55,13 @@ public abstract class Message implements Serializable{
         
         Message retour = null;
         try {
-            retour = (Message) oiut.readObject();
+            retour = (Message)oiut.readObject();
         } catch (ClassNotFoundException ex) {
             Logger.getLogger(Message.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        finally {
+        	input.close();
+        	oiut.close();
         }
         
         return retour;
