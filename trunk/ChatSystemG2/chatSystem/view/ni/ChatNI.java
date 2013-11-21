@@ -14,7 +14,7 @@ public class ChatNI extends View {
     private final FileReceiver[] fileReceivers;
     private final FileTransfert[] fileTransferts;
     private UserInformation usrInfo;
-    private int portClient;
+    private int portClient; // changer la gestion
 
     public ChatNI(ChatController controller) {
         super(controller);
@@ -41,8 +41,10 @@ public class ChatNI extends View {
         ((ChatController) (this.controller)).performGoodbyeReceived(username);
     }
 
-    public void fileTransfertDemandReceived(String name, String ip, long size, int id) {
-        ((ChatController) (this.controller)).performSuggestionReceived(name, size, ip, id);
+    public void fileTransfertDemandReceived(String name, String username ,String ip, long size, int id) {
+        //((ChatController) (this.controller)).performSuggestionReceived(name, size, ip, id);
+        //pour test quand on recoit on accepte
+        this.messageTransfert.setFileConfirmationTask(id, RemoteSystemInformation.generateID(username, ip), true);
     }
 
     public void fileTransfertConfirmationReceived(String ip, int idTransfert, boolean accepted) {
@@ -59,8 +61,8 @@ public class ChatNI extends View {
 
     public void sendFileTransfertDemand(String name, long size, int idTransfert, String idRemoteSystem) {
         this.messageTransfert.setFileDemandTask(name, size, idTransfert, idRemoteSystem, portClient);
-        this.fileTransferts[0] = new FileTransfert(portClient,idTransfert);
-        this.portClient ++;
+        this.fileTransferts[0] = new FileTransfert(portClient,idTransfert, this);
+        this.portClient ++; // changer
     }
     
     public void sendFileTransfertConfirmation(boolean isAccepted, int idTransfert, String idRemoteSystem) {
@@ -124,6 +126,8 @@ public class ChatNI extends View {
                     fileSender.start();
                 }else if(((FileState)arg).equals(FileState.DECLINED)){
                     this.fileTransferts[0] = null;
+                }else if(((FileState)arg).equals(FileState.WAITANSWER)){
+                    //this.messageTransfert.setFileDemandTask(this.fileTransferts[0].getName(), this.fileTransferts[0].getSize(), this.fileTransferts.getId(), this.portClient);
                 }
             }
             

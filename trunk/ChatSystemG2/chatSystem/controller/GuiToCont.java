@@ -18,7 +18,7 @@ public interface GuiToCont {
         
         public void performSendMessageRequest(String message, String idRemoteSystem);
         
-        public void performSendFileRequest(String name, long size, String idRemoteSystem);
+        public void performSendFileRequest(String name, String idRemoteSystem);
 	
         public void performAcceptSuggestion(int idTransfert);
 	

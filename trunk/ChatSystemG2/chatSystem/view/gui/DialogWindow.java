@@ -65,6 +65,7 @@ public class DialogWindow extends javax.swing.JFrame implements ActionListener{
         sendButton.addActionListener(this);
 
         fileButton.setText("Join File");
+        fileButton.addActionListener(this);
 
         jScrollPane2.setViewportView(conversation);
 
@@ -115,6 +116,9 @@ public class DialogWindow extends javax.swing.JFrame implements ActionListener{
         if(ae.getSource() == this.sendButton){
             this.chatGUI.sendButtonPressed(this.message.getText(),this.contact);
             this.message.setText("");
+        }else if(ae.getSource() == this.fileButton){
+            this.chatGUI.fileButtonPressed("",contact);
+            //ici demander affichage progressBar
         }
     }
 }

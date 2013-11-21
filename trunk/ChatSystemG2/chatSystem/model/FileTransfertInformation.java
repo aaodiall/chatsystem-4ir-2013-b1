@@ -1,6 +1,7 @@
 package chatSystem.model;
 
 import java.io.BufferedReader;
+import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
@@ -10,6 +11,7 @@ import java.util.logging.Logger;
 
 public class FileTransfertInformation extends Model {
 
+    private static int idCpt;
     private static final int tailleSegment = 1024;
     
     private final long taille;
@@ -21,24 +23,51 @@ public class FileTransfertInformation extends Model {
     private final int tailleRecup;
     private boolean isLast;
     
+    private File fileDescriptor;
+    
     private FileInputStream reader;
 
     /**
-     * Class' constructor
+     * Class' constructor for sending the file
+     *
+     * @param idRemoteSystem id of the sending remote system
+     * @param name file's name
+     */
+    public FileTransfertInformation(String idRemoteSystem, String name) {
+        
+        this.idRemoteSystem = idRemoteSystem;
+        this.name = name;
+        this.idTransfert = FileTransfertInformation.idCpt++;
+        this.state = FileState.WAITANSWER;
+        this.tailleRecup = 0;
+        this.path = null;
+        this.isLast = false;
+        
+        this.fileDescriptor = new File(name);
+        
+        this.taille = this.fileDescriptor.length();
+        try {
+            this.reader = new FileInputStream(this.fileDescriptor);
+        } catch (FileNotFoundException ex) {
+            Logger.getLogger(FileTransfertInformation.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+    
+    /**
+     * Class' constructor for sending the file
      *
      * @param taille file's size
      * @param idRemoteSystem id of the sending remote system
      * @param name file's name
-     * @param idTransfert id given to the transfer
      */
-    public FileTransfertInformation(long taille, String idRemoteSystem, String name, int idTransfert) {
+    public FileTransfertInformation(String idRemoteSystem, long taille, String name) {
         this.taille = taille;
         this.idRemoteSystem = idRemoteSystem;
         this.name = name;
-        this.idTransfert = idTransfert;
+        this.idTransfert = FileTransfertInformation.idCpt++;
         this.state = FileState.WAITANSWER;
         this.tailleRecup = 0;
-        this.path = null;
+        //this.path = null; in name ..
         this.isLast = false;
         try {
             this.reader = new FileInputStream(path);
@@ -123,5 +152,13 @@ public class FileTransfertInformation extends Model {
      * Add a new file part
      */
     public void addFilePart() {
+    }
+    
+    public int getId(){
+        return this.idTransfert;
+    }
+    
+    public String getName(){
+        return this.name;
     }
 }

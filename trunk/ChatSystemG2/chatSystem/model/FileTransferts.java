@@ -22,18 +22,31 @@ public class FileTransferts extends Model{
     /**
      * Adding a new file's transfer
      * @param name file's name
-     * @param size file's size
      * @param idRemoteSystem sender's id
-     * @param idTransfert id given to the transfer
      */
-    public synchronized void addTransfert(String name, long size, String idRemoteSystem, int idTransfert) {
-        if (this.fileModel.containsKey(idTransfert)) {
-            this.fileModel.remove(idTransfert);
-        }
-        this.fileModel.put(idTransfert, new FileTransfertInformation(size,idRemoteSystem, name, idTransfert));
+    public synchronized void addTransfert(String name, String idRemoteSystem) {
+        
+       FileTransfertInformation newFileTransfert = new FileTransfertInformation(idRemoteSystem, name);
+       this.fileModel.put(newFileTransfert.getId(), newFileTransfert);
         
        this.setChanged();
-       this.notifyObservers(idTransfert);
+       this.notifyObservers(newFileTransfert.getId());
+       this.clearChanged();
+    }
+    
+    /**
+     * Adding a new file's transfer
+     * @param name file's name
+     * @param size file's size
+     * @param idRemoteSystem sender's id
+     */
+    public synchronized void addTransfert(String name, long size, String idRemoteSystem) {
+        
+       FileTransfertInformation newFileTransfert = new FileTransfertInformation(idRemoteSystem, size, name);
+       this.fileModel.put(newFileTransfert.getId(), newFileTransfert);
+        
+       this.setChanged();
+       this.notifyObservers(newFileTransfert.getId());
        this.clearChanged();
     }
 
