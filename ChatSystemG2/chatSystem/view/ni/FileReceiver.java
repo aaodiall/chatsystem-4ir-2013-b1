@@ -25,7 +25,7 @@ public class FileReceiver implements Runnable {
     public void run() {
         try {
             //Le client commence par tenter la connection
-            
+            System.out.println("Lancement Reception Fichier");
             try {
                 this.socketClient = new Socket(this.ipServer, this.portServer);
             } catch (IOException ex) {
