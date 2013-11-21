@@ -115,7 +115,7 @@ public class ChatController extends Controller implements GuiToCont, NiToCont {
 
     @Override
     public void performConfirmationReceived(String idRemoteSystem, int idTransfert, boolean accepted) {
-        System.out.println("Receiving a file transfert request from " + idRemoteSystem + ", modifying the model");
+        System.out.println("Receiving a file transfert confirmation from " + idRemoteSystem + ", modifying the model");
         if (accepted) {
             this.fileTransferts.setFileTransfertInformationState(idTransfert, FileState.ACCEPTED);
         }

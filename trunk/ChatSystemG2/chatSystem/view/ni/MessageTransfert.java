@@ -117,6 +117,7 @@ public class MessageTransfert implements Runnable {
     private void sendFileTransfertDemand(String name, long size, int idTransfert, String idRemoteSystem, int portClient) {
         String ip = this.rmInstance.getRemoteSystem(idRemoteSystem).getIP();
         FileTransfertDemand ftd = new FileTransfertDemand(this.chatni.getUserInfo().getUsername(), name, size, portClient);
+        System.out.println("ENVOI : " + ftd.toString() + " -> " + ip);
         this.sendPacket(ip, ftd);
     }
 
