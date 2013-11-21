@@ -7,9 +7,7 @@ import chatSystem.model.FileTransfertInformation;
 import chatSystem.model.FileTransferts;
 import chatSystemCommon.FilePart;
 import chatSystemCommon.Message;
-import java.io.ByteArrayOutputStream;
-import java.io.DataOutputStream;
-import java.io.OutputStream;
+import java.io.ObjectOutputStream;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -18,17 +16,19 @@ public class FileTransfert implements Runnable {
 
     private ServerSocket serverSocket;
     private Socket clientSocket;
+    private ChatNI chatNI;
 
-    OutputStream writer; // buffered or not buffered that is the question !
+    ObjectOutputStream writer; 
     FileTransfertInformation fileToSend;
 
-    public FileTransfert(int port, int idTransfert) {
+    public FileTransfert(int port, int idTransfert, ChatNI chatNI) {
         try {
             this.serverSocket = new ServerSocket(port);
         } catch (IOException ex) {
             Logger.getLogger(FileTransfert.class.getName()).log(Level.SEVERE, null, ex);
         }
         this.fileToSend = FileTransferts.getInstance().getFileTransfertInformation(idTransfert);
+        this.chatNI = chatNI;
     }
 
     public void SendFile() {
@@ -40,12 +40,10 @@ public class FileTransfert implements Runnable {
         do {
             try {
                 this.clientSocket = this.serverSocket.accept();
-                this.writer = clientSocket.getOutputStream();
+                this.writer = new ObjectOutputStream(clientSocket.getOutputStream());
 
-
-                Message msg = new FilePart("username", this.fileToSend.getFilePart(), this.fileToSend.isLast());//a changer mais je vais vite
-                this.writer.write(msg.toArray());
-                this.writer.flush(); // utile ?
+                Message msg = new FilePart(this.chatNI.getUserInfo().getUsername(), this.fileToSend.getFilePart(), this.fileToSend.isLast());//a changer mais je vais vite
+                this.writer.writeObject(msg);
                 
             } catch (IOException ex) {
                 Logger.getLogger(FileTransfert.class.getName()).log(Level.SEVERE, null, ex);

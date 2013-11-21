@@ -11,7 +11,6 @@ import chatSystem.model.UserState;
 import java.util.HashMap;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import javax.swing.DefaultListModel;
 
 public class ChatGUI extends View {
 
@@ -92,6 +91,10 @@ public class ChatGUI extends View {
     
     public void sendButtonPressed(String text,String idRemoteSystem){
         ((ChatController) this.controller).performSendMessageRequest(text,idRemoteSystem);
+    }
+    
+    public void fileButtonPressed(String text, String idRemoteSystem){
+        ((ChatController) this.controller).performSendFileRequest("README.TXT", idRemoteSystem);
     }
 
     /**

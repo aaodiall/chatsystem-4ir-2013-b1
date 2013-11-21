@@ -12,7 +12,7 @@ import chatSystem.model.FileTransferts;
 
 public class ChatController extends Controller implements GuiToCont, NiToCont {
 
-    private int transfertID; 
+    //private int transfertID; 
     private UserInformation localUser; //mettre dans une HasMap créée dans la classe mère
     private RemoteSystems remoteSystems;
     private FileTransferts fileTransferts;
@@ -33,7 +33,7 @@ public class ChatController extends Controller implements GuiToCont, NiToCont {
             System.err.println("local host non existent");
         }
         
-        this.transfertID = 0;
+//        this.transfertID = 0;
         this.chatGUI = new ChatGUI(this);
         this.localUser.addObserver(chatGUI);
         this.remoteSystems.addObserver(chatGUI);
@@ -89,10 +89,10 @@ public class ChatController extends Controller implements GuiToCont, NiToCont {
     }
 
     @Override
-    public void performSendFileRequest(String name, long size, String idRemoteSystem) {
+    public void performSendFileRequest(String name, String idRemoteSystem) {
        System.out.println("Send file request to be send to " + idRemoteSystem + ", modifying the model");
-       this.fileTransferts.addTransfert(name, size, idRemoteSystem, this.transfertID);
-       this.transfertID ++;
+       this.fileTransferts.addTransfert(name, idRemoteSystem);
+    //   this.transfertID ++;
     }
     
     @Override
@@ -110,7 +110,7 @@ public class ChatController extends Controller implements GuiToCont, NiToCont {
     @Override
     public void performSuggestionReceived(String name, long size, String idRemoteSystem, int idTransfert) {
         System.out.println("Receiving a file transfert request from " + idRemoteSystem + ", modifying the model");
-        this.fileTransferts.addTransfert(name, size, idRemoteSystem, idTransfert);
+        this.fileTransferts.addTransfert(name, size, idRemoteSystem);
     }
 
     @Override
