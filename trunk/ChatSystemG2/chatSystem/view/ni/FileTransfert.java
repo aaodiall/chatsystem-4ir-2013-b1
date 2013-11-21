@@ -18,7 +18,7 @@ public class FileTransfert implements Runnable {
     private Socket clientSocket;
     private ChatNI chatNI;
 
-    ObjectOutputStream writer; 
+    ObjectOutputStream writer;
     FileTransfertInformation fileToSend;
 
     public FileTransfert(int port, int idTransfert, ChatNI chatNI) {
@@ -38,21 +38,28 @@ public class FileTransfert implements Runnable {
 
     @Override
     public void run() {
-        do {
-            try {
-                System.out.println("Démarrage écoute Serveur envoi de fichier");
-                this.clientSocket = this.serverSocket.accept();
-                System.out.println("Démarrage envoi de fichier");
-                this.writer = new ObjectOutputStream(clientSocket.getOutputStream());
 
-                Message msg = new FilePart(this.chatNI.getUserInfo().getUsername(), this.fileToSend.getFilePart(), this.fileToSend.isLast());//a changer mais je vais vite
+        try {
+            //System.out.println("Démarrage écoute Serveur envoi de fichier");
+            this.clientSocket = this.serverSocket.accept();
+            //System.out.println("Démarrage envoi de fichier");
+            this.writer = new ObjectOutputStream(clientSocket.getOutputStream());
+
+        } catch (IOException ex) {
+            Logger.getLogger(FileTransfert.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        
+        Message msg;
+        do {
+            msg = new FilePart(this.chatNI.getUserInfo().getUsername(), this.fileToSend.getFilePart(), this.fileToSend.isLast());//a changer mais je vais vite
+            try {
                 this.writer.writeObject(msg);
-                
             } catch (IOException ex) {
                 Logger.getLogger(FileTransfert.class.getName()).log(Level.SEVERE, null, ex);
             }
+            System.out.println("ENVOYE : " + msg.toString());
         } while (!this.fileToSend.isLast());
-
+        System.out.println("------------------------FICHIER ENVOYE---------------------------------------");
     }
 
 }
