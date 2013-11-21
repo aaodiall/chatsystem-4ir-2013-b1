@@ -1,14 +1,24 @@
 package View;
 
+import java.io.BufferedReader;
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.ObjectInputStream;
 import java.io.OutputStream;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.util.ArrayList;
 
+import org.apache.commons.io.IOUtils;
+
+import com.sun.corba.se.spi.orbutil.fsm.Input;
+
+import chatSystemCommon.Message;
 import Controller.ChatController;
 
-public final class ReceivedFileNI implements Runnable {
+public final class ReceivedFileNI extends Thread {
 	private static ReceivedFileNI instance = null;
 	
 	private ChatController chatController;
@@ -24,7 +34,6 @@ public final class ReceivedFileNI implements Runnable {
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
-		
 	}
 	
 	public final static ReceivedFileNI getInstance(ChatController chatController) {
@@ -36,48 +45,32 @@ public final class ReceivedFileNI implements Runnable {
 		}
 		return ReceivedFileNI.instance;
 	}
+	
+	public byte[] toByteArrayUsingJava(InputStream is) throws IOException{
+		/*
+		ByteArrayOutputStream baos = new ByteArrayOutputStream();
+        int reads = is.read();
+       
+        while(reads != -1){
+            baos.write(reads);
+            reads = is.read();
+        }
+        return baos.toByteArray();
+    	*/
+		return IOUtils.toByteArray(is);
+    }
 
 	public void run() { 
         while(true) {
             try {
-				socket = serverSocket.accept();
+				socket = serverSocket.accept();	
+				System.out.println(socket.toString());
 				inputStream = socket.getInputStream();
+				//byte[] buf = 
+				//System.out.println(Message.fromArray(buf));
 			} catch (IOException e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
-			}         
-            
-            //BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(outputStream));
-            //bw.write("Blabla");
-            //bw.flush();
-            //socket.close();
-        }
-
-		/*
-		DatagramSocket socket = null;
-		try {
-			socket = new DatagramSocket(16001, InetAddress.getByName("0.0.0.0"));
-			socket.setBroadcast(true);
-
-			while (true) {
-				//System.out.println(getClass().getName() + ">>>Ready to receive broadcast packets!");
-				//Receive a packet
-				byte[] recvBuf = new byte[15000];
-				DatagramPacket packet = new DatagramPacket(recvBuf, recvBuf.length);
-				socket.receive(packet);
-
-				//Packet received
-				//System.out.println(getClass().getName() + ">>>Discovery packet received from: " + packet.getAddress().getHostAddress());
-				//System.out.println(getClass().getName() + ">>>Packet received; data: " + Message.fromArray(packet.getData()));
-				
-				chatController.receivedMessage(packet.getAddress(),Message.fromArray(packet.getData()));
 			}
-		} catch (IOException ex) {
-			ex.printStackTrace();
-		}
-		finally {
-			socket.close();
-		}
-		*/
+        }
 	}
 }

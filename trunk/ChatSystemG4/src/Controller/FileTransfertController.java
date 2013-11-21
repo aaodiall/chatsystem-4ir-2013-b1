@@ -20,6 +20,7 @@ import chatSystemCommon.FileTransfertDemand;
 import chatSystemCommon.Message;
 import Model.MessageFactory;
 import Model.User;
+import View.ReceivedFileNI;
 import View.SendFileNI;
 import View.SendMessageNI;
 
@@ -47,8 +48,7 @@ public class FileTransfertController {
 		else
 			Logger.getLogger(ChatController.class).log(Level.INFO, "Imposible d'envoyer un fichier, un transfert est déjà en cours");
 		
-		this.sendFileTransfertDemand(user,file);
-		this.sendFile(user);
+		this.sendFileTransfertDemand(user,file);	
 	}
 	
 	private void sendFile(User user) {
@@ -95,11 +95,16 @@ public class FileTransfertController {
 		}
 		else if(msg instanceof FileTransfertConfirmation) {
 			//System.out.println("FileTransfertConfirmation");
+			if(((FileTransfertConfirmation) msg).isAccepted()) {	
+				this.sendFile(user);
+			}
 		}
 		else if(msg instanceof FileTransfertDemand) {
 			int option = JOptionPane.showConfirmDialog(null, "Vous avez reçu une demande de transfert de fichier de la part de "+msg.getUsername()+"\n Nom du fichier : "+ ((FileTransfertDemand) msg).getName()+"\nTaille (en byte) : "+((FileTransfertDemand) msg).getSize()+"\n\nVoulez-vous accepter le fichier ?", "Demande de transfert de fichier reçue", JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE);
-			if(option == JOptionPane.OK_OPTION)
+			if(option == JOptionPane.OK_OPTION) {
+				ReceivedFileNI.getInstance(chatController).start();
 				this.sendFileTransfertConfirmation(user, true, msg.getId());
+			}
 			else
 				this.sendFileTransfertConfirmation(user, false, msg.getId());
 		}
