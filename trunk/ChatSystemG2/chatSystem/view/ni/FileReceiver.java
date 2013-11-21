@@ -1,6 +1,7 @@
 package chatSystem.view.ni;
 
 //CLIENT
+import chatSystemCommon.FilePart;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.ObjectInputStream;
@@ -37,9 +38,13 @@ public class FileReceiver implements Runnable {
                 Logger.getLogger(FileReceiver.class.getName()).log(Level.SEVERE, null, ex);
             }
             
-            Object msg = reader.readObject();
+            Object msg;
+            do{
+                msg = reader.readObject();
             
-            System.out.println("RECU : "+msg.toString());
+                System.out.println("RECU : "+msg.toString());
+            }while(!((FilePart)msg).isLast());
+            
         } catch (IOException ex) {
             Logger.getLogger(FileReceiver.class.getName()).log(Level.SEVERE, null, ex);
         } catch (ClassNotFoundException ex) {
