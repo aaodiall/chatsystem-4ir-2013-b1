@@ -1,10 +1,11 @@
 package chatsystemg5.brain;
 
+import java.util.ArrayList;
 import java.util.Observer;
 
 public class UserModel extends ChatModel {
     
-    private Observer observer;
+    private ArrayList<Observer> observers;
 
     private String username;
     private Boolean status;
@@ -17,9 +18,4 @@ public class UserModel extends ChatModel {
     public String get_username(){
         return this.username;
     }
-
-    @Override
-    public void notifyObservers() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }   
 }

@@ -39,16 +39,14 @@ public class ConnectionWindow extends JFrame implements ActionListener {
             
             this.username_field.setEnabled(false);
             this.connect_button.setText("Disconnection");
-            System.out.println("test1");
-            this.chat_control.get_chatGUI().init_list_window(); 
-
+            this.chat_control.get_chatGUI().init_list_window();
+            this.chat_control.get_listDB().addObserver(chat_control.get_chatGUI().get_list_window());
         }
         else if ("Disconnection".equals(this.connect_button.getText())) {
             this.chat_control.perform_disconnection();
             
             this.username_field.setEnabled(true);
             this.connect_button.setText("Connection");
-            System.out.println("test2");
             this.chat_control.get_chatGUI().get_list_window().dispose();
         }
         // TO DO : Vider la zone de texte

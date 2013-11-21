@@ -17,8 +17,7 @@ public class ChatGUI extends JFrame{
     public ChatGUI(ChatController chat_control){
         this.chat_control = chat_control;
         this.chat_windows = new HashMap<String, ChatWindow>();
-        this.connection_window = new ConnectionWindow(this.chat_control);  
-
+        this.connection_window = new ConnectionWindow(this.chat_control);
     }
     
     public void create_chat_window(String remote_username){

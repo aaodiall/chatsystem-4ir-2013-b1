@@ -7,13 +7,14 @@ package chatsystemg5.brain;
 import chatsystemg5.ihm.ChatWindow;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.Observer;
 
 
 public class ConversationModel extends ChatModel{
     
-    private Observer observer;
+    private ArrayList<Observer> observers;
     
     private HashMap<String, LinkedList<String>> conversation;
     
@@ -41,11 +42,4 @@ public class ConversationModel extends ChatModel{
     public String get_last_text_by_user(String remote_username){
         return this.conversation.get(remote_username).getLast();
     }
-
-    @Override
-    public void notifyObservers(){ 
-        // because there is only one observer
-        // if there were several ones we had to implement a loop updating each Observer
-        this.observer.update(this, this.conversation);
-    } 
 }
