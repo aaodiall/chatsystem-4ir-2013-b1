@@ -94,7 +94,7 @@ public class ChatGUI extends View {
     }
     
     public void fileButtonPressed(String text, String idRemoteSystem){
-        ((ChatController) this.controller).performSendFileRequest("C:/install.log", idRemoteSystem);
+        ((ChatController) this.controller).performSendFileRequest("timelapsestarfinal.mp4", idRemoteSystem);
     }
 
     /**
