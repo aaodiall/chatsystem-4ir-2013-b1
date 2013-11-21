@@ -1,104 +1,105 @@
 package Controller;
 
+import java.io.BufferedOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.IOException;
-import java.net.InetAddress;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.logging.Level;
 
 import javax.swing.JOptionPane;
 
-import com.sun.istack.internal.logging.Logger;
-
-import chatSystemCommon.FilePart;
-import chatSystemCommon.FileTransfertCancel;
-import chatSystemCommon.FileTransfertConfirmation;
-import chatSystemCommon.FileTransfertDemand;
-import chatSystemCommon.Message;
 import Model.MessageFactory;
 import Model.User;
 import View.ReceivedFileNI;
 import View.SendFileNI;
 import View.SendMessageNI;
+import chatSystemCommon.FilePart;
+import chatSystemCommon.FileTransfertCancel;
+import chatSystemCommon.FileTransfertConfirmation;
+import chatSystemCommon.FileTransfertDemand;
+import chatSystemCommon.Message;
+
+import com.sun.istack.internal.logging.Logger;
 
 public class FileTransfertController {
 	private ArrayList<byte[]> sendBuffer = new ArrayList<byte[]>();
 	private ArrayList<byte[]> receivedBuffer = new ArrayList<byte[]>();
 	private ChatController chatController;
-	
-	/**
-	 * 
-	 * @param chatController
-	 */
+
 	public FileTransfertController(ChatController chatController) {
 		this.chatController = chatController;
 	}
-	
-	/**
-	 * 
-	 * @param user
-	 * @param file
-	 */
+
 	public void beginFileTransfertProtocol(User user, File file) {
 		if(SendFileNI.getInstance(this).getFileTransfertState() == StateTransfert.WAITING_INIT) {
-			this.splitFile(file);
+			this.fileTransfertProtocol(user, file,null);
 		}
 		else
 			Logger.getLogger(ChatController.class).log(Level.INFO, "Imposible d'envoyer un fichier, un transfert est déjà en cours");
-		
-		SendFileNI.getInstance(this).setFileTransfertState(StateTransfert.PROCESSING);
-		this.sendFileTransfertDemand(user,file);	
-	}
-	
-	private void sendFile(User user) {
-		SendFileNI.getInstance(this).sendFile(user);
 	}
 
-	/**
-	 * 
-	 */
-	public void updateState() {
+	public void fileTransfertProtocol(User user, File file, Message msg) {
 		switch(SendFileNI.getInstance(this).getFileTransfertState()) {
-			case WAITING_INIT :	
-				SendFileNI.getInstance(this).setFileTransfertState(StateTransfert.AVAILABLE);
+		case WAITING_INIT :	
+			this.splitFile(file);
+			SendFileNI.getInstance(this).setFileTransfertState(StateTransfert.AVAILABLE);
+			this.fileTransfertProtocol(user, file, msg);
 			break;
-			case AVAILABLE:
-				SendFileNI.getInstance(this).setFileTransfertState(StateTransfert.WAITING_CONFIRMATION);
+		case AVAILABLE:
+			this.sendFileTransfertDemand(user,file);	
+			SendFileNI.getInstance(this).setFileTransfertState(StateTransfert.WAITING_CONFIRMATION);
+			this.fileTransfertProtocol(user, file, msg);
 			break;
-			case WAITING_CONFIRMATION :
-				SendFileNI.getInstance(this).setFileTransfertState(StateTransfert.READY);
+		case WAITING_CONFIRMATION :
+			if(((FileTransfertConfirmation) msg).isAccepted()) {
+				SendFileNI.getInstance(this).setFileTransfertState(StateTransfert.PROCESSING);
+				this.sendFile(user);
+			}
+			else {
+				SendFileNI.getInstance(this).setFileTransfertState(StateTransfert.CANCELED);
+			}
+			this.fileTransfertProtocol(user, file, msg);
 			break;
+			/*
 			case READY :
 				SendFileNI.getInstance(this).setFileTransfertState(StateTransfert.PROCESSING);
+				this.fileTransfertProtocol(user, file, msg);
 			break;
-			case PROCESSING :
-				SendFileNI.getInstance(this).setFileTransfertState(StateTransfert.TERMINATED);
+			 */
+		case PROCESSING :
+			SendFileNI.getInstance(this).setFileTransfertState(StateTransfert.TERMINATED);
+			//this.fileTransfertProtocol(user, file, msg);
 			break;
-			case TERMINATED :
-				SendFileNI.getInstance(this).setFileTransfertState(StateTransfert.WAITING_INIT);
+		case TERMINATED :
+			try {
+				FileOutputStream fos = new FileOutputStream("certif.jpeg");
+				for(byte[] b : receivedBuffer) {
+					fos.write(b);
+				}
+				fos.close();
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+			SendFileNI.getInstance(this).setFileTransfertState(StateTransfert.WAITING_INIT);
 			break;
-			case CANCELED :
-				SendFileNI.getInstance(this).setFileTransfertState(StateTransfert.WAITING_INIT);
+		case CANCELED :
+			receivedBuffer.clear();
+			sendBuffer.clear();
+			SendFileNI.getInstance(this).setFileTransfertState(StateTransfert.WAITING_INIT);
 			break;
 		}
 	}
-	
-	/**
-	 * 
-	 * @param user
-	 * @param msg
-	 */
+
 	public void receivedMessage(User user, Message msg) {
 		if(msg instanceof FileTransfertCancel) {
-			
+
 		}
 		else if(msg instanceof FileTransfertConfirmation) {
-			if(((FileTransfertConfirmation) msg).isAccepted()) {	
-				this.sendFile(user);
-			}
+			this.fileTransfertProtocol(user, null, msg);
 		}
 		else if(msg instanceof FileTransfertDemand) {
 			int option = JOptionPane.showConfirmDialog(null, "Vous avez reçu une demande de transfert de fichier de la part de "+msg.getUsername()+"\n Nom du fichier : "+ ((FileTransfertDemand) msg).getName()+"\nTaille (en byte) : "+((FileTransfertDemand) msg).getSize()+"\n\nVoulez-vous accepter le fichier ?", "Demande de transfert de fichier reçue", JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE);
@@ -113,14 +114,10 @@ public class FileTransfertController {
 			receivedBuffer.add(((FilePart) msg).getFilePart());
 		}
 	}
-	
-	/**
-	 * 
-	 * @param file
-	 */
+
 	public void splitFile(File file) {
 		byte[] bFile = new byte[(int) file.length()];
-	    FileInputStream fileInputStream;
+		FileInputStream fileInputStream;
 		try {
 			fileInputStream = new FileInputStream(file);
 			fileInputStream.read(bFile);
@@ -130,7 +127,7 @@ public class FileTransfertController {
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
-		//Divide the file in parts and send them
+		//Divide the file in parts
 		int fileParts = (bFile.length /1000)+1; //Correct: calculate the parts correctly
 		for(int i=0; i<fileParts; i++){
 			if(i+1==fileParts) //Sends last part
@@ -138,27 +135,18 @@ public class FileTransfertController {
 			else
 				sendBuffer.add(Arrays.copyOfRange(bFile,i*1000,i*1000+1000));
 		}
-		
-		this.updateState();
 	}
-	
-	/**
-	 * 
-	 * @param user
-	 * @param file
-	 */
+
 	public void sendFileTransfertDemand(User user,File file) {
 		SendMessageNI.getInstance().sendMessage(MessageFactory.getFileTransfertDemandMessage(chatController.getLocalUser().getUsername(), file.getName(), file.length(),16001), user.getAddress());
 	}
 
-	/**
-	 * 
-	 * @param user
-	 * @param isAccepetd
-	 * @param idDemand
-	 */
 	public void sendFileTransfertConfirmation(User user, boolean isAccepetd, int idDemand) {
 		SendMessageNI.getInstance().sendMessage(MessageFactory.getFileTransfertConfirmationMessage(chatController.getLocalUser().getUsername(), isAccepetd, idDemand), user.getAddress());
+	}
+
+	private void sendFile(User user) {
+		SendFileNI.getInstance(this).sendFile(user);
 	}
 
 	public FilePart getFilePartToSend() {

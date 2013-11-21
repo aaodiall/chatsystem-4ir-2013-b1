@@ -7,8 +7,6 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.logging.Level;
 
-import javax.swing.JOptionPane;
-
 import Interface.GuiToController;
 import Model.ChatModel;
 import Model.MessageFactory;
@@ -16,9 +14,6 @@ import Model.User;
 import View.ChatGUI;
 import View.ReceivedMessageNI;
 import View.SendMessageNI;
-import chatSystemCommon.FileTransfertCancel;
-import chatSystemCommon.FileTransfertConfirmation;
-import chatSystemCommon.FileTransfertDemand;
 import chatSystemCommon.Goodbye;
 import chatSystemCommon.Hello;
 import chatSystemCommon.Message;
