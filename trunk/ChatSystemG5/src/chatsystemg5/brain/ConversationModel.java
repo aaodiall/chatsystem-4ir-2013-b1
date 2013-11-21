@@ -12,6 +12,9 @@ import java.util.Observer;
 
 
 public class ConversationModel extends ChatModel{
+    
+    private Observer observer;
+    
     private HashMap<String, LinkedList<String>> conversation;
     
     ConversationModel (ChatController chat_control){
@@ -33,6 +36,10 @@ public class ConversationModel extends ChatModel{
             this.conversation.put(remote_user, messages);
         }
         this.notifyObservers();
+    }
+    
+    public String get_last_text_by_user(String remote_username){
+        return this.conversation.get(remote_username).getLast();
     }
 
     @Override

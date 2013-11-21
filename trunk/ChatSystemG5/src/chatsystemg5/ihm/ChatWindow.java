@@ -5,69 +5,52 @@
 package chatsystemg5.ihm;
 
 import chatsystemg5.brain.ChatController;
+import chatsystemg5.brain.ConversationModel;
 import java.awt.BorderLayout;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.WindowEvent;
+import java.awt.event.WindowListener;
+import java.util.HashMap;
+import java.util.LinkedList;
+import java.util.Observable;
+import java.util.Observer;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
+import javax.swing.SwingUtilities;
+import sun.awt.WindowClosingListener;
 
-public class ChatWindow extends JFrame implements ActionListener {
+public class ChatWindow extends JFrame implements Observer, ActionListener, WindowClosingListener {
     
     private ChatController chat_control;
     private String remote_username;
     
-    private GridLayout layout;
-
-    private JButton send_button;
+    // Variables declaration - do not modify                     
+    private javax.swing.JButton file_button;
+    private javax.swing.JButton send_button;
+    private javax.swing.JTextArea received_text;
+    private javax.swing.JTextArea send_text;
+    private javax.swing.JLabel label;
     
-    private JLabel label_send_text ;
-    private JLabel label_received_text;
-    
-    private JTextArea received_text;
-    private JTextArea send_text;
+    private javax.swing.JScrollPane jScrollPane1;
+    private javax.swing.JScrollPane jScrollPane2;
+    private javax.swing.JSeparator jSeparator1;
+    private javax.swing.JSeparator jSeparator2;
+    // End of variables declaration  
     
     //private BufferedWriter writer;
     //private BufferedReader reader;
     
-    public ChatWindow (ChatController chat_control) {
+    public ChatWindow (ChatController chat_control, String remote_username) {
         this.chat_control = chat_control;
-        this.remote_username = null;
-
-        // create the components
-        setLayout(new GridLayout(4,2,2,2));
+        this.remote_username = remote_username;
         
-        // the send button and his eventListenner
-        this.send_button = new JButton("Send");
-        this.send_button.addActionListener(this);
-        
-        // not used yet
-        this.label_received_text = new JLabel("Received text");
-        this.label_send_text = new JLabel("Send text");
-        
-        
-        this.send_text = new JTextArea();
-        this.received_text = new JTextArea();
-        this.received_text.setEditable(false);
-
-        // dispose component in the GridLayout
-		 
-        this.add("1",this.label_received_text);
-        this.add("3",this.received_text);
-        this.add("5",this.label_send_text);
-        this.add("7",this.send_text);
-        this.add("8",this.send_button);
-        
-        // packs the fenetre: size is calculated
-        // regarding the added components
-        this.pack();
-        // the JFrame is visible now
+        initComponents();
         this.setVisible(true);
-
-        this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE) ; 
     }
 
     @Override
@@ -75,13 +58,110 @@ public class ChatWindow extends JFrame implements ActionListener {
         // it's the send button which is selected
         if (e.getSource() == this.send_button) {
             this.chat_control.perform_send(this.remote_username, this.send_text.getText());
-            //this.chat_control.perform_send("test@/10.1.5.152", this.send_text.getText());
+        }
+        else if(e.getSource() == this.file_button) {
+            FileActionPerformed(e);
         }
     }
     
-    public void update_chat_window(String remote_user){
-        this.remote_username = remote_user;
-        this.setVisible(true);
+    @Override
+    public void update(Observable obs, Object obj){
+        this.received_text.append(((ConversationModel)obj).get_last_text_by_user(this.remote_username));
+        this.received_text.updateUI();
     }
-    
+
+    @Override
+    public RuntimeException windowClosingNotify(WindowEvent we) {
+        String exception_message = "GUI : The chat window with " + this.remote_username + " has been closed";
+        RuntimeException e = new RuntimeException(exception_message);
+        return e;
+    }
+
+    @Override
+    public RuntimeException windowClosingDelivered(WindowEvent we) {
+        this.chat_control.get_chatGUI().delete_chat_window(this.remote_username);
+        RuntimeException e = new RuntimeException();
+        return e;
+    }
+
+    private void FileActionPerformed(java.awt.event.ActionEvent evt) {                                     
+        // TODO add your handling code here:
+    }
+                        
+    private void initComponents() {
+
+        label = new javax.swing.JLabel();
+        received_text = new javax.swing.JTextArea();
+        send_text = new javax.swing.JTextArea();
+        send_button = new javax.swing.JButton();
+        file_button = new javax.swing.JButton();
+        
+        jScrollPane1 = new javax.swing.JScrollPane();        
+        jScrollPane2 = new javax.swing.JScrollPane();
+        jSeparator1 = new javax.swing.JSeparator();
+        jSeparator2 = new javax.swing.JSeparator();
+        
+
+        setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
+
+        label.setText(this.remote_username);
+
+        received_text.setColumns(20);
+        received_text.setRows(5);
+        jScrollPane1.setViewportView(received_text);
+
+        send_text.setColumns(20);
+        send_text.setRows(5);
+        jScrollPane2.setViewportView(send_text);
+
+        send_button.setText("Send");
+        send_button.addActionListener(this);
+
+        file_button.setText("File");
+        file_button.addActionListener(this);
+
+        org.jdesktop.layout.GroupLayout layout = new org.jdesktop.layout.GroupLayout(getContentPane());
+        getContentPane().setLayout(layout);
+        layout.setHorizontalGroup(
+            layout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
+            .add(layout.createSequentialGroup()
+                .addContainerGap()
+                .add(layout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
+                    .add(org.jdesktop.layout.GroupLayout.TRAILING, jSeparator1)
+                    .add(layout.createSequentialGroup()
+                        .add(layout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
+                            .add(jScrollPane2, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 388, Short.MAX_VALUE)
+                            .add(jScrollPane1)
+                            .add(layout.createSequentialGroup()
+                                .add(label, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
+                                .add(file_button, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, 59, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE))
+                            .add(org.jdesktop.layout.GroupLayout.TRAILING, jSeparator2))
+                        .addContainerGap())))
+            .add(layout.createSequentialGroup()
+                .add(send_button, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addContainerGap())
+        );
+        layout.setVerticalGroup(
+            layout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
+            .add(layout.createSequentialGroup()
+                .addContainerGap()
+                .add(layout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING, false)
+                    .add(file_button, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .add(label, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
+                .add(jSeparator2, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, 10, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
+                .add(jScrollPane1, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, 226, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
+                .add(jSeparator1, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
+                .add(jScrollPane2, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
+                .add(send_button)
+                .addContainerGap())
+        );
+
+        pack();
+    }
 }

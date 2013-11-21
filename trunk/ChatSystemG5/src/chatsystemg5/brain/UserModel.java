@@ -4,6 +4,8 @@ import java.util.Observer;
 
 public class UserModel extends ChatModel {
     
+    private Observer observer;
+
     private String username;
     private Boolean status;
     

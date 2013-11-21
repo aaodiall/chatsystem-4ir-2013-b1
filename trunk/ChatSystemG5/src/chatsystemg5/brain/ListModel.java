@@ -10,6 +10,8 @@ import javax.swing.event.ListDataListener;
 
 public class ListModel extends ChatModel {
     
+    private Observer observer;
+    
     private HashMap<String,String> hmap_users;
     
     public ListModel (ChatController chatController) {
@@ -32,11 +34,16 @@ public class ListModel extends ChatModel {
     public String get_IP_addr (String username) {
         return hmap_users.get(username);
     }
+    
+    public HashMap<String,String> get_hmap_users () {
+        return this.hmap_users;
+    }
 
     @Override
-    public void notifyObservers(){ 
-        // because there is only one observer
-        // if there were several ones we had to implement a loop updating each Observer
-        this.observer.update(this, this.hmap_users);
-    }        
+    public void notifyObservers() {
+        this.observer.update((ListModel)this, (HashMap<String,String>)this.hmap_users);
+    }
+    
+    
+
 }

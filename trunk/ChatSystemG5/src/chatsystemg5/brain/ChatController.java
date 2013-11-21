@@ -12,13 +12,14 @@ import java.util.logging.Logger;
 
 public class ChatController {
 
-    UserModel userDB;
-    ListModel listDB;
-    ConversationModel convDB;
-    String username;
+    private UserModel userDB;
+    private ListModel listDB;
+    private ConversationModel convDB;
     
-    ChatGUI chatGUI;
-    ChatNI chatNI;
+    private String username;
+    
+    private ChatGUI chatGUI;
+    private ChatNI chatNI;
     
     public ChatController () {
         // initialize view
@@ -87,8 +88,8 @@ public class ChatController {
     // Réception d'un message
     public void perform_send (String remote_user, String txt, String IP_text) {
         //display_message ()
-        System.out.println("I'm Controller, receiving : " + txt.toString());
-        //convDB.add_conversation(remote_user, IP_text, txt);        
+        String conversation = new String(txt + "\n[" + System.currentTimeMillis() + "]");
+        convDB.add_conversation(remote_user, IP_text, conversation);        
     }
         
     /**************** Getters ****************/
@@ -99,6 +100,10 @@ public class ChatController {
     
     public ListModel get_listDB(){
         return this.listDB;
+    }
+    
+    public ConversationModel get_convDB(){
+        return this.convDB;
     }
  
     public ChatGUI get_chatGUI(){
