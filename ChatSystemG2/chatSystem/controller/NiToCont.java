@@ -25,7 +25,5 @@ public interface NiToCont {
         
         public void performConfirmationReceived(String idRemoteSystem, int idTransfert, boolean accepted);
 	
-	/*
-	
-	public void performFileReceived(File f);*/
+	public void performFilePartReceived(byte[] filePart, boolean isLast);
 }

@@ -77,6 +77,7 @@ public class FileTransfertInformation extends Model {
         this.path = null; //in name or to define
         this.isLast = false;
         
+        System.out.println(name);
         this.fileDescriptor = new File(name);
         try {
             this.fileDescriptor.createNewFile();
@@ -115,6 +116,10 @@ public class FileTransfertInformation extends Model {
      */
     public boolean isLast() {
         return this.isLast;
+    }
+    
+    public boolean setIsLast(boolean isLast) {
+        return this.isLast = isLast;
     }
 
     /**
