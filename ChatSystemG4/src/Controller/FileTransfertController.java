@@ -6,10 +6,12 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.nio.ByteBuffer;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.logging.Level;
 
+import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
 
 import Model.MessageFactory;
@@ -27,8 +29,12 @@ import com.sun.istack.internal.logging.Logger;
 
 public class FileTransfertController {
 	private ArrayList<byte[]> sendBuffer = new ArrayList<byte[]>();
-	private ArrayList<byte[]> receivedBuffer = new ArrayList<byte[]>();
+	//private ArrayList<byte[]> receivedBuffer = new ArrayList<byte[]>();
+	private ByteBuffer receivedBuffer;
+	private byte[] receivedFile;
 	private ChatController chatController;
+	private String fileName;
+	private long fileSize;
 
 	public FileTransfertController(ChatController chatController) {
 		this.chatController = chatController;
@@ -43,6 +49,7 @@ public class FileTransfertController {
 	}
 
 	public void fileTransfertProtocol(User user, File file, Message msg) {
+		Logger.getLogger(FileTransfertController.class).log(Level.INFO, SendFileNI.getInstance(this).getFileTransfertState().name());
 		switch(SendFileNI.getInstance(this).getFileTransfertState()) {
 		case WAITING_INIT :	
 			this.splitFile(file);
@@ -55,6 +62,10 @@ public class FileTransfertController {
 			this.fileTransfertProtocol(user, file, msg);
 			break;
 		case WAITING_CONFIRMATION :
+			SendFileNI.getInstance(this).setFileTransfertState(StateTransfert.READY);
+			//this.fileTransfertProtocol(user, file, msg);
+			break;
+		case READY :
 			if(((FileTransfertConfirmation) msg).isAccepted()) {
 				SendFileNI.getInstance(this).setFileTransfertState(StateTransfert.PROCESSING);
 				this.sendFile(user);
@@ -64,26 +75,11 @@ public class FileTransfertController {
 			}
 			this.fileTransfertProtocol(user, file, msg);
 			break;
-			/*
-			case READY :
-				SendFileNI.getInstance(this).setFileTransfertState(StateTransfert.PROCESSING);
-				this.fileTransfertProtocol(user, file, msg);
-			break;
-			 */
 		case PROCESSING :
 			SendFileNI.getInstance(this).setFileTransfertState(StateTransfert.TERMINATED);
 			//this.fileTransfertProtocol(user, file, msg);
 			break;
 		case TERMINATED :
-			try {
-				FileOutputStream fos = new FileOutputStream("certif.jpeg");
-				for(byte[] b : receivedBuffer) {
-					fos.write(b);
-				}
-				fos.close();
-			} catch (IOException e) {
-				e.printStackTrace();
-			}
 			SendFileNI.getInstance(this).setFileTransfertState(StateTransfert.WAITING_INIT);
 			break;
 		case CANCELED :
@@ -102,7 +98,11 @@ public class FileTransfertController {
 			this.fileTransfertProtocol(user, null, msg);
 		}
 		else if(msg instanceof FileTransfertDemand) {
-			int option = JOptionPane.showConfirmDialog(null, "Vous avez reçu une demande de transfert de fichier de la part de "+msg.getUsername()+"\n Nom du fichier : "+ ((FileTransfertDemand) msg).getName()+"\nTaille (en byte) : "+((FileTransfertDemand) msg).getSize()+"\n\nVoulez-vous accepter le fichier ?", "Demande de transfert de fichier reçue", JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE);
+			this.fileName = ((FileTransfertDemand) msg).getName();
+			this.fileSize = ((FileTransfertDemand) msg).getSize();
+			this.receivedFile = new byte[(int) this.fileSize];
+			this.receivedBuffer = ByteBuffer.wrap(receivedFile);
+			int option = JOptionPane.showConfirmDialog(null, "Vous avez reçu une demande de transfert de fichier de la part de "+msg.getUsername()+"\n Nom du fichier : "+ this.fileName +"\nTaille (en byte) : "+ this.fileSize +"\n\nVoulez-vous accepter le fichier ?", "Demande de transfert de fichier reçue", JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE);
 			if(option == JOptionPane.OK_OPTION) {
 				ReceivedFileNI.getInstance(chatController,((FileTransfertDemand) msg).getPortClient()).start();
 				this.sendFileTransfertConfirmation(user, true, msg.getId());
@@ -111,7 +111,30 @@ public class FileTransfertController {
 				this.sendFileTransfertConfirmation(user, false, msg.getId());
 		}
 		else if(msg instanceof FilePart) {
-			receivedBuffer.add(((FilePart) msg).getFilePart());
+			receivedBuffer.put(((FilePart) msg).getFilePart());
+			
+			if(((FilePart) msg).isLast()) {
+				JFileChooser fileChooser = new JFileChooser(); 
+				fileChooser.setDialogTitle("Select directory");
+				fileChooser.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
+				fileChooser.setAcceptAllFileFilterUsed(false);
+				
+				int value = fileChooser.showOpenDialog(chatController.getChatGui());
+				while(value != JFileChooser.APPROVE_OPTION){
+					JOptionPane.showMessageDialog(chatController.getChatGui(), "You must select a directory.");
+					value = fileChooser.showOpenDialog(chatController.getChatGui());
+				}
+				
+				try {
+					FileOutputStream fos = new FileOutputStream(fileChooser.getSelectedFile().toString()+"\\"+this.fileName);
+					fos.write(this.receivedFile);
+					fos.flush();
+					fos.close();
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
+				
+			}
 		}
 	}
 
@@ -128,12 +151,12 @@ public class FileTransfertController {
 			e.printStackTrace();
 		}
 		//Divide the file in parts
-		int fileParts = (bFile.length /1000)+1; //Correct: calculate the parts correctly
+		int fileParts = (bFile.length /2000)+1; //Correct: calculate the parts correctly
 		for(int i=0; i<fileParts; i++){
 			if(i+1==fileParts) //Sends last part
-				sendBuffer.add(Arrays.copyOfRange(bFile,i*1000,bFile.length));
+				sendBuffer.add(Arrays.copyOfRange(bFile,i*2000,bFile.length));
 			else
-				sendBuffer.add(Arrays.copyOfRange(bFile,i*1000,i*1000+1000));
+				sendBuffer.add(Arrays.copyOfRange(bFile,i*2000,i*2000+2000));
 		}
 	}
 
@@ -151,11 +174,14 @@ public class FileTransfertController {
 
 	public FilePart getFilePartToSend() {
 		byte[] toSend = null;
-		if(sendBuffer.size() > 0) {
+		if(sendBuffer.size() >0) {
 			toSend = sendBuffer.get(0);
 			sendBuffer.remove(0);
-			return MessageFactory.getFileMessage(chatController.getLocalUser().getUsername(), toSend, false);
+			if(sendBuffer.size() != 1) 
+				return MessageFactory.getFileMessage(chatController.getLocalUser().getUsername(), toSend, false);
+			else
+				return MessageFactory.getFileMessage(chatController.getLocalUser().getUsername(), toSend, true);
 		}
-		return MessageFactory.getFileMessage(chatController.getLocalUser().getUsername(), toSend, true);
+		return null;
 	}
 }
