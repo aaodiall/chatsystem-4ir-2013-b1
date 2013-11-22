@@ -10,6 +10,15 @@ public class ChatSystem {
             
             //double i=0;
             ChatController brain = new ChatController();
+            
+            /* Ne marche pas depuis le remodelage :
+             * il y avait un problème de retour de connexion où l'adresse IP à qui
+             * renvoyer le Hello n'était pas donnée, tentative pour la donner pas terrible.
+             * Passage MsgHandler -> ChatNI -> ChatController problématique
+             * alors que MsgHandler -> ChatController OK. Bizarre
+             * Pb surtout au niveau du Thread, nullpointerexception
+             */
+            
             /*ChatController brain2 = new ChatController();
             while (i<1000000000) i++;
             System.out.println("Ready to send text");

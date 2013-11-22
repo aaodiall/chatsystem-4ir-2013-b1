@@ -16,21 +16,36 @@ public /*abstract*/ class ChatNI implements Observer {
     private MessageHandlerNI msg_handler;
     //private FileHandlerNI file_handler;
     private String username;
+    private InetAddress IP_dest;
+    private InetAddress IP_temp;
 
     public ChatNI(ChatController chat_control) {
         
+        this.chat_control = chat_control;
         username = chat_control.get_userDB().get_username();
-        msg_handler = new MessageHandlerNI(this);
+        msg_handler = new MessageHandlerNI(chat_control, this);
         //file_handler = new FileHandlerNI(this);
-        System.out.println("I'm ChatNI : username : " + username);
+        //System.out.println("I'm ChatNI : username : " + username);
     }
 
     /******************************************************************/
     
     // PARTIE MESSAGE EMISSION
     
-    public void to_connection(Boolean alrdythere) {
-        msg_handler.send_connection(alrdythere);
+    public void to_connection(String user_and_IP, Boolean alrdythere) {
+        try {
+            if (!alrdythere) {
+                IP_dest = MessageEmissionNI.get_broadcast();
+            }
+            else {
+                IP_dest = InetAddress.getByName(chat_control.get_listDB().get_IP_addr(user_and_IP));
+            }
+            //System.out.println("I'm ChatNI : IP temp to send : " + IP_temp);
+            System.out.println("I'm ChatNI : sending a Hello : " + alrdythere);
+            msg_handler.send_connection(IP_dest, alrdythere);
+        } catch (UnknownHostException ex) {
+            Logger.getLogger(ChatNI.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }
     
     public void to_disconnection() {
@@ -55,7 +70,14 @@ public /*abstract*/ class ChatNI implements Observer {
     // PARTIE MESSAGE RECEPTION
     
     public void from_connection(String remote_user, String IP_text, Boolean alrdythere) {
-        chat_control.perform_connection(remote_user, IP_text, alrdythere);
+        //try {
+            //this.IP_temp = InetAddress.getByName(IP_text);
+            //System.out.println("I'm ChatNI : IP temp received : " + IP_temp);
+            //System.out.println("I'm ChatNI : connection back : remote user : " + remote_user + ", IP source : " + IP_text + ", already there ? " + alrdythere);
+            chat_control.perform_connection_back(remote_user, IP_text, alrdythere);
+//        } catch (UnknownHostException ex) {
+//            Logger.getLogger(ChatNI.class.getName()).log(Level.SEVERE, null, ex);
+//        }
     }
     
     public void from_disconnection(String remote_user, String IP_text) {

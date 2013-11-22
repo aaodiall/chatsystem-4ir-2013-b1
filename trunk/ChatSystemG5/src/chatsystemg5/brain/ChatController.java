@@ -47,20 +47,22 @@ public class ChatController {
     
     // Connexion du local user
     public void perform_connection () {
-        System.out.println("test1");
-        chatNI.to_connection(false);
+        chatNI.to_connection(username, false);
+
     }
     
     // Connexion d'un autre user
-     public void perform_connection (String r_user, String IP_text, Boolean alrdythere) {
+    public void perform_connection_back (String remote_user, String IP_text, Boolean alrdythere) {
+        //System.out.println("I'm Controller, receiving connection : remote user : " +remote_user + ", IP source : " + IP_text + ", already there ? " + alrdythere);
         // Ajouter utilisateur au model
-        listDB.add_user(r_user, IP_text);
+        listDB.add_user(remote_user, IP_text);
 
    
         // if remote user first connection
         if(!alrdythere){
+            //System.out.println("I'm Controller : sending back a Hello ");
             // create a new message to sent back ack
-            chatNI.to_connection(true);       
+            chatNI.to_connection(remote_user + " @ " + IP_text, true);       
         }
      }
     
