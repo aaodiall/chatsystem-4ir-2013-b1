@@ -47,17 +47,14 @@ public class ChatController implements GuiToController{
 		Logger.getLogger(ChatController.class).log(Level.INFO, "Message received >> " + msg.toString());
 		
 		if(msg instanceof Hello) {
-			//System.out.println("Hello");
 			chatModel.addUser(user);
 			if(!((Hello) msg).isAck())
 				SendMessageNI.getInstance().sendMessage(MessageFactory.getHelloMessage(chatModel.getLocalUser().getUsername(), true), inetAddress);
 		}
 		else if(msg instanceof Goodbye) {
-			//System.out.println("Goodbye");
 			chatModel.removeElement(new User(inetAddress,msg.getUsername()));
 		}
 		else if(msg instanceof Text) {
-			//System.out.println("Text");
 			int selectedIndex = chatGui.getUserList().getSelectedIndex();		
 			chatModel.get(user).addMessage(msg);
 			if(selectedIndex != -1)

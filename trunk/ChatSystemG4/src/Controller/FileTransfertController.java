@@ -41,7 +41,7 @@ public class FileTransfertController {
 	}
 
 	public void beginFileTransfertProtocol(User user, File file) {
-		if(SendFileNI.getInstance(this).getFileTransfertState() == StateTransfert.WAITING_INIT) {
+		if(SendFileNI.getInstance(this).getFileTransfertState() == StateTransfert.AVAILABLE) {
 			this.fileTransfertProtocol(user, file,null);
 		}
 		else
@@ -51,51 +51,40 @@ public class FileTransfertController {
 	public void fileTransfertProtocol(User user, File file, Message msg) {
 		Logger.getLogger(FileTransfertController.class).log(Level.INFO, SendFileNI.getInstance(this).getFileTransfertState().name());
 		switch(SendFileNI.getInstance(this).getFileTransfertState()) {
-		case WAITING_INIT :	
-			this.splitFile(file);
-			SendFileNI.getInstance(this).setFileTransfertState(StateTransfert.AVAILABLE);
-			this.fileTransfertProtocol(user, file, msg);
-			break;
 		case AVAILABLE:
+			this.splitFile(file);
 			this.sendFileTransfertDemand(user,file);	
-			SendFileNI.getInstance(this).setFileTransfertState(StateTransfert.WAITING_CONFIRMATION);
-			this.fileTransfertProtocol(user, file, msg);
-			break;
-		case WAITING_CONFIRMATION :
-			SendFileNI.getInstance(this).setFileTransfertState(StateTransfert.READY);
-			//this.fileTransfertProtocol(user, file, msg);
-			break;
-		case READY :
-			if(((FileTransfertConfirmation) msg).isAccepted()) {
-				SendFileNI.getInstance(this).setFileTransfertState(StateTransfert.PROCESSING);
-				this.sendFile(user);
-			}
-			else {
-				SendFileNI.getInstance(this).setFileTransfertState(StateTransfert.CANCELED);
-			}
-			this.fileTransfertProtocol(user, file, msg);
+			this.moveToState(StateTransfert.PROCESSING);
 			break;
 		case PROCESSING :
-			SendFileNI.getInstance(this).setFileTransfertState(StateTransfert.TERMINATED);
-			//this.fileTransfertProtocol(user, file, msg);
+			if(((FileTransfertConfirmation) msg).isAccepted())
+				this.sendFile(user);	
+			else 
+				this.moveToState(StateTransfert.CANCELED);
 			break;
 		case TERMINATED :
-			SendFileNI.getInstance(this).setFileTransfertState(StateTransfert.WAITING_INIT);
+			SendFileNI.getInstance(this).stop();
+			this.moveToState(StateTransfert.AVAILABLE);
 			break;
 		case CANCELED :
 			receivedBuffer.clear();
 			sendBuffer.clear();
-			SendFileNI.getInstance(this).setFileTransfertState(StateTransfert.WAITING_INIT);
+			this.moveToState(StateTransfert.AVAILABLE);
 			break;
 		}
 	}
 
+	public void moveToState(StateTransfert state) {
+		SendFileNI.getInstance(this).setFileTransfertState(state);
+	}
+	
 	public void receivedMessage(User user, Message msg) {
 		if(msg instanceof FileTransfertCancel) {
 
 		}
 		else if(msg instanceof FileTransfertConfirmation) {
-			this.fileTransfertProtocol(user, null, msg);
+			if (SendFileNI.getInstance(this).getFileTransfertState() == StateTransfert.PROCESSING)
+				this.fileTransfertProtocol(user, null, msg);
 		}
 		else if(msg instanceof FileTransfertDemand) {
 			this.fileName = ((FileTransfertDemand) msg).getName();

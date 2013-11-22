@@ -19,7 +19,7 @@ public final class SendFileNI extends Thread{
 	private Socket socket;
 	private User remoteUser;
 
-	private StateTransfert fileTransfertState = StateTransfert.WAITING_INIT;
+	private StateTransfert fileTransfertState = StateTransfert.AVAILABLE;
 	private FileTransfertController fileTransfertController;
 
 	private SendFileNI(FileTransfertController fileTransfertController) {
@@ -50,16 +50,22 @@ public final class SendFileNI extends Thread{
 				os = socket.getOutputStream();
 				
 				FilePart fp = fileTransfertController.getFilePartToSend();
-				if(fp == null)
-					this.stop();
+				if(fp == null) {
+					fileTransfertController.moveToState(StateTransfert.TERMINATED);
+					fileTransfertController.fileTransfertProtocol(null, null, null);
+				}	
+				
 				os.write(fp.toArray());
 				os.flush();
-				os.close();
-				
-				if(fp.isLast())
-					fileTransfertController.fileTransfertProtocol(remoteUser, null, fp);
 			} catch (IOException e) {
 				Logger.getLogger(SendFileNI.class).log(Level.SEVERE,null,e);
+			}
+			finally {
+				try {
+					os.close();
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
 			}
 		}
 	}
