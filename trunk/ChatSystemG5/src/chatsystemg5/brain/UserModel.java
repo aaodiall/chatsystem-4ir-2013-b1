@@ -17,5 +17,5 @@ public class UserModel extends ChatModel {
     
     public String get_username(){
         return this.username;
-    }
+    } 
 }

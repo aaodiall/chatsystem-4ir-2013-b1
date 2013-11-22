@@ -12,7 +12,7 @@ import java.util.LinkedList;
 import java.util.Observer;
 
 
-public class ConversationModel extends ChatModel{
+public class ConversationModel extends ChatModel {
     
     private ArrayList<Observer> observers;
     

@@ -1,5 +1,7 @@
 package chatsystemg5.ihm;
 
-public interface ToLocalUser {
+import java.awt.event.ActionEvent;
 
+public interface ToLocalUser {
+   
 }

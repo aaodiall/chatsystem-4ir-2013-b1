@@ -35,7 +35,7 @@ public class ListWindow extends JFrame implements Observer, ListSelectionListene
         this.chat_control = chat_control;
         
         initComponents();
-        this.setVisible(true);
+        this.setVisible(true);    
     }
 
     @Override

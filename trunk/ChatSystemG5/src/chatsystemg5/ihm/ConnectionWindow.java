@@ -1,8 +1,6 @@
 package chatsystemg5.ihm;
 
 import chatsystemg5.brain.ChatController;
-import chatsystemg5.brain.UserModel;
-import java.awt.BorderLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import javax.swing.JButton;
@@ -34,6 +32,7 @@ public class ConnectionWindow extends JFrame implements ActionListener {
         if ("Connection".equals(this.connect_button.getText())) {
             String username = this.username_field.getText();
             // On initialise et on met en place la connexion
+
             this.chat_control.init_controller(username);
             this.chat_control.perform_connection();
             
@@ -44,10 +43,12 @@ public class ConnectionWindow extends JFrame implements ActionListener {
         }
         else if ("Disconnection".equals(this.connect_button.getText())) {
             this.chat_control.perform_disconnection();
+
             
             this.username_field.setEnabled(true);
             this.connect_button.setText("Connection");
             this.chat_control.get_chatGUI().get_list_window().dispose();
+
         }
         // TO DO : Vider la zone de texte
      
