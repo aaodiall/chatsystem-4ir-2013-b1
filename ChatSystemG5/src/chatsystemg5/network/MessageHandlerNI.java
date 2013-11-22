@@ -13,13 +13,17 @@ import java.util.logging.Logger;
 public class MessageHandlerNI {
     
     private int UDP_port;
-    private ChatNI chatNI;
+    private ChatNI chatNI; 
     String username;
     InetAddress IP_dest;
     private MessageEmissionNI msg_emission;
     private Thread msg_reception;
     
-    public MessageHandlerNI (ChatNI chatNI) {
+    private ChatController chat_control;
+    
+    public MessageHandlerNI (ChatController chat_control, ChatNI chatNI) {
+        
+        this.chat_control = chat_control;
         
         UDP_port = 16001;
         this.chatNI = chatNI;
@@ -41,9 +45,9 @@ public class MessageHandlerNI {
     public void receive (Message msg, InetAddress IP_source) {
         String IP_text = IP_source.getHostAddress();
         if (msg instanceof Hello) {
-            System.out.println("I'm MsgHandler : Hello received.");
-            System.out.println("I'm MsgHandler : remote user : " + msg.getUsername());
+            System.out.println("I'm MsgHandler : Hello received from " + msg.getUsername() + ", IP source : " + IP_text);
             chatNI.from_connection(msg.getUsername(), IP_text, ((Hello) msg).isAck());
+            //chat_control.perform_connection(msg.getUsername(), IP_text, ((Hello) msg).isAck());
             System.out.println("Test 1");
         }
         if (msg instanceof Goodbye) {
@@ -75,10 +79,13 @@ public class MessageHandlerNI {
         }
     }
     
-    public void send_connection(Boolean alrdythere) {
+    public void send_connection(InetAddress IP_dest, Boolean alrdythere) {
         //System.out.println("I'm MsgHandler : username : " + username);
         Hello msg = new Hello(username, alrdythere);
-        IP_dest = msg_emission.get_broadcast();
+//        if (!alrdythere) {
+//            IP_dest = msg_emission.get_broadcast();
+//        }
+        System.out.println("I'm MsgHandler : sending Hello to " + IP_dest);
         send(msg, IP_dest);
     }
     

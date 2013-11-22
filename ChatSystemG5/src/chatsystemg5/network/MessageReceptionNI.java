@@ -29,7 +29,7 @@ public class MessageReceptionNI implements Runnable, FromRemoteApp {
             
             this.UDP_sock = new DatagramSocket(this.UDP_port, InetAddress.getByName("0.0.0.0"));
             this.UDP_sock.setBroadcast(true);
-            this.buffer = new byte[256];
+            
             this.localhost = (InetAddress.getLocalHost()).getHostAddress();
         }
         catch (IOException exc) {
@@ -43,7 +43,7 @@ public class MessageReceptionNI implements Runnable, FromRemoteApp {
         try {
             // always listenning
             while(true){     
-                
+                this.buffer = new byte[1000];
                 this.message = new DatagramPacket(buffer, buffer.length);
                 
                 // listen and receive all the message
@@ -52,14 +52,15 @@ public class MessageReceptionNI implements Runnable, FromRemoteApp {
                 // get the IP of the sender
                 this.IP_source = message.getAddress();
                 
-                //System.out.println(" I'm Network : From : " + IP_source.getHostAddress().toString());
-                //System.out.println(" I'm Network : I'm : " + (InetAddress.getLocalHost()).getHostAddress().toString());
-                
-                if (!(IP_source.getHostAddress()).equals(this.localhost)) {
+                //System.out.println("I'm Network : I'm : " + (InetAddress.getLocalHost()).getHostAddress().toString());
+                //System.out.println("I'm Network : From : " + IP_source.getHostAddress().toString());
+                //System.out.println("I'm Network : From : " + IP_source);
+                //if (!(IP_source.getHostAddress()).equals(this.localhost)) {
                     // send the content of the buffer to the controller
                     Message msg = Message.fromArray(buffer);
                     msg_handler.receive(msg, IP_source);  
-                }                
+                //}          
+                System.out.println("NI : Test 1");
 
             }
         } catch (IOException ex) {

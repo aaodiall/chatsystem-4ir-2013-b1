@@ -96,7 +96,7 @@ public class MessageEmissionNI implements ToRemoteApp{
         }
     }
     
-    public InetAddress get_broadcast() {
+    public static InetAddress get_broadcast() {
         InetAddress broadcast = null;
         try {
             broadcast = InetAddress.getByName("10.1.255.255");
