@@ -10,6 +10,11 @@ import java.awt.BorderLayout;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.LinkedList;
+import java.util.Observable;
+import java.util.Observer;
 import java.awt.event.WindowEvent;
 import java.awt.event.WindowListener;
 import java.util.HashMap;
@@ -28,6 +33,7 @@ public class ChatWindow extends JFrame implements Observer, ActionListener, Wind
     
     private ChatController chat_control;
     private String remote_username;
+    private HashMap conversation_list;
     
     // Variables declaration - do not modify                     
     private javax.swing.JButton file_button;
@@ -65,6 +71,22 @@ public class ChatWindow extends JFrame implements Observer, ActionListener, Wind
         }
     }
     
+    public void update_chat_window(String remote_user){
+        this.remote_username = remote_user;
+            this.getContentPane().remove(this.received_text);
+            this.getContentPane().remove(this.send_text);
+            //this.getContentPane().invalidate();
+            this.add("3",this.received_text);
+            this.add("7",this.send_text);
+            this.repaint();
+            this.setVisible(true);
+    }
+    
+    public void display_message_chat_window (String text_message, String remote_user){
+        this.received_text.setText(text_message);
+        this.update_chat_window(remote_username);
+    }
+
     @Override
     public void update(Observable obs, Object obj){
         this.received_text.append(((ConversationModel)obs).get_last_text_by_user(this.remote_username));

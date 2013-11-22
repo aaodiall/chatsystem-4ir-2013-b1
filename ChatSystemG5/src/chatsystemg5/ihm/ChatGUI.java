@@ -2,19 +2,23 @@ package chatsystemg5.ihm;
 
 import chatsystemg5.brain.ChatController;
 import java.awt.BorderLayout;
+import java.awt.Composite;
+import java.awt.CompositeContext;
 import java.awt.Panel;
-import java.util.ArrayList;
+import java.awt.RenderingHints;
+import java.awt.image.ColorModel;
 import java.util.HashMap;
 import javax.swing.JFrame;
+import javax.swing.JPanel;
 
-public class ChatGUI extends JFrame{
-    
+public class ChatGUI extends JFrame {
+
     private ChatController chat_control;
     private ConnectionWindow connection_window;
     private ListWindow list_window;
     private HashMap<String, ChatWindow> chat_windows;
-    
-    public ChatGUI(ChatController chat_control){
+
+    public ChatGUI(ChatController chat_control) {
         this.chat_control = chat_control;
         this.chat_windows = new HashMap<String, ChatWindow>();
         this.connection_window = new ConnectionWindow(this.chat_control);
@@ -28,8 +32,8 @@ public class ChatGUI extends JFrame{
     public void delete_chat_window(String remote_username){
         this.chat_windows.remove(remote_username);
     }
-    
-    public ListWindow get_list_window(){
+
+    public ListWindow get_list_window() {
         return this.list_window;
     }
     
@@ -40,8 +44,8 @@ public class ChatGUI extends JFrame{
     public ChatWindow get_chat_window(String remote_username){
         return this.chat_windows.get(remote_username);
     }
-    
-    public ConnectionWindow get_connection_window(){
+
+    public ConnectionWindow get_connection_window() {
         return this.connection_window;
     }
 }
