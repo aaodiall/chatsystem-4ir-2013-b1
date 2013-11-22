@@ -50,7 +50,9 @@ public final class SendFileNI extends Thread{
 				os = socket.getOutputStream();
 				
 				FilePart fp = fileTransfertController.getFilePartToSend();
-				os.write(fileTransfertController.getFilePartToSend().toArray());
+				if(fp == null)
+					this.stop();
+				os.write(fp.toArray());
 				os.flush();
 				os.close();
 				

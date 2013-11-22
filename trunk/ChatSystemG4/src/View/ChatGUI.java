@@ -175,20 +175,4 @@ public class ChatGUI extends JFrame implements ControllerToGui{
 				"The user "+ username +" wants to send you a file. \nDo you want to accept the file transfer?",
 				"File transfer demand", JOptionPane.YES_NO_OPTION);
 	}
-
-	/*
-	public String getSavingPath() {
-		fileChooser = new JFileChooser(); 
-		fileChooser.setDialogTitle("Select directory");
-		fileChooser.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
-		fileChooser.setAcceptAllFileFilterUsed(false);
-		
-		int value = fileChooser.showOpenDialog(getParent());
-		while(value != JFileChooser.APPROVE_OPTION){
-			JOptionPane.showMessageDialog(getParent(), "You must select a directory.");
-			value = fileChooser.showOpenDialog(getParent());
-		}
-		return fileChooser.getSelectedFile().toString();
-	}
-	*/
 }

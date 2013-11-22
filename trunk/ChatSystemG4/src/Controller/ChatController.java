@@ -120,4 +120,14 @@ public class ChatController implements GuiToController{
 	public User getLocalUser() {
 		return chatModel.getLocalUser();
 	}
+
+	public ChatGUI getChatGui() {
+		return chatGui;
+	}
+
+	public void setChatGui(ChatGUI chatGui) {
+		this.chatGui = chatGui;
+	}
+	
+	
 }
