@@ -121,8 +121,7 @@ public class FileTransfertController {
 					fos.close();
 				} catch (IOException e) {
 					e.printStackTrace();
-				}
-				
+				}	
 			}
 		}
 	}
@@ -140,12 +139,12 @@ public class FileTransfertController {
 			e.printStackTrace();
 		}
 		//Divide the file in parts
-		int fileParts = (bFile.length /2000)+1; //Correct: calculate the parts correctly
+		int fileParts = (bFile.length /5000)+1; //Correct: calculate the parts correctly
 		for(int i=0; i<fileParts; i++){
 			if(i+1==fileParts) //Sends last part
-				sendBuffer.add(Arrays.copyOfRange(bFile,i*2000,bFile.length));
+				sendBuffer.add(Arrays.copyOfRange(bFile,i*5000,bFile.length));
 			else
-				sendBuffer.add(Arrays.copyOfRange(bFile,i*2000,i*2000+2000));
+				sendBuffer.add(Arrays.copyOfRange(bFile,i*5000,i*5000+5000));
 		}
 	}
 
@@ -163,13 +162,16 @@ public class FileTransfertController {
 
 	public FilePart getFilePartToSend() {
 		byte[] toSend = null;
-		if(sendBuffer.size() >0) {
-			toSend = sendBuffer.get(0);
-			sendBuffer.remove(0);
-			if(sendBuffer.size() != 1) 
+		if(!sendBuffer.isEmpty()) {
+			toSend = sendBuffer.get(0);		
+			if(sendBuffer.size() > 1) {
+				sendBuffer.remove(0);
 				return MessageFactory.getFileMessage(chatController.getLocalUser().getUsername(), toSend, false);
-			else
+			}		
+			else {
+				sendBuffer.remove(0);
 				return MessageFactory.getFileMessage(chatController.getLocalUser().getUsername(), toSend, true);
+			}	
 		}
 		return null;
 	}

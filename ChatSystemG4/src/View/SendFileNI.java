@@ -54,18 +54,13 @@ public final class SendFileNI extends Thread{
 					fileTransfertController.moveToState(StateTransfert.TERMINATED);
 					fileTransfertController.fileTransfertProtocol(null, null, null);
 				}	
-				
-				os.write(fp.toArray());
-				os.flush();
+				else {
+					os.write(fp.toArray());
+					os.flush();
+					os.close();
+				}
 			} catch (IOException e) {
 				Logger.getLogger(SendFileNI.class).log(Level.SEVERE,null,e);
-			}
-			finally {
-				try {
-					os.close();
-				} catch (IOException e) {
-					e.printStackTrace();
-				}
 			}
 		}
 	}
