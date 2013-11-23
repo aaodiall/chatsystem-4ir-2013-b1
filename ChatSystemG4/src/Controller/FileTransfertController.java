@@ -63,7 +63,6 @@ public class FileTransfertController {
 				this.moveToState(StateTransfert.CANCELED);
 			break;
 		case TERMINATED :
-			SendFileNI.getInstance(this).stop();
 			this.moveToState(StateTransfert.AVAILABLE);
 			break;
 		case CANCELED :
@@ -93,7 +92,8 @@ public class FileTransfertController {
 			this.receivedBuffer = ByteBuffer.wrap(receivedFile);
 			int option = JOptionPane.showConfirmDialog(null, "Vous avez reçu une demande de transfert de fichier de la part de "+msg.getUsername()+"\n Nom du fichier : "+ this.fileName +"\nTaille (en byte) : "+ this.fileSize +"\n\nVoulez-vous accepter le fichier ?", "Demande de transfert de fichier reçue", JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE);
 			if(option == JOptionPane.OK_OPTION) {
-				ReceivedFileNI.getInstance(chatController,((FileTransfertDemand) msg).getPortClient()).start();
+				Thread receivedThread = new Thread(ReceivedFileNI.getInstance(chatController,((FileTransfertDemand) msg).getPortClient()));
+				receivedThread.start();
 				this.sendFileTransfertConfirmation(user, true, msg.getId());
 			}
 			else
@@ -103,8 +103,9 @@ public class FileTransfertController {
 			receivedBuffer.put(((FilePart) msg).getFilePart());
 			
 			if(((FilePart) msg).isLast()) {
+				ReceivedFileNI.getInstance(chatController, -1).running = false;
 				JFileChooser fileChooser = new JFileChooser(); 
-				fileChooser.setDialogTitle("Select directory");
+				fileChooser.setDialogTitle("Where do you want to save the file ?");
 				fileChooser.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
 				fileChooser.setAcceptAllFileFilterUsed(false);
 				
@@ -158,6 +159,8 @@ public class FileTransfertController {
 
 	private void sendFile(User user) {
 		SendFileNI.getInstance(this).sendFile(user);
+		Thread sendFileThread = new Thread(SendFileNI.getInstance(this));
+		sendFileThread.start();
 	}
 
 	public FilePart getFilePartToSend() {
