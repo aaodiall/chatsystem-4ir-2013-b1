@@ -1,6 +1,7 @@
 package View;
 
 import java.io.IOException;
+import java.io.InterruptedIOException;
 import java.io.OutputStream;
 import java.net.InetAddress;
 import java.net.Socket;
@@ -13,7 +14,7 @@ import chatSystemCommon.FilePart;
 
 import com.sun.istack.internal.logging.Logger;
 
-public final class SendFileNI extends Thread{
+public final class SendFileNI implements Runnable{
 	private static SendFileNI instance = null;
 
 	private Socket socket;
@@ -22,6 +23,8 @@ public final class SendFileNI extends Thread{
 	private StateTransfert fileTransfertState = StateTransfert.AVAILABLE;
 	private FileTransfertController fileTransfertController;
 
+	private OutputStream outputStream = null;
+	
 	private SendFileNI(FileTransfertController fileTransfertController) {
 		this.fileTransfertController = fileTransfertController;
 	}
@@ -39,15 +42,15 @@ public final class SendFileNI extends Thread{
 	synchronized public void sendFile(User user){
 		Logger.getLogger(SendFileNI.class).log(Level.INFO,"SendFile method called >> "+ user.toString());
 		this.remoteUser = user;
-		this.start();
+		//this.start();
 	}
 
+	@Override
 	public void run(){
-		OutputStream os = null;
 		while(this.fileTransfertState == StateTransfert.PROCESSING) {
 			try {
 				socket = new Socket(remoteUser.getAddress(), 16001);
-				os = socket.getOutputStream();
+				outputStream = socket.getOutputStream();
 				
 				FilePart fp = fileTransfertController.getFilePartToSend();
 				if(fp == null) {
@@ -55,11 +58,12 @@ public final class SendFileNI extends Thread{
 					fileTransfertController.fileTransfertProtocol(null, null, null);
 				}	
 				else {
-					os.write(fp.toArray());
-					os.flush();
-					os.close();
+					outputStream.write(fp.toArray());
+					outputStream.flush();
+					outputStream.close();
 				}
-			} catch (IOException e) {
+			} 
+			catch (IOException e) {
 				Logger.getLogger(SendFileNI.class).log(Level.SEVERE,null,e);
 			}
 		}

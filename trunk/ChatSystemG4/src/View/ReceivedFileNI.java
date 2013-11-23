@@ -3,25 +3,29 @@ package View;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.InterruptedIOException;
 import java.net.ServerSocket;
 import java.net.Socket;
 
 import Controller.ChatController;
 import chatSystemCommon.Message;
 
-public final class ReceivedFileNI extends Thread {
+public final class ReceivedFileNI implements Runnable {
 	private static ReceivedFileNI instance = null;
 	
 	private ChatController chatController;
 	
 	private ServerSocket serverSocket;
     private Socket socket;
-    private InputStream inputStream;	
+    private InputStream inputStream;
+    
+    public boolean running = true;
 	
 	private ReceivedFileNI(ChatController chatController, int portClient) {
 		this.chatController = chatController;
 		try {
 			serverSocket = new ServerSocket(portClient);
+			//this.start();
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
@@ -47,14 +51,16 @@ public final class ReceivedFileNI extends Thread {
         }
         return baos.toByteArray();
     }
-
+	
+	@Override
 	public void run() { 
         while(true) {
-            try {
+             try {
 				socket = serverSocket.accept();	
 				inputStream = socket.getInputStream();
 				chatController.receivedMessage(socket.getInetAddress(), Message.fromArray(this.toByteArray(inputStream)));
-			} catch (IOException e) {
+				inputStream.close();
+            } catch (IOException e) {
 				e.printStackTrace();
 			}
         }
