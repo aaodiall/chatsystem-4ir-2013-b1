@@ -4,7 +4,6 @@ import chatSystem.model.FileSendingInformation;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.io.IOException;
-import chatSystem.model.FileTransfertInformation;
 import chatSystem.model.FileTransferts;
 import chatSystemCommon.FilePart;
 import chatSystemCommon.Message;
@@ -23,7 +22,7 @@ public class FileTransfert implements Runnable {
     private final FileSendingInformation fileToSend;
 
     public FileTransfert(int port, int idTransfert, ChatNI chatNI) {
-        System.out.println("Init serveur envoi de fichier");
+        //System.out.println("Init serveur envoi de fichier");
         try {
             this.serverSocket = new ServerSocket(port);
         } catch (IOException ex) {
@@ -58,7 +57,7 @@ public class FileTransfert implements Runnable {
             } catch (IOException ex) {
                 Logger.getLogger(FileTransfert.class.getName()).log(Level.SEVERE, null, ex);
             }
-            System.out.println("ENVOYE : " + msg.toString());
+            //System.out.println("ENVOYE : " + msg.toString());
         } while (!this.fileToSend.isLast());
         System.out.println("------------------------FICHIER ENVOYE---------------------------------------");
     }

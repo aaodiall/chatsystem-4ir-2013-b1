@@ -128,7 +128,7 @@ public class UserWindow extends JFrame implements ActionListener, MouseListener 
             //demande d'ouverture de la dialog Window correspondante
             if (index != -1) { //cas de la liste non vide
                 String idRemoteSystem = (String) this.contactsList.getModel().getElementAt(index);
-                this.chatGUI.displayDialogWindow(idRemoteSystem);
+                this.chatGUI.openDialogWindow(idRemoteSystem);
             }
         }
     }

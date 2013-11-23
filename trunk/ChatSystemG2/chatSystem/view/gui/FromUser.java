@@ -14,7 +14,7 @@ public interface FromUser {
 	
 	public void saveFile(File fileToSend, int idTransfert);
 	
-	public void openDialogWindow();
+	public void openDialogWindow(String idRemoteSystem);
 
 	public void acceptSuggestion(int idTransfert);
         

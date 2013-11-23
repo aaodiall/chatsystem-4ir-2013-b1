@@ -6,8 +6,6 @@
 
 package chatSystem.controller;
 
-import chatSystemCommon.*;
-
 /**
  *
  * @author Marjorie
