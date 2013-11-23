@@ -6,6 +6,7 @@
 
 package chatSystem.model;
 
+import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -19,9 +20,11 @@ import java.util.logging.Logger;
 public class FileReceivingInformation extends FileTransfertInformation{
     
     private FileOutputStream writer;
+    
+    private final long size;
 
-    public FileReceivingInformation(String idRemoteSystem, long size, String name) {
-        super(idRemoteSystem, name);
+    public FileReceivingInformation(String idRemoteSystem, long size, String path) {
+        super(idRemoteSystem, new File(path));
         
         this.state = FileState.ACCEPTED;
         this.size = size;
@@ -32,7 +35,7 @@ public class FileReceivingInformation extends FileTransfertInformation{
         }
         
         try {
-            this.writer = new FileOutputStream(name);
+            this.writer = new FileOutputStream(this.fileDescriptor);
         } catch (FileNotFoundException ex) {
             Logger.getLogger(FileTransfertInformation.class.getName()).log(Level.SEVERE, null, ex);
         }

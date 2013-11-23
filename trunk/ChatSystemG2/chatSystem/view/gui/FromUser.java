@@ -1,30 +1,30 @@
 package chatSystem.view.gui;
 
+import java.io.File;
+
 /** Actions the chat system's user can start **/
 
 public interface FromUser {
 
-	public void Connect();
+	public void connect(String username);
 	
-	public void Username(String pseudo);
+	public void disconnect();
 	
-	public void Disconnect();
+	public void sendMessageRequest(String message, String idRemoteSystem);
 	
-	public void SendMessageRequest(String message);
+	public void selectDirectory(String directory);
 	
-	public void SelectDirectory(String directory);
+	public void saveFile();
 	
-	public void SaveFile();
-	
-	public void OpenDialogWindow();
+	public void openDialogWindow();
 
-	public void AcceptSuggestion();
+	public void acceptSuggestion(int idTransfert);
 	
-	public void ConfirmSending();
+	public void confirmSending();
 	
-	public void SendFileRequest();
+	public void sendFileRequest(File fileToSend, String idRemoteSystem);
 	
-	public void SelectFile();
+	public void selectFile();
 	
-	public void DeclineSuggestion();
+	public void declineSuggestion(int idTransfert);
 }

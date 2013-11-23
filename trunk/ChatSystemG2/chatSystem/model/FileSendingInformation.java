@@ -6,6 +6,7 @@
 
 package chatSystem.model;
 
+import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
@@ -20,11 +21,10 @@ public class FileSendingInformation extends FileTransfertInformation{
     
     private FileInputStream reader;
 
-    public FileSendingInformation(String idRemoteSystem, String name) {
-        super(idRemoteSystem, name);
+    public FileSendingInformation(String idRemoteSystem, File fileToSend) {
+        super(idRemoteSystem, fileToSend);
         
         this.state = FileState.WAITANSWER;
-        this.size = this.fileDescriptor.length();
         try {
             this.reader = new FileInputStream(this.fileDescriptor);
         } catch (FileNotFoundException ex) {
