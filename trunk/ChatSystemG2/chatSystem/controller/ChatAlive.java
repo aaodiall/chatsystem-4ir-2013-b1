@@ -12,7 +12,7 @@ import chatSystem.model.RemoteSystems;
  *
  * @author Marjorie
  */
-public class ChatAlive implements Runnable{
+public class ChatAlive extends Thread{
 
     private long msBetweenHellos;
     private long msTimeToAnswer;
@@ -23,7 +23,7 @@ public class ChatAlive implements Runnable{
      */
     public ChatAlive() {
         this.rmInstance = RemoteSystems.getInstance();
-        this.msBetweenHellos = 10000; //10s
+        this.msBetweenHellos = 60000; //1min
         this.msTimeToAnswer = 2000; //2s
     } 
     
@@ -31,9 +31,9 @@ public class ChatAlive implements Runnable{
     public void run() {
         while (true) {
             try {
-                Thread.sleep(this.msBetweenHellos - this.msTimeToAnswer);
+                this.sleep(this.msBetweenHellos - this.msTimeToAnswer);
                 rmInstance.setAllMaybeOffline();
-                Thread.sleep(this.msTimeToAnswer);
+                this.sleep(this.msTimeToAnswer);
                 this.rmInstance.removeOfflineRemoteSystem();
             } catch (InterruptedException e) {
                 System.err.println("Someone interrupted ChatAlive for no reason");

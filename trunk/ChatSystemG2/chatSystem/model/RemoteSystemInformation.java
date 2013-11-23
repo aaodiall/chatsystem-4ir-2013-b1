@@ -82,11 +82,9 @@ public class RemoteSystemInformation extends UserInformation {
     
     @Override
     public void setUserState(UserState state) {
-        if (state == UserState.DISCONNECTED) 
-            RemoteSystems.getInstance().deleteRemoteSystem(this.getIdRemoteSystem());
-        else
             this.state = state;
     }
+ 
     public static String generateID(String username, String ip) {
         return username + "@" + ip;
     }
