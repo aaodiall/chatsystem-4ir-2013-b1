@@ -92,9 +92,12 @@ public class ChatNI extends View {
                 
             }
         } else if (o instanceof RemoteSystems) {
-            if (arg instanceof String) { //ip
+            if (arg == null) {
+                this.messageTransfert.setHelloTask();
+            }
+            else if (arg instanceof String) { //ip
                 
-                this.messageTransfert.setHelloTask((String) arg);
+                this.messageTransfert.setHelloTask((String) arg);        
                 
             } else if (arg instanceof RemoteSystemInformation) {
                 
