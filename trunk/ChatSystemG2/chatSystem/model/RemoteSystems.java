@@ -5,8 +5,6 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
-import java.util.concurrent.BlockingQueue;
-import java.util.concurrent.LinkedBlockingQueue;
 
 /**
  * Keeps and manages the remote system's information
@@ -33,14 +31,26 @@ public class RemoteSystems extends Model implements Iterable<RemoteSystemInforma
      */
     public synchronized void addRemoteSystem(String username, String ip) {
         System.out.println("Ajout utilisateur : " + username + "     " + ip);
-        RemoteSystemInformation newRS = new RemoteSystemInformation(username, ip);
-        String key = newRS.getIdRemoteSystem();
+        String key = RemoteSystemInformation.generateID(username, ip);
         if (!this.remoteSystemsInformation.containsKey(key)) {
+            RemoteSystemInformation newRS = new RemoteSystemInformation(username, ip);
             this.remoteSystemsInformation.put(key, newRS);
-
             this.setChanged();
             this.notifyObservers(ip);
             this.clearChanged();
+        } else {
+            RemoteSystemInformation aux = this.getRemoteSystem(key);
+            if (aux.getUserState() == UserState.CONNECTED) {
+                //message sent by a remote system to indicate it's still connected
+                aux.setUserState(UserState.CONNECTED);
+                this.setChanged();
+                this.notifyObservers(ip);
+                this.clearChanged();
+            }
+            else if (aux.getUserState() == UserState.MAYBEOFFLINE) {
+                //message sent to answer a hello broadcast to determine which remote system is still connected
+                aux.setUserState(UserState.CONNECTED);
+            }
         }
     }
 
@@ -51,7 +61,6 @@ public class RemoteSystems extends Model implements Iterable<RemoteSystemInforma
      */
     public synchronized void deleteRemoteSystem(String idRemoteSystem) {
         this.remoteSystemsInformation.remove(idRemoteSystem);
-
         this.setChanged();
         this.notifyObservers();
         this.clearChanged();
@@ -104,6 +113,21 @@ public class RemoteSystems extends Model implements Iterable<RemoteSystemInforma
         return userList;
     }
 
+    public void setAllMaybeOffline() {
+        for (RemoteSystemInformation rsi: this) {
+            rsi.setUserState(UserState.MAYBEOFFLINE);
+        }
+        this.setChanged();
+        this.notifyObservers();
+        this.clearChanged();
+    }
+    
+    public void removeOfflineRemoteSystem() {
+        for (RemoteSystemInformation rsi: this) {
+            if (rsi.getUserState() == UserState.MAYBEOFFLINE)
+                rsi.setUserState(UserState.DISCONNECTED);
+        }
+    }
     /**
      * Static method to obtain an instance of the class RemoteSystems
      *
@@ -120,6 +144,7 @@ public class RemoteSystems extends Model implements Iterable<RemoteSystemInforma
         return instance;
     }
 
+    
     @Override
     public Iterator<RemoteSystemInformation> iterator() {
         return new RSIterator();

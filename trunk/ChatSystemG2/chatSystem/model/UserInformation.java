@@ -4,7 +4,7 @@ public class UserInformation extends Model{
 	
 	private String username;
 	private final String ip;
-	private UserState state;
+	protected UserState state;
 	
         /**
          * Creation d'une zone d'information sur un utilisateur encore inconnu
@@ -59,7 +59,7 @@ public class UserInformation extends Model{
          * Mettre a jour l'etat de l'utilisateur (connected/disconnected)
          * @param state nouvel etat
          */
-	public final void setUserState(UserState state) {
+	public void setUserState(UserState state) {
                 System.out.println("Entering setState : le nouvel état est : "+state.toString());
 		this.state = state;
                 this.setChanged();
