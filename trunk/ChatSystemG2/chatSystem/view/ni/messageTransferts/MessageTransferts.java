@@ -7,6 +7,7 @@
 package chatSystem.view.ni.messageTransferts;
 
 import chatSystem.model.RemoteSystems;
+import chatSystem.model.UserState;
 import chatSystem.view.ni.ChatNI;
 import chatSystemCommon.*;
 import java.io.IOException;
@@ -229,7 +230,7 @@ public class MessageTransferts implements Runnable {
      */
     @Override
     public synchronized void run() {
-        while (true) {
+        while (this.chatni.getUserInfo().getUserState() == UserState.CONNECTED) {
             this.fileTask.getNextTask().execute();
         }
     }

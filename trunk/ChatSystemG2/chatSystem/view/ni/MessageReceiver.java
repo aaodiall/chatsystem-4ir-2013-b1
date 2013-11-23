@@ -1,6 +1,7 @@
 package chatSystem.view.ni;
 
 import chatSystem.model.RemoteSystemInformation;
+import chatSystem.model.UserState;
 import java.net.*;
 import java.io.IOException;
 import chatSystemCommon.*;
@@ -54,7 +55,7 @@ public class MessageReceiver implements Runnable {
      * Receive a message and analyze it Call for the right chatNI's method
      */
     private void receiveMessage() {
-        while (true) {
+        while (this.chatni.getUserInfo().getUserState() == UserState.CONNECTED) {
             DatagramPacket packet = new DatagramPacket(this.messageReceived, this.messageReceived.length);
             try {
                 this.serverSocket.receive(packet);
