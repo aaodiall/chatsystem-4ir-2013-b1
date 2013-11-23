@@ -117,9 +117,9 @@ public class ChatController extends Controller implements GuiToCont, NiToCont {
     }
     
     @Override
-    public void performSuggestionReceived(String name, long size, String idRemoteSystem, int idTransfert) {
+    public void performSuggestionReceived(String name, long size, String idRemoteSystem, int idTransfert, int portServer) {
         System.out.println("Receiving a file transfert request from " + idRemoteSystem + ", modifying the model");
-        this.fileTransferts.addTransfert(name, size, idRemoteSystem);
+        this.fileTransferts.addTransfert(idTransfert, name, size, idRemoteSystem, portServer);
     }
     
     @Override
@@ -133,11 +133,11 @@ public class ChatController extends Controller implements GuiToCont, NiToCont {
         if (accepted) {
             this.fileTransferts.setFileTransfertInformationState(idTransfert, FileState.ACCEPTED);
             FileTransfertInformation tmp = this.fileTransferts.getFileTransfertInformation(idTransfert);
-            this.remoteSystems.addMessageSentToRemoteSystem("The file  " + tmp.getName() + " was accepted by " + tmp.getIdRemoteSystem(), tmp.getIdRemoteSystem());
+            this.remoteSystems.addMessageSentToRemoteSystem("The file " + tmp.getName() + " was accepted by " + tmp.getIdRemoteSystem(), tmp.getIdRemoteSystem());
         } else {
             this.fileTransferts.setFileTransfertInformationState(idTransfert, FileState.DECLINED);
             FileTransfertInformation tmp = this.fileTransferts.getFileTransfertInformation(idTransfert);
-            this.remoteSystems.addMessageSentToRemoteSystem("the file  " + tmp.getName() + " was rejected by " + tmp.getIdRemoteSystem(), tmp.getIdRemoteSystem());
+            this.remoteSystems.addMessageSentToRemoteSystem("the file " + tmp.getName() + " was rejected by " + tmp.getIdRemoteSystem(), tmp.getIdRemoteSystem());
         }
     }
     
@@ -148,8 +148,18 @@ public class ChatController extends Controller implements GuiToCont, NiToCont {
      */
     @Override
     public void performFilePartReceived(byte[] filePart, boolean isLast){
-        ((FileReceivingInformation)this.fileTransferts.getFileTransfertInformation(0)).addFilePart(filePart);
-        this.fileTransferts.getFileTransfertInformation(0).setIsLast(isLast);
+        FileReceivingInformation tmp = (FileReceivingInformation)this.fileTransferts.getFileTransfertInformation(0);
+        tmp.addFilePart(filePart);
+        tmp.setIsLast(isLast);
+        if(isLast){
+            this.remoteSystems.addMessageSentToRemoteSystem("The file " + tmp.getName() + " from " + tmp.getIdRemoteSystem() + " has been received", tmp.getIdRemoteSystem());
+        }
+    }
+    
+    @Override
+    public void performFileSended(int idTransfert, String idRemoteSystem) {
+        FileReceivingInformation tmp = (FileReceivingInformation)this.fileTransferts.getFileTransfertInformation(0);
+        this.remoteSystems.addMessageSentToRemoteSystem("The file " + tmp.getName() + " from " + tmp.getIdRemoteSystem() + " has been received", tmp.getIdRemoteSystem());
     }
 
 }

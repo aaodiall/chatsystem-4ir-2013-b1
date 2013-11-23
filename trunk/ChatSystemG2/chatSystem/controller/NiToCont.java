@@ -19,9 +19,11 @@ public interface NiToCont {
 	
         public void performMessageSent(String message, String idRemoteSystem);
 	
-	public void performSuggestionReceived(String name, long size, String idRemoteSystem, int idTransfert);
+	public void performSuggestionReceived(String name, long size, String idRemoteSystem, int idTransfert, int portServer);
         
         public void performConfirmationReceived(String idRemoteSystem, int idTransfert, boolean accepted);
 	
 	public void performFilePartReceived(byte[] filePart, boolean isLast);
+        
+        public void performFileSended(int idTransfert, String idRemoteSystem);
 }

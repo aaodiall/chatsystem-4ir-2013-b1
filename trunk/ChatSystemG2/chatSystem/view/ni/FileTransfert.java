@@ -21,19 +21,19 @@ public class FileTransfert implements Runnable {
     private ObjectOutputStream writer;
     private final FileSendingInformation fileToSend;
 
-    public FileTransfert(int port, int idTransfert, ChatNI chatNI) {
+    public FileTransfert(int idTransfert, ChatNI chatNI) {
         //System.out.println("Init serveur envoi de fichier");
         try {
-            this.serverSocket = new ServerSocket(port);
+            this.serverSocket = new ServerSocket();
         } catch (IOException ex) {
             Logger.getLogger(FileTransfert.class.getName()).log(Level.SEVERE, null, ex);
         }
         this.fileToSend = (FileSendingInformation) FileTransferts.getInstance().getFileTransfertInformation(idTransfert);
         this.chatNI = chatNI;
     }
-
-    public void SendFile() {
-        //this.fileToSend.getFilePart()
+    
+    public int getPort(){
+        return this.serverSocket.getLocalPort();
     }
 
     @Override
@@ -57,8 +57,8 @@ public class FileTransfert implements Runnable {
             } catch (IOException ex) {
                 Logger.getLogger(FileTransfert.class.getName()).log(Level.SEVERE, null, ex);
             }
-            //System.out.println("ENVOYE : " + msg.toString());
         } while (!this.fileToSend.isLast());
+        this.chatNI.fileSended(this.fileToSend.getId(),this.fileToSend.getIdRemoteSystem());
         System.out.println("------------------------FICHIER ENVOYE---------------------------------------");
     }
 

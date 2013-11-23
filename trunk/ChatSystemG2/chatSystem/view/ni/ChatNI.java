@@ -12,24 +12,20 @@ public class ChatNI extends View {
     private final Thread threadMessageTransfert;
     private final MessageReceiver messageReceiver;
     private final MessageTransferts messageTransfert;
-    private final FileReceiver[] fileReceivers;
-    private final FileTransfert[] fileTransferts;
+    //private final FileReceiver[] fileReceivers;
+    //private final FileTransfert[] fileTransferts;
 
     private UserInformation usrInfo;
-
-    private int portClient; // changer la gestion
 
     public ChatNI(ChatController controller) {
         super(controller);
 
-        this.fileReceivers = new FileReceiver[5];
-        this.fileTransferts = new FileTransfert[5];
+        //this.fileReceivers = new FileReceiver[5];
+        //this.fileTransferts = new FileTransfert[5];
         this.messageReceiver = new MessageReceiver(this);
         this.messageTransfert = new MessageTransferts(this);
         this.threadMessageReceiver = new Thread(this.messageReceiver);
         this.threadMessageTransfert = new Thread(this.messageTransfert);
-
-        this.portClient = 1024;
     }
 
     public void helloReceived(String username, String ip, boolean isAck) {
@@ -44,8 +40,8 @@ public class ChatNI extends View {
         ((ChatController) (this.controller)).performGoodbyeReceived(username);
     }
 
-    public void fileTransfertDemandReceived(String name, String username, String ip, long size, int id, int portClient) {
-        ((ChatController) (this.controller)).performSuggestionReceived(name, size, RemoteSystemInformation.generateID(username, ip), id);
+    public void fileTransfertDemandReceived(String name, String username, String ip, long size, int id, int portServer) {
+        ((ChatController) (this.controller)).performSuggestionReceived(name, size, RemoteSystemInformation.generateID(username, ip), id, portServer);
     }
 
     public void fileTransfertConfirmationReceived(String ip, int idTransfert, boolean accepted) {
@@ -55,17 +51,11 @@ public class ChatNI extends View {
     public void filePartReceived(byte[] filePart, boolean isLast) {
         ((ChatController) (this.controller)).performFilePartReceived(filePart, isLast);
     }
+    
+    public void fileSended(int idTransfert, String idRemoteSystem) {
+        ((ChatController) (this.controller)).performFileSended(idTransfert, idRemoteSystem);
+    }   
 
-    public void sendFileTransfertConfirmation(boolean isAccepted, int idTransfert, String idRemoteSystem) {
-        this.messageTransfert.setFileConfirmationTask(idRemoteSystem, isAccepted, idTransfert);
-    }
-
-    /*public void createNewFileTransfert() {
-     int i = 0;
-     boolean fileTransfertCreated = false;
-     while (i < 4 && (!fileTransfertCreated)) {
-     if (this.fileTransfert[i] != null && )
-     }*/
     /**
      *
      * @param o : part of the model which send a the notification
@@ -111,8 +101,8 @@ public class ChatNI extends View {
                 this.messageTransfert.setFileConfirmationTask(tmp.getIdRemoteSystem(), true, tmp.getId());
 
                 String ip = RemoteSystems.getInstance().getRemoteSystem(tmp.getIdRemoteSystem()).getIP();
-
-                Thread fileReceiver = new Thread(new FileReceiver(ip, portClient, this));
+                
+                Thread fileReceiver = new Thread(new FileReceiver(ip, tmp.getPortServer(), this));
                 fileReceiver.setName("Thread Reception TCP");
                 fileReceiver.start();
                 break;
@@ -121,7 +111,7 @@ public class ChatNI extends View {
                 break;
             case DECLINED:
 
-                this.fileTransferts[0] = null;
+                //this.fileTransferts[0] = null;
                 break;
             case TERMINATED:
                 //Noting TODO
@@ -136,18 +126,17 @@ public class ChatNI extends View {
                 break;
             case WAITANSWER:
 
-                this.fileTransferts[0] = new FileTransfert(portClient, tmp.getId(), this);
-                Thread fileSender = new Thread(this.fileTransferts[0]);
+                //this.fileTransferts[0] = new FileTransfert(tmp.getId(), this);
+                FileTransfert test = new FileTransfert(tmp.getId(), this);
+                Thread fileSender = new Thread(test);
                 fileSender.setName("Thread Envoi TCP");
                 fileSender.start();
-                this.messageTransfert.setFileDemandTask(tmp.getName(), tmp.getSize(), tmp.getIdRemoteSystem(), this.portClient);
-
-                this.portClient++;
+                this.messageTransfert.setFileDemandTask(tmp.getName(), tmp.getSize(), tmp.getIdRemoteSystem(), test.getPort());
 
                 break;
             case DECLINED:
 
-                this.fileTransferts[0] = null;
+                //this.fileTransferts[0] = null;
                 break;
             case TERMINATED:
                 //Noting TODO
@@ -190,5 +179,4 @@ public class ChatNI extends View {
     public UserInformation getUserInfo() { 
         return this.usrInfo;
     }
-
 }

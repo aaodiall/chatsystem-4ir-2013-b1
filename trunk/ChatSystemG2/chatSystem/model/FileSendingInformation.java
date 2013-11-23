@@ -21,8 +21,8 @@ public class FileSendingInformation extends FileTransfertInformation{
     
     private FileInputStream reader;
 
-    public FileSendingInformation(String idRemoteSystem, File fileToSend) {
-        super(idRemoteSystem, fileToSend);
+    public FileSendingInformation(int idTransfert, String idRemoteSystem, File fileToSend) {
+        super(idTransfert, idRemoteSystem, fileToSend);
         
         try {
             this.reader = new FileInputStream(this.fileDescriptor);
@@ -37,7 +37,7 @@ public class FileSendingInformation extends FileTransfertInformation{
      * @return file's part
      */
     public byte[] getFilePart() {
-        byte[] filePart = new byte[1024];
+        byte[] filePart = new byte[FileTransfertInformation.tailleSegment];
         try {
             if(this.reader.read(filePart) == -1){
                 this.isLast = true;
