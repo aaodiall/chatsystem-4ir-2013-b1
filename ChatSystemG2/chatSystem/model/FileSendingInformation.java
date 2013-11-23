@@ -24,7 +24,6 @@ public class FileSendingInformation extends FileTransfertInformation{
     public FileSendingInformation(String idRemoteSystem, File fileToSend) {
         super(idRemoteSystem, fileToSend);
         
-        this.state = FileState.WAITANSWER;
         try {
             this.reader = new FileInputStream(this.fileDescriptor);
         } catch (FileNotFoundException ex) {

@@ -94,7 +94,6 @@ public class ChatController extends Controller implements GuiToCont, NiToCont {
     public void performSendFileRequest(File fileToSend, String idRemoteSystem) {
        System.out.println("Send file request to be send to " + idRemoteSystem + ", modifying the model");
        this.fileTransferts.addTransfert(fileToSend, idRemoteSystem);
-    //   this.transfertID ++;
     }
     
     @Override
@@ -113,6 +112,11 @@ public class ChatController extends Controller implements GuiToCont, NiToCont {
     public void performSuggestionReceived(String name, long size, String idRemoteSystem, int idTransfert) {
         System.out.println("Receiving a file transfert request from " + idRemoteSystem + ", modifying the model");
         this.fileTransferts.addTransfert(name, size, idRemoteSystem);
+    }
+    
+    @Override
+    public void performSaveFile(File fileToSave, int idTransfert) {
+        ((FileReceivingInformation)this.fileTransferts.getFileTransfertInformation(idTransfert)).setFileDescriptor(fileToSave);
     }
 
     @Override

@@ -22,7 +22,7 @@ public class FileTransferts extends Model{
 
     /**
      * Adding a new file's transfer
-     * @param name file's name
+     * @param fileToSend
      * @param idRemoteSystem sender's id
      */
     public synchronized void addTransfert(File fileToSend, String idRemoteSystem) {
@@ -37,7 +37,7 @@ public class FileTransferts extends Model{
     
     /**
      * Adding a new file's transfer
-     * @param name file's name
+     * @param name
      * @param size file's size
      * @param idRemoteSystem sender's id
      */

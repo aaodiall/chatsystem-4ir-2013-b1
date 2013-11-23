@@ -26,6 +26,6 @@ public interface GuiToCont {
 	
 	public void performDeclineSuggestion(int idTransfert);
 	
-        //public void performFileSended();
+        public void performSaveFile(File fileToSave, int idTransfert);
     
 }
