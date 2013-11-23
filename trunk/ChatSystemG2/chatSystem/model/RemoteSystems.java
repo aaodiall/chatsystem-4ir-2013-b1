@@ -33,7 +33,7 @@ public class RemoteSystems extends Model implements Iterable<RemoteSystemInforma
         
         String key = RemoteSystemInformation.generateID(username, ip);
         if (!this.remoteSystemsInformation.containsKey(key)) {
-            System.out.println("Ajout utilisateur : " + username + "     " + ip);
+            System.out.println("Adding a user : " + username + "     " + ip);
             RemoteSystemInformation newRS = new RemoteSystemInformation(username, ip);
             this.remoteSystemsInformation.put(key, newRS);
             this.setChanged();
