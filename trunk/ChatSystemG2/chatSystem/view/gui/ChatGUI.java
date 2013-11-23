@@ -47,18 +47,25 @@ public class ChatGUI extends View implements ToUser, FromUser{
 
     @Override
     public void displaySuggestion(FileReceivingInformation tmp) {
-        this.dWindows.get(tmp.getIdRemoteSystem()).displaySuggestion(tmp.getName(), tmp.getId());
+        String contact = tmp.getIdRemoteSystem();
+        if (this.dWindows.containsKey(contact)) {
+            if (this.dWindows.get(contact) == null) {
+                this.dWindows.remove(contact);
+                this.dWindows.put(contact, new DialogWindow(contact, RemoteSystems.getInstance().getRemoteSystem(contact).getMessages(), this));
+            }
+        }
+        this.dWindows.get(contact).displaySuggestion(tmp.getName(), tmp.getId());
     }
 
     @Override
     public void displayDialogWindow(String contact) {
+        // La fenetre peut être a null même si on connait le contact
         if (this.dWindows.containsKey(contact)) {
             if (this.dWindows.get(contact) == null) {
                 this.dWindows.remove(contact);
                 this.dWindows.put(contact, new DialogWindow(contact, RemoteSystems.getInstance().getRemoteSystem(contact).getMessages(),this));
             }
             this.dWindows.get(contact).setVisible(true);
-
         }
     }
 
@@ -73,6 +80,7 @@ public class ChatGUI extends View implements ToUser, FromUser{
 
         for (String contact : newList) {
             if (!(this.dWindows.containsKey(contact))) {
+                //on mets null pour si on ne lui parle jamais
                 this.dWindows.put(contact, null);
             }
         }
@@ -156,10 +164,10 @@ public class ChatGUI extends View implements ToUser, FromUser{
     public void updateByFileReceivingInformation(FileReceivingInformation tmp) {
         switch (tmp.getState()) {
             case ACCEPTED:
-                displaySuggestion(tmp); // a déplacer a WaitAnswer mais il faut chager la gestion
+                 //Nothing TODO
                 break;
             case WAITANSWER:
-                // TODO
+                displaySuggestion(tmp);
                 break;
             case DECLINED:
                 //Nothing TODO

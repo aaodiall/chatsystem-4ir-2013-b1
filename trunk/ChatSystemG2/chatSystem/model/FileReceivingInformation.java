@@ -30,11 +30,6 @@ public class FileReceivingInformation extends FileTransfertInformation{
         
         //For now we just have a temporary file until the user choose how to name it and where to save it
         
-        try {
-            this.writer = new FileOutputStream(this.fileDescriptor);
-        } catch (FileNotFoundException ex) {
-            Logger.getLogger(FileTransfertInformation.class.getName()).log(Level.SEVERE, null, ex);
-        }
     }
     
     /**
@@ -52,6 +47,11 @@ public class FileReceivingInformation extends FileTransfertInformation{
     
     public void setFileDescriptor(File fileToSave){
         this.fileDescriptor = fileToSave;
+        try {
+            this.writer = new FileOutputStream(this.fileDescriptor);
+        } catch (FileNotFoundException ex) {
+            Logger.getLogger(FileTransfertInformation.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }
     
 }

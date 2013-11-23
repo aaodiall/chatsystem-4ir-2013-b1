@@ -45,7 +45,7 @@ public class ChatNI extends View {
     }
 
     public void fileTransfertDemandReceived(String name, String username, String ip, long size, int id, int portClient) {
-        ((ChatController) (this.controller)).performSuggestionReceived(name, size, ip, id);
+        ((ChatController) (this.controller)).performSuggestionReceived(name, size, RemoteSystemInformation.generateID(username, ip), id);
     }
 
     public void fileTransfertConfirmationReceived(String ip, int idTransfert, boolean accepted) {
@@ -56,17 +56,6 @@ public class ChatNI extends View {
         ((ChatController) (this.controller)).performFilePartReceived(filePart, isLast);
     }
 
-    /*   public void sendHelloMsg(String ip) {
-     this.messageTransfert.setHelloTask(ip);
-     }
-
-     public void sendHelloMsg() {
-     this.messageTransfert.setHelloTask();
-     }
-
-     public void sendFileTransfertDemand(String name, long size, int idTransfert, String idRemoteSystem) {
-     this.messageTransfert.setFileDemandTask(name, size, idTransfert, idRemoteSystem, portClient);
-     }*/ //on les utilise pas du coup je commente.. 
     public void sendFileTransfertConfirmation(boolean isAccepted, int idTransfert, String idRemoteSystem) {
         this.messageTransfert.setFileConfirmationTask(idRemoteSystem, isAccepted, idTransfert);
     }
