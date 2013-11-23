@@ -128,7 +128,6 @@ public class DialogWindow extends JFrame implements ActionListener {
                 switch (choix) {
                     case JOptionPane.YES_OPTION:
                         saveFile(name, idTransfert);
-                        chatGUI.acceptSuggestion(idTransfert);
                         break;
                     case JOptionPane.NO_OPTION:
                         chatGUI.declineSuggestion(idTransfert);
@@ -146,11 +145,15 @@ public class DialogWindow extends JFrame implements ActionListener {
                 if (fileChooser == null) {
                     fileChooser = new JFileChooser();
                 }
-
+                
+                fileChooser.setSelectedFile(new File(name));
                 int choix = fileChooser.showSaveDialog(parent);
                 if (choix == JFileChooser.APPROVE_OPTION) {
                     File fileSelected = fileChooser.getSelectedFile();
                     chatGUI.saveFile(fileSelected, idTransfert);
+                    chatGUI.acceptSuggestion(idTransfert);
+                }else{
+                    chatGUI.declineSuggestion(idTransfert);
                 }
             }
         });
