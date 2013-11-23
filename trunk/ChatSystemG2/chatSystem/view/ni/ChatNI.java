@@ -3,6 +3,7 @@ package chatSystem.view.ni;
 import chatSystem.view.gui.View;
 import chatSystem.controller.ChatController;
 import chatSystem.model.*;
+import chatSystem.view.ni.messageTransferts.*;
 import java.util.Observable;
 
 public class ChatNI extends View {
@@ -10,7 +11,7 @@ public class ChatNI extends View {
     private final Thread threadMessageReceiver;
     private final Thread threadMessageTransfert;
     private final MessageReceiver messageReceiver;
-    private final MessageTransfert messageTransfert;
+    private final MessageTransferts messageTransfert;
     private final FileReceiver[] fileReceivers;
     private final FileTransfert[] fileTransferts;
 
@@ -24,7 +25,7 @@ public class ChatNI extends View {
         this.fileReceivers = new FileReceiver[5];
         this.fileTransferts = new FileTransfert[5];
         this.messageReceiver = new MessageReceiver(this);
-        this.messageTransfert = new MessageTransfert(this);
+        this.messageTransfert = new MessageTransferts(this);
         this.threadMessageReceiver = new Thread(this.messageReceiver);
         this.threadMessageTransfert = new Thread(this.messageTransfert);
 
@@ -67,7 +68,7 @@ public class ChatNI extends View {
      this.messageTransfert.setFileDemandTask(name, size, idTransfert, idRemoteSystem, portClient);
      }*/ //on les utilise pas du coup je commente.. 
     public void sendFileTransfertConfirmation(boolean isAccepted, int idTransfert, String idRemoteSystem) {
-        this.messageTransfert.setFileConfirmationTask(idTransfert, idRemoteSystem, isAccepted);
+        this.messageTransfert.setFileConfirmationTask(idRemoteSystem, isAccepted, idTransfert);
     }
 
     /*public void createNewFileTransfert() {
@@ -117,7 +118,7 @@ public class ChatNI extends View {
         switch (tmp.getState()) {
             case ACCEPTED:
                 System.out.println("Envoi rep demande ok ");
-                this.messageTransfert.setFileConfirmationTask(tmp.getId(), tmp.getIdRemoteSystem(), true);
+                this.messageTransfert.setFileConfirmationTask(tmp.getIdRemoteSystem(), true, tmp.getId());
 
                 String ip = RemoteSystems.getInstance().getRemoteSystem(tmp.getIdRemoteSystem()).getIP();
 
@@ -149,7 +150,7 @@ public class ChatNI extends View {
                 Thread fileSender = new Thread(this.fileTransferts[0]);
                 fileSender.setName("Thread Envoi TCP");
                 fileSender.start();
-                this.messageTransfert.setFileDemandTask(tmp.getName(), tmp.getSize(), tmp.getId(), tmp.getIdRemoteSystem(), this.portClient);
+                this.messageTransfert.setFileDemandTask(tmp.getName(), tmp.getSize(), tmp.getIdRemoteSystem(), this.portClient);
 
                 this.portClient++;
 
@@ -188,7 +189,7 @@ public class ChatNI extends View {
     public void updateByRemoteSystems(RemoteSystemInformation aux) {
         String msgToSend = aux.getMessageToSend();
         if (msgToSend != null) {
-            this.messageTransfert.setTextMessageTask(aux.getIP(), aux.getIdRemoteSystem(), msgToSend);
+            this.messageTransfert.setTextMessageTask(aux.getIdRemoteSystem(), msgToSend);
         }
     }
 

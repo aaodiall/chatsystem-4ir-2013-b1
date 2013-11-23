@@ -2,10 +2,11 @@
  * tasks' file, the user can add tasks like when using a normal file but also
  * insert urgent tasks which will be treated first.
  */
-package chatSystem.view.ni;
 
-import java.util.List;
+package chatSystem.view.ni.messageTransferts;
+
 import java.util.LinkedList;
+import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -18,28 +19,51 @@ public class FileWithPriority<E> {
 
     private final List<E> fileTask;
 
+    /**
+     * Class' constructor
+     */
     public FileWithPriority() {
         this.fileTask = new LinkedList<E>();
     }
 
+    /**
+     * Determining if the file is empty
+     * @return true if the file is empty, or false if it's not
+     */
     public boolean isEmpty() {
         return this.fileTask.isEmpty();
     }
 
+    /**
+     * Add a task to the end of the pile
+     * @param task the task which is to be added
+     */
     public synchronized void addTask(E task) {
         this.fileTask.add(task);
         notify();
     }
 
+    /**
+     * Add a task at the beginning of the pile
+     * @param task the task which is to be added
+     */
     public synchronized void addUrgentTask(E task) {
         this.fileTask.add(0, task);
         notify();
     }
 
+    /**
+     * Determine the file's size
+     * @return file's size
+     */
     public int size() {
         return this.fileTask.size();
     }
 
+    /**
+     * Return and erase the next task in the file
+     * @return first element in the file
+     */
     public synchronized E getNextTask() {
         if (this.fileTask.isEmpty()) {
             try {
@@ -54,8 +78,8 @@ public class FileWithPriority<E> {
     }
 
     /**
-     *
-     * @return
+     * Return the String representation of the file
+     * @return String representation of the file
      */
     @Override
     public String toString() {
@@ -65,5 +89,4 @@ public class FileWithPriority<E> {
         }
         return result;
     }
-
 }
