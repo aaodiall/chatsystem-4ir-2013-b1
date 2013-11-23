@@ -187,7 +187,7 @@ public class ChatNI extends View {
         ((ChatController) this.controller).performMessageSent(msg, idRemoteSystem);
     }
 
-    public UserInformation getUserInfo() {
+    public UserInformation getUserInfo() { 
         return this.usrInfo;
     }
 

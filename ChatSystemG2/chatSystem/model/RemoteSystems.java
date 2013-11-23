@@ -123,7 +123,8 @@ public class RemoteSystems extends Model implements Iterable<RemoteSystemInforma
     public void removeOfflineRemoteSystem() {
         for (RemoteSystemInformation rsi: this) {
             if (rsi.getUserState() == UserState.MAYBEOFFLINE)
-                rsi.setUserState(UserState.DISCONNECTED);
+                //rsi.setUserState(UserState.DISCONNECTED);
+                this.remoteSystemsInformation.remove(rsi.getIdRemoteSystem());
         }
         this.setChanged();
         this.notifyObservers();

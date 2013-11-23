@@ -50,7 +50,7 @@ public class ChatController extends Controller implements GuiToCont, NiToCont {
         this.remoteSystems.addObserver(chatNI);
         this.fileTransferts.addObserver(chatNI);
         
-        this.chatAlive = new ChatAlive();
+        this.chatAlive = new ChatAlive(localUser);
         this.threadChatAlive = new Thread(this.chatAlive);
     }
 
