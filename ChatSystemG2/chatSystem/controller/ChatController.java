@@ -133,11 +133,11 @@ public class ChatController extends Controller implements GuiToCont, NiToCont {
         if (accepted) {
             this.fileTransferts.setFileTransfertInformationState(idTransfert, FileState.ACCEPTED);
             FileTransfertInformation tmp = this.fileTransferts.getFileTransfertInformation(idTransfert);
-            this.remoteSystems.addMessageSentToRemoteSystem("Le Fichier  " + tmp.getName() + " a bien était accepté par " + tmp.getIdRemoteSystem(), tmp.getIdRemoteSystem());
+            this.remoteSystems.addMessageSentToRemoteSystem("The file  " + tmp.getName() + " was accepted by " + tmp.getIdRemoteSystem(), tmp.getIdRemoteSystem());
         } else {
             this.fileTransferts.setFileTransfertInformationState(idTransfert, FileState.DECLINED);
             FileTransfertInformation tmp = this.fileTransferts.getFileTransfertInformation(idTransfert);
-            this.remoteSystems.addMessageSentToRemoteSystem("Le Fichier  " + tmp.getName() + " a bien était accepté par " + tmp.getIdRemoteSystem(), tmp.getIdRemoteSystem());
+            this.remoteSystems.addMessageSentToRemoteSystem("the file  " + tmp.getName() + " was rejected by " + tmp.getIdRemoteSystem(), tmp.getIdRemoteSystem());
         }
     }
     
