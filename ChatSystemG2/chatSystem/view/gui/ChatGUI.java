@@ -62,25 +62,11 @@ public class ChatGUI extends View implements ToUser, FromUser{
         }
     }
 
-    @Override
-    public void displayDeclinedSuggestionNotification(FileSendingInformation tmp) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-        //this.dWindows.get(tmp.getIdRemoteSystem()).displaySuggestion(tmp.getName(), tmp.getId());
-    }
 
    /* @Override
     public void displayNewMessageNotification() {
     }*/
 
-    @Override
-    public void displayFileReceivedNotification(FileReceivingInformation tmp) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
-
-    @Override
-    public void displayFileSendedNotification(FileSendingInformation tmp) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
 
     @Override
     public void listUser(List<String> newList) throws GUIException {
@@ -101,11 +87,6 @@ public class ChatGUI extends View implements ToUser, FromUser{
     public void displayMessage() {
         //fait directement avec le dafaultListModel mais il faut le changer pour le faire nous mm (comme la liste utilisateur)
     }*/
-
-    @Override
-    public void displayAcceptedSuggestionNotification(FileSendingInformation tmp) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
     
     /**
      *
@@ -158,16 +139,16 @@ public class ChatGUI extends View implements ToUser, FromUser{
     public void updateByFileSendingInformation(FileSendingInformation tmp) {
         switch (tmp.getState()) {
             case ACCEPTED:
-                displayAcceptedSuggestionNotification(tmp);
+                // Nothing TODO
                 break;
             case WAITANSWER:
                 // Nothing TODO
                 break;
             case DECLINED:
-                displayDeclinedSuggestionNotification(tmp);
+                // Nothing TODO
                 break;
             case TERMINATED:
-                displayFileSendedNotification(tmp);
+                // Nothing TODO
                 break;
         }
     }
@@ -184,7 +165,7 @@ public class ChatGUI extends View implements ToUser, FromUser{
                 //Nothing TODO
                 break;
             case TERMINATED:
-                displayFileReceivedNotification(tmp);
+                // Nothing TODO
                 break;
         }
     }
@@ -210,8 +191,8 @@ public class ChatGUI extends View implements ToUser, FromUser{
     }
 
     @Override
-    public void openDialogWindow() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    public void openDialogWindow(String idRemoteSystem) {
+        displayDialogWindow(idRemoteSystem);
     }
 
     @Override

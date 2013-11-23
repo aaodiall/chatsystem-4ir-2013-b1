@@ -27,7 +27,7 @@ public class FileReceiver implements Runnable {
     public void run() {
         try {
             //Le client commence par tenter la connection
-            System.out.println("Lancement Reception Fichier");
+            //System.out.println("Lancement Reception Fichier");
             try {
                 this.socketClient = new Socket(this.ipServer, this.portServer);
                 this.reader = new ObjectInputStream(socketClient.getInputStream());
@@ -40,7 +40,7 @@ public class FileReceiver implements Runnable {
                 msg = reader.readObject();
                 
                 this.chatNI.filePartReceived(((FilePart)msg).getFilePart(),((FilePart)msg).isLast());
-                System.out.println("RECU : "+msg.toString());
+                //System.out.println("RECU : "+msg.toString());
             }while(!((FilePart)msg).isLast());
             
             System.out.println("-------------------FICHIER RECU----------------------");

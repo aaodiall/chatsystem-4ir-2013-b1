@@ -2,6 +2,7 @@ package chatSystem.controller;
 
 import chatSystem.model.FileReceivingInformation;
 import chatSystem.model.FileState;
+import chatSystem.model.FileTransfertInformation;
 import chatSystem.model.RemoteSystems;
 import chatSystem.model.UserInformation;
 import chatSystem.model.UserState;
@@ -93,7 +94,7 @@ public class ChatController extends Controller implements GuiToCont, NiToCont {
 
     @Override
     public void performMessageSent(String message, String idRemoteSystem) {
-        System.out.println("Message sent to " + idRemoteSystem + ", modifying the model");
+       System.out.println("Message sent to " + idRemoteSystem + ", modifying the model");
        this.remoteSystems.addMessageSentToRemoteSystem(this.localUser.getUsername() + " : " +message, idRemoteSystem);
     }
 
@@ -106,13 +107,13 @@ public class ChatController extends Controller implements GuiToCont, NiToCont {
     @Override
     public void performAcceptSuggestion(int idTransfert) {
         System.out.println("Send file accepted notification, modifying the model");
-        this.fileTransferts.getFileTransfertInformation(idTransfert).setState(FileState.ACCEPTED);
+        this.fileTransferts.setFileTransfertInformationState(idTransfert, FileState.ACCEPTED);
     }
 	
     @Override
     public void performDeclineSuggestion(int idTransfert) {
         System.out.println("Send file declined notification, modifying the model");
-        this.fileTransferts.getFileTransfertInformation(idTransfert).setState(FileState.DECLINED);
+        this.fileTransferts.setFileTransfertInformationState(idTransfert, FileState.DECLINED);
     }
     
     @Override
@@ -131,10 +132,13 @@ public class ChatController extends Controller implements GuiToCont, NiToCont {
         System.out.println("Receiving a file transfert confirmation from " + idRemoteSystem + ", modifying the model");
         if (accepted) {
             this.fileTransferts.setFileTransfertInformationState(idTransfert, FileState.ACCEPTED);
-        }
-        else {
+            FileTransfertInformation tmp = this.fileTransferts.getFileTransfertInformation(idTransfert);
+            this.remoteSystems.addMessageSentToRemoteSystem("Le Fichier  " + tmp.getName() + " a bien était accepté par " + tmp.getIdRemoteSystem(), tmp.getIdRemoteSystem());
+        } else {
             this.fileTransferts.setFileTransfertInformationState(idTransfert, FileState.DECLINED);
-        }            
+            FileTransfertInformation tmp = this.fileTransferts.getFileTransfertInformation(idTransfert);
+            this.remoteSystems.addMessageSentToRemoteSystem("Le Fichier  " + tmp.getName() + " a bien était accepté par " + tmp.getIdRemoteSystem(), tmp.getIdRemoteSystem());
+        }
     }
     
     /**
