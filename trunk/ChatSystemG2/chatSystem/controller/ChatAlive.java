@@ -18,6 +18,9 @@ public class ChatAlive implements Runnable{
     private long msTimeToAnswer;
     private RemoteSystems rmInstance = null;
       
+    /**
+     * Class' constructor
+     */
     public ChatAlive() {
         this.rmInstance = RemoteSystems.getInstance();
         this.msBetweenHellos = 10000; //10s
@@ -36,8 +39,5 @@ public class ChatAlive implements Runnable{
                 System.err.println("Someone interrupted ChatAlive for no reason");
             }
         }
-    }
-    
-    
-    
+    }   
 }
