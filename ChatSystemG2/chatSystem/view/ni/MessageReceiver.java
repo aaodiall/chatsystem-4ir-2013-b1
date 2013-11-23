@@ -66,7 +66,7 @@ public class MessageReceiver implements Runnable {
                     System.out.println("RECEPTION : " + msg.toString() + " <- " + from + " je passe à chatNI");
                     if (msgClass == Hello.class) {
                         Hello helloReceived = (Hello) msg;
-                        this.chatni.helloReceived(helloReceived.getUsername(), from);
+                        this.chatni.helloReceived(helloReceived.getUsername(), from, helloReceived.isAck());
                     } else if (msgClass == Text.class) {
                         Text msgText = (Text) msg;
                         this.chatni.textMessageReceived(msgText.getText(), RemoteSystemInformation.generateID(msg.getUsername(), from));
