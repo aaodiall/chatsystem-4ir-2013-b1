@@ -18,16 +18,14 @@ public class ChatAlive extends Thread{
 
     private final long msBetweenHellos;
     private final long msTimeToAnswer;
-    private final UserInformation usrInfo;
     private RemoteSystems rmInstance = null;
       
     /**
      * Class' constructor
      */
-    public ChatAlive(UserInformation usrInfo) {
+    public ChatAlive() {
         this.rmInstance = RemoteSystems.getInstance();
-        this.usrInfo = usrInfo;
-        this.msBetweenHellos = 60000; //1min
+        this.msBetweenHellos = 5000; //1min
         this.msTimeToAnswer = 2000; //2s
     } 
     
@@ -37,7 +35,6 @@ public class ChatAlive extends Thread{
             try {
                 this.sleep(this.msBetweenHellos - this.msTimeToAnswer);
                 rmInstance.setAllMaybeOffline();
-                this.usrInfo.setUserState(UserState.CONNECTED);
                 this.sleep(this.msTimeToAnswer);
                 this.rmInstance.removeOfflineRemoteSystem();
             } catch (InterruptedException e) {

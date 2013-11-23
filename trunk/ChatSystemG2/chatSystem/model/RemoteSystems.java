@@ -44,9 +44,9 @@ public class RemoteSystems extends Model implements Iterable<RemoteSystemInforma
             if (aux.getUserState() == UserState.CONNECTED) {
                 //message sent by a remote system to indicate it's still connected
                 aux.setUserState(UserState.CONNECTED);
-                this.setChanged();
+                /*this.setChanged();
                 this.notifyObservers(ip);
-                this.clearChanged();
+                this.clearChanged();*/
             }
             else if (aux.getUserState() == UserState.MAYBEOFFLINE) {
                 //message sent to answer a hello broadcast to determine which remote system is still connected
@@ -125,6 +125,9 @@ public class RemoteSystems extends Model implements Iterable<RemoteSystemInforma
             if (rsi.getUserState() == UserState.MAYBEOFFLINE)
                 rsi.setUserState(UserState.DISCONNECTED);
         }
+        this.setChanged();
+        this.notifyObservers();
+        this.clearChanged();
     }
     /**
      * Static method to obtain an instance of the class RemoteSystems
