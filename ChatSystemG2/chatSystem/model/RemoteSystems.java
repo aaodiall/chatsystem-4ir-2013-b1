@@ -30,9 +30,10 @@ public class RemoteSystems extends Model implements Iterable<RemoteSystemInforma
      * @param ip remote system's ip address
      */
     public synchronized void addRemoteSystem(String username, String ip) {
-        System.out.println("Ajout utilisateur : " + username + "     " + ip);
+        
         String key = RemoteSystemInformation.generateID(username, ip);
         if (!this.remoteSystemsInformation.containsKey(key)) {
+            System.out.println("Ajout utilisateur : " + username + "     " + ip);
             RemoteSystemInformation newRS = new RemoteSystemInformation(username, ip);
             this.remoteSystemsInformation.put(key, newRS);
             this.setChanged();
@@ -117,9 +118,6 @@ public class RemoteSystems extends Model implements Iterable<RemoteSystemInforma
         for (RemoteSystemInformation rsi: this) {
             rsi.setUserState(UserState.MAYBEOFFLINE);
         }
-        this.setChanged();
-        this.notifyObservers();
-        this.clearChanged();
     }
     
     public void removeOfflineRemoteSystem() {
