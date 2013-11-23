@@ -41,14 +41,14 @@ public class RemoteSystems extends Model implements Iterable<RemoteSystemInforma
             this.clearChanged();
         } else {
             RemoteSystemInformation aux = this.getRemoteSystem(key);
-            if (aux.getUserState() == UserState.CONNECTED) {
+            //if (aux.getUserState() == UserState.CONNECTED) {
                 //message sent by a remote system to indicate it's still connected
-                aux.setUserState(UserState.CONNECTED);
+            //    aux.setUserState(UserState.CONNECTED);
                 /*this.setChanged();
                 this.notifyObservers(ip);
                 this.clearChanged();*/
-            }
-            else if (aux.getUserState() == UserState.MAYBEOFFLINE) {
+            //}
+            if (aux.getUserState() == UserState.MAYBEOFFLINE) {
                 //message sent to answer a hello broadcast to determine which remote system is still connected
                 aux.setUserState(UserState.CONNECTED);
             }
@@ -118,6 +118,9 @@ public class RemoteSystems extends Model implements Iterable<RemoteSystemInforma
         for (RemoteSystemInformation rsi: this) {
             rsi.setUserState(UserState.MAYBEOFFLINE);
         }
+        this.setChanged();
+        this.notifyObservers();
+        this.clearChanged();
     }
     
     public void removeOfflineRemoteSystem() {
@@ -126,9 +129,6 @@ public class RemoteSystems extends Model implements Iterable<RemoteSystemInforma
                 //rsi.setUserState(UserState.DISCONNECTED);
                 this.remoteSystemsInformation.remove(rsi.getIdRemoteSystem());
         }
-        this.setChanged();
-        this.notifyObservers();
-        this.clearChanged();
     }
     /**
      * Static method to obtain an instance of the class RemoteSystems
