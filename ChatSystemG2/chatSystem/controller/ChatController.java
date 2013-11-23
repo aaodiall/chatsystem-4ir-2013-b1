@@ -10,6 +10,7 @@ import chatSystem.view.ni.ChatNI;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
 import chatSystem.model.FileTransferts;
+import java.io.File;
 
 public class ChatController extends Controller implements GuiToCont, NiToCont {
 
@@ -90,9 +91,9 @@ public class ChatController extends Controller implements GuiToCont, NiToCont {
     }
 
     @Override
-    public void performSendFileRequest(String name, String idRemoteSystem) {
+    public void performSendFileRequest(File fileToSend, String idRemoteSystem) {
        System.out.println("Send file request to be send to " + idRemoteSystem + ", modifying the model");
-       this.fileTransferts.addTransfert(name, idRemoteSystem);
+       this.fileTransferts.addTransfert(fileToSend, idRemoteSystem);
     //   this.transfertID ++;
     }
     
@@ -103,7 +104,7 @@ public class ChatController extends Controller implements GuiToCont, NiToCont {
     }
 	
     @Override
-    public void performDeclinedSuggestion(int idTransfert) {
+    public void performDeclineSuggestion(int idTransfert) {
         System.out.println("Send file declined notification, modifying the model");
         this.fileTransferts.getFileTransfertInformation(idTransfert).setState(FileState.DECLINED);
     }

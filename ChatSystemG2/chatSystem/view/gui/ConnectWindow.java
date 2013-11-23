@@ -94,7 +94,7 @@ public final class ConnectWindow extends JFrame implements ActionListener {
         System.out.println("Entering actionPerformed");
         if(ae.getSource() == this.connectButton){
             if(!usernameTextField.getText().equals("")){
-                chatGUI.connectButtonPressed(usernameTextField.getText());
+                chatGUI.connect(usernameTextField.getText());
             }
         }
     }

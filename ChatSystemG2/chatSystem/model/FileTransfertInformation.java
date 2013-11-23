@@ -18,11 +18,8 @@ public abstract class FileTransfertInformation extends Model {
     
     private final int idTransfert;
     private final String idRemoteSystem;
-    private final String name;
     private final int sizeTransfered;
     
-    protected long size;
-    private String path;
     protected FileState state;
     protected boolean isLast;
     
@@ -32,18 +29,16 @@ public abstract class FileTransfertInformation extends Model {
      * Class' constructor to send the file
      *
      * @param idRemoteSystem id of the sending remote system
-     * @param name file's name
+     * @param fileToSend file's descriptor
      */
-    public FileTransfertInformation(String idRemoteSystem, String name) {
+    public FileTransfertInformation(String idRemoteSystem, File fileToSend) {
         
         this.idRemoteSystem = idRemoteSystem;
-        this.name = name;
         this.idTransfert = FileTransfertInformation.idCpt++;
         this.sizeTransfered = 0;
-        this.path = null;
         this.isLast = false;
         
-        this.fileDescriptor = new File(name);
+        this.fileDescriptor = fileToSend;
     }
 
     /**
@@ -76,24 +71,13 @@ public abstract class FileTransfertInformation extends Model {
         return this.isLast = isLast;
     }
 
-
-
     /**
      * Obtaining the file's path in the system
      *
      * @return file's path
      */
     public String getPath() {
-        return this.path;
-    }
-
-    /**
-     * Setting the file's path in the system
-     *
-     * @param path new file's path
-     */
-    public void setPath(String path) {
-        this.path = path;
+        return this.fileDescriptor.getAbsolutePath();
     }
 
     /**
@@ -110,11 +94,11 @@ public abstract class FileTransfertInformation extends Model {
     }
     
     public String getName(){
-        return this.name;
+        return this.fileDescriptor.getName();
     }
     
     public long getSize(){
-        return this.size;
+        return this.fileDescriptor.getTotalSpace();
     }
     
     public String getIdRemoteSystem(){

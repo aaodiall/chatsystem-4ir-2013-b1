@@ -1,31 +1,32 @@
 package chatSystem.view.gui;
 
+import chatSystem.model.FileReceivingInformation;
 import java.util.List;
 
 
 public interface ToUser {
 	
-	public void Deconnected();
+	public void disconnected();
+        
+        public void connected();
 	
-	public void DisplayFileTransfertProgression();
+	public void displayFileTransfertProgression();
 
-	public void DisplaySuggestion();
+	public void displaySuggestion(FileReceivingInformation tmp);
 	
-	public void DisplayDialogWindow (String contact);
+	public void displayDialogWindow (String contact);
 	
-	public void DisplayDeclinedSuggestionNotification();
+	public void displayDeclinedSuggestionNotification();
 	
-	public void DisplayNewMessageNotification();
+	public void displayNewMessageNotification();
 	
-	public void DisplayReceivedFile();
+	public void displayReceivedFile();
 	
-	public void DisplayFileSendedNotification();
+	public void displayFileSendedNotification();
 	
 	public void listUser(List<String> newList) throws GUIException;
 	
-	public void DisplayMessage();
+	public void displayMessage();
 	
-	public void DisplayBrowseWindow();
-	
-	public void DisplayAcceptedSuggestionNotification();
+	public void displayAcceptedSuggestionNotification();
 }

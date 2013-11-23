@@ -6,6 +6,8 @@
 
 package chatSystem.controller;
 
+import java.io.File;
+
 /**
  *
  * @author Marjorie
@@ -18,11 +20,11 @@ public interface GuiToCont {
         
         public void performSendMessageRequest(String message, String idRemoteSystem);
         
-        public void performSendFileRequest(String name, String idRemoteSystem);
+        public void performSendFileRequest(File fileToSend, String idRemoteSystem);
 	
         public void performAcceptSuggestion(int idTransfert);
 	
-	public void performDeclinedSuggestion(int idTransfert);
+	public void performDeclineSuggestion(int idTransfert);
 	
         //public void performFileSended();
     

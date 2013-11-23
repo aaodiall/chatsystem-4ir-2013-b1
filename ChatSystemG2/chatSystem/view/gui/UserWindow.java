@@ -30,9 +30,9 @@ public class UserWindow extends JFrame implements ActionListener, MouseListener 
 
         this.username = new JLabel(username);
         this.deconnectButton = new JButton("Deconnect");
-        this.contactsName = new DefaultListModel();
 
-        this.contactsList = new JList(this.contactsName);
+        this.contactsName = new DefaultListModel();
+        this.contactsList = new JList(contactsName);
 
         this.chatGUI = chatGUI;
         this.initWindow();
@@ -91,35 +91,32 @@ public class UserWindow extends JFrame implements ActionListener, MouseListener 
 
     }
 
-    List<String> toUp;// = new List<String>();
-
-    public void updateContacts(List<String> newContacts) {
-        this.toUp = newContacts;
+    public void updateContacts(final List<String> newContacts) {   
         SwingUtilities.invokeLater(new Runnable() {
+            @Override
             public void run() {
-                updateContactsSwing();
+                contactsName.removeAllElements();
+                for (String name : newContacts){
+                    contactsName.addElement(name);
+                }   
             }
         });
-
     }
 
-    public void updateContactsSwing() {
-        (this.contactsName).removeAllElements();
-        Collections.sort(this.toUp);
-        for (String name : this.toUp) {
-            this.contactsName.addElement(name);
-        }
-    }
-
-    public void setUsername(String username) {
-        this.username.setText(username);
+    public void setUsername(final String usrname) {
+        SwingUtilities.invokeLater(new Runnable() {
+            @Override
+            public void run() {
+                username.setText(usrname);
+            }
+        });
     }
 
     @Override
     public void actionPerformed(ActionEvent ae) {
         System.out.println("Entering actionPerformed");
         if (ae.getSource() == this.deconnectButton) {
-            chatGUI.deconnectButtonPressed();
+            chatGUI.disconnect();
         }
     }
 
@@ -129,8 +126,10 @@ public class UserWindow extends JFrame implements ActionListener, MouseListener 
             //localisation index du clic
             int index = this.contactsList.locationToIndex(me.getPoint());
             //demande d'ouverture de la dialog Window correspondante
-            String idRemoteSystem = (String)this.contactsList.getModel().getElementAt(index);
-            this.chatGUI.displayDialogWindow(idRemoteSystem);
+            if (index != -1) { //cas de la liste non vide
+                String idRemoteSystem = (String) this.contactsList.getModel().getElementAt(index);
+                this.chatGUI.displayDialogWindow(idRemoteSystem);
+            }
         }
     }
 

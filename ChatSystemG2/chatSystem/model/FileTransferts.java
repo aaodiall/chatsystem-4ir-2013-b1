@@ -1,5 +1,6 @@
 package chatSystem.model;
 
+import java.io.File;
 import java.util.Map;
 import java.util.HashMap;
 
@@ -24,9 +25,9 @@ public class FileTransferts extends Model{
      * @param name file's name
      * @param idRemoteSystem sender's id
      */
-    public synchronized void addTransfert(String name, String idRemoteSystem) {
+    public synchronized void addTransfert(File fileToSend, String idRemoteSystem) {
         
-       FileTransfertInformation newFileTransfert = new FileSendingInformation(idRemoteSystem, name);
+       FileTransfertInformation newFileTransfert = new FileSendingInformation(idRemoteSystem, fileToSend);
        this.fileModel.put(newFileTransfert.getId(), newFileTransfert);
         
        this.setChanged();
