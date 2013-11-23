@@ -20,7 +20,7 @@ public abstract class FileTransfertInformation extends Model {
     private final String idRemoteSystem;
     private final int sizeTransfered;
     
-    protected FileState state;
+    private FileState state;
     protected boolean isLast;
     
     protected File fileDescriptor;
@@ -37,6 +37,8 @@ public abstract class FileTransfertInformation extends Model {
         this.idTransfert = FileTransfertInformation.idCpt++;
         this.sizeTransfered = 0;
         this.isLast = false;
+        
+        this.state = FileState.WAITANSWER;
         
         this.fileDescriptor = fileToSend;
     }

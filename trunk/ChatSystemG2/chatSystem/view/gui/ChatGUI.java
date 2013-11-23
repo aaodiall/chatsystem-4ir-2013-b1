@@ -5,6 +5,7 @@ import java.util.Map;
 import java.util.Observable;
 import chatSystem.controller.ChatController;
 import chatSystem.model.FileReceivingInformation;
+import chatSystem.model.FileSendingInformation;
 import chatSystem.model.FileTransferts;
 import chatSystem.model.RemoteSystems;
 import chatSystem.model.UserInformation;
@@ -40,12 +41,12 @@ public class ChatGUI extends View implements ToUser, FromUser{
 
     @Override
     public void displayFileTransfertProgression() {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
 
     }
 
     @Override
     public void displaySuggestion(FileReceivingInformation tmp) {
-
         this.dWindows.get(tmp.getIdRemoteSystem()).displaySuggestion(tmp.getName(), tmp.getId());
     }
 
@@ -62,19 +63,23 @@ public class ChatGUI extends View implements ToUser, FromUser{
     }
 
     @Override
-    public void displayDeclinedSuggestionNotification() {
+    public void displayDeclinedSuggestionNotification(FileSendingInformation tmp) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        //this.dWindows.get(tmp.getIdRemoteSystem()).displaySuggestion(tmp.getName(), tmp.getId());
     }
 
-    @Override
+   /* @Override
     public void displayNewMessageNotification() {
+    }*/
+
+    @Override
+    public void displayFileReceivedNotification(FileReceivingInformation tmp) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
     @Override
-    public void displayReceivedFile() {
-    }
-
-    @Override
-    public void displayFileSendedNotification() {
+    public void displayFileSendedNotification(FileSendingInformation tmp) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
     @Override
@@ -92,13 +97,14 @@ public class ChatGUI extends View implements ToUser, FromUser{
         }
     }
 
-    @Override
+ /*   @Override
     public void displayMessage() {
         //fait directement avec le dafaultListModel mais il faut le changer pour le faire nous mm (comme la liste utilisateur)
-    }
+    }*/
 
     @Override
-    public void displayAcceptedSuggestionNotification() {
+    public void displayAcceptedSuggestionNotification(FileSendingInformation tmp) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
     
     /**
@@ -141,9 +147,45 @@ public class ChatGUI extends View implements ToUser, FromUser{
         } else if (o instanceof FileTransferts) {
             
             if (arg instanceof FileReceivingInformation){
-                displaySuggestion((FileReceivingInformation)arg);
+                updateByFileReceivingInformation((FileReceivingInformation) arg);
+            }else if(arg instanceof FileSendingInformation){
+                updateByFileSendingInformation((FileSendingInformation) arg);
             }
             
+        }
+    }
+    
+    public void updateByFileSendingInformation(FileSendingInformation tmp) {
+        switch (tmp.getState()) {
+            case ACCEPTED:
+                displayAcceptedSuggestionNotification(tmp);
+                break;
+            case WAITANSWER:
+                // Nothing TODO
+                break;
+            case DECLINED:
+                displayDeclinedSuggestionNotification(tmp);
+                break;
+            case TERMINATED:
+                displayFileSendedNotification(tmp);
+                break;
+        }
+    }
+    
+    public void updateByFileReceivingInformation(FileReceivingInformation tmp) {
+        switch (tmp.getState()) {
+            case ACCEPTED:
+                displaySuggestion(tmp); // a déplacer a WaitAnswer mais il faut chager la gestion
+                break;
+            case WAITANSWER:
+                // TODO
+                break;
+            case DECLINED:
+                //Nothing TODO
+                break;
+            case TERMINATED:
+                displayFileReceivedNotification(tmp);
+                break;
         }
     }
     
@@ -163,13 +205,8 @@ public class ChatGUI extends View implements ToUser, FromUser{
     }
 
     @Override
-    public void selectDirectory(String directory) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
-
-    @Override
-    public void saveFile() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    public void saveFile(File fileToSend, int idTransfert) {
+        ((ChatController) this.controller).performSaveFile(fileToSend, idTransfert);
     }
 
     @Override
@@ -188,19 +225,7 @@ public class ChatGUI extends View implements ToUser, FromUser{
     }
 
     @Override
-    public void confirmSending() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
-
-    @Override
     public void sendFileRequest(File fileToSend, String idRemoteSystem) {
         ((ChatController) this.controller).performSendFileRequest(fileToSend, idRemoteSystem);
     }
-
-    @Override
-    public void selectFile() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
-
- 
 }

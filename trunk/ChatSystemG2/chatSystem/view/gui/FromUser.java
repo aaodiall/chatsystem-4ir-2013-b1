@@ -12,19 +12,13 @@ public interface FromUser {
 	
 	public void sendMessageRequest(String message, String idRemoteSystem);
 	
-	public void selectDirectory(String directory);
-	
-	public void saveFile();
+	public void saveFile(File fileToSend, int idTransfert);
 	
 	public void openDialogWindow();
 
 	public void acceptSuggestion(int idTransfert);
-	
-	public void confirmSending();
+        
+        public void declineSuggestion(int idTransfert);
 	
 	public void sendFileRequest(File fileToSend, String idRemoteSystem);
-	
-	public void selectFile();
-	
-	public void declineSuggestion(int idTransfert);
 }

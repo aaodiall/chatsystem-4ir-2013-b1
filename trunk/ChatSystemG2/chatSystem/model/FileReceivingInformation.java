@@ -23,16 +23,12 @@ public class FileReceivingInformation extends FileTransfertInformation{
     
     private final long size;
 
-    public FileReceivingInformation(String idRemoteSystem, long size, String path) {
-        super(idRemoteSystem, new File(path));
+    public FileReceivingInformation(String idRemoteSystem, long size, String name) {
+        super(idRemoteSystem, new File(name));
         
-        this.state = FileState.ACCEPTED;
         this.size = size;
-        try {
-            this.fileDescriptor.createNewFile();
-        } catch (IOException ex) {
-            Logger.getLogger(FileTransfertInformation.class.getName()).log(Level.SEVERE, null, ex);
-        }
+        
+        //For now we just have a temporary file until the user choose how to name it and where to save it
         
         try {
             this.writer = new FileOutputStream(this.fileDescriptor);
@@ -52,6 +48,10 @@ public class FileReceivingInformation extends FileTransfertInformation{
         } catch (IOException ex) {
             Logger.getLogger(FileTransfertInformation.class.getName()).log(Level.SEVERE, null, ex);
         }
+    }
+    
+    public void setFileDescriptor(File fileToSave){
+        this.fileDescriptor = fileToSave;
     }
     
 }
