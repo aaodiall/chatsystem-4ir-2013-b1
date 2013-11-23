@@ -6,8 +6,6 @@ import javax.swing.DefaultListModel;
 /**
  * Keeps and manages all the information about a remote system (Username,
  * address, id, messages)
- *
- * @author Marjorie
  */
 public class RemoteSystemInformation extends UserInformation {
 
@@ -17,21 +15,17 @@ public class RemoteSystemInformation extends UserInformation {
 
     /**
      * Class' constructor
-     *
      * @param username contact's username
      * @param ip remote system's ip address
      */
     public RemoteSystemInformation(String username, String ip) {
         super(username, ip);
-
         this.messagesToSend = new ConcurrentLinkedQueue<String>();
         this.messages = new DefaultListModel();
-
     }
 
     /**
      * Add a message in the received messages' list
-     *
      * @param message new received message
      */
     public void addMessageReceived(String message) {
@@ -40,7 +34,6 @@ public class RemoteSystemInformation extends UserInformation {
 
     /**
      * Add a message in the to-send messages' list
-     *
      * @param message message to send
      */
     public void addMessageToSend(String message) {        
@@ -49,7 +42,6 @@ public class RemoteSystemInformation extends UserInformation {
 
     /**
      * Get the message which is to be sent
-     *
      * @return message to send
      */
     public String getMessageToSend() {
@@ -58,14 +50,18 @@ public class RemoteSystemInformation extends UserInformation {
 
     /**
      * Add a message in the sent messages' list
-     *
      * @param message sent message
      */
     public void addMessageSent(String message) {
         this.messages.addElement(message); 
 
     }
+    
 
+    /**
+     * Get the conversation between the user and this remote system
+     * @return list of all the exchanges messages
+     */
     public DefaultListModel getMessages() {
         return this.messages;
     }
@@ -73,18 +69,27 @@ public class RemoteSystemInformation extends UserInformation {
     /**
      * Get the remote system's unique id Obtained by joining the ip address and
      * the contact's username
-     *
      * @return remote system's id
      */
     public String getIdRemoteSystem() {
         return RemoteSystemInformation.generateID(this.getUsername(),this.getIP());
     }
     
+    /**
+     * Set the remote system's state (connected/disconnected/maybeoffline)
+     * @param state remote system's state
+     */
     @Override
     public void setUserState(UserState state) {
             this.state = state;
     }
  
+    /**
+     * Static method using to generate a remote system's id
+     * @param username username of the contact using this remote system
+     * @param ip ip adress of the remote system
+     * @return remote system's id
+     */
     public static String generateID(String username, String ip) {
         return username + "@" + ip;
     }
