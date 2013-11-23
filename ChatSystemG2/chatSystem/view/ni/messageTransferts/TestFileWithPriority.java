@@ -2,7 +2,8 @@
  * Test of FileWithPriority
  */
 
-package chatSystem.view.ni;
+
+package chatSystem.view.ni.messageTransferts;
 
 /**
  *
