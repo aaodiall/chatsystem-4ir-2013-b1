@@ -1,5 +1,6 @@
 package chatSystem.controller;
 
+import chatSystem.model.FileReceivingInformation;
 import chatSystem.model.FileState;
 import chatSystem.model.RemoteSystems;
 import chatSystem.model.UserInformation;
@@ -131,7 +132,7 @@ public class ChatController extends Controller implements GuiToCont, NiToCont {
      */
     @Override
     public void performFilePartReceived(byte[] filePart, boolean isLast){
-        this.fileTransferts.getFileTransfertInformation(0).addFilePart(filePart);
+        ((FileReceivingInformation)this.fileTransferts.getFileTransfertInformation(0)).addFilePart(filePart);
         this.fileTransferts.getFileTransfertInformation(0).setIsLast(isLast);
     }
 

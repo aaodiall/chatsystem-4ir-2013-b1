@@ -57,7 +57,7 @@ public class RemoteSystems extends Model implements Iterable<RemoteSystemInforma
         this.clearChanged();
     }
 
-    public RemoteSystemInformation getRemoteSystem(String idRemoteSystem) {
+    public RemoteSystemInformation getRemoteSystem(String idRemoteSystem) { //supprimer pour faire des liens comme la fonctionen dessous
         return this.remoteSystemsInformation.get(idRemoteSystem);
     }
 
