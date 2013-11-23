@@ -26,8 +26,7 @@ public class FileTransferts extends Model{
      */
     public synchronized void addTransfert(String name, String idRemoteSystem) {
         
-       FileTransfertInformation newFileTransfert = new FileTransfertInformation(idRemoteSystem, name);
-       System.out.println("Ajout du transfertModel : "+newFileTransfert.getId());
+       FileTransfertInformation newFileTransfert = new FileSendingInformation(idRemoteSystem, name);
        this.fileModel.put(newFileTransfert.getId(), newFileTransfert);
         
        this.setChanged();
@@ -43,7 +42,7 @@ public class FileTransferts extends Model{
      */
     public synchronized void addTransfert(String name, long size, String idRemoteSystem) {
         
-       FileTransfertInformation newFileTransfert = new FileTransfertInformation(idRemoteSystem, size, name);
+       FileTransfertInformation newFileTransfert = new FileReceivingInformation(idRemoteSystem, size, name);
        this.fileModel.put(newFileTransfert.getId(), newFileTransfert);
         
        this.setChanged();
@@ -59,20 +58,36 @@ public class FileTransferts extends Model{
         this.fileModel.remove(idTransfert);
     }
 
-
-    public FileTransfertInformation getFileTransfertInformation(int idTransfert) {
+    public FileTransfertInformation getFileTransfertInformation(int idTransfert) { 
         return this.fileModel.get(idTransfert);
     }
 
     public void setFileTransfertInformationState(int idTransfert, FileState state) {
-        System.out.println("Modif State du transfertModel : "+idTransfert);
         if (this.fileModel.containsKey((Integer)idTransfert)) {
             this.fileModel.get(idTransfert).setState(state);
+            
             this.setChanged();
-            this.notifyObservers(state);
+            this.notifyObservers(this.fileModel.get(idTransfert));
             this.clearChanged();
         }
     }
+    
+    //a virer
+   /* public boolean isLast(int idTransfert) throws Exception{
+        if (this.fileModel.containsKey((Integer)idTransfert)) {
+            return this.fileModel.get(idTransfert).isLast();
+        }else{
+            throw new Exception("clé transfert inconnu");
+        }
+    }
+    
+    public byte[] getFilePart(int idTransfert) throws Exception{
+        if (this.fileModel.containsKey((Integer)idTransfert)) {
+            return this.fileModel.get(idTransfert).getFilePart();
+        }else{
+            throw new Exception("clé transfert inconnu");
+        }
+    }*/
     
     /**
      * Static method to obtain an instance of the classe

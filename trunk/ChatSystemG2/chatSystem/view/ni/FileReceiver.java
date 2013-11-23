@@ -3,7 +3,6 @@ package chatSystem.view.ni;
 //CLIENT
 import chatSystemCommon.FilePart;
 import java.io.IOException;
-import java.io.InputStream;
 import java.io.ObjectInputStream;
 import java.net.Socket;
 import java.util.logging.Level;
@@ -31,10 +30,6 @@ public class FileReceiver implements Runnable {
             System.out.println("Lancement Reception Fichier");
             try {
                 this.socketClient = new Socket(this.ipServer, this.portServer);
-            } catch (IOException ex) {
-                Logger.getLogger(FileReceiver.class.getName()).log(Level.SEVERE, null, ex);
-            }
-            try {
                 this.reader = new ObjectInputStream(socketClient.getInputStream());
             } catch (IOException ex) {
                 Logger.getLogger(FileReceiver.class.getName()).log(Level.SEVERE, null, ex);
@@ -47,6 +42,7 @@ public class FileReceiver implements Runnable {
                 this.chatNI.filePartReceived(((FilePart)msg).getFilePart(),((FilePart)msg).isLast());
                 System.out.println("RECU : "+msg.toString());
             }while(!((FilePart)msg).isLast());
+            
             System.out.println("-------------------FICHIER RECU----------------------");
         } catch (IOException ex) {
             Logger.getLogger(FileReceiver.class.getName()).log(Level.SEVERE, null, ex);

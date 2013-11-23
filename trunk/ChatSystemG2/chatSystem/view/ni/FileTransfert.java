@@ -1,5 +1,6 @@
 package chatSystem.view.ni;
 
+import chatSystem.model.FileSendingInformation;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.io.IOException;
@@ -14,12 +15,12 @@ import java.util.logging.Logger;
 //SERVEUR
 public class FileTransfert implements Runnable {
 
+    private final ChatNI chatNI;
     private ServerSocket serverSocket;
     private Socket clientSocket;
-    private ChatNI chatNI;
-
-    ObjectOutputStream writer;
-    FileTransfertInformation fileToSend;
+    
+    private ObjectOutputStream writer;
+    private final FileSendingInformation fileToSend;
 
     public FileTransfert(int port, int idTransfert, ChatNI chatNI) {
         System.out.println("Init serveur envoi de fichier");
@@ -28,7 +29,7 @@ public class FileTransfert implements Runnable {
         } catch (IOException ex) {
             Logger.getLogger(FileTransfert.class.getName()).log(Level.SEVERE, null, ex);
         }
-        this.fileToSend = FileTransferts.getInstance().getFileTransfertInformation(idTransfert);
+        this.fileToSend = (FileSendingInformation) FileTransferts.getInstance().getFileTransfertInformation(idTransfert);
         this.chatNI = chatNI;
     }
 

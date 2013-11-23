@@ -11,25 +11,22 @@ import java.util.logging.Logger;
 /*
  *  Scinder cette classe en deux -> une qui permet d'écrire un fichier recus et une qui permet de lire un fichier a envoyer ? 
  */
-public class FileTransfertInformation extends Model {
+public abstract class FileTransfertInformation extends Model {
 
-    private static int idCpt;
     private static final int tailleSegment = 1024;
+    private static int idCpt;
     
     private final int idTransfert;
     private final String idRemoteSystem;
-    private FileState state;
     private final String name;
-    private final long taille;
+    private final int sizeTransfered;
+    
+    protected long size;
     private String path;
+    protected FileState state;
+    protected boolean isLast;
     
-    private final int tailleRecup;
-    private boolean isLast;
-    
-    private File fileDescriptor;
-    
-    private FileInputStream reader;
-    private FileOutputStream writer;
+    protected File fileDescriptor;
 
     /**
      * Class' constructor to send the file
@@ -42,54 +39,11 @@ public class FileTransfertInformation extends Model {
         this.idRemoteSystem = idRemoteSystem;
         this.name = name;
         this.idTransfert = FileTransfertInformation.idCpt++;
-        this.state = FileState.WAITANSWER;
-        this.tailleRecup = 0;
+        this.sizeTransfered = 0;
         this.path = null;
         this.isLast = false;
         
         this.fileDescriptor = new File(name);
-        
-        this.taille = this.fileDescriptor.length();
-        try {
-            this.reader = new FileInputStream(this.fileDescriptor);
-        } catch (FileNotFoundException ex) {
-            Logger.getLogger(FileTransfertInformation.class.getName()).log(Level.SEVERE, null, ex);
-        }
-    }
-    
-    /**
-     * Class' constructor to receive the file
-     *
-     * @param taille file's size
-     * @param idRemoteSystem id of the sending remote system
-     * @param name file's name
-     */
-    public FileTransfertInformation(String idRemoteSystem, long taille, String name) {
-        
-        this.idRemoteSystem = idRemoteSystem;
-        this.idTransfert = FileTransfertInformation.idCpt++;
-        
-        this.name = name;
-        this.taille = taille;
-        
-        this.state = FileState.ACCEPTED;
-        this.tailleRecup = 0;
-        this.path = null; //in name or to define
-        this.isLast = false;
-        
-        System.out.println(name);
-        this.fileDescriptor = new File(name);
-        try {
-            this.fileDescriptor.createNewFile();
-        } catch (IOException ex) {
-            Logger.getLogger(FileTransfertInformation.class.getName()).log(Level.SEVERE, null, ex);
-        }
-        
-        try {
-            this.writer = new FileOutputStream(name);
-        } catch (FileNotFoundException ex) {
-            Logger.getLogger(FileTransfertInformation.class.getName()).log(Level.SEVERE, null, ex);
-        }
     }
 
     /**
@@ -122,24 +76,7 @@ public class FileTransfertInformation extends Model {
         return this.isLast = isLast;
     }
 
-    /**
-     * Obtaining the next file's part to send
-     *
-     * @return file's part
-     */
-    public byte[] getFilePart() {
-        byte[] filePart = new byte[1024];
-        try {
-            if(this.reader.read(filePart) == -1){
-                this.isLast = true;
-            }
-            
-            //set isLast to true when last part has been loaded
-        } catch (IOException ex) {
-            Logger.getLogger(FileTransfertInformation.class.getName()).log(Level.SEVERE, null, ex);
-        }
-        return filePart;
-    }
+
 
     /**
      * Obtaining the file's path in the system
@@ -167,18 +104,6 @@ public class FileTransfertInformation extends Model {
     public void setState(FileState state) {
         this.state = state;
     }
-
-    /**
-     * Add a new file part
-     */
-    public void addFilePart(byte[] filePart) {
-        try {
-            this.writer.write(filePart);
-
-        } catch (IOException ex) {
-            Logger.getLogger(FileTransfertInformation.class.getName()).log(Level.SEVERE, null, ex);
-        }
-    }
     
     public int getId(){
         return this.idTransfert;
@@ -189,7 +114,7 @@ public class FileTransfertInformation extends Model {
     }
     
     public long getSize(){
-        return this.taille;
+        return this.size;
     }
     
     public String getIdRemoteSystem(){
