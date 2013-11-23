@@ -27,7 +27,7 @@ public class FileTransferts extends Model{
      */
     public synchronized void addTransfert(File fileToSend, String idRemoteSystem) {
         
-       FileTransfertInformation newFileTransfert = new FileSendingInformation(idRemoteSystem, fileToSend);
+       FileTransfertInformation newFileTransfert = new FileSendingInformation(-1, idRemoteSystem, fileToSend);
        this.fileModel.put(newFileTransfert.getId(), newFileTransfert);
         
        this.setChanged();
@@ -41,10 +41,10 @@ public class FileTransferts extends Model{
      * @param size file's size
      * @param idRemoteSystem sender's id
      */
-    public synchronized void addTransfert(String name, long size, String idRemoteSystem) {
+    public synchronized void addTransfert(int idTransfert, String name, long size, String idRemoteSystem, int portServer) {
         
-       FileTransfertInformation newFileTransfert = new FileReceivingInformation(idRemoteSystem, size, name);
-       this.fileModel.put(newFileTransfert.getId(), newFileTransfert);
+       FileTransfertInformation newFileTransfert = new FileReceivingInformation(idTransfert, idRemoteSystem, size, name, portServer);
+       this.fileModel.put(idTransfert, newFileTransfert);
         
        this.setChanged();
        this.notifyObservers(newFileTransfert);

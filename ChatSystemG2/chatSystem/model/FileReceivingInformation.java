@@ -22,14 +22,19 @@ public class FileReceivingInformation extends FileTransfertInformation{
     private FileOutputStream writer;
     
     private final long size;
+    private final int portServer;
 
-    public FileReceivingInformation(String idRemoteSystem, long size, String name) {
-        super(idRemoteSystem, new File(name));
+    public FileReceivingInformation(int idTransfert, String idRemoteSystem, long size, String name, int portServer) {
+        super(idTransfert, idRemoteSystem, new File(name));
         
         this.size = size;
-        
+        this.portServer = portServer;
         //For now we just have a temporary file until the user choose how to name it and where to save it
         
+    }
+    
+    public int getPortServer(){
+        return this.portServer;
     }
     
     /**

@@ -27,15 +27,15 @@ public class ChatAlive extends Thread{
     public ChatAlive(UserInformation usrInfo) {
         this.rmInstance = RemoteSystems.getInstance();
         this.usrInfo = usrInfo;
-        this.msBetweenHellos = 30000; //1min
-        this.msTimeToAnswer = 10000; //2s
+        this.msBetweenHellos = 10000; //1min
+        this.msTimeToAnswer = 2000; //2s
     } 
     
     @Override
     public void run() {
         while (this.usrInfo.getUserState() == UserState.CONNECTED) {
             try {
-                this.sleep(this.msBetweenHellos /*- this.msTimeToAnswer*/);
+                this.sleep(this.msBetweenHellos - this.msTimeToAnswer);
                 rmInstance.setAllMaybeOffline();
                 this.sleep(this.msTimeToAnswer);
                 this.rmInstance.removeOfflineRemoteSystem();

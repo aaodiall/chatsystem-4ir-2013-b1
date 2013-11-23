@@ -1,20 +1,11 @@
 package chatSystem.model;
 
 import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
-/*
- *  Scinder cette classe en deux -> une qui permet d'écrire un fichier recus et une qui permet de lire un fichier a envoyer ? 
- */
 public abstract class FileTransfertInformation extends Model {
 
-    private static final int tailleSegment = 1024;
-    private static int idCpt;
+    protected static final int tailleSegment = 1024;
+    //private static int idCpt;
     
     private final int idTransfert;
     private final String idRemoteSystem;
@@ -31,10 +22,10 @@ public abstract class FileTransfertInformation extends Model {
      * @param idRemoteSystem id of the sending remote system
      * @param fileToSend file's descriptor
      */
-    public FileTransfertInformation(String idRemoteSystem, File fileToSend) {
+    public FileTransfertInformation(int idTransfert, String idRemoteSystem, File fileToSend) {
         
         this.idRemoteSystem = idRemoteSystem;
-        this.idTransfert = FileTransfertInformation.idCpt++;
+        this.idTransfert = idTransfert;//FileTransfertInformation.idCpt++;
         this.sizeTransfered = 0;
         this.isLast = false;
         
