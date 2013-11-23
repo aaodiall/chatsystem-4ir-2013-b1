@@ -11,7 +11,7 @@ package chatSystem.controller;
  * @author Marjorie
  */
 public interface NiToCont {
-    	public void performHelloReceived(String username, String ip);
+    	public void performHelloReceived(String username, String ip, boolean isAck);
 
 	public void performGoodbyeReceived(String idRemoteSystem);
 	

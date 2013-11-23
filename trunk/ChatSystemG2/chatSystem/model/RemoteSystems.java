@@ -29,7 +29,7 @@ public class RemoteSystems extends Model implements Iterable<RemoteSystemInforma
      * @param username contact's username
      * @param ip remote system's ip address
      */
-    public synchronized void addRemoteSystem(String username, String ip) {
+    public synchronized void addRemoteSystem(String username, String ip, boolean isAck) {
         
         String key = RemoteSystemInformation.generateID(username, ip);
         if (!this.remoteSystemsInformation.containsKey(key)) {
@@ -41,14 +41,14 @@ public class RemoteSystems extends Model implements Iterable<RemoteSystemInforma
             this.clearChanged();
         } else {
             RemoteSystemInformation aux = this.getRemoteSystem(key);
-            //if (aux.getUserState() == UserState.CONNECTED) {
+            if (aux.getUserState() == UserState.CONNECTED && ! isAck) {
                 //message sent by a remote system to indicate it's still connected
-            //    aux.setUserState(UserState.CONNECTED);
-                /*this.setChanged();
+                aux.setUserState(UserState.CONNECTED);
+                this.setChanged();
                 this.notifyObservers(ip);
-                this.clearChanged();*/
-            //}
-            if (aux.getUserState() == UserState.MAYBEOFFLINE) {
+                this.clearChanged();
+        
+            }else if (aux.getUserState() == UserState.MAYBEOFFLINE) {
                 //message sent to answer a hello broadcast to determine which remote system is still connected
                 aux.setUserState(UserState.CONNECTED);
             }

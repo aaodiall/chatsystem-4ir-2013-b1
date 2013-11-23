@@ -32,8 +32,8 @@ public class ChatNI extends View {
         this.portClient = 1024;
     }
 
-    public void helloReceived(String username, String ip) {
-        ((ChatController) (this.controller)).performHelloReceived(username, ip);
+    public void helloReceived(String username, String ip, boolean isAck) {
+        ((ChatController) (this.controller)).performHelloReceived(username, ip, isAck);
     }
 
     public void textMessageReceived(String msg, String username) {
