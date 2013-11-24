@@ -12,7 +12,6 @@ import java.io.File;
 import java.util.HashMap;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import java.util.Set;
 
 public class ChatGUI extends View implements ToUser, FromUser {
 
@@ -38,10 +37,11 @@ public class ChatGUI extends View implements ToUser, FromUser {
     @Override
     public void disconnected() {
         for (String key : this.dWindows.keySet()) {
-            DialogWindow aux = this.dWindows.get(key);
+            /*DialogWindow aux = this.dWindows.get(key);
             if (aux != null) {
                 aux.setVisible(false);
-            }
+            }*/
+            this.dWindows.remove(key);
         }
         cWindow.setVisible(true);
         uWindow.setVisible(false);
