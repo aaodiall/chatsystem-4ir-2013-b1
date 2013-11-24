@@ -67,8 +67,8 @@ public class FileTransfert implements Runnable {
             this.clientSocket = this.serverSocket.accept();
 
             //on est connecté, on prépare de transfert
-            this.writer = new ObjectOutputStream(clientSocket.getOutputStream());
-            this.writerBuffer = new BufferedOutputStream(writer);
+            this.writerBuffer = new BufferedOutputStream(clientSocket.getOutputStream());
+            this.writer = new ObjectOutputStream(writerBuffer);
 
             Message msg;
             try {
@@ -76,16 +76,14 @@ public class FileTransfert implements Runnable {
                     //on récupère le morceau de fichier a envoyer et on l'écrit dans la socket
                     msg = new FilePart(this.chatNI.getUserInfo().getUsername(), this.fileToSend.getFilePart(), this.fileToSend.isLast());//a changer mais je vais vite
 
-                    byte[] tmp = msg.toArray();
-                    this.writerBuffer.write(tmp);
-                    this.writerBuffer.flush();
+                    this.writer.writeObject(msg);
+                    this.writer.flush();
                 } while (!this.fileToSend.isLast());
 
             } finally {
                 //on termine
-                
-                this.writerBuffer.close();
                 this.writer.close();
+                this.writerBuffer.close();
                 this.clientSocket.close();
                 this.serverSocket.close();
             }
