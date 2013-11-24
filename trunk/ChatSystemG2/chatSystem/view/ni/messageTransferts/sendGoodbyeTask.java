@@ -4,10 +4,6 @@
 
 package chatSystem.view.ni.messageTransferts;
 
-/**
- *
- * @author Marjorie
- */
 
 public class sendGoodbyeTask extends Task {
 

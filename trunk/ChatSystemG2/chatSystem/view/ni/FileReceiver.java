@@ -1,3 +1,6 @@
+/**
+ * Active class responsible for the reception of file sent from a given remote system
+ */
 package chatSystem.view.ni;
 
 //CLIENT
@@ -18,6 +21,13 @@ public class FileReceiver implements Runnable {
     private Socket socketClient;
     private ObjectInputStream reader;
 
+    /**
+     * Class' constructor
+     * @param idTransfert id of the file's reception the instance is responsible of
+     * @param ipServer ip adress of the remote system sending the file
+     * @param portServer port the remote system is going to use
+     * @param chatNI instance of chat ni which is responsible for this instance of file receiver
+     */
     public FileReceiver(int idTransfert, String ipServer, int portServer, ChatNI chatNI) {
         this.ipServer = ipServer;
         this.portServer = portServer;
@@ -25,6 +35,9 @@ public class FileReceiver implements Runnable {
         this.idTransfert = idTransfert;
     }
 
+    /**
+     * Action executed by the active class
+     */
     @Override
     public void run() {
         try {

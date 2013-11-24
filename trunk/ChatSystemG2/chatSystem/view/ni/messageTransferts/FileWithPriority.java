@@ -1,5 +1,5 @@
 /**
- * tasks' file, the user can add tasks like when using a normal file but also
+ * Tasks' file, the user can add tasks like when using a normal file but also
  * insert urgent tasks which will be treated first.
  */
 
@@ -11,8 +11,6 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 /**
- *
- * @author Marjorie
  * @param <E> : type of object
  */
 public class FileWithPriority<E> {

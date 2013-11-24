@@ -19,10 +19,7 @@ import java.net.UnknownHostException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-/**
- *
- * @author Marjorie
- */
+
 public class MessageTransferts implements Runnable {
     
     final static int portUdpEmission = 16001;

@@ -3,10 +3,6 @@
 */
 package chatSystem.view.ni.messageTransferts;
 
-/**
- *
- * @author Marjorie
- */
     public abstract class Task {
         protected MessageTransferts messageTransferts;
         

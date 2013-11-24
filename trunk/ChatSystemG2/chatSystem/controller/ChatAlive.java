@@ -23,6 +23,7 @@ public class ChatAlive extends Thread{
       
     /**
      * Class' constructor
+     * @userInfor information about the local user
      */
     public ChatAlive(UserInformation usrInfo) {
         this.rmInstance = RemoteSystems.getInstance();
