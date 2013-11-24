@@ -21,7 +21,6 @@ public class ChatGUI extends View implements ToUser, FromUser {
 
     /**
      * Class' constructor
-     *
      * @param controller instance of controller responsible for this instance of
      * chat gui
      */

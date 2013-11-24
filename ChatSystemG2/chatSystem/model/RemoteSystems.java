@@ -1,3 +1,8 @@
+/**
+ * Keep and manage the remote systems' information
+ * This class implements the Singleton's pattern
+ */
+
 package chatSystem.model;
 
 import java.util.ArrayList;
@@ -6,11 +11,6 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
-/**
- * Keeps and manages the remote system's information
- *
- * @author Marjorie
- */
 public class RemoteSystems extends Model implements Iterable<RemoteSystemInformation> {
 
     private static RemoteSystems instance;
@@ -25,7 +25,6 @@ public class RemoteSystems extends Model implements Iterable<RemoteSystemInforma
 
     /**
      * Add a remote system in the remote system's list
-     *
      * @param username contact's username
      * @param ip remote system's ip address
      */
@@ -57,7 +56,6 @@ public class RemoteSystems extends Model implements Iterable<RemoteSystemInforma
 
     /**
      * Remove a remote system from the list
-     *
      * @param idRemoteSystem id of the remote system to be removed
      */
     public synchronized void deleteRemoteSystem(String idRemoteSystem) {
@@ -67,17 +65,26 @@ public class RemoteSystems extends Model implements Iterable<RemoteSystemInforma
         this.clearChanged();
     }
 
+    /**
+     * Obtain the information about a given remote system
+     * @param idRemoteSystem id of the remote system which is wanted
+     * @return instance of RemoteSystemInformation corresponding to the id
+     */
     public RemoteSystemInformation getRemoteSystem(String idRemoteSystem) { //supprimer pour faire des liens comme la fonctionen dessous
         return this.remoteSystemsInformation.get(idRemoteSystem);
     }
 
+    /**
+     * Add a received message in a given remote system's list
+     * @param idRemoteSystem id of the remote system
+     * @param message message which is to be added
+     */
     public synchronized void addMessageReceivedToRemote(String idRemoteSystem, String message) {
         this.remoteSystemsInformation.get(idRemoteSystem).addMessageReceived(message);
     }
 
     /**
      * add a message in the message-to-send list of a given remote system
-     *
      * @param idRemoteSystem remote system the message has to be sent to
      * @param message message which has to be sent
      */
@@ -103,7 +110,6 @@ public class RemoteSystems extends Model implements Iterable<RemoteSystemInforma
 
     /**
      * Get the contacts username's list
-     *
      * @return usernames' list
      */
     public List<String> getUserList() {
@@ -114,6 +120,11 @@ public class RemoteSystems extends Model implements Iterable<RemoteSystemInforma
         return userList;
     }
 
+    /**
+     * Set all the remote systems' state as maybeoffline
+     * Will launch a search for the remote systems which are still connected
+     * And those who are not
+     */
     public void setAllMaybeOffline() {
         for (RemoteSystemInformation rsi: this) {
             rsi.setUserState(UserState.MAYBEOFFLINE);
@@ -123,6 +134,9 @@ public class RemoteSystems extends Model implements Iterable<RemoteSystemInforma
         this.clearChanged();
     }
     
+    /**
+     * Remove from the list the remote systems which appeared to be offline
+     */
     public void removeOfflineRemoteSystem() {
         for (RemoteSystemInformation rsi: this) {
             if (rsi.getUserState() == UserState.MAYBEOFFLINE)
@@ -130,9 +144,9 @@ public class RemoteSystems extends Model implements Iterable<RemoteSystemInforma
                 this.remoteSystemsInformation.remove(rsi.getIdRemoteSystem());
         }
     }
+    
     /**
      * Static method to obtain an instance of the class RemoteSystems
-     *
      * @return RemoteSystems unique instance
      */
     public final static RemoteSystems getInstance() {
@@ -146,7 +160,12 @@ public class RemoteSystems extends Model implements Iterable<RemoteSystemInforma
         return instance;
     }
 
-    
+    /**
+     * Provide an iterator on the instance
+     * The aim is for others objects to be able to look through the instance 
+     * without knowing from what it is composed
+     * @return instance's interator
+     */
     @Override
     public Iterator<RemoteSystemInformation> iterator() {
         return new RSIterator();
