@@ -17,6 +17,10 @@ public class FileTransfertDemand extends Message{
 		this.portClient = portClient;
                 this.idDemand = idDemand;
 	}
+        
+        public int getIdDemand() {
+            return this.idDemand;
+        }
 
 	public String getName() {
 		return name;
