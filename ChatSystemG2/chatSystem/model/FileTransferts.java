@@ -27,7 +27,7 @@ public class FileTransferts extends Model{
      */
     public synchronized void addTransfert(File fileToSend, String idRemoteSystem) {
         
-       FileTransfertInformation newFileTransfert = new FileSendingInformation(-1, idRemoteSystem, fileToSend);
+       FileTransfertInformation newFileTransfert = new FileSendingInformation(idRemoteSystem, fileToSend);
        this.fileModel.put(newFileTransfert.getId(), newFileTransfert);
         
        this.setChanged();

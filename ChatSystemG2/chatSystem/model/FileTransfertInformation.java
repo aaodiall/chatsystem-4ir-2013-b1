@@ -19,6 +19,7 @@ public abstract class FileTransfertInformation extends Model {
     /**
      * Class' constructor to send the file
      *
+     * @param idTransfert idTransfert choosed (by us or the remote system)
      * @param idRemoteSystem id of the sending remote system
      * @param fileToSend file's descriptor
      */
@@ -32,6 +33,11 @@ public abstract class FileTransfertInformation extends Model {
         this.state = FileState.WAITANSWER;
         
         this.fileDescriptor = fileToSend;
+    }
+    
+    public FileTransfertInformation(String idRemoteSystem, File fileToSend) {
+        this(fileToSend.hashCode(),idRemoteSystem,fileToSend);
+        // we set the idTransfert has fileToSend.hashCode() because it's unique in this application
     }
 
     /**

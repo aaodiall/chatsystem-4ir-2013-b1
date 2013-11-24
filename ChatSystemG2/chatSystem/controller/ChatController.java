@@ -15,7 +15,6 @@ import java.io.File;
 
 public class ChatController extends Controller implements GuiToCont, NiToCont {
 
-    //private int transfertID; 
     private UserInformation localUser; //mettre dans une HasMap créée dans la classe mère
     private RemoteSystems remoteSystems;
     private FileTransferts fileTransferts;
@@ -39,7 +38,6 @@ public class ChatController extends Controller implements GuiToCont, NiToCont {
             System.err.println("local host non existent");
         }
         
-//        this.transfertID = 0;
         this.chatGUI = new ChatGUI(this);
         this.localUser.addObserver(chatGUI);
         this.remoteSystems.addObserver(chatGUI);
