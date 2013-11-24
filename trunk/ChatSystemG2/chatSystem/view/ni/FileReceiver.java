@@ -6,7 +6,6 @@ package chatSystem.view.ni;
 //CLIENT
 import chatSystem.model.FileReceivingInformation;
 import chatSystemCommon.FilePart;
-import chatSystemCommon.Message;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.ObjectInputStream;
@@ -22,7 +21,7 @@ public class FileReceiver implements Runnable {
     private final FileReceivingInformation fileToReceive;
     
     private Socket socketClient;
-    private InputStream reader;
+    private ObjectInputStream reader;
 
     /**
      * Class' constructor
@@ -47,16 +46,14 @@ public class FileReceiver implements Runnable {
             //Le client commence par tenter la connection
             try {
                 this.socketClient = new Socket(this.ipServer, this.portServer);
-                this.reader = socketClient.getInputStream();
+                this.reader = new ObjectInputStream(socketClient.getInputStream());
             } catch (IOException ex) {
                 Logger.getLogger(FileReceiver.class.getName()).log(Level.SEVERE, null, ex);
             }
             
-            Message msg;
-            byte[] byteMsg = null;
+            Object msg;
             do{
-                int read = reader.read(byteMsg);
-                msg = Message.fromArray(byteMsg);
+                msg = reader.readObject();
                 this.chatNI.filePartReceived(this.fileToReceive.getId(), ((FilePart)msg).getFilePart(), ((FilePart)msg).isLast());
                 
             }while(!((FilePart)msg).isLast());
@@ -65,6 +62,8 @@ public class FileReceiver implements Runnable {
             this.reader.close();
             
         } catch (IOException ex) {
+            Logger.getLogger(FileReceiver.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (ClassNotFoundException ex) {
             Logger.getLogger(FileReceiver.class.getName()).log(Level.SEVERE, null, ex);
         }
     }

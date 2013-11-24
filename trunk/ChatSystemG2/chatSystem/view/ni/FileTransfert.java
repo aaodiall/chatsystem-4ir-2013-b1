@@ -24,7 +24,7 @@ public class FileTransfert implements Runnable {
     private ServerSocket serverSocket;
     private Socket clientSocket;
 
-    private OutputStream writer;
+    private ObjectOutputStream writer;
     private BufferedOutputStream writerBuffer;
 
     private final FileSendingInformation fileToSend;
@@ -67,7 +67,7 @@ public class FileTransfert implements Runnable {
             this.clientSocket = this.serverSocket.accept();
 
             //on est connecté, on prépare de transfert
-            this.writer = clientSocket.getOutputStream();
+            this.writer = new ObjectOutputStream(clientSocket.getOutputStream());
             this.writerBuffer = new BufferedOutputStream(writer);
 
             Message msg;

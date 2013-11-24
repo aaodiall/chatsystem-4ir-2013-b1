@@ -56,7 +56,7 @@ public class ChatController extends Controller implements GuiToCont, NiToCont {
         this.localUser.setUserState(UserState.CONNECTED);
         this.chatAlive = new ChatAlive(this.localUser);
         this.chatAlive.setName("chat alive");
-        this.chatAlive.start();
+        //this.chatAlive.start();
     }
 
     @Override
