@@ -27,7 +27,7 @@ import java.util.concurrent.ArrayBlockingQueue;
  * Il n'y a que les messages de type File qu'elle ne peut pas envoyer
  */
 
-public class ChatNIMessage implements Runnable{
+public class ChatNIMessage extends Thread{
 	
 	/* ATTRIBUTS A METTRE
 	 * DatagramSocket socketUDP;
@@ -141,8 +141,8 @@ public class ChatNIMessage implements Runnable{
 	 * @param size
 	 * @param portTCPLocal
 	 */
-	public void sendFileTransfertDemand(String username,InetAddress recipient,String name,long size,int portTCPLocal){		
-		FileTransfertDemand demand = new FileTransfertDemand(username,name,size,portTCPLocal);
+	public void sendFileTransfertDemand(String username,InetAddress recipient,String name,long size,int portTCPLocal, int idDemand){		
+		FileTransfertDemand demand = new FileTransfertDemand(username,name,size,portTCPLocal,idDemand);
 		byte[] demandStream;
 		DatagramPacket pdu2send;
 		try{

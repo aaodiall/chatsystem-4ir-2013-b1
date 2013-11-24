@@ -31,7 +31,7 @@ public class ModelListUsers extends Observable {
 	public void removeUsernameList(String username){
 		this.listUsers.remove(username);
 		setChanged();
-		notifyObservers();
+		notifyObservers(listUsers);
 		
 	}
 	

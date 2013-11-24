@@ -4,7 +4,10 @@
 package chatSystemIHMs;
 
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 import java.util.Scanner;
+import java.util.Set;
 
 import chatSystemController.Controller;
 
@@ -19,7 +22,8 @@ public class CommandLine implements FromUser,ToUser{
 	private ArrayList<String> users;
 	private ArrayList<Boolean> lMRecipients; // list of recipients when multiple recipients
 	private boolean toMultiple;
-	private String textToSend; 
+	private String textToSend;
+	private String username;
 	
 	
 	CommandLine(Controller controller){
@@ -29,6 +33,14 @@ public class CommandLine implements FromUser,ToUser{
 		this.toMultiple = false;
 	}
 
+	void setUsers (String[] t){
+		this.users = ((ArrayList)Arrays.asList(t));
+	}
+	
+	void setUsername (String u){
+		this.username = u;
+	}
+	
 	void displayDisconnectedMenu(){
 		System.out.println("0 : Leave the chat (bad idea =/)");
 		System.out.println("1 : Connect (excellent option ^^)");
@@ -102,8 +114,8 @@ public class CommandLine implements FromUser,ToUser{
 	
 	public void connect() {
 		System.out.println("Enter a surname");
-		String username = this.sc.nextLine();
-		this.controller.performConnect(username);
+		this.username = this.sc.nextLine();
+		this.controller.performConnect(this.username);
 		this.displayConnectedMenu();
 	}
 
@@ -236,5 +248,27 @@ public class CommandLine implements FromUser,ToUser{
 	public void notifyRemoteDisconnection(String remote) {
 		System.out.println(remote + "is disconnected");
 	}
+
+	
+	public void proposeFile(String remote, String file, long size) {
+		System.out.println("Do you accept to receive the file " + file + " from "+ remote +" ?");
+		System.out.println("size of file : " + size);
+	}
+
+	
+	public void displayOkFile(String remote, String file) {
+		System.out.println(remote + "has accepted" + file);
+		System.out.println("Transfert in progress");		
+	}
+	
+	public void displayKoFile(String remote,String file){
+		System.out.println(remote + "has refused your file");
+	}
+	
+	
+	public void displayCancelFile(String remote, String file) {
+		System.out.println(remote + "has cancelled the transfert of " + file);		
+	}
+	
 	
 }
