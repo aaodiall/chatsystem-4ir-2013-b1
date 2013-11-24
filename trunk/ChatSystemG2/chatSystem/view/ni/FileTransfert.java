@@ -26,7 +26,7 @@ public class FileTransfert implements Runnable {
 
     private OutputStream writer;
     private BufferedOutputStream writerBuffer;
-    
+
     private final FileSendingInformation fileToSend;
 
     /**
@@ -63,31 +63,34 @@ public class FileTransfert implements Runnable {
     public void run() {
 
         try {
-            //System.out.println("Démarrage écoute Serveur envoi de fichier");
+            //attente de connection
             this.clientSocket = this.serverSocket.accept();
-            this.serverSocket.close();
-            
-            //System.out.println("Démarrage envoi de fichier");
+
+            //on est connecté, on prépare de transfert
             this.writer = clientSocket.getOutputStream();
             this.writerBuffer = new BufferedOutputStream(writer);
 
             Message msg;
-            do {
-                msg = new FilePart(this.chatNI.getUserInfo().getUsername(), this.fileToSend.getFilePart(), this.fileToSend.isLast());//a changer mais je vais vite
-                try {
-                    byte[] tmp = msg.toArray();
-                    this.writerBuffer.write(tmp, 0, tmp.length);
-                    this.writerBuffer.flush();
+            try {
+                do {
+                    //on récupère le morceau de fichier a envoyer et on l'écrit dans la socket
+                    msg = new FilePart(this.chatNI.getUserInfo().getUsername(), this.fileToSend.getFilePart(), this.fileToSend.isLast());//a changer mais je vais vite
 
-                } catch (IOException ex) {
-                    Logger.getLogger(FileTransfert.class.getName()).log(Level.SEVERE, null, ex);
-                } finally {
-                    this.writerBuffer.close();
-                    this.writer.close();
-                }
-            } while (!this.fileToSend.isLast());
+                    byte[] tmp = msg.toArray();
+                    this.writerBuffer.write(tmp);
+                    this.writerBuffer.flush();
+                } while (!this.fileToSend.isLast());
+
+            } finally {
+                //on termine
+                
+                this.writerBuffer.close();
+                this.writer.close();
+                this.clientSocket.close();
+                this.serverSocket.close();
+            }
+
             this.chatNI.fileSended(this.fileToSend.getId(), this.fileToSend.getIdRemoteSystem());
-            this.clientSocket.close();
 
         } catch (IOException ex) {
             Logger.getLogger(FileTransfert.class.getName()).log(Level.SEVERE, null, ex);
