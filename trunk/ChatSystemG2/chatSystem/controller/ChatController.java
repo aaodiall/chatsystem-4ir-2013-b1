@@ -21,8 +21,7 @@ public class ChatController extends Controller implements GuiToCont, NiToCont {
     private FileTransferts fileTransferts;
     private final ChatGUI chatGUI;
     private final ChatNI chatNI;
-    private final ChatAlive chatAlive;
-    private final Thread threadChatAlive;
+    private ChatAlive chatAlive;
 
     
     public ChatController() {
@@ -48,9 +47,6 @@ public class ChatController extends Controller implements GuiToCont, NiToCont {
         this.localUser.addObserver(chatNI);
         this.remoteSystems.addObserver(chatNI);
         this.fileTransferts.addObserver(chatNI);
-        
-        this.chatAlive = new ChatAlive(localUser);
-        this.threadChatAlive = new Thread(this.chatAlive);
     }
 
     @Override
@@ -58,7 +54,9 @@ public class ChatController extends Controller implements GuiToCont, NiToCont {
         System.out.println("Entering performConnect");
         this.localUser.setUsername(username);
         this.localUser.setUserState(UserState.CONNECTED);
-        //this.threadChatAlive.start();
+        this.chatAlive = new ChatAlive(this.localUser);
+        this.chatAlive.setName("chat alive");
+        this.chatAlive.start();
     }
 
     @Override
