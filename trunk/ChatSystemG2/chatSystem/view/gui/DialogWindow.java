@@ -262,21 +262,24 @@ public class DialogWindow extends JFrame implements ActionListener {
      */
 
     public int gestionProgressionBar(int idTransfert,long size,long sizeTransfered, JProgressBar pb, HashMap<Integer, Long> gesPb) {
-        // Check if the transfert is known, if not the transfert is added
-       if(!gesPb.containsKey((Integer)idTransfert)){
-            gesPb.put((Integer)idTransfert, (Long)sizeTransfered);
-            int oldMax = pb.getMaximum();
-            pb.setMaximum(oldMax + (int) size);
-       }
-        
-        gesPb.remove((Integer)idTransfert);
-        gesPb.put((Integer)idTransfert, (Long)sizeTransfered);
-        
-        // If the transfert has terminated we stop counting it
+       // If the transfert has terminated we stop counting it
         if(size <= sizeTransfered){
+            int oldMax = pb.getMaximum();
+            pb.setMaximum(oldMax - (int) size);
             gesPb.remove(idTransfert);
+            
         }
-       
+        else {
+            if(!gesPb.containsKey(idTransfert)){
+                int oldMax = pb.getMaximum();
+                pb.setMaximum(oldMax + (int) size);
+            }
+            else {
+                gesPb.remove(idTransfert);
+            }
+            gesPb.put((Integer)idTransfert, (Long)sizeTransfered);
+                
+        }
 
         //Check where are all the transferts and send back the value
         int totalTrans = 0;
