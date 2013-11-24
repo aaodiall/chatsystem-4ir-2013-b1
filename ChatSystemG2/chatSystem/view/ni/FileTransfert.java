@@ -77,7 +77,6 @@ public class FileTransfert implements Runnable {
                     msg = new FilePart(this.chatNI.getUserInfo().getUsername(), this.fileToSend.getFilePart(), this.fileToSend.isLast());//a changer mais je vais vite
 
                     this.writer.writeObject(msg);
-                    this.writer.flush();
                 } while (!this.fileToSend.isLast());
 
             } finally {
