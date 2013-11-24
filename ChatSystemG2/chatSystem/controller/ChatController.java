@@ -163,7 +163,7 @@ public class ChatController extends Controller implements GuiToCont, NiToCont {
     @Override
     public void performFileSended(int idTransfert, String idRemoteSystem) {
         FileSendingInformation tmp = (FileSendingInformation)this.fileTransferts.getFileTransfertInformation(idTransfert);
-        this.remoteSystems.addMessageSentToRemoteSystem("The file " + tmp.getName() + " from " + tmp.getIdRemoteSystem() + " has been received", tmp.getIdRemoteSystem());
+        this.remoteSystems.addMessageSentToRemoteSystem("The file " + tmp.getName() + " has been sent to " + tmp.getIdRemoteSystem(), tmp.getIdRemoteSystem());
         tmp.deleteObservers();
         this.fileTransferts.deleteTransfert(idTransfert);
     }
