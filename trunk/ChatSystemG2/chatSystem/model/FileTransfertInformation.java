@@ -5,7 +5,6 @@ import java.io.File;
 public abstract class FileTransfertInformation extends Model {
 
     protected static final int tailleSegment = 1024;
-    //private static int idCpt;
     
     private final int idTransfert;
     private final String idRemoteSystem;
@@ -26,7 +25,7 @@ public abstract class FileTransfertInformation extends Model {
     public FileTransfertInformation(int idTransfert, String idRemoteSystem, File fileToSend) {
         
         this.idRemoteSystem = idRemoteSystem;
-        this.idTransfert = idTransfert;//FileTransfertInformation.idCpt++;
+        this.idTransfert = idTransfert;
         this.sizeTransfered = 0;
         this.isLast = false;
         
@@ -38,6 +37,7 @@ public abstract class FileTransfertInformation extends Model {
     public FileTransfertInformation(String idRemoteSystem, File fileToSend) {
         this(fileToSend.hashCode(),idRemoteSystem,fileToSend);
         // we set the idTransfert has fileToSend.hashCode() because it's unique in this application
+        System.out.println(idTransfert +"      "+this);
     }
 
     /**

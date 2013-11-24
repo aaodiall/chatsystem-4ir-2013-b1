@@ -73,23 +73,6 @@ public class FileTransferts extends Model{
         }
     }
     
-    //a virer
-   /* public boolean isLast(int idTransfert) throws Exception{
-        if (this.fileModel.containsKey((Integer)idTransfert)) {
-            return this.fileModel.get(idTransfert).isLast();
-        }else{
-            throw new Exception("clé transfert inconnu");
-        }
-    }
-    
-    public byte[] getFilePart(int idTransfert) throws Exception{
-        if (this.fileModel.containsKey((Integer)idTransfert)) {
-            return this.fileModel.get(idTransfert).getFilePart();
-        }else{
-            throw new Exception("clé transfert inconnu");
-        }
-    }*/
-    
     /**
      * Static method to obtain an instance of the classe
      * @return FileTransferts' unique instance
