@@ -5,6 +5,7 @@
  */
 package chatSystem.model;
 
+import java.io.BufferedInputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -18,13 +19,19 @@ import java.util.logging.Logger;
  */
 public class FileSendingInformation extends FileTransfertInformation {
 
+    private BufferedInputStream readerBuffer;
     private FileInputStream reader;
+    
+    byte[] filePart;
 
     public FileSendingInformation(String idRemoteSystem, File fileToSend) {
         super(idRemoteSystem, fileToSend);
 
+        this.filePart = new byte[FileTransfertInformation.tailleSegment];
+        
         try {
             this.reader = new FileInputStream(this.fileDescriptor);
+            this.readerBuffer = new BufferedInputStream(this.reader);
         } catch (FileNotFoundException ex) {
             Logger.getLogger(FileTransfertInformation.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -36,15 +43,15 @@ public class FileSendingInformation extends FileTransfertInformation {
      * @return file's part
      */
     public byte[] getFilePart() {
-        byte[] filePart = new byte[FileTransfertInformation.tailleSegment];
         try {
-            if (this.reader.read(filePart) == -1) {
+            if (this.readerBuffer.read(filePart) == -1) {
                 this.isLast = true;
             }
 
             //set isLast to true when last part has been loaded
             this.sizeTransfered += filePart.length;
             if (isLast) {
+                this.readerBuffer.close();
                 this.reader.close();
             }
 
