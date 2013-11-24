@@ -1,4 +1,4 @@
-package View;
+package org.insa.java.view;
 
 import java.io.IOException;
 import java.net.DatagramPacket;
@@ -45,7 +45,6 @@ public final class SendMessageNI {
 			byte[] sendData = message.toArray();
 			DatagramPacket sendPacket = new DatagramPacket(sendData, sendData.length, address,16001);
 			datagramSocket.send(sendPacket);
-			//System.out.println(getClass().getName() + ">>> Request packet sent to: "+address.toString());		
 		} catch (IOException e) {
 			e.printStackTrace();
 		}	

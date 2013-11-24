@@ -1,4 +1,4 @@
-package Model;
+package org.insa.model;
 
 import java.net.InetAddress;
 import java.util.ArrayList;
@@ -43,7 +43,7 @@ public class User {
 		return messageList;
 	}
 
-	public void setTalkList(ArrayList<Message> messageList) {
+	public void setMessageList(ArrayList<Message> messageList) {
 		this.messageList = messageList;
 	}
 

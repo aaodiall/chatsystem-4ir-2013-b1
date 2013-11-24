@@ -1,7 +1,4 @@
-/**
- * 
- */
-package Model;
+package org.java.factory;
 
 import chatSystemCommon.FilePart;
 import chatSystemCommon.FileTransfertCancel;
@@ -10,10 +7,6 @@ import chatSystemCommon.FileTransfertDemand;
 import chatSystemCommon.Goodbye;
 import chatSystemCommon.Hello;
 
-/**
- * @author Thiebaud Thomas
- *
- */
 public class MessageFactory {
 	private static Hello hello = null;
 	private static Goodbye bye = null;
