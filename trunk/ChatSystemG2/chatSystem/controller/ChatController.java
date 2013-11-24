@@ -41,12 +41,10 @@ public class ChatController extends Controller implements GuiToCont, NiToCont {
         this.chatGUI = new ChatGUI(this);
         this.localUser.addObserver(chatGUI);
         this.remoteSystems.addObserver(chatGUI);
-        this.fileTransferts.addObserver(chatGUI);
 
         this.chatNI = new ChatNI(this);
         this.localUser.addObserver(chatNI);
         this.remoteSystems.addObserver(chatNI);
-        this.fileTransferts.addObserver(chatNI);
     }
 
     @Override
@@ -99,19 +97,21 @@ public class ChatController extends Controller implements GuiToCont, NiToCont {
     public void performSendFileRequest(File fileToSend, String idRemoteSystem) {
        System.out.println("Send file request to be send to " + idRemoteSystem + ", modifying the model");
        int idTransfert = this.fileTransferts.addTransfert(fileToSend, idRemoteSystem);
-       this.fileTransferts.getFileTransfertInformation(idTransfert).addObserver(chatGUI);
+        this.fileTransferts.getFileTransfertInformation(idTransfert).addObserver(chatGUI);
+        this.fileTransferts.getFileTransfertInformation(idTransfert).addObserver(chatNI);
+        this.fileTransferts.getFileTransfertInformation(idTransfert).setState(FileState.WAITANSWER);
     }
     
     @Override
     public void performAcceptSuggestion(int idTransfert) {
         System.out.println("Send file accepted notification, modifying the model");
-        this.fileTransferts.setFileTransfertInformationState(idTransfert, FileState.ACCEPTED);
+        this.fileTransferts.getFileTransfertInformation(idTransfert).setState(FileState.ACCEPTED);
     }
 	
     @Override
     public void performDeclineSuggestion(int idTransfert) {
         System.out.println("Send file declined notification, modifying the model");
-        this.fileTransferts.setFileTransfertInformationState(idTransfert, FileState.DECLINED);
+        this.fileTransferts.getFileTransfertInformation(idTransfert).setState(FileState.DECLINED);
     }
     
     @Override
@@ -119,6 +119,8 @@ public class ChatController extends Controller implements GuiToCont, NiToCont {
         System.out.println("Receiving a file transfert request from " + idRemoteSystem + ", modifying the model");
         this.fileTransferts.addTransfert(idTransfert, name, size, idRemoteSystem, portServer);
         this.fileTransferts.getFileTransfertInformation(idTransfert).addObserver(chatGUI);
+        this.fileTransferts.getFileTransfertInformation(idTransfert).addObserver(chatNI);
+        this.fileTransferts.getFileTransfertInformation(idTransfert).setState(FileState.WAITANSWER);
     }
     
     @Override
@@ -132,11 +134,11 @@ public class ChatController extends Controller implements GuiToCont, NiToCont {
         if (accepted) {
             FileTransfertInformation tmp = this.fileTransferts.getFileTransfertInformation(idTransfert);
             this.remoteSystems.addMessageSentToRemoteSystem("The file " + tmp.getName() + " was accepted by " + tmp.getIdRemoteSystem(), tmp.getIdRemoteSystem());
-            this.fileTransferts.setFileTransfertInformationState(idTransfert, FileState.ACCEPTED);
+            this.fileTransferts.getFileTransfertInformation(idTransfert).setState(FileState.ACCEPTED);
         } else {
             FileTransfertInformation tmp = this.fileTransferts.getFileTransfertInformation(idTransfert);
             this.remoteSystems.addMessageSentToRemoteSystem("the file " + tmp.getName() + " was rejected by " + tmp.getIdRemoteSystem(), tmp.getIdRemoteSystem());
-            this.fileTransferts.setFileTransfertInformationState(idTransfert, FileState.DECLINED);
+            this.fileTransferts.getFileTransfertInformation(idTransfert).setState(FileState.DECLINED);
         }
     }
     

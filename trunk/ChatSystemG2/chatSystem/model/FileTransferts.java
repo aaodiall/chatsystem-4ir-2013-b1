@@ -30,11 +30,6 @@ public class FileTransferts extends Model{
         
        FileTransfertInformation newFileTransfert = new FileSendingInformation(idRemoteSystem, fileToSend);
        this.fileModel.put(newFileTransfert.getId(), newFileTransfert);
-        
-       this.setChanged();
-       this.notifyObservers(newFileTransfert);
-       this.clearChanged();
-       
        return newFileTransfert.getId();
     }
     
@@ -50,11 +45,6 @@ public class FileTransferts extends Model{
         
        FileTransfertInformation newFileTransfert = new FileReceivingInformation(idTransfert, idRemoteSystem, size, name, portServer);
        this.fileModel.put(idTransfert, newFileTransfert);
-        
-       this.setChanged();
-       this.notifyObservers(newFileTransfert);
-       this.clearChanged();
-
     }
 
     /**
@@ -69,15 +59,6 @@ public class FileTransferts extends Model{
         return this.fileModel.get(idTransfert);
     }
 
-    public void setFileTransfertInformationState(int idTransfert, FileState state) {
-        if (this.fileModel.containsKey((Integer)idTransfert)) {
-            this.fileModel.get(idTransfert).setState(state);
-            
-            this.setChanged();
-            this.notifyObservers(this.fileModel.get(idTransfert));
-            this.clearChanged();
-        }
-    }
     
     /**
      * Static method to obtain an instance of the classe

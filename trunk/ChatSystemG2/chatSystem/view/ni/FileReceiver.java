@@ -25,7 +25,7 @@ public class FileReceiver implements Runnable {
 
     /**
      * Class' constructor
-     * @param idTransfert id of the file's reception the instance is responsible of
+     * @param fileToReceive
      * @param ipServer ip adress of the remote system sending the file
      * @param portServer port the remote system is going to use
      * @param chatNI instance of chat ni which is responsible for this instance of file receiver
