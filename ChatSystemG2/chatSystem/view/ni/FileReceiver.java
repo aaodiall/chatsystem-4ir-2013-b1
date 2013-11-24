@@ -4,6 +4,7 @@
 package chatSystem.view.ni;
 
 //CLIENT
+import chatSystem.model.FileReceivingInformation;
 import chatSystemCommon.FilePart;
 import java.io.IOException;
 import java.io.ObjectInputStream;
@@ -16,7 +17,7 @@ public class FileReceiver implements Runnable {
     private final String ipServer;
     private final int portServer;
     private final ChatNI chatNI;
-    private final int idTransfert;
+    private final FileReceivingInformation fileToReceive;
     
     private Socket socketClient;
     private ObjectInputStream reader;
@@ -28,11 +29,11 @@ public class FileReceiver implements Runnable {
      * @param portServer port the remote system is going to use
      * @param chatNI instance of chat ni which is responsible for this instance of file receiver
      */
-    public FileReceiver(int idTransfert, String ipServer, int portServer, ChatNI chatNI) {
+    public FileReceiver(FileReceivingInformation fileToReceive, String ipServer, int portServer, ChatNI chatNI) {
         this.ipServer = ipServer;
         this.portServer = portServer;
         this.chatNI = chatNI;
-        this.idTransfert = idTransfert;
+        this.fileToReceive = fileToReceive;
     }
 
     /**
@@ -52,11 +53,13 @@ public class FileReceiver implements Runnable {
             Object msg;
             do{
                 msg = reader.readObject();
+                this.chatNI.filePartReceived(this.fileToReceive.getId(), ((FilePart)msg).getFilePart(), ((FilePart)msg).isLast());
                 
-                this.chatNI.filePartReceived(this.idTransfert, ((FilePart)msg).getFilePart(), ((FilePart)msg).isLast());
             }while(!((FilePart)msg).isLast());
+            this.fileToReceive.setIsLast(true);
+            this.socketClient.close();
+            this.reader.close();
             
-            System.out.println("-------------------FICHIER RECU----------------------");
         } catch (IOException ex) {
             Logger.getLogger(FileReceiver.class.getName()).log(Level.SEVERE, null, ex);
         } catch (ClassNotFoundException ex) {
