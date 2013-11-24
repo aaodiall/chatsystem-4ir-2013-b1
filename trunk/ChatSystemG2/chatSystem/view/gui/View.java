@@ -1,15 +1,12 @@
 /*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
+ * VIEW of the system, following the MVC pattern
  */
+
 package chatSystem.view.gui;
 
 import java.util.Observer;
 import chatSystem.controller.Controller;
-/**
- * 
- * @author clero
- */
+
 public abstract class View implements Observer{
     protected Controller controller;
     

@@ -1,3 +1,9 @@
+/**
+ * Display to the local user the list of contacts he can communicate with
+ * The user has only to click on the name of the remote system he wishes to communicate with
+ * to see displayed the corresponding DialogWindow
+ */
+
 package chatSystem.view.gui;
 
 import java.awt.BorderLayout;
@@ -7,16 +13,12 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
-import java.util.Collections;
 import java.util.List;
 
 import javax.swing.*;
 
 public class UserWindow extends JFrame implements ActionListener, MouseListener {
 
-    /**
-     * numéro de version
-     */
     private static final long serialVersionUID = 1L;
 
     private final JButton deconnectButton;
@@ -26,6 +28,11 @@ public class UserWindow extends JFrame implements ActionListener, MouseListener 
 
     private final ChatGUI chatGUI;
 
+    /**
+     * Class' constructor
+     * @param username local user's username
+     * @param chatGUI instance of chatGUI which is responsible for this instance of UserWindow
+     */
     public UserWindow(String username, ChatGUI chatGUI) {
 
         this.username = new JLabel(username);
@@ -38,6 +45,9 @@ public class UserWindow extends JFrame implements ActionListener, MouseListener 
         this.initWindow();
     }
 
+    /**
+     * Initialization of all the window's components
+     */
     private void initWindow() {
 
         this.setTitle("User Window");
@@ -46,7 +56,7 @@ public class UserWindow extends JFrame implements ActionListener, MouseListener 
         panel.setLayout(new GridBagLayout());
         GridBagConstraints c = new GridBagConstraints();
 
-        //contraintes pour le label username
+        //constraints for the username label
         c.gridx = 0;
         c.gridy = 0;
         c.fill = GridBagConstraints.HORIZONTAL;
@@ -56,7 +66,7 @@ public class UserWindow extends JFrame implements ActionListener, MouseListener 
         c.weightx = 0.0;
         panel.add(this.username, c);
 
-        //contraintes pour le bouton déconnecter
+        //constraints for the  disconnect button
         c.gridx = 3;
         c.gridy = 0;
         c.fill = GridBagConstraints.HORIZONTAL;
@@ -66,14 +76,14 @@ public class UserWindow extends JFrame implements ActionListener, MouseListener 
         c.weightx = 0.0;
         panel.add(this.deconnectButton, c);
 
-        //initialisation de la liste de contacts
+        //initialization of the contacts' list
         contactsList.setSelectionMode(ListSelectionModel.SINGLE_INTERVAL_SELECTION);
         contactsList.setLayoutOrientation(JList.VERTICAL);
         contactsList.setVisibleRowCount(-1);
         JScrollPane listScroller = new JScrollPane(contactsList);
         listScroller.setVerticalScrollBar(new JScrollBar(JScrollBar.VERTICAL));
         listScroller.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
-        //contraintes pour la liste de contacts
+        //constraints for the contacts' list
         c.gridx = 0;
         c.gridy = 5;
         c.fill = GridBagConstraints.BOTH;
@@ -91,6 +101,10 @@ public class UserWindow extends JFrame implements ActionListener, MouseListener 
 
     }
 
+    /**
+     * Update the contacts' list
+     * @param newContacts new contacts' list
+     */
     public void updateContacts(final List<String> newContacts) {   
         SwingUtilities.invokeLater(new Runnable() {
             @Override
@@ -103,6 +117,10 @@ public class UserWindow extends JFrame implements ActionListener, MouseListener 
         });
     }
 
+    /**
+     * Set the local user's username
+     * @param usrname username the local user wants to have 
+     */
     public void setUsername(final String usrname) {
         SwingUtilities.invokeLater(new Runnable() {
             @Override
@@ -112,6 +130,10 @@ public class UserWindow extends JFrame implements ActionListener, MouseListener 
         });
     }
 
+     /**
+     * Action performed when an event is detected
+     * @param ae actionEvent detected
+     */
     @Override
     public void actionPerformed(ActionEvent ae) {
         System.out.println("Entering actionPerformed");
@@ -120,6 +142,11 @@ public class UserWindow extends JFrame implements ActionListener, MouseListener 
         }
     }
 
+    /**
+     * Action performed when the user clicks on the contacts' list
+     * to select a remote system he wants to communicate with
+     * @param me mouse event
+     */
     @Override
     public void mouseClicked(MouseEvent me) {
         if (me.getClickCount() == 2) {

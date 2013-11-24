@@ -1,25 +1,16 @@
+/**
+ * Window corresponding to the communication between the local user and a given remote system
+ */
+
 package chatSystem.view.gui;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
 import java.util.HashMap;
-import javax.swing.DefaultListModel;
-import javax.swing.JButton;
-import javax.swing.JFileChooser;
-import javax.swing.JFrame;
-import javax.swing.JLabel;
-import javax.swing.JList;
-import javax.swing.JOptionPane;
-import javax.swing.JProgressBar;
-import javax.swing.JScrollPane;
-import javax.swing.JTextArea;
-import javax.swing.SwingUtilities;
+import javax.swing.*;
 
-/**
- *
- * @author Jules
- */
+
 public class DialogWindow extends JFrame implements ActionListener {
 
     private final JList conversation;
@@ -42,10 +33,9 @@ public class DialogWindow extends JFrame implements ActionListener {
 
     /**
      * Creates new form DialogWindow
-     *
-     * @param contact
-     * @param conversationModel
-     * @param chatGUI
+     * @param contact username of the contact the local user can communicate using this instance of DialogWindow
+     * @param conversationModel conversation between the local user and the remote system
+     * @param chatGUI instance of chatGUI which is responsible for this instance of DialogWindow
      */
     public DialogWindow(String contact, DefaultListModel conversationModel, ChatGUI chatGUI) {
         this.contact = contact;
@@ -67,6 +57,9 @@ public class DialogWindow extends JFrame implements ActionListener {
         initWindow();
     }
 
+    /**
+     * Initialization of all the window's components
+     */
     private void initWindow() {
 
         setTitle("Dialog Window : "+contact);
@@ -159,6 +152,12 @@ public class DialogWindow extends JFrame implements ActionListener {
         pack();
     }
 
+    /**
+     * Opens a window to show the user a file transfert's suggestion, with the possibility for him to answer yes or no
+     * The user's answer is recovered and performed
+     * @param name name of the file
+     * @param idTransfert id of the file's transfert
+     */
     public void displaySuggestion(final String name, final int idTransfert) {
         SwingUtilities.invokeLater(new Runnable() {
             @Override
@@ -180,6 +179,12 @@ public class DialogWindow extends JFrame implements ActionListener {
         });
     }
 
+    /**
+     * Open a window to ask the user where to save the file he is going to download
+     * The answer is collected and performed
+     * @param name file's name
+     * @param idTransfert id of the file's transfert
+     */
     public void saveFile(final String name, final int idTransfert) {
         final JFrame parent = this;
         SwingUtilities.invokeLater(new Runnable() {
@@ -202,6 +207,12 @@ public class DialogWindow extends JFrame implements ActionListener {
         });
     }
     
+    /**
+     * Show the user the progression of the file he is sending
+     * @param idTransfert id of the file's transfert
+     * @param size file's size
+     * @param sizeTransfered size of the information that has already been sent
+     */
     public void displayFileSendingProgression(final int idTransfert,final long size,final long sizeTransfered) {
          SwingUtilities.invokeLater(new Runnable() {
             @Override
@@ -217,6 +228,12 @@ public class DialogWindow extends JFrame implements ActionListener {
         });
     }
     
+    /**
+     * Show the user the progression of the file he is receiving
+     * @param idTransfert id of the file's transfert
+     * @param size file's size
+     * @param sizeTransfered size of the information that has already been received
+     */
     public void displayFileReceivingProgression(final int idTransfert,final long size,final long sizeTransfered){
          SwingUtilities.invokeLater(new Runnable() {
             @Override
@@ -232,21 +249,32 @@ public class DialogWindow extends JFrame implements ActionListener {
         });
     }
     
+    /**
+     * Gestion of the progression bar in the window
+     * We decided to only show one progress bar in reception and one in sending, even when there are several files
+     * The progress bar show the progression all the sendings (or receptions) seen as a whole
+     * @param idTransfert id of the file's transfert
+     * @param size file's size
+     * @param sizeTransfered size of the information that has already been transfered (sent or received)
+     * @param pb ProgressBar corresponding to this file's transfert
+     * @param gesPb map of progressBar which is concerned
+     * @return whole progression of all the transferts (sending or receiving)
+     */
     public int gestionProgressionBar(int idTransfert,long size,long sizeTransfered, JProgressBar pb, HashMap<Integer, Long> gesPb) {
         
-        // On regarde si on connait le transfert, si on le connait pas on l'ajoute
+        // Check if the transfert is known, if not the transfert is added
         if(!gesPb.containsKey((Integer)idTransfert)){
             gesPb.put((Integer)idTransfert, (Long)sizeTransfered);
             int oldMax = pb.getMaximum();
             pb.setMaximum(oldMax + (int) size);
         }
         
-        // Si le transfert est fini on ne le compte plus
+        // If the transfert has terminated we stop counting it
         if(size <= sizeTransfered){
             gesPb.remove(idTransfert);
         }
 
-        //on regarde ou en sont l'ensemble des transfert et on renvoi la valeur
+        //Check where are all the transferts and send back the value
         int totalTrans = 0;
         for(Integer key : gesPb.keySet()){
             totalTrans += gesPb.get(key).intValue();
@@ -255,6 +283,10 @@ public class DialogWindow extends JFrame implements ActionListener {
         return totalTrans;
     }
 
+    /**
+     * Action performed when an event is detected
+     * @param ae actionEvent detected
+     */
     @Override
     public void actionPerformed(ActionEvent ae) {
         System.out.println("Entering actionPerformed DialogWindow");

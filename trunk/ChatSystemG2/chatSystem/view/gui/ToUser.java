@@ -1,3 +1,7 @@
+/**
+ * Represents all the messages that can be sent to the local user
+ */
+
 package chatSystem.view.gui;
 
 import chatSystem.model.FileReceivingInformation;
