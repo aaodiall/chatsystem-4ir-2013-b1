@@ -115,10 +115,11 @@ public class MessageTransferts implements Runnable {
      * @param size file's size
      * @param idRemoteSystem remote system id
      * @param portClient port used for the transfert
+     * @param idTransfert id of the transfert concerned
      */
-    protected void sendFileTransfertDemand(String name, long size, String idRemoteSystem, int portClient) {
+    protected void sendFileTransfertDemand(String name, long size, String idRemoteSystem, int portClient, int idTransfert) {
         String ip = this.rmInstance.getRemoteSystem(idRemoteSystem).getIP();
-        FileTransfertDemand ftd = new FileTransfertDemand(this.chatni.getUserInfo().getUsername(), name, size, portClient);
+        FileTransfertDemand ftd = new FileTransfertDemand(this.chatni.getUserInfo().getUsername(), name, size, portClient,idTransfert);
         System.out.println("ENVOI : " + ftd.toString() + " -> " + ip);
         this.sendPacket(ip, ftd);
     }
@@ -207,9 +208,10 @@ public class MessageTransferts implements Runnable {
      * @param size file's size
      * @param idRemoteSystem id of the remote system the request is to be sent
      * @param portClient port the transfert is going to use
+     * @param idTransfert id of the transfert concerned
      */
-    public void setFileDemandTask(String name, long size, String idRemoteSystem, int portClient) {
-        this.fileTask.addTask(new sendFileTransfertDemandTask(this,name, size, idRemoteSystem, portClient));
+    public void setFileDemandTask(String name, long size, String idRemoteSystem, int portClient, int idTransfert) {
+        this.fileTask.addTask(new sendFileTransfertDemandTask(this, name, size, idRemoteSystem, portClient, idTransfert));
     }
 
     /**

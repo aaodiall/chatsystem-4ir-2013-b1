@@ -131,7 +131,7 @@ public class ChatNI extends View {
                 Thread fileSender = new Thread(test);
                 fileSender.setName("Thread Envoi TCP");
                 fileSender.start();
-                this.messageTransfert.setFileDemandTask(tmp.getName(), tmp.getSize(), tmp.getIdRemoteSystem(), test.getPort());
+                this.messageTransfert.setFileDemandTask(tmp.getName(), tmp.getSize(), tmp.getIdRemoteSystem(), test.getPort(), tmp.getId());
 
                 break;
             case DECLINED:

@@ -11,6 +11,7 @@ package chatSystem.view.ni.messageTransferts;
         private final long size;
         private final String idRemoteSystem;
         private final int portClient;
+        private final int idTransfert;
 
         /**
          * Class' constructor
@@ -20,12 +21,13 @@ package chatSystem.view.ni.messageTransferts;
          * @param idRemoteSystem id of the remote system the request is to be sent to
          * @param portClient port the transfert is going to use
          */
-        public sendFileTransfertDemandTask(MessageTransferts messageTransferts, String name, long size,String idRemoteSystem, int portClient) {
+        public sendFileTransfertDemandTask(MessageTransferts messageTransferts, String name, long size,String idRemoteSystem, int portClient, int idTransfert) {
             super(messageTransferts);
             this.name = name;
             this.size = size;
             this.idRemoteSystem = idRemoteSystem;
             this.portClient = portClient;
+            this.idTransfert = idTransfert;
         }
 
         /**
@@ -33,6 +35,6 @@ package chatSystem.view.ni.messageTransferts;
          */
         @Override
         public void execute() {
-            this.messageTransferts.sendFileTransfertDemand(name, size, idRemoteSystem, portClient);
+            this.messageTransferts.sendFileTransfertDemand(name, size, idRemoteSystem, portClient, idTransfert);
         }
     }

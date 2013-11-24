@@ -21,8 +21,8 @@ public class FileSendingInformation extends FileTransfertInformation{
     
     private FileInputStream reader;
 
-    public FileSendingInformation(int idTransfert, String idRemoteSystem, File fileToSend) {
-        super(idTransfert, idRemoteSystem, fileToSend);
+    public FileSendingInformation(String idRemoteSystem, File fileToSend) {
+        super(idRemoteSystem, fileToSend);
         
         try {
             this.reader = new FileInputStream(this.fileDescriptor);
