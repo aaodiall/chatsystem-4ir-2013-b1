@@ -31,7 +31,7 @@ public class ChatGUI extends View implements ToUser, FromUser{
     }
 
     /**
-     * 
+     * Modify the interface to show the user he is disconnected
      */
     @Override
     public void disconnected() {
@@ -42,12 +42,19 @@ public class ChatGUI extends View implements ToUser, FromUser{
         }
     }
     
+    /**
+     * Modify the interface to show the user he is connected
+     */
     @Override
     public void connected(){
         cWindow.setVisible(false);
         uWindow.setVisible(true);
     }
 
+    /**
+     * Modify the interface to show the user the progression of his file transfert
+     * @param tmp information about the file transfert
+     */
     @Override
     public void displayFileTransfertProgression(FileTransfertInformation tmp) {
         String contact = tmp.getIdRemoteSystem();
@@ -60,6 +67,10 @@ public class ChatGUI extends View implements ToUser, FromUser{
         this.dWindows.get(contact).displayFileSendingProgression(tmp.getId(), tmp.getSize(), tmp.getProgression());
     }
 
+    /**
+     * Modify the interface to show the user a file transfert's suggestion
+     * @param tmp 
+     */
     @Override
     public void displayFileSuggestion(FileReceivingInformation tmp) {
         String contact = tmp.getIdRemoteSystem();
@@ -72,7 +83,10 @@ public class ChatGUI extends View implements ToUser, FromUser{
         this.dWindows.get(contact).displaySuggestion(tmp.getName(), tmp.getId());
     }
     
-
+    /**
+     * Modify the interface to show the user the dialog window of the remote system he wishes to communicate with
+     * @param contact 
+     */
     @Override
     public void displayDialogWindow(String contact) {
         // La fenetre peut être a null même si on connait le contact
@@ -90,7 +104,11 @@ public class ChatGUI extends View implements ToUser, FromUser{
     public void displayNewMessageNotification() {
     }*/
 
-
+    /**
+     * Modify the interface to update the list of available contacts
+     * @param newList new list of available contact
+     * @throws GUIException security in case the update was launched before creating the user list window
+     */
     @Override
     public void listUser(List<String> newList) throws GUIException {
 
@@ -113,7 +131,7 @@ public class ChatGUI extends View implements ToUser, FromUser{
     }*/
     
     /**
-     *
+     * Update launched by the modification of some Observable object the class is following
      * @param o : part of the model which send a the notification
      * @param arg : argument sended by the model
      */
@@ -160,6 +178,10 @@ public class ChatGUI extends View implements ToUser, FromUser{
         }
     }
     
+    /**
+     * Update launched if the modification occured in a FileSendingInformation instance
+     * @param tmp instance of FileSendingInformation which was created or modified
+     */
     public void updateByFileSendingInformation(FileSendingInformation tmp) {
         switch (tmp.getState()) {
             case ACCEPTED:
@@ -177,6 +199,10 @@ public class ChatGUI extends View implements ToUser, FromUser{
         }
     }
     
+    /**
+     * Update launched if the modification occured in a FileReceivingInformation instance
+     * @param tmp instance of FileReceivingInformation which was created or modified
+     */
     public void updateByFileReceivingInformation(FileReceivingInformation tmp) {
         switch (tmp.getState()) {
             case ACCEPTED:
@@ -194,41 +220,75 @@ public class ChatGUI extends View implements ToUser, FromUser{
         }
     }
     
+    /**
+     * Connection of the local user
+     * @param username username chosen for the connection by the local user
+     */
     @Override
     public void connect(String username) {
         ((ChatController) this.controller).performConnect(username);
     }
 
+    /**
+     * Disconnection of the local user
+     */
     @Override
     public void disconnect() {
         ((ChatController) this.controller).performDisconnect();
     }
 
+    /**
+     * Send a text message
+     * @param message text message's content
+     * @param idRemoteSystem id of the remote system the local user wants to send the text message
+     */
     @Override
     public void sendMessageRequest(String message, String idRemoteSystem) {
         ((ChatController) this.controller).performSendMessageRequest(message,idRemoteSystem);
     }
 
+    /**
+     * Save a file in the computer's memory
+     * @param fileToSend file which is to be saved
+     * @param idTransfert id of the file's transfert
+     */
     @Override
     public void saveFile(File fileToSend, int idTransfert) {
         ((ChatController) this.controller).performSaveFile(fileToSend, idTransfert);
     }
 
+    /**
+     * Open the dialog window corresponding to the remote system the user wants to talk to
+     * @param idRemoteSystem id of the remote system
+     */
     @Override
     public void openDialogWindow(String idRemoteSystem) {
         displayDialogWindow(idRemoteSystem);
     }
-
+    
+    /**
+     * Accept the file transfert's suggestion displayed to the local user
+     * @param idTransfert id of the file's transfert
+     */
     @Override
     public void acceptSuggestion(int idTransfert) {
         ((ChatController) this.controller).performAcceptSuggestion(idTransfert);
     }
     
+    /**
+     * Decline the file transfert's suggestion displayed to the local user
+     * @param idTransfert id of the file's transfert
+     */
     @Override
     public void declineSuggestion(int idTransfert) {
         ((ChatController) this.controller).performDeclineSuggestion(idTransfert);
     }
 
+    /**
+     * Send a file transfert's request to a given remote system
+     * @param fileToSend file the user wants to send
+     * @param idRemoteSystem id of the remote system the file is to be proposed to
+     */
     @Override
     public void sendFileRequest(File fileToSend, String idRemoteSystem) {
         ((ChatController) this.controller).performSendFileRequest(fileToSend, idRemoteSystem);

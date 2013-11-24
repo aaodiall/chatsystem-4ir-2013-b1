@@ -1,4 +1,9 @@
+/**
+ * First window to appear, where the user is to enter a username to get connected
+ */
+
 package chatSystem.view.gui;
+
 
 import java.awt.BorderLayout;
 import java.awt.GridBagConstraints;
@@ -8,15 +13,8 @@ import java.awt.event.ActionListener;
 
 import javax.swing.*;
 
-/**
- *
- * @author jules
- */
 public final class ConnectWindow extends JFrame implements ActionListener {
 
-    /**
-     * numéro de série
-     */
     private static final long serialVersionUID = 1L;
 
     private final JButton connectButton;
@@ -25,18 +23,24 @@ public final class ConnectWindow extends JFrame implements ActionListener {
     private final JLabel usernameLabel;
     private final ChatGUI chatGUI;
 
+    /**
+     * Class' constructor
+     * @param chatGUI instance of chatGUI which is responsible for the instance of ConnectWindow
+     */
     public ConnectWindow(ChatGUI chatGUI) {
 
         this.bienvenueLabel = new JLabel("Bienvenue sur le chat System");
         this.usernameLabel = new JLabel("username  ");
         this.usernameTextField = new JTextField(30);
-        this.connectButton = new JButton("Connect");
-        
+        this.connectButton = new JButton("Connect");   
         this.chatGUI = chatGUI;
 
         this.initWindow();
     }
 
+    /**
+     * Initialization of all the window's components
+     */
     public void initWindow() {
 
         this.setTitle("Connect Window");
@@ -46,7 +50,7 @@ public final class ConnectWindow extends JFrame implements ActionListener {
         panel.setLayout(new GridBagLayout());
         GridBagConstraints c = new GridBagConstraints();
 
-        //initialisation des contraintes pour le label message
+        //initialization of the constraints for the message label
         c.gridx = 0;
         c.gridy = 0;
         c.fill = GridBagConstraints.HORIZONTAL;
@@ -56,7 +60,7 @@ public final class ConnectWindow extends JFrame implements ActionListener {
         c.weightx = 0.0;
         panel.add(this.bienvenueLabel, c);
 
-        //initialisation des contraintes pour le label usernameL
+        //initialization of the constraints for usernameL label 
         c.gridx = 0;
         c.gridy = 1;
         c.ipady = 20;
@@ -65,7 +69,7 @@ public final class ConnectWindow extends JFrame implements ActionListener {
         c.fill = GridBagConstraints.HORIZONTAL;
         panel.add(this.usernameLabel, c);
 
-        //initialisation des contraintes pour le textField username
+         //initialization of the constraints for username textField
         c.gridx = 1;
         c.gridy = 1;
         c.ipady = 10;
@@ -74,7 +78,7 @@ public final class ConnectWindow extends JFrame implements ActionListener {
         c.fill = GridBagConstraints.HORIZONTAL;
         panel.add(this.usernameTextField, c);
 
-        //initialisation des contraintes pour le bouton connect
+         //initialization of the constraints for the connect button
         c.gridx = 1;
         c.gridy = 2;
         c.ipady = 10;
@@ -89,6 +93,10 @@ public final class ConnectWindow extends JFrame implements ActionListener {
         this.connectButton.addActionListener(this);
     }
 
+    /**
+     * Action performed when an event is detected
+     * @param ae actionEvent detected
+     */
     @Override 
     public void actionPerformed(ActionEvent ae) {
         System.out.println("Entering actionPerformed");

@@ -1,3 +1,7 @@
+/**
+ * Represents all the messages that can be sent by the local user and must be performed
+ */
+
 package chatSystem.view.gui;
 
 import java.io.File;
