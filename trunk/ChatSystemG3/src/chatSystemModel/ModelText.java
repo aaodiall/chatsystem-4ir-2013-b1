@@ -25,6 +25,10 @@ public class ModelText extends Observable{
 		return this.textReceived;
 	}
 	
+	public String getRemote(){
+		return this.remote;
+	}
+	
 	public void setTextToSend(String text){
 		this.text2send = text;
 	}
@@ -36,5 +40,6 @@ public class ModelText extends Observable{
 	public void setRemote (String user){
 		this.remote = user;
 	}
+
 }
 

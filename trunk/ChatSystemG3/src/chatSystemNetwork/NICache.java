@@ -6,7 +6,9 @@ package chatSystemNetwork;
 import java.net.InetAddress;
 import java.util.Observable;
 import java.util.Observer;
+import java.util.concurrent.ArrayBlockingQueue;
 
+import chatSystemModel.ModelFile;
 import chatSystemModel.ModelUsername;
 
 /**
@@ -17,6 +19,7 @@ public class NICache implements Observer{
 
 	private String username;
 	private InetAddress localBroadcast;
+	private ArrayBlockingQueue<byte[]> parts;
 	
 	NICache(){
 		username = null;

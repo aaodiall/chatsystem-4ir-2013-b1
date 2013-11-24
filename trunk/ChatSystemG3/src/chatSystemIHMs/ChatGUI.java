@@ -24,6 +24,7 @@ public class ChatGUI extends View implements Observer{
 	private InterfaceConnect wConnect;
 	private InterfaceCommunicate wCommunicate;
 	private CommandLine cmd;
+	private int mode; // 1 pour graphique, 0 pour cmd
 	
 	//private ToUser toUser;
 	//private FromUser fromUser;
@@ -44,23 +45,25 @@ public class ChatGUI extends View implements Observer{
 		System.out.println("Choose the mode : 1 for graphical , 0 for command line");
 		int a = sc.nextInt();
 		if (a == 1){
+			this.mode = 1;
 			this.wConnect = new InterfaceConnect(controller);;
 			this.wCommunicate = new InterfaceCommunicate(controller,wConnect.getTfdUsername());
 		}else{
+			this.mode = 0;
 			this.cmd = new CommandLine(controller);
 			this.cmd.initConnection();
-		}
-		
-		
-	
+		}	
+	}
+	public int getMode(){
+		return this.mode;
 	}
 	
 	
 	public void cmdUpdate(Observable arg0, Object arg1){
 		if(arg0.getClass()==ModelListUsers.class){
-			
+			this.cmd.setUsers((String[])((HashMap<?,?>)arg1).keySet().toArray());
 		}else if(arg0.getClass().equals(ModelUsername.class)){
-			
+			this.cmd.setUsername((String)arg1);
 		}
 	}
 	
