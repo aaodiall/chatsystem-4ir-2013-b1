@@ -7,13 +7,15 @@ public class FileTransfertDemand extends Message{
 	private String name;
 	private long size;
 	private int portClient;
+        private final int idDemand;
 	
-	public FileTransfertDemand(String username, String name, long size,int portClient) {
+	public FileTransfertDemand(String username, String name, long size, int portClient, int idDemand) {
 		super(username);
 		
 		this.name = name;
 		this.size = size;
 		this.portClient = portClient;
+                this.idDemand = idDemand;
 	}
 
 	public String getName() {
@@ -42,6 +44,6 @@ public class FileTransfertDemand extends Message{
 
 	@Override
 	public String toString() {
-		return "FileTransfertDemand [name=" + name + ", size=" + size+ ", portClient=" + portClient + "]";
+		return "FileTransfertDemand [name=" + name + ", size=" + size+ ", portClient=" + portClient + ", idDemand=" + idDemand + "]";
 	}
 }
