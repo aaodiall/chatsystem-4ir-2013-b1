@@ -2,6 +2,7 @@ package chatSystem.view.gui;
 
 import chatSystem.model.FileReceivingInformation;
 import chatSystem.model.FileSendingInformation;
+import chatSystem.model.FileTransfertInformation;
 import java.util.List;
 
 
@@ -11,9 +12,9 @@ public interface ToUser {
         
         public void connected();
 	
-	public void displayFileTransfertProgression();
+	public void displayFileTransfertProgression(FileTransfertInformation tmp);
 
-	public void displaySuggestion(FileReceivingInformation tmp);
+	public void displayFileSuggestion(FileReceivingInformation tmp);
 	
 	public void displayDialogWindow (String contact);
 	
