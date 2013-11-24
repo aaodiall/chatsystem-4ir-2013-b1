@@ -46,10 +46,10 @@ public class FileReceivingInformation extends FileTransfertInformation{
     public void addFilePart(byte[] filePart) {
         try {
             this.writerBuffer.write(filePart);
-            this.writerBuffer.flush();
-            this.sizeTransfered += filePart.length;
+            this.setProgression(this.getProgression()+filePart.length); 
             
             if(this.isLast){
+                this.writerBuffer.flush();
                 this.writerBuffer.close();
                 this.writer.close();
             }

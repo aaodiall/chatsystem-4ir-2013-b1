@@ -11,7 +11,7 @@ public abstract class FileTransfertInformation extends Model {
     
     private FileState state;
     protected boolean isLast;
-    protected long sizeTransfered;
+    private long sizeTransfered;
     
     protected File fileDescriptor;
 
@@ -56,6 +56,13 @@ public abstract class FileTransfertInformation extends Model {
      */
     public long getProgression() {
         return sizeTransfered;
+    }
+    
+    protected void setProgression(long sizeTransfered){
+        this.sizeTransfered = sizeTransfered;
+        this.setChanged();
+        this.notifyObservers();
+        this.clearChanged();
     }
 
     /**

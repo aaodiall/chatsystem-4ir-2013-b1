@@ -98,7 +98,8 @@ public class ChatController extends Controller implements GuiToCont, NiToCont {
     @Override
     public void performSendFileRequest(File fileToSend, String idRemoteSystem) {
        System.out.println("Send file request to be send to " + idRemoteSystem + ", modifying the model");
-       this.fileTransferts.addTransfert(fileToSend, idRemoteSystem);
+       int idTransfert = this.fileTransferts.addTransfert(fileToSend, idRemoteSystem);
+       this.fileTransferts.getFileTransfertInformation(idTransfert).addObserver(chatGUI);
     }
     
     @Override
@@ -117,6 +118,7 @@ public class ChatController extends Controller implements GuiToCont, NiToCont {
     public void performSuggestionReceived(String name, long size, String idRemoteSystem, int idTransfert, int portServer) {
         System.out.println("Receiving a file transfert request from " + idRemoteSystem + ", modifying the model");
         this.fileTransferts.addTransfert(idTransfert, name, size, idRemoteSystem, portServer);
+        this.fileTransferts.getFileTransfertInformation(idTransfert).addObserver(chatGUI);
     }
     
     @Override
@@ -140,6 +142,7 @@ public class ChatController extends Controller implements GuiToCont, NiToCont {
     
     /**
      *
+     * @param idTransfert
      * @param filePart
      * @param isLast
      */
@@ -150,6 +153,8 @@ public class ChatController extends Controller implements GuiToCont, NiToCont {
         tmp.setIsLast(isLast);
         if(isLast){
             this.remoteSystems.addMessageSentToRemoteSystem("The file " + tmp.getName() + " from " + tmp.getIdRemoteSystem() + " has been received", tmp.getIdRemoteSystem());
+            this.fileTransferts.getFileTransfertInformation(idTransfert).deleteObservers();
+            this.fileTransferts.deleteTransfert(idTransfert);
         }
     }
     
@@ -157,6 +162,8 @@ public class ChatController extends Controller implements GuiToCont, NiToCont {
     public void performFileSended(int idTransfert, String idRemoteSystem) {
         FileSendingInformation tmp = (FileSendingInformation)this.fileTransferts.getFileTransfertInformation(idTransfert);
         this.remoteSystems.addMessageSentToRemoteSystem("The file " + tmp.getName() + " from " + tmp.getIdRemoteSystem() + " has been received", tmp.getIdRemoteSystem());
+        tmp.deleteObservers();
+        this.fileTransferts.deleteTransfert(idTransfert);
     }
 
 }

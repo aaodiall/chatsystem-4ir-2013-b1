@@ -49,7 +49,7 @@ public class FileSendingInformation extends FileTransfertInformation {
             }
 
             //set isLast to true when last part has been loaded
-            this.sizeTransfered += filePart.length;
+            this.setProgression(this.getProgression()+filePart.length); 
             if (isLast) {
                 this.readerBuffer.close();
                 this.reader.close();

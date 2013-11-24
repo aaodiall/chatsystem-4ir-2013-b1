@@ -261,13 +261,15 @@ public class DialogWindow extends JFrame implements ActionListener {
      * @return whole progression of all the transferts (sending or receiving)
      */
     public int gestionProgressionBar(int idTransfert,long size,long sizeTransfered, JProgressBar pb, HashMap<Integer, Long> gesPb) {
-        
         // Check if the transfert is known, if not the transfert is added
         if(!gesPb.containsKey((Integer)idTransfert)){
             gesPb.put((Integer)idTransfert, (Long)sizeTransfered);
             int oldMax = pb.getMaximum();
             pb.setMaximum(oldMax + (int) size);
         }
+        
+        gesPb.remove((Integer)idTransfert);
+        gesPb.put((Integer)idTransfert, (Long)sizeTransfered);
         
         // If the transfert has terminated we stop counting it
         if(size <= sizeTransfered){
@@ -279,7 +281,6 @@ public class DialogWindow extends JFrame implements ActionListener {
         for(Integer key : gesPb.keySet()){
             totalTrans += gesPb.get(key).intValue();
         }
-        
         return totalTrans;
     }
 
