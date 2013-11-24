@@ -4,10 +4,7 @@
 
 package chatSystem.view.ni.messageTransferts;
 
-/**
- *
- * @author Marjorie
- */
+
 public class sendFileTransfertConfirmationTask extends Task {
 
     private final String idRemoteSystem;

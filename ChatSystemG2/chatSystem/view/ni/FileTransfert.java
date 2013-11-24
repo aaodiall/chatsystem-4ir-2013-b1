@@ -1,3 +1,7 @@
+/**
+ * Active class responsible for the file's transferts from this local system to a given remote system
+ */
+
 package chatSystem.view.ni;
 
 import chatSystem.model.FileSendingInformation;
@@ -21,6 +25,11 @@ public class FileTransfert implements Runnable {
     private ObjectOutputStream writer;
     private final FileSendingInformation fileToSend;
 
+    /**
+     * Class' constructor
+     * @param idTransfert id of the file transfert the instance has to execute
+     * @param chatNI instance of chat ni which is responsible for this file transferts instance
+     */
     public FileTransfert(int idTransfert, ChatNI chatNI) {
         //System.out.println("Init serveur envoi de fichier");
         try {
@@ -32,10 +41,17 @@ public class FileTransfert implements Runnable {
         this.chatNI = chatNI;
     }
     
+    /**
+     * Determine the port the file transfert is going to be executing on
+     * @return port
+     */
     public int getPort(){
         return this.serverSocket.getLocalPort();
     }
-
+    
+    /**
+     * Action done by the active class
+     */
     @Override
     public void run() {
 

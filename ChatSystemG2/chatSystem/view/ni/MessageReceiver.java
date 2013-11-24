@@ -8,11 +8,8 @@ import chatSystemCommon.*;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-//import chatSystem.controller.Controller;
 /**
  * Active class receiving messages
- *
- * @author Marjorie
  */
 public class MessageReceiver implements Runnable {
 
@@ -27,9 +24,7 @@ public class MessageReceiver implements Runnable {
 
     /**
      * Class' constructor
-     *
      * @param chatni chatNI responsible for this messageReceiver instance
-     *
      */
     public MessageReceiver(ChatNI chatni) {
         try {
@@ -52,7 +47,8 @@ public class MessageReceiver implements Runnable {
     }
 
     /**
-     * Receive a message and analyze it Call for the right chatNI's method
+     * Receive a message and analyze it
+     * Call for the right chatNI's method
      */
     private void receiveMessage() {
         while (this.chatni.getUserInfo().getUserState() == UserState.CONNECTED) {

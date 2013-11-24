@@ -4,10 +4,7 @@
 
 package chatSystem.view.ni.messageTransferts;
 
-/**
- *
- * @author Marjorie
- */
+
 public class sendHelloTask extends Task {
 
     private final String ip;

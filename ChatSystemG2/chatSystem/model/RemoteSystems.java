@@ -41,7 +41,7 @@ public class RemoteSystems extends Model implements Iterable<RemoteSystemInforma
             this.clearChanged();
         } else {
             RemoteSystemInformation aux = this.getRemoteSystem(key);
-            if (aux.getUserState() == UserState.CONNECTED && ! isAck) {
+            if (aux.getUserState() == UserState.CONNECTED && !isAck) {
                 //message sent by a remote system to indicate it's still connected
                 aux.setUserState(UserState.CONNECTED);
                 this.setChanged();
