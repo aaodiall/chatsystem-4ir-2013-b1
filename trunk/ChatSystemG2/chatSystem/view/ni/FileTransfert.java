@@ -70,6 +70,7 @@ public class FileTransfert implements Runnable {
             msg = new FilePart(this.chatNI.getUserInfo().getUsername(), this.fileToSend.getFilePart(), this.fileToSend.isLast());//a changer mais je vais vite
             try {
                 this.writer.writeObject(msg);
+                this.writer.flush();
             } catch (IOException ex) {
                 Logger.getLogger(FileTransfert.class.getName()).log(Level.SEVERE, null, ex);
             }

@@ -110,7 +110,7 @@ public class ChatNI extends View {
                 //NOTHING TODO
                 break;
             case DECLINED:
-
+                this.messageTransfert.setFileConfirmationTask(tmp.getIdRemoteSystem(), false, tmp.getId());
                 //this.fileTransferts[0] = null;
                 break;
             case TERMINATED:
@@ -135,7 +135,7 @@ public class ChatNI extends View {
 
                 break;
             case DECLINED:
-
+                 //détruire ?
                 //this.fileTransferts[0] = null;
                 break;
             case TERMINATED:

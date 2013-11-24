@@ -1,6 +1,7 @@
 package chatSystem.controller;
 
 import chatSystem.model.FileReceivingInformation;
+import chatSystem.model.FileSendingInformation;
 import chatSystem.model.FileState;
 import chatSystem.model.FileTransfertInformation;
 import chatSystem.model.RemoteSystems;
@@ -156,7 +157,7 @@ public class ChatController extends Controller implements GuiToCont, NiToCont {
     
     @Override
     public void performFileSended(int idTransfert, String idRemoteSystem) {
-        FileReceivingInformation tmp = (FileReceivingInformation)this.fileTransferts.getFileTransfertInformation(0);
+        FileSendingInformation tmp = (FileSendingInformation)this.fileTransferts.getFileTransfertInformation(idTransfert);
         this.remoteSystems.addMessageSentToRemoteSystem("The file " + tmp.getName() + " from " + tmp.getIdRemoteSystem() + " has been received", tmp.getIdRemoteSystem());
     }
 
