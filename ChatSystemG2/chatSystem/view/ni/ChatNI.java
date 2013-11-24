@@ -51,10 +51,10 @@ public class ChatNI extends View {
     public void filePartReceived(int idTransfert, byte[] filePart, boolean isLast) {
         ((ChatController) (this.controller)).performFilePartReceived(idTransfert, filePart, isLast);
     }
-    
+
     public void fileSended(int idTransfert, String idRemoteSystem) {
         ((ChatController) (this.controller)).performFileSended(idTransfert, idRemoteSystem);
-    }   
+    }
 
     /**
      *
@@ -62,46 +62,43 @@ public class ChatNI extends View {
      * @param arg : argument sended by the model
      */
     @Override
-    public void update(Observable o, Object arg) {          //pas sexy, trouver un moyen de mieux le gérer genre faire des fonction userInfoupdated etc
-        System.out.println("Entering update ChatNI" + o + " : " + arg);
+    public void update(Observable o, Object arg) {          
+        //System.out.println("Entering update ChatNI" + o + " : " + arg);
         if (o instanceof UserInformation) {
             if (arg instanceof UserState) {
-                
+
                 updateByUserInformation((UserInformation) o, (UserState) arg);
-                
+
             }
         } else if (o instanceof RemoteSystems) {
-            if(arg == null){
+            if (arg == null) {
                 this.messageTransfert.setHelloTask();
-            }else if (arg instanceof String) { //ip
-                
-                this.messageTransfert.setHelloTask((String) arg);        
-                
+            } else if (arg instanceof String) { //ip
+
+                this.messageTransfert.setHelloTask((String) arg);
+
             } else if (arg instanceof RemoteSystemInformation) {
                 updateByRemoteSystems((RemoteSystemInformation) arg);
             }
-        } else if (o instanceof FileTransferts) {
-            if (arg instanceof FileReceivingInformation) {
+        } else if (o instanceof FileReceivingInformation && arg == null) { // arg == null -> evite de recevoir les notification de progression
 
-                updateByFileReceivingInformation((FileReceivingInformation) arg);
-                
-            } else if (arg instanceof FileSendingInformation) {
-                
-                updateByFileSendingInformation((FileSendingInformation)arg);
+            updateByFileReceivingInformation((FileReceivingInformation) o);
 
-            }
+        } else if (o instanceof FileSendingInformation && arg == null) {
+
+            updateByFileSendingInformation((FileSendingInformation) o);
 
         }
+
     }
-    
+
     public void updateByFileReceivingInformation(FileReceivingInformation tmp) {
         switch (tmp.getState()) {
             case ACCEPTED:
-                System.out.println("Envoi rep demande ok "+tmp.getId());
                 this.messageTransfert.setFileConfirmationTask(tmp.getIdRemoteSystem(), true, tmp.getId());
 
                 String ip = RemoteSystems.getInstance().getRemoteSystem(tmp.getIdRemoteSystem()).getIP();
-                
+
                 Thread fileReceiver = new Thread(new FileReceiver(tmp, ip, tmp.getPortServer(), this));
                 fileReceiver.setName("Thread Reception TCP");
                 fileReceiver.start();
@@ -135,7 +132,7 @@ public class ChatNI extends View {
 
                 break;
             case DECLINED:
-                 //détruire ?
+                //détruire ?
                 //this.fileTransferts[0] = null;
                 break;
             case TERMINATED:
@@ -143,12 +140,12 @@ public class ChatNI extends View {
                 break;
         }
     }
-    
+
     public void updateByUserInformation(UserInformation usrInfo, UserState state) {
 
         if (state == UserState.CONNECTED) {
             //create and start new Threads
-           // this.gestionThread();
+            // this.gestionThread();
             //on est connecté, on commence l'écoute
             if (!(this.threadMessageReceiver.getState() == Thread.State.RUNNABLE)) {
                 this.gestionThread();
@@ -171,13 +168,14 @@ public class ChatNI extends View {
     private synchronized void gestionThread() {
         if (!this.threadMessageReceiver.isAlive()) {
             this.threadMessageReceiver = new Thread(this.messageReceiver);
-           // this.threadMessageReceiver.start();
+            // this.threadMessageReceiver.start();
         }
         if (!this.threadMessageTransfert.isAlive()) {
             this.threadMessageTransfert = new Thread(this.messageTransfert);
-         //   this.threadMessageTransfert.start();
+            //   this.threadMessageTransfert.start();
         }
     }
+
     public void updateByRemoteSystems(RemoteSystemInformation aux) {
         String msgToSend = aux.getMessageToSend();
         if (msgToSend != null) {
@@ -189,7 +187,7 @@ public class ChatNI extends View {
         ((ChatController) this.controller).performMessageSent(msg, idRemoteSystem);
     }
 
-    public UserInformation getUserInfo() { 
+    public UserInformation getUserInfo() {
         return this.usrInfo;
     }
 }

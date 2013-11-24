@@ -37,7 +37,6 @@ public abstract class FileTransfertInformation extends Model {
     public FileTransfertInformation(String idRemoteSystem, File fileToSend) {
         this(fileToSend.hashCode(),idRemoteSystem,fileToSend);
         // we set the idTransfert has fileToSend.hashCode() because it's unique in this application
-        System.out.println(idTransfert +"      "+this);
     }
 
     /**
@@ -61,7 +60,7 @@ public abstract class FileTransfertInformation extends Model {
     protected void setProgression(long sizeTransfered){
         this.sizeTransfered = sizeTransfered;
         this.setChanged();
-        this.notifyObservers();
+        this.notifyObservers(this.sizeTransfered);
         this.clearChanged();
     }
 
@@ -93,6 +92,9 @@ public abstract class FileTransfertInformation extends Model {
      */
     public void setState(FileState state) {
         this.state = state;
+        this.setChanged();
+        this.notifyObservers();
+        this.clearChanged();
     }
     
     public int getId(){

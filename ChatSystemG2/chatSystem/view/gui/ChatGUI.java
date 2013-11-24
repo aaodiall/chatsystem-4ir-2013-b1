@@ -153,8 +153,8 @@ public class ChatGUI extends View implements ToUser, FromUser {
      * @param arg : argument sended by the model
      */
     @Override
-    public void update(Observable o, Object arg) {          //pas sexy, trouver un moyen de mieux le gérer
-        System.out.println("Entering update Chat GUI");
+    public void update(Observable o, Object arg) {          
+        //System.out.println("Entering update Chat GUI");
         if (o instanceof UserInformation) {
             if (arg instanceof String) {
                 if (uWindow == null) {
@@ -180,21 +180,10 @@ public class ChatGUI extends View implements ToUser, FromUser {
                 Logger.getLogger(ChatGUI.class.getName()).log(Level.SEVERE, null, ex);
             }
 
-        } else if (o instanceof FileTransferts) {
-
-            if (arg instanceof FileReceivingInformation) {
-                updateByFileReceivingInformation((FileReceivingInformation) arg);
-            } else if (arg instanceof FileSendingInformation) {
-                updateByFileSendingInformation((FileSendingInformation) arg);
-            }
-
-        } else if (o instanceof FileTransfertInformation) {
-            FileTransfertInformation tmp = (FileTransfertInformation)o;
-            switch (tmp.getState()) {
-                case ACCEPTED:
-                    displayFileTransfertProgression(tmp);
-                    break;
-            }
+        } else if (o instanceof FileReceivingInformation) {
+            updateByFileReceivingInformation((FileReceivingInformation) o);
+        } else if (arg instanceof FileSendingInformation) {
+            updateByFileSendingInformation((FileSendingInformation) o);
         }
     }
 
