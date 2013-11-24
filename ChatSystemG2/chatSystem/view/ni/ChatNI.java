@@ -8,8 +8,8 @@ import java.util.Observable;
 
 public class ChatNI extends View {
 
-    private final Thread threadMessageReceiver;
-    private final Thread threadMessageTransfert;
+    private Thread threadMessageReceiver;
+    private Thread threadMessageTransfert;
     private final MessageReceiver messageReceiver;
     private final MessageTransferts messageTransfert;
     //private final FileReceiver[] fileReceivers;
@@ -147,8 +147,11 @@ public class ChatNI extends View {
     public void updateByUserInformation(UserInformation usrInfo, UserState state) {
 
         if (state == UserState.CONNECTED) {
+            //create and start new Threads
+           // this.gestionThread();
             //on est connecté, on commence l'écoute
             if (!(this.threadMessageReceiver.getState() == Thread.State.RUNNABLE)) {
+                this.gestionThread();
                 System.out.println("Demarrage de la reception");
                 //a changer completement il faudrait pouvoir couper le thread et le lancer comme on veut
                 this.usrInfo = usrInfo;
@@ -165,6 +168,16 @@ public class ChatNI extends View {
         }
     }
 
+    private synchronized void gestionThread() {
+        if (!this.threadMessageReceiver.isAlive()) {
+            this.threadMessageReceiver = new Thread(this.messageReceiver);
+           // this.threadMessageReceiver.start();
+        }
+        if (!this.threadMessageTransfert.isAlive()) {
+            this.threadMessageTransfert = new Thread(this.messageTransfert);
+         //   this.threadMessageTransfert.start();
+        }
+    }
     public void updateByRemoteSystems(RemoteSystemInformation aux) {
         String msgToSend = aux.getMessageToSend();
         if (msgToSend != null) {

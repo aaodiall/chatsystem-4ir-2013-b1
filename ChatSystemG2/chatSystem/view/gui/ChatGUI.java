@@ -13,6 +13,7 @@ import java.io.File;
 import java.util.HashMap;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import java.util.Set;
 
 public class ChatGUI extends View implements ToUser, FromUser{
 
@@ -35,11 +36,13 @@ public class ChatGUI extends View implements ToUser, FromUser{
      */
     @Override
     public void disconnected() {
+       for (String key: this.dWindows.keySet()) {
+           DialogWindow aux = this.dWindows.get(key);
+           if (aux != null)
+               aux.setVisible(false);
+       }
         cWindow.setVisible(true);
         uWindow.setVisible(false);
-        for (String key: this.dWindows.keySet()) {
-            this.dWindows.get(key).setVisible(false);
-        }
     }
     
     /**
@@ -147,14 +150,10 @@ public class ChatGUI extends View implements ToUser, FromUser{
                 }
                 this.uWindow.setUsername((String) arg);
             } else if (arg instanceof UserState) {
-                if ((UserState) arg == UserState.CONNECTED) {
-                    
-                    connected();
-                    
-                } else {
-                    
-                    disconnected();
-                    
+                if ((UserState) arg == UserState.CONNECTED) {                   
+                    connected();                   
+                } else {                  
+                    disconnected();                   
                 }
             }
         } else if (o instanceof RemoteSystems) {
