@@ -67,11 +67,10 @@ public class MessageTransferts implements Runnable {
      * the broadcast address which has to be determined
      */
     protected void sendHello() {
-        System.out.println("Sending hellos");
+        //System.out.println("Sending hellos");
         //hello sent to everyone can only be a hello without ack
         Hello helloToSend = new Hello(this.chatni.getUserInfo().getUsername(), false);
         InetAddress broadcastAddress = this.determineBroadcastAddress();
-        System.out.println("ENVOI : " + helloToSend.toString() + " -> " + broadcastAddress.getHostAddress());
         this.sendPacket(broadcastAddress, helloToSend);
     }
 
@@ -82,7 +81,6 @@ public class MessageTransferts implements Runnable {
     protected void sendHello(String ip) {
         //hello sent to one person can only be an ack hello
         Hello helloToSend = new Hello(this.chatni.getUserInfo().getUsername(), true);
-        System.out.println("ENVOI : " + helloToSend.toString() + " -> " + ip);
         this.sendPacket(ip, helloToSend);
     }
 
@@ -93,7 +91,6 @@ public class MessageTransferts implements Runnable {
     protected void sendGoodbye() {
         InetAddress broadcastAddress = this.determineBroadcastAddress();
         Goodbye goodbyeToSend = new Goodbye(this.chatni.getUserInfo().getUsername());
-        System.out.println("ENVOI : " + goodbyeToSend.toString() + " -> " + broadcastAddress.getHostAddress());
         this.sendPacket(broadcastAddress, goodbyeToSend);
     }
 
@@ -120,7 +117,6 @@ public class MessageTransferts implements Runnable {
     protected void sendFileTransfertDemand(String name, long size, String idRemoteSystem, int portClient, int idTransfert) {
         String ip = this.rmInstance.getRemoteSystem(idRemoteSystem).getIP();
         FileTransfertDemand ftd = new FileTransfertDemand(this.chatni.getUserInfo().getUsername(), name, size, portClient,idTransfert);
-        System.out.println("ENVOI : " + ftd.toString() + " -> " + ip);
         this.sendPacket(ip, ftd);
     }
 
@@ -160,6 +156,7 @@ public class MessageTransferts implements Runnable {
         try {
             byte[] buffer = msg.toArray();
             DatagramPacket msgToSend = new DatagramPacket(buffer, buffer.length, ip, MessageTransferts.portUdpEmission);
+            System.out.println("ENVOI : " + msg.toString() + " -> " + ip.getHostAddress());
             this.messageSocket.send(msgToSend);
         } catch (IOException exc) {
             System.out.println("Probleme à la conversion du message ou à l'envoi du message");

@@ -97,7 +97,7 @@ public class ChatNI extends View {
     public void updateByFileReceivingInformation(FileReceivingInformation tmp) {
         switch (tmp.getState()) {
             case ACCEPTED:
-                System.out.println("Envoi rep demande ok ");
+                System.out.println("Envoi rep demande ok "+tmp.getId());
                 this.messageTransfert.setFileConfirmationTask(tmp.getIdRemoteSystem(), true, tmp.getId());
 
                 String ip = RemoteSystems.getInstance().getRemoteSystem(tmp.getIdRemoteSystem()).getIP();
