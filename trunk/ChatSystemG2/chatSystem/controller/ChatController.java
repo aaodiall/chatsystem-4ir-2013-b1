@@ -57,7 +57,7 @@ public class ChatController extends Controller implements GuiToCont, NiToCont {
         System.out.println("Entering performConnect");
         this.localUser.setUsername(username);
         this.localUser.setUserState(UserState.CONNECTED);
-        this.threadChatAlive.start();
+        //this.threadChatAlive.start();
     }
 
     @Override
