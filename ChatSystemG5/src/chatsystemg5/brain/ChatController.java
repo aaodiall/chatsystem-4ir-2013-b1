@@ -60,9 +60,9 @@ public class ChatController {
    
         // if remote user first connection
         if(!alrdythere){
-            //System.out.println("I'm Controller : sending back a Hello ");
+            System.out.println("I'm Controller : sending back a Hello to : " + remote_user + " @ " + IP_text);
             // create a new message to sent back ack
-            chatNI.to_connection(remote_user + " @ " + IP_text, true);       
+            chatNI.to_connection(remote_user + "@" + IP_text, true);       
         }
      }
     

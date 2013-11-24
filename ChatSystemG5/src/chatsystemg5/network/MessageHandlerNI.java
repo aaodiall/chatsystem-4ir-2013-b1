@@ -48,7 +48,6 @@ public class MessageHandlerNI {
             System.out.println("I'm MsgHandler : Hello received from " + msg.getUsername() + ", IP source : " + IP_text);
             chatNI.from_connection(msg.getUsername(), IP_text, ((Hello) msg).isAck());
             //chat_control.perform_connection(msg.getUsername(), IP_text, ((Hello) msg).isAck());
-            System.out.println("Test 1");
         }
         if (msg instanceof Goodbye) {
             System.out.println("I'm MsgHandler : Goodbye received.");
@@ -85,7 +84,7 @@ public class MessageHandlerNI {
 //        if (!alrdythere) {
 //            IP_dest = msg_emission.get_broadcast();
 //        }
-        System.out.println("I'm MsgHandler : sending Hello to " + IP_dest);
+        //System.out.println("I'm MsgHandler : sending Hello to " + IP_dest.getHostAddress());
         send(msg, IP_dest);
     }
     

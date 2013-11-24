@@ -19,7 +19,9 @@ public class ListModel extends ChatModel {
         if (!this.hmap_users.containsKey(username + "@" + IP_addr)) {
             hmap_users.put (username + "@" + IP_addr, IP_addr);
         }
+        //System.out.println("I'm ListModel : notify BEF ?");
         this.notifyObservers();
+        //System.out.println("I'm ListModel : notify AFT ?");
     }
     
     public void remove_user(String username, String IP_addr) {
