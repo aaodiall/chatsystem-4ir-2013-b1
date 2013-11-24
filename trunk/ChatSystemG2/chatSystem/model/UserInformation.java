@@ -1,3 +1,7 @@
+/**
+ * Information the system has about a user
+ */
+
 package chatSystem.model;
 
 public class UserInformation extends Model{
@@ -7,8 +11,8 @@ public class UserInformation extends Model{
 	protected UserState state;
 	
         /**
-         * Creation d'une zone d'information sur un utilisateur encore inconnu
-         * @param ip adresse ip, seule information disponible
+         * Class' constructor, the user created is still unknown
+         * @param ip ip adress, only available piece of information
          */
         public UserInformation(String ip) {
             this.ip = ip;
@@ -17,9 +21,9 @@ public class UserInformation extends Model{
         }
         
         /**
-         * Creation d'une zone d'information sur un utilisateur dont on vient d'apprendre l'existence
-         * @param username pseudo de l'utilisateur
-         * @param ip adresse ip de l'utilisateur
+         * Class' constructor, the system just heard about the user
+         * @param username username chosen by the user
+         * @param ip user' ip adress
          */
          public UserInformation(String username, String ip) {
             this.ip = ip;
@@ -28,7 +32,7 @@ public class UserInformation extends Model{
         }
         
          /**
-          * Recuperer le pseudo de l'utilisateur
+          * Recover the user' username
           * @return username
           */
 	public String getUsername() {
@@ -36,8 +40,8 @@ public class UserInformation extends Model{
 	}
 	
         /**
-         * Modifier le pseudo de l'utilisateur
-         * @param username nouveau pseudo
+         * Modify the user's username
+         * @param username new username
          */
 	public void setUsername(String username) {
                 System.out.println("Entering setUsername");
@@ -48,19 +52,19 @@ public class UserInformation extends Model{
 	}
 	
         /**
-         * Recuperer l'etat de l'utilisateur (connected/disconnected)
-         * @return etat de l'utilisateur
+         * Recover the user's state (connected/disconnected/maybeoffline)
+         * @return user's state
          */
 	public final UserState getUserState() {
 		return this.state;
 	}
 
         /**
-         * Mettre a jour l'etat de l'utilisateur (connected/disconnected)
-         * @param state nouvel etat
+         * Update the user's state (connected/disconnected/maybeoffline)
+         * @param state new state
          */
 	public void setUserState(UserState state) {
-                System.out.println("Entering setState : le nouvel état est : "+state.toString());
+                System.out.println("Entering setState, the new state is : "+state.toString());
 		this.state = state;
                 this.setChanged();
                 this.notifyObservers(this.state);
@@ -68,17 +72,17 @@ public class UserInformation extends Model{
 	}
 	
         /**
-         * Recuperer l'adresse ip de l'utilisateur
-         * @return adresse ip
+         * Recover the user's ip adress
+         * @return user's ip adress
          */
 	public String getIP() {
 		return this.ip;
 	}
 	
         /**
-         * Evalue si l'objet en argument est egal a cette instance de UserInformation
-         * @param obj objet a comparer
-         * @return resultat de la comparaison
+         * Evaluate whether the objet given as argument is equal to this UserInformation's instance
+         * @param obj objet to compare
+         * @return result of the comparison
          */
         @Override
         public boolean equals(Object obj) {

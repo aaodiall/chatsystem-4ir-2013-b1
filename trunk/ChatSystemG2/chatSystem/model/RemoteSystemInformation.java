@@ -1,12 +1,14 @@
+/**
+ * Keep and manage all the information about a remote system (Username,
+ * address, id, messages)
+ */
+
 package chatSystem.model;
 
 import java.util.concurrent.ConcurrentLinkedQueue;
 import javax.swing.DefaultListModel;
 
-/**
- * Keeps and manages all the information about a remote system (Username,
- * address, id, messages)
- */
+
 public class RemoteSystemInformation extends UserInformation {
 
     //faire une seule liste et faire unJlist ds la fenetre pour afficher directement la liste
