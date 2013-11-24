@@ -22,12 +22,12 @@ public class FileSendingInformation extends FileTransfertInformation {
     private BufferedInputStream readerBuffer;
     private FileInputStream reader;
     
-    byte[] filePart;
+    //byte[] filePart;
 
     public FileSendingInformation(String idRemoteSystem, File fileToSend) {
         super(idRemoteSystem, fileToSend);
 
-        this.filePart = new byte[FileTransfertInformation.tailleSegment];
+        //this.filePart = new byte[FileTransfertInformation.tailleSegment];
         
         try {
             this.reader = new FileInputStream(this.fileDescriptor);
@@ -43,6 +43,8 @@ public class FileSendingInformation extends FileTransfertInformation {
      * @return file's part
      */
     public byte[] getFilePart() {
+        
+        byte[] filePart = new byte[tailleSegment];
         try {
             if (this.readerBuffer.read(filePart) == -1) {
                 this.isLast = true;
