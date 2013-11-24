@@ -1,16 +1,14 @@
+/**
+ * Responsible of the interface between the local user and the system
+ */
+
 package chatSystem.view.gui;
 
 import java.util.List;
 import java.util.Map;
 import java.util.Observable;
 import chatSystem.controller.ChatController;
-import chatSystem.model.FileReceivingInformation;
-import chatSystem.model.FileSendingInformation;
-import chatSystem.model.FileTransfertInformation;
-import chatSystem.model.FileTransferts;
-import chatSystem.model.RemoteSystems;
-import chatSystem.model.UserInformation;
-import chatSystem.model.UserState;
+import chatSystem.model.*;
 import java.io.File;
 import java.util.HashMap;
 import java.util.logging.Level;
@@ -22,16 +20,26 @@ public class ChatGUI extends View implements ToUser, FromUser{
     private UserWindow uWindow = null;
     private final Map<String, DialogWindow> dWindows;
 
+    /**
+     * Class' constructor
+     * @param controller instance of controller responsible for this instance of chat gui
+     */
     public ChatGUI(ChatController controller) {
         super(controller);
         this.cWindow = new ConnectWindow(this);
         this.dWindows = new HashMap<String, DialogWindow>();
     }
 
+    /**
+     * 
+     */
     @Override
     public void disconnected() {
         cWindow.setVisible(true);
         uWindow.setVisible(false);
+        for (String key: this.dWindows.keySet()) {
+            this.dWindows.get(key).setVisible(false);
+        }
     }
     
     @Override
