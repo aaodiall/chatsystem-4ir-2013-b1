@@ -48,8 +48,8 @@ public class ChatNI extends View {
         ((ChatController) (this.controller)).performConfirmationReceived(ip, idTransfert, accepted);
     }
 
-    public void filePartReceived(byte[] filePart, boolean isLast) {
-        ((ChatController) (this.controller)).performFilePartReceived(filePart, isLast);
+    public void filePartReceived(int idTransfert, byte[] filePart, boolean isLast) {
+        ((ChatController) (this.controller)).performFilePartReceived(idTransfert, filePart, isLast);
     }
     
     public void fileSended(int idTransfert, String idRemoteSystem) {
@@ -102,7 +102,7 @@ public class ChatNI extends View {
 
                 String ip = RemoteSystems.getInstance().getRemoteSystem(tmp.getIdRemoteSystem()).getIP();
                 
-                Thread fileReceiver = new Thread(new FileReceiver(ip, tmp.getPortServer(), this));
+                Thread fileReceiver = new Thread(new FileReceiver(tmp.getId(), ip, tmp.getPortServer(), this));
                 fileReceiver.setName("Thread Reception TCP");
                 fileReceiver.start();
                 break;

@@ -24,7 +24,7 @@ public class FileTransfert implements Runnable {
     public FileTransfert(int idTransfert, ChatNI chatNI) {
         //System.out.println("Init serveur envoi de fichier");
         try {
-            this.serverSocket = new ServerSocket();
+            this.serverSocket = new ServerSocket(0); // let the OS find the right port
         } catch (IOException ex) {
             Logger.getLogger(FileTransfert.class.getName()).log(Level.SEVERE, null, ex);
         }

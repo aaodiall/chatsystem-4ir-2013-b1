@@ -147,8 +147,8 @@ public class ChatController extends Controller implements GuiToCont, NiToCont {
      * @param isLast
      */
     @Override
-    public void performFilePartReceived(byte[] filePart, boolean isLast){
-        FileReceivingInformation tmp = (FileReceivingInformation)this.fileTransferts.getFileTransfertInformation(0);
+    public void performFilePartReceived(int idTransfert, byte[] filePart, boolean isLast){
+        FileReceivingInformation tmp = (FileReceivingInformation)this.fileTransferts.getFileTransfertInformation(idTransfert);
         tmp.addFilePart(filePart);
         tmp.setIsLast(isLast);
         if(isLast){
