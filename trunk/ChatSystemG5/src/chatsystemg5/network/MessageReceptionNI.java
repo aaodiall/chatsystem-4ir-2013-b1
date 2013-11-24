@@ -52,15 +52,15 @@ public class MessageReceptionNI implements Runnable, FromRemoteApp {
                 // get the IP of the sender
                 this.IP_source = message.getAddress();
                 
-                //System.out.println("I'm Network : I'm : " + (InetAddress.getLocalHost()).getHostAddress().toString());
-                //System.out.println("I'm Network : From : " + IP_source.getHostAddress().toString());
-                //System.out.println("I'm Network : From : " + IP_source);
-                //if (!(IP_source.getHostAddress()).equals(this.localhost)) {
+                System.out.println("I'm Network : I'm : " + (InetAddress.getLocalHost()).getHostAddress().toString());
+                System.out.println("I'm Network : From : " + IP_source.getHostAddress().toString());
+                
+                if (!(IP_source.getHostAddress()).equals(this.localhost)) {
                     // send the content of the buffer to the controller
                     Message msg = Message.fromArray(buffer);
                     msg_handler.receive(msg, IP_source);  
-                //}          
-                System.out.println("NI : Test 1");
+                }          
+                //System.out.println("NI : Test 1");
 
             }
         } catch (IOException ex) {

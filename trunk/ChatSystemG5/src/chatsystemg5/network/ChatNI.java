@@ -40,7 +40,7 @@ public /*abstract*/ class ChatNI implements Observer {
             else {
                 IP_dest = InetAddress.getByName(chat_control.get_listDB().get_IP_addr(user_and_IP));
             }
-            //System.out.println("I'm ChatNI : IP temp to send : " + IP_temp);
+            System.out.println("I'm ChatNI : IP dest : " + IP_dest.getHostAddress());
             System.out.println("I'm ChatNI : sending a Hello : " + alrdythere);
             msg_handler.send_connection(IP_dest, alrdythere);
         } catch (UnknownHostException ex) {
@@ -71,8 +71,7 @@ public /*abstract*/ class ChatNI implements Observer {
     
     public void from_connection(String remote_user, String IP_text, Boolean alrdythere) {
         //try {
-            //this.IP_temp = InetAddress.getByName(IP_text);
-            //System.out.println("I'm ChatNI : IP temp received : " + IP_temp);
+            System.out.println("I'm ChatNI : IP source received : " + IP_text);
             //System.out.println("I'm ChatNI : connection back : remote user : " + remote_user + ", IP source : " + IP_text + ", already there ? " + alrdythere);
             chat_control.perform_connection_back(remote_user, IP_text, alrdythere);
 //        } catch (UnknownHostException ex) {
