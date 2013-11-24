@@ -266,9 +266,9 @@ public class DialogWindow extends JFrame implements ActionListener {
         if(size <= sizeTransfered){
             int oldMax = pb.getMaximum();
             pb.setMaximum(oldMax - (int) size);
-            gesPb.remove(idTransfert);
-            
+            gesPb.remove(idTransfert); 
         }
+        
         else {
             if(!gesPb.containsKey(idTransfert)){
                 int oldMax = pb.getMaximum();
