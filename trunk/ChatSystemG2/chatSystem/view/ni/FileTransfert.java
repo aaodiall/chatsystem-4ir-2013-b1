@@ -1,7 +1,7 @@
 /**
- * Active class responsible for the file's transferts from this local system to a given remote system
+ * Active class responsible for the file's transferts from this local system to
+ * a given remote system
  */
-
 package chatSystem.view.ni;
 
 import chatSystem.model.FileSendingInformation;
@@ -11,7 +11,9 @@ import java.io.IOException;
 import chatSystem.model.FileTransferts;
 import chatSystemCommon.FilePart;
 import chatSystemCommon.Message;
+import java.io.BufferedOutputStream;
 import java.io.ObjectOutputStream;
+import java.io.OutputStream;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -21,14 +23,18 @@ public class FileTransfert implements Runnable {
     private final ChatNI chatNI;
     private ServerSocket serverSocket;
     private Socket clientSocket;
+
+    private OutputStream writer;
+    private BufferedOutputStream writerBuffer;
     
-    private ObjectOutputStream writer;
     private final FileSendingInformation fileToSend;
 
     /**
      * Class' constructor
+     *
      * @param idTransfert id of the file transfert the instance has to execute
-     * @param chatNI instance of chat ni which is responsible for this file transferts instance
+     * @param chatNI instance of chat ni which is responsible for this file
+     * transferts instance
      */
     public FileTransfert(int idTransfert, ChatNI chatNI) {
         //System.out.println("Init serveur envoi de fichier");
@@ -40,15 +46,16 @@ public class FileTransfert implements Runnable {
         this.fileToSend = (FileSendingInformation) FileTransferts.getInstance().getFileTransfertInformation(idTransfert);
         this.chatNI = chatNI;
     }
-    
+
     /**
      * Determine the port the file transfert is going to be executing on
+     *
      * @return port
      */
-    public int getPort(){
+    public int getPort() {
         return this.serverSocket.getLocalPort();
     }
-    
+
     /**
      * Action done by the active class
      */
@@ -58,25 +65,33 @@ public class FileTransfert implements Runnable {
         try {
             //System.out.println("Démarrage écoute Serveur envoi de fichier");
             this.clientSocket = this.serverSocket.accept();
+            this.serverSocket.close();
+            
             //System.out.println("Démarrage envoi de fichier");
-            this.writer = new ObjectOutputStream(clientSocket.getOutputStream());
+            this.writer = clientSocket.getOutputStream();
+            this.writerBuffer = new BufferedOutputStream(writer);
+
+            Message msg;
+            do {
+                msg = new FilePart(this.chatNI.getUserInfo().getUsername(), this.fileToSend.getFilePart(), this.fileToSend.isLast());//a changer mais je vais vite
+                try {
+                    byte[] tmp = msg.toArray();
+                    this.writerBuffer.write(tmp, 0, tmp.length);
+                    this.writerBuffer.flush();
+
+                } catch (IOException ex) {
+                    Logger.getLogger(FileTransfert.class.getName()).log(Level.SEVERE, null, ex);
+                } finally {
+                    this.writerBuffer.close();
+                    this.writer.close();
+                }
+            } while (!this.fileToSend.isLast());
+            this.chatNI.fileSended(this.fileToSend.getId(), this.fileToSend.getIdRemoteSystem());
+            this.clientSocket.close();
 
         } catch (IOException ex) {
             Logger.getLogger(FileTransfert.class.getName()).log(Level.SEVERE, null, ex);
         }
-        
-        Message msg;
-        do {
-            msg = new FilePart(this.chatNI.getUserInfo().getUsername(), this.fileToSend.getFilePart(), this.fileToSend.isLast());//a changer mais je vais vite
-            try {
-                this.writer.writeObject(msg);
-                this.writer.flush();
-            } catch (IOException ex) {
-                Logger.getLogger(FileTransfert.class.getName()).log(Level.SEVERE, null, ex);
-            }
-        } while (!this.fileToSend.isLast());
-        this.chatNI.fileSended(this.fileToSend.getId(),this.fileToSend.getIdRemoteSystem());
-        System.out.println("------------------------FICHIER ENVOYE---------------------------------------");
     }
 
 }

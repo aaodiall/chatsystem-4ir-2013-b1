@@ -6,6 +6,7 @@
 
 package chatSystem.model;
 
+import java.io.BufferedOutputStream;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
@@ -20,6 +21,7 @@ import java.util.logging.Logger;
 public class FileReceivingInformation extends FileTransfertInformation{
     
     private FileOutputStream writer;
+    private BufferedOutputStream writerBuffer;
     
     private final long size;
     private final int portServer;
@@ -43,8 +45,15 @@ public class FileReceivingInformation extends FileTransfertInformation{
      */
     public void addFilePart(byte[] filePart) {
         try {
-            this.writer.write(filePart);
+            this.writerBuffer.write(filePart);
+            this.writerBuffer.flush();
             this.sizeTransfered += filePart.length;
+            
+            if(this.isLast){
+                this.writerBuffer.close();
+                this.writer.close();
+            }
+            
         } catch (IOException ex) {
             Logger.getLogger(FileTransfertInformation.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -54,6 +63,7 @@ public class FileReceivingInformation extends FileTransfertInformation{
         this.fileDescriptor = fileToSave;
         try {
             this.writer = new FileOutputStream(this.fileDescriptor);
+            this.writerBuffer = new BufferedOutputStream(writer);
         } catch (FileNotFoundException ex) {
             Logger.getLogger(FileTransfertInformation.class.getName()).log(Level.SEVERE, null, ex);
         }

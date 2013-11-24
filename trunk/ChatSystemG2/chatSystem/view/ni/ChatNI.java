@@ -102,7 +102,7 @@ public class ChatNI extends View {
 
                 String ip = RemoteSystems.getInstance().getRemoteSystem(tmp.getIdRemoteSystem()).getIP();
                 
-                Thread fileReceiver = new Thread(new FileReceiver(tmp.getId(), ip, tmp.getPortServer(), this));
+                Thread fileReceiver = new Thread(new FileReceiver(tmp, ip, tmp.getPortServer(), this));
                 fileReceiver.setName("Thread Reception TCP");
                 fileReceiver.start();
                 break;

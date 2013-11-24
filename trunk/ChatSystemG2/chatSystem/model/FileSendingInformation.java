@@ -3,7 +3,6 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-
 package chatSystem.model;
 
 import java.io.File;
@@ -17,20 +16,20 @@ import java.util.logging.Logger;
  *
  * @author Jules
  */
-public class FileSendingInformation extends FileTransfertInformation{
-    
+public class FileSendingInformation extends FileTransfertInformation {
+
     private FileInputStream reader;
 
     public FileSendingInformation(String idRemoteSystem, File fileToSend) {
         super(idRemoteSystem, fileToSend);
-        
+
         try {
             this.reader = new FileInputStream(this.fileDescriptor);
         } catch (FileNotFoundException ex) {
             Logger.getLogger(FileTransfertInformation.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
-    
+
     /**
      * Obtaining the next file's part to send
      *
@@ -39,16 +38,20 @@ public class FileSendingInformation extends FileTransfertInformation{
     public byte[] getFilePart() {
         byte[] filePart = new byte[FileTransfertInformation.tailleSegment];
         try {
-            if(this.reader.read(filePart) == -1){
+            if (this.reader.read(filePart) == -1) {
                 this.isLast = true;
             }
-            
+
             //set isLast to true when last part has been loaded
+            this.sizeTransfered += filePart.length;
+            if (isLast) {
+                this.reader.close();
+            }
+
         } catch (IOException ex) {
             Logger.getLogger(FileTransfertInformation.class.getName()).log(Level.SEVERE, null, ex);
         }
-        this.sizeTransfered += filePart.length;
         return filePart;
     }
-    
+
 }
