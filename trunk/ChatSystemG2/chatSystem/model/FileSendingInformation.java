@@ -47,6 +47,7 @@ public class FileSendingInformation extends FileTransfertInformation{
         } catch (IOException ex) {
             Logger.getLogger(FileTransfertInformation.class.getName()).log(Level.SEVERE, null, ex);
         }
+        this.sizeTransfered += filePart.length;
         return filePart;
     }
     

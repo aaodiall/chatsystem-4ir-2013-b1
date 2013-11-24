@@ -6,6 +6,7 @@ import java.util.Observable;
 import chatSystem.controller.ChatController;
 import chatSystem.model.FileReceivingInformation;
 import chatSystem.model.FileSendingInformation;
+import chatSystem.model.FileTransfertInformation;
 import chatSystem.model.FileTransferts;
 import chatSystem.model.RemoteSystems;
 import chatSystem.model.UserInformation;
@@ -40,13 +41,19 @@ public class ChatGUI extends View implements ToUser, FromUser{
     }
 
     @Override
-    public void displayFileTransfertProgression() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-
+    public void displayFileTransfertProgression(FileTransfertInformation tmp) {
+        String contact = tmp.getIdRemoteSystem();
+        if (this.dWindows.containsKey(contact)) {
+            if (this.dWindows.get(contact) == null) {
+                this.dWindows.remove(contact);
+                this.dWindows.put(contact, new DialogWindow(contact, RemoteSystems.getInstance().getRemoteSystem(contact).getMessages(), this));
+            }
+        }
+        this.dWindows.get(contact).displayFileSendingProgression(tmp.getId(), tmp.getSize(), tmp.getProgression());
     }
 
     @Override
-    public void displaySuggestion(FileReceivingInformation tmp) {
+    public void displayFileSuggestion(FileReceivingInformation tmp) {
         String contact = tmp.getIdRemoteSystem();
         if (this.dWindows.containsKey(contact)) {
             if (this.dWindows.get(contact) == null) {
@@ -56,6 +63,7 @@ public class ChatGUI extends View implements ToUser, FromUser{
         }
         this.dWindows.get(contact).displaySuggestion(tmp.getName(), tmp.getId());
     }
+    
 
     @Override
     public void displayDialogWindow(String contact) {
@@ -147,7 +155,7 @@ public class ChatGUI extends View implements ToUser, FromUser{
     public void updateByFileSendingInformation(FileSendingInformation tmp) {
         switch (tmp.getState()) {
             case ACCEPTED:
-                // Nothing TODO
+                displayFileTransfertProgression(tmp);
                 break;
             case WAITANSWER:
                 // Nothing TODO
@@ -164,10 +172,10 @@ public class ChatGUI extends View implements ToUser, FromUser{
     public void updateByFileReceivingInformation(FileReceivingInformation tmp) {
         switch (tmp.getState()) {
             case ACCEPTED:
-                 //Nothing TODO
+                 displayFileTransfertProgression(tmp);
                 break;
             case WAITANSWER:
-                displaySuggestion(tmp);
+                displayFileSuggestion(tmp);
                 break;
             case DECLINED:
                 //Nothing TODO

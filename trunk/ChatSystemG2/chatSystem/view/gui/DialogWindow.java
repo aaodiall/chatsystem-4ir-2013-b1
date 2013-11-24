@@ -3,14 +3,15 @@ package chatSystem.view.gui;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
+import java.util.HashMap;
 import javax.swing.DefaultListModel;
 import javax.swing.JButton;
 import javax.swing.JFileChooser;
 import javax.swing.JFrame;
+import javax.swing.JLabel;
 import javax.swing.JList;
-import javax.swing.JMenu;
-import javax.swing.JMenuBar;
 import javax.swing.JOptionPane;
+import javax.swing.JProgressBar;
 import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 import javax.swing.SwingUtilities;
@@ -23,14 +24,18 @@ public class DialogWindow extends JFrame implements ActionListener {
 
     private final JList conversation;
     private final JButton fileButton;
-    //private final JMenu jMenu1;
-    //private final JMenu jMenu2;
     private final JScrollPane messageJScrollPane;
     private final JScrollPane conversationJScrollPane;
-    //private final JMenuBar menu;
     private final JTextArea message;
+    private final JLabel uploadLabel;
+    private final JLabel downloadLabel;
+    private final JProgressBar uploadJProgressBar;
+    private final JProgressBar downloadJProgressBar;
     private final JButton sendButton;
     private JFileChooser fileChooser;
+    
+    private final HashMap<Integer,Long> gestionDownloadProgression;
+    private final HashMap<Integer,Long> gestionUploadProgression;
 
     private final String contact;
     private final ChatGUI chatGUI;
@@ -44,6 +49,8 @@ public class DialogWindow extends JFrame implements ActionListener {
      */
     public DialogWindow(String contact, DefaultListModel conversationModel, ChatGUI chatGUI) {
         this.contact = contact;
+        this.gestionDownloadProgression = new HashMap<Integer,Long>();
+        this.gestionUploadProgression = new HashMap<Integer,Long>();
 
         this.messageJScrollPane = new JScrollPane();
         this.message = new JTextArea();
@@ -51,17 +58,19 @@ public class DialogWindow extends JFrame implements ActionListener {
         this.fileButton = new JButton();
         this.conversationJScrollPane = new JScrollPane();
         this.conversation = new JList(conversationModel);
+        this.uploadJProgressBar = new JProgressBar();
+        this.uploadLabel = new JLabel();
+        this.downloadJProgressBar = new JProgressBar();
+        this.downloadLabel = new JLabel();
 
-        //this.fileChooser = new JFileChooser();
-        //this.menu = new javax.swing.JMenuBar();
-        //this.jMenu1 = new javax.swing.JMenu();
-        //this.jMenu2 = new javax.swing.JMenu();
         this.chatGUI = chatGUI;
         initWindow();
     }
 
     private void initWindow() {
 
+        setTitle("Dialog Window : "+contact);
+        
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
 
         message.setColumns(20);
@@ -70,47 +79,81 @@ public class DialogWindow extends JFrame implements ActionListener {
 
         sendButton.setText("Send");
         sendButton.addActionListener(this);
+        
+        uploadLabel.setText("Upload");
+        uploadLabel.setVisible(false);
+        
+        uploadJProgressBar.setVisible(false);
+        uploadJProgressBar.setStringPainted(true);
+
+        downloadLabel.setText("Download");
+        downloadLabel.setVisible(false);
+        
+        downloadJProgressBar.setVisible(false);
+        downloadJProgressBar.setStringPainted(true);
 
         fileButton.setText("Join File");
         fileButton.addActionListener(this);
 
         conversationJScrollPane.setViewportView(conversation);
-
-        /*jMenu1.setText("File");
-         menu.add(jMenu1);
-
-         jMenu2.setText("Edit");
-         menu.add(jMenu2);
-
-         setJMenuBar(menu);*/
+        
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
-                layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                .addGroup(layout.createSequentialGroup()
-                        .addGap(37, 37, 37)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                                .addComponent(conversationJScrollPane, javax.swing.GroupLayout.DEFAULT_SIZE, 546, Short.MAX_VALUE)
-                                .addComponent(messageJScrollPane))
+            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(layout.createSequentialGroup()
+                .addGap(37, 37, 37)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addComponent(conversationJScrollPane, javax.swing.GroupLayout.DEFAULT_SIZE, 546, Short.MAX_VALUE)
+                    .addComponent(messageJScrollPane))
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(layout.createSequentialGroup()
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 44, Short.MAX_VALUE)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                .addComponent(sendButton, javax.swing.GroupLayout.PREFERRED_SIZE, 159, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addComponent(fileButton, javax.swing.GroupLayout.PREFERRED_SIZE, 159, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addGap(28, 28, 28))
+                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(sendButton, javax.swing.GroupLayout.PREFERRED_SIZE, 159, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(fileButton, javax.swing.GroupLayout.PREFERRED_SIZE, 159, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(uploadJProgressBar, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                .addGap(28, 28, 28))
+                            .addGroup(layout.createSequentialGroup()
+                                .addComponent(downloadJProgressBar, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addContainerGap())))
+                    .addGroup(layout.createSequentialGroup()
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(layout.createSequentialGroup()
+                                .addGap(92, 92, 92)
+                                .addComponent(downloadLabel))
+                            .addGroup(layout.createSequentialGroup()
+                                .addGap(96, 96, 96)
+                                .addComponent(uploadLabel)))
+                        .addGap(0, 0, Short.MAX_VALUE))))
         );
         layout.setVerticalGroup(
-                layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(layout.createSequentialGroup()
                         .addContainerGap(23, Short.MAX_VALUE)
                         .addComponent(conversationJScrollPane, javax.swing.GroupLayout.PREFERRED_SIZE, 274, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(18, 18, 18)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                                .addGroup(layout.createSequentialGroup()
-                                        .addComponent(sendButton, javax.swing.GroupLayout.PREFERRED_SIZE, 46, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                        .addComponent(fileButton, javax.swing.GroupLayout.PREFERRED_SIZE, 46, javax.swing.GroupLayout.PREFERRED_SIZE))
-                                .addComponent(messageJScrollPane))
-                        .addContainerGap())
+                        .addGap(18, 18, 18))
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(39, 39, 39)
+                        .addComponent(uploadLabel)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(uploadJProgressBar, javax.swing.GroupLayout.PREFERRED_SIZE, 22, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(20, 20, 20)
+                        .addComponent(downloadLabel)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(downloadJProgressBar, javax.swing.GroupLayout.PREFERRED_SIZE, 22, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(sendButton, javax.swing.GroupLayout.PREFERRED_SIZE, 46, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(fileButton, javax.swing.GroupLayout.PREFERRED_SIZE, 46, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(messageJScrollPane))
+                .addContainerGap())
         );
 
         pack();
@@ -158,6 +201,59 @@ public class DialogWindow extends JFrame implements ActionListener {
             }
         });
     }
+    
+    public void displayFileSendingProgression(final int idTransfert,final long size,final long sizeTransfered) {
+         SwingUtilities.invokeLater(new Runnable() {
+            @Override
+            public void run() {
+                int updateValue = gestionProgressionBar(idTransfert, size, sizeTransfered, uploadJProgressBar, gestionUploadProgression);
+                uploadJProgressBar.setValue(updateValue);
+                
+                if(!uploadJProgressBar.isVisible()){
+                    uploadJProgressBar.setVisible(true);
+                    uploadLabel.setVisible(true);
+                }
+            }
+        });
+    }
+    
+    public void displayFileReceivingProgression(final int idTransfert,final long size,final long sizeTransfered){
+         SwingUtilities.invokeLater(new Runnable() {
+            @Override
+            public void run() {
+                int updateValue = gestionProgressionBar(idTransfert, size, sizeTransfered, downloadJProgressBar, gestionDownloadProgression);
+                downloadJProgressBar.setValue(updateValue);
+                
+                if(!downloadJProgressBar.isVisible()){
+                    downloadJProgressBar.setVisible(true);
+                    downloadLabel.setVisible(true);
+                }
+            }
+        });
+    }
+    
+    public int gestionProgressionBar(int idTransfert,long size,long sizeTransfered, JProgressBar pb, HashMap<Integer, Long> gesPb) {
+        
+        // On regarde si on connait le transfert, si on le connait pas on l'ajoute
+        if(!gesPb.containsKey((Integer)idTransfert)){
+            gesPb.put((Integer)idTransfert, (Long)sizeTransfered);
+            int oldMax = pb.getMaximum();
+            pb.setMaximum(oldMax + (int) size);
+        }
+        
+        // Si le transfert est fini on ne le compte plus
+        if(size <= sizeTransfered){
+            gesPb.remove(idTransfert);
+        }
+
+        //on regarde ou en sont l'ensemble des transfert et on renvoi la valeur
+        int totalTrans = 0;
+        for(Integer key : gesPb.keySet()){
+            totalTrans += gesPb.get(key).intValue();
+        }
+        
+        return totalTrans;
+    }
 
     @Override
     public void actionPerformed(ActionEvent ae) {
@@ -177,8 +273,8 @@ public class DialogWindow extends JFrame implements ActionListener {
                 this.chatGUI.sendFileRequest(fileSelected, contact);
             }
 
-            //
-            //ici demander affichage progressBar
+            //uploadJProgressBar.setVisible(true);
+            //uploadLabel.setVisible(true);
         }
     }
 }

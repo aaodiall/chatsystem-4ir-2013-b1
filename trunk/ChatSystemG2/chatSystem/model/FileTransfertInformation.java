@@ -9,10 +9,10 @@ public abstract class FileTransfertInformation extends Model {
     
     private final int idTransfert;
     private final String idRemoteSystem;
-    private final int sizeTransfered;
     
     private FileState state;
     protected boolean isLast;
+    protected long sizeTransfered;
     
     protected File fileDescriptor;
 
@@ -48,8 +48,8 @@ public abstract class FileTransfertInformation extends Model {
      *
      * @return transfer's progression
      */
-    public int getProgression() {
-        return 0;
+    public long getProgression() {
+        return sizeTransfered;
     }
 
     /**

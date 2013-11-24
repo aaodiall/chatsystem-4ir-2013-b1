@@ -44,7 +44,7 @@ public class FileReceivingInformation extends FileTransfertInformation{
     public void addFilePart(byte[] filePart) {
         try {
             this.writer.write(filePart);
-
+            this.sizeTransfered += filePart.length;
         } catch (IOException ex) {
             Logger.getLogger(FileTransfertInformation.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -57,6 +57,11 @@ public class FileReceivingInformation extends FileTransfertInformation{
         } catch (FileNotFoundException ex) {
             Logger.getLogger(FileTransfertInformation.class.getName()).log(Level.SEVERE, null, ex);
         }
+    }
+    
+    @Override
+    public long getSize(){
+        return size;
     }
     
 }
