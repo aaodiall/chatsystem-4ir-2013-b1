@@ -2,10 +2,6 @@ package org.insa.general.view;
 
 public abstract class GeneralStatusBar {
 	
-	public GeneralStatusBar() {
-		this.setProgressBarVisible(false);
-	}
-	
 	public abstract void setProgressBarValue(int i);
 	
 	public abstract void setProgressBarVisible(boolean b);

@@ -95,7 +95,7 @@ public class FileController {
 				try {
 					String directoryPath = chatController.getChatGUI().getFilePath();
 					if(directoryPath != null && !directoryPath.isEmpty()) {
-						FileOutputStream fos = new FileOutputStream(+"\\"+this.fileName);
+						FileOutputStream fos = new FileOutputStream(directoryPath+"\\"+this.fileName);
 					fos.write(this.receivedFile);
 					fos.flush();
 					fos.close();

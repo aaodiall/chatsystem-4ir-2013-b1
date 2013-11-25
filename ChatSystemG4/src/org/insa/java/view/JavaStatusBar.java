@@ -14,10 +14,10 @@ public class JavaStatusBar extends GeneralStatusBar{
 	private JProgressBar statusProgress = new JProgressBar();
 	
 	public JavaStatusBar() {
-		super();
 		statusPanel.setLayout(new GridLayout(1, 2));
 		statusPanel.add(statusLabel);
 		statusPanel.add(statusProgress);
+		statusProgress.setVisible(false);
 	}
 	
 	public void setProgressBarVisible(boolean b) {
