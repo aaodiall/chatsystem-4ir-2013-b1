@@ -28,9 +28,14 @@ public class MessageHandlerNI {
         UDP_port = 16001;
         this.chatNI = chatNI;
         username = chatNI.get_user();
-  
+        
+        System.out.println("I'm MsgHandler : view of thread BEF : " + msg_reception);
         // Creation de la rececption
-        msg_reception = new Thread(new MessageReceptionNI(this, UDP_port));
+        if (msg_reception == null) {
+            System.out.println("Thread créé !");
+            msg_reception = new Thread(new MessageReceptionNI(this, UDP_port));
+        }
+        System.out.println("I'm MsgHandler : view of thread AFT : " + msg_reception);
         msg_reception.start();
         
         // Creation de l'emission
@@ -96,8 +101,7 @@ public class MessageHandlerNI {
         Goodbye msg = new Goodbye(username);
         IP_dest = msg_emission.get_broadcast();
         send(msg, IP_dest);
-        //this.msg_reception.stop();
-        
+        this.msg_reception.interrupt();        
      }
     
     public void send_text(InetAddress IP_dest, String txt) {
