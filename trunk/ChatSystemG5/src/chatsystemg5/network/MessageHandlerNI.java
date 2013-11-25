@@ -96,7 +96,7 @@ public class MessageHandlerNI {
         Goodbye msg = new Goodbye(username);
         IP_dest = msg_emission.get_broadcast();
         send(msg, IP_dest);
-        this.msg_reception.stop();
+        //this.msg_reception.stop();
         
      }
     
