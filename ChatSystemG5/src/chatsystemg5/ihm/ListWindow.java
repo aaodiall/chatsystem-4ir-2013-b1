@@ -44,6 +44,7 @@ public class ListWindow extends JFrame implements Observer, ListSelectionListene
         // we know that we get an HashMap
         this.list_display.setListData(((ListModel)obs).get_hmap_users().keySet().toArray());
         //this.list_display.updateUI();
+        //this.list_display.updateUI();
     }
     
     @Override

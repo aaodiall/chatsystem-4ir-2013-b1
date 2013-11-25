@@ -75,7 +75,6 @@ public class ChatController {
     // Déconnection du local user
     public void perform_disconnection () {
         this.userDB.set_state(false);
-        this.chatGUI.dispose();
         chatNI.to_disconnection();
      }
     
