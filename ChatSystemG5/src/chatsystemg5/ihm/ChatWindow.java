@@ -16,7 +16,7 @@ import java.util.Observer;
 import javax.swing.JFrame;
 import sun.awt.WindowClosingListener;
 
-public class ChatWindow extends JFrame implements Observer, ActionListener, WindowClosingListener {
+public class ChatWindow extends JFrame implements Observer, ActionListener {
     
     private ChatController chat_control;
     private String remote_username;
@@ -62,24 +62,8 @@ public class ChatWindow extends JFrame implements Observer, ActionListener, Wind
 
     @Override
     public void update(Observable obs, Object obj){
-        this.received_text.setCaretColor(Color.blue);
         this.received_text.append(((ConversationModel)obs).get_last_text_by_user(this.remote_username));
-        //this.received_text.updateUI();
-    }
-
-    @Override
-    public RuntimeException windowClosingNotify(WindowEvent we) {
-        String exception_message = "GUI : The chat window with " + this.remote_username + " has been closed";
-        RuntimeException e = new RuntimeException(exception_message);
-        return e;
-    }
-
-    @Override
-    public RuntimeException windowClosingDelivered(WindowEvent we) {
-        this.chat_control.get_chatGUI().delete_chat_window(this.remote_username);
-        this.chat_control.get_convDB().deleteObserver(this);
-        RuntimeException e = new RuntimeException();
-        return e;
+        this.setVisible(true);
     }
 
     private void FileActionPerformed(java.awt.event.ActionEvent evt) {                                     
@@ -100,7 +84,7 @@ public class ChatWindow extends JFrame implements Observer, ActionListener, Wind
         jSeparator2 = new javax.swing.JSeparator();
         
 
-        setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
+        setDefaultCloseOperation(javax.swing.WindowConstants.HIDE_ON_CLOSE);
 
         label.setText(this.remote_username);
 
