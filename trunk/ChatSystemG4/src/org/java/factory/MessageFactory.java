@@ -73,7 +73,7 @@ public class MessageFactory {
 	
 	public static FileTransfertDemand getFileTransfertDemandMessage(String username, String name, long size,int portClient) {
 		if(fileTransfertDemand == null) {
-			fileTransfertDemand = new FileTransfertDemand(username,name,size,portClient);
+			fileTransfertDemand = new FileTransfertDemand(username,name,size,portClient,1);
 		}
 		else {
 			fileTransfertDemand.setUsername(username);
