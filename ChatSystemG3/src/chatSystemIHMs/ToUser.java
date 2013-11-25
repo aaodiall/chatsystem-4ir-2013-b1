@@ -18,5 +18,6 @@ public interface ToUser {
 	public void displayCancelFile(String remote,String file);
 	public void notifyRemoteConnection(String remote);
 	public void notifyRemoteDisconnection(String remote);
+	public void openInterfaceDialogFile();
 
 }

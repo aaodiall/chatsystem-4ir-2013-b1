@@ -91,6 +91,7 @@ public class InterfaceCommunicate extends JFrame implements ActionListener{
 		btnSendFile = new JButton("Send File");
 		btnSendFile.setBounds(512, 591, 138, 25);
 		getContentPane().add(btnSendFile);
+		this.btnSendFile.addActionListener(this);
 		
 		scrollPane_1 = new JScrollPane();
 		scrollPane_1.setBounds(12, 50, 585, 472);
@@ -120,6 +121,9 @@ public class InterfaceCommunicate extends JFrame implements ActionListener{
 			if(!tAreaMessageText.getText().equals("")){
 				this.chatGUI.sendMessage(this.getTitle());
 			}
+		}
+		else if (e.getSource()==this.btnSendFile){
+			this.chatGUI.sendFile(this.getTitle());
 		}
 		
 	}
