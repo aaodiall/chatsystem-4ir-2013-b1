@@ -54,14 +54,22 @@ public class ChatSystem {
 		chatController = new Controller(modelListUsers,modelStates , modelText, modelUsername, modelGroupRecipient);
 		chatNI = new ChatNI(portUDP,bufferSize,chatController);
 		chatController.setChatNI(chatNI);
+		chatGUI=new ChatGUI(chatController);
 		chatNIThread = new Thread(chatNI);
 		chatNIThread.start();
 		modelUsername.addObserver(chatNI);
 		modelStates.addObserver(chatNI);
 		modelGroupRecipient.addObserver(chatNI);
-		chatGUI=new ChatGUI(chatController);
-		chatController.setChatgui(chatGUI);
+		
+		//chatController.setChatgui(chatGUI);
 		modelListUsers.addObserver(chatGUI);
+		// TEST du System avec GUI -> modifier aussi le ChatController
+				//chatGUI=new ChatGUI(chatController);
+			//	chatController.setChatgui(chatGUI);
+				//modelListUsers.addObserver(chatGUI);
+				modelUsername.addObserver(chatGUI);
+				modelStates.addObserver(chatGUI);
+				modelText.addObserver(chatGUI);
 		/*
 		 				/\
 		  			   /  \				Je n'ai pas implémenter la relation de mon interface commandeLine

@@ -127,6 +127,7 @@ public class ChatNI extends View implements Runnable, Observer{
 	
 	public void sendPropositionFile(InetAddress recipient, String fileName, long size, int idDemand){
 		this.chatNIMessage.sendFileTransfertDemand(this.cache.getUsername(),recipient,fileName, size,server.getNumPort(),idDemand);
+		System.out.println("dans sendMsgText Chatni");
 	}
 	
 	public void sendConfirmationFile(InetAddress recipient, String fileName,boolean answer, int idDemand){
@@ -150,7 +151,7 @@ public class ChatNI extends View implements Runnable, Observer{
 		InetAddress ipRemoteAddr;
 		ipRemoteAddr = this.bufferPDUReceived.peek().getAddress();
 		DatagramPacket pdureceived;
-		if (!this.userIP.equals(ipRemoteAddr)){
+		if (this.userIP.equals(ipRemoteAddr)){
 			try {
 				pdureceived = this.bufferPDUReceived.poll();
 				receivedMsg = Message.fromArray(pdureceived.getData());
@@ -158,6 +159,7 @@ public class ChatNI extends View implements Runnable, Observer{
 				if (receivedMsg.getClass() == Hello.class){
 					controller.connectReceived(this.makeUsername(receivedMsg.getUsername(),ipRemoteAddr), ipRemoteAddr,((Hello)receivedMsg).isAck());
 				}else if(receivedMsg.getClass() == Text.class){
+					System.out.println("dans PDU ANALYSE TEXT RECU");
 					controller.messageReceived(((Text)receivedMsg).getText(), this.makeUsername(receivedMsg.getUsername(),ipRemoteAddr));
 				}else if(receivedMsg.getClass() == Goodbye.class){
 					controller.disconnectReceived(this.makeUsername(receivedMsg.getUsername(),ipRemoteAddr));

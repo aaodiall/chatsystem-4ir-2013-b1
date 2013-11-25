@@ -3,7 +3,12 @@
  */
 package chatSystemIHMs;
 
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.awt.event.WindowEvent;
+import java.awt.event.WindowListener;
 import java.util.HashMap;
+import java.util.Map;
 import java.util.Observable;
 import java.util.Observer;
 import java.util.Scanner;
@@ -14,82 +19,268 @@ import javax.swing.DefaultListModel;
 import chatSystemController.Controller;
 import chatSystemModel.ModelListUsers;
 import chatSystemModel.ModelStates;
+import chatSystemModel.ModelText;
 import chatSystemModel.ModelUsername;
 
 /**
  * @author alpha
  *
  */
-public class ChatGUI extends View implements Observer{
+public class ChatGUI extends View implements Observer,ToUser,FromUser{
 	private InterfaceConnect wConnect;
-	private InterfaceCommunicate wCommunicate;
+	private final Map<String,InterfaceCommunicate > wCommunicate;
+	private InterfaceListUsers wListUsers=null;;
 	private CommandLine cmd;
-	private int mode; // 1 pour graphique, 0 pour cmd
-	
+	private Controller controller;
+	// private final Map<String, InterfaceCommunicate> wCommunicate;
 	//private ToUser toUser;
 	//private FromUser fromUser;
-	
 
-	public InterfaceConnect getwConnect() {
+
+	/*
+public InterfaceConnect getwConnect() {
 		return wConnect;
 	}
 	public InterfaceCommunicate getwCommunicate() {
 		return wCommunicate;
-	}
+	}*/
 	/**
 	 * @param wConnect
 	 * @param wCommunicate
 	 */
 	public ChatGUI(Controller controller) {
-		Scanner sc = new Scanner(System.in);
+		/*Scanner sc = new Scanner(System.in);
 		System.out.println("Choose the mode : 1 for graphical , 0 for command line");
 		int a = sc.nextInt();
-		if (a == 1){
-			this.mode = 1;
-			this.wConnect = new InterfaceConnect(controller);;
-			this.wCommunicate = new InterfaceCommunicate(controller,wConnect.getTfdUsername());
-		}else{
-			this.mode = 0;
+		if (a == 1){*/
+		this.wCommunicate=new HashMap<String,InterfaceCommunicate>();
+		this.controller=controller;
+		this.wConnect = new InterfaceConnect(this);
+		this.wListUsers=new InterfaceListUsers("alpha",this);
+		//this.wCommunicate = new HashMap<String, InterfaceCommunicate>();
+		/*}else{
 			this.cmd = new CommandLine(controller);
 			this.cmd.initConnection();
-		}	
+		}*/
+
+
+
 	}
-	public int getMode(){
-		return this.mode;
-	}
-	
-	
+
+
 	public void cmdUpdate(Observable arg0, Object arg1){
 		if(arg0.getClass()==ModelListUsers.class){
-			this.cmd.setUsers((String[])((HashMap<?,?>)arg1).keySet().toArray());
+
 		}else if(arg0.getClass().equals(ModelUsername.class)){
-			this.cmd.setUsername((String)arg1);
+
 		}
 	}
-	
+
 	/* (non-Javadoc)
 	 * @see java.util.Observer#update(java.util.Observable, java.lang.Object)
 	 */
 	@Override
 	public void update(Observable arg0, Object arg1) {
 		// TODO Auto-generated method stub
-		
-		if(arg0.getClass()==ModelListUsers.class){
-			wCommunicate.setUsers(( (HashMap<?, ?>)arg1 ).keySet().toArray()) ;
+
+		if (arg0 instanceof ModelStates){
+			if ((Boolean)arg1.equals(false)){
+			//	wCommunicate.setVisible(false);
+				this.wListUsers.getUsers().clear();
+				this.wCommunicate.clear();
+				this.wListUsers.setVisible(false);
+				wConnect.setVisible(true);
+				wConnect.setTfdUsername("");
+			}
 		}
-		if(arg0.getClass().equals(ModelUsername.class)){
-			wCommunicate.setLblUsername((String)arg1);
+		if(arg0 instanceof ModelText){
+		//	arg1=new ModelText();
+			String txtReceived=new String(((ModelText)arg0).getTextReceived());
+			String remote=new String(((ModelText)arg0).getRemote());
+			//System.out.println(remote);
+			this.displayMessage(txtReceived,remote);
+			
+			//wCommunicate.settAreaHistoryCom(wCommunicate.gettAreaHistoryCom()+"\n"+((String)arg1));
+			
 		}
-		//ainsi de suite
-	}
-/*public static void main(String[] args) {
+
+
+		if(arg0 instanceof ModelListUsers){
+			System.out.println("modelList modifier");
+			this.wListUsers.setUsers(( (HashMap<?, ?>)arg1 ).keySet().toArray()) ;
+
+			//	wCommunicate.setUsers(( (HashMap<?, ?>)arg1 ).keySet().toArray()) ;
+		}
+		if(arg0 instanceof ModelUsername){//arg0.getClass().equals(ModelUsername.class
+			if(this.wListUsers==null){//premiere connection on cree la liste users
+				this.wListUsers=new InterfaceListUsers(((String)arg1), this);
+			}else {
+				this.wListUsers.setLblUsername((String)arg1);
+			}
+
+			wConnect.setVisible(false);
+			this.wListUsers.setVisible(true);
+
 		
-		InterfaceConnect wConnect=new InterfaceConnect();
-		wConnect.setVisible(true);
-		
+
+		//	wCommunicate.setVisible(true);
+		//wCommunicate.setLblUsername(((String)arg1));
 	}
-*/
+	//ainsi de suite
+}
+
+/* (non-Javadoc)
+ * @see chatSystemIHMs.FromUser#connect()
+ */
+@Override
+public void connect() {
+	// TODO Auto-generated method stub
+	controller.performConnect(wConnect.getTfdUsername());
+
+
+}
+/* (non-Javadoc)
+ * @see chatSystemIHMs.FromUser#disconnect()
+ */
+@Override
+public void disconnect() {
+	// TODO Auto-generated method stub
 	
+	controller.performDisconnect();
+}
+/* (non-Javadoc)
+ * @see chatSystemIHMs.FromUser#sendMessage()
+ */
+@Override
+public void sendMessage(String remoteUsername) {
+	// TODO Auto-generated method stub
+	String localUsername=this.wListUsers.getLblUsername();
+	String text2Send =this.wCommunicate.get(remoteUsername).gettAreaMessageText();
+	this.wCommunicate.get(remoteUsername).settAreaHistoryCom(localUsername+" :"+text2Send+"\n");
+	controller.performSendText(remoteUsername,wCommunicate.get(remoteUsername).gettAreaMessageText());
+	this.wCommunicate.get(remoteUsername).settAreaMessageText("");
 	
+}
+/* (non-Javadoc)
+ * @see chatSystemIHMs.FromUser#sendFile()
+ */
+@Override
+public void sendFile() {
+	// TODO Auto-generated method stub
+
+}
+/* (non-Javadoc)
+ * @see chatSystemIHMs.FromUser#addRecipient()
+ */
+@Override
+public void addRecipient() {
+	// TODO Auto-generated method stub
+
+}
+/* (non-Javadoc)
+ * @see chatSystemIHMs.ToUser#initConnection()
+ */
+@Override
+public void initConnection() {
+	// TODO Auto-generated method stub
+
+
+}
+/* (non-Javadoc)
+ * @see chatSystemIHMs.ToUser#openOngletDialog()
+ */
+@Override
+public void openWindowCommunicate(String remoteUsername) {
+	// TODO Auto-generated method stub
+	if (this.wCommunicate.containsKey(remoteUsername)) {
+        if (this.wCommunicate.get(remoteUsername) == null) {
+            this.wCommunicate.remove(remoteUsername);
+            this.wCommunicate.put(remoteUsername, new InterfaceCommunicate(remoteUsername, this));
+        }
+        this.wCommunicate.get(remoteUsername).setVisible(true);
+        
+    }
+	else{
+		this.wCommunicate.put(remoteUsername, new InterfaceCommunicate(remoteUsername, this));
+		this.wCommunicate.get(remoteUsername).setVisible(true);
+	}
+}
+/* (non-Javadoc)
+ * @see chatSystemIHMs.ToUser#displayMessage(java.lang.String, java.lang.String)
+ */
+@Override
+public void displayMessage(String text, String remote) {
+	// TODO Auto-generated method stub
+	System.out.println("dans display");
+	this.wCommunicate.get(remote).settAreaHistoryCom("   "+remote+" :"+text+"\n");
+
+}
+/* (non-Javadoc)
+ * @see chatSystemIHMs.ToUser#notifyRemoteConnection(java.lang.String)
+ */
+@Override
+public void notifyRemoteConnection(String remote) {
+	// TODO Auto-generated method stub
+
+}
+/* (non-Javadoc)
+ * @see chatSystemIHMs.ToUser#notifyRemoteDisconnection(java.lang.String)
+ */
+@Override
+public void notifyRemoteDisconnection(String remote) {
+	// TODO Auto-generated method stub
+
+}
+
+
+/* (non-Javadoc)
+ * @see chatSystemIHMs.ToUser#proposeFile(java.lang.String, java.lang.String, long)
+ */
+@Override
+public void proposeFile(String remote, String file, long size) {
+	// TODO Auto-generated method stub
+	
+}
+
+
+/* (non-Javadoc)
+ * @see chatSystemIHMs.ToUser#displayOkFile(java.lang.String, java.lang.String)
+ */
+@Override
+public void displayOkFile(String remote, String file) {
+	// TODO Auto-generated method stub
+	
+}
+
+
+/* (non-Javadoc)
+ * @see chatSystemIHMs.ToUser#displayKoFile(java.lang.String, java.lang.String)
+ */
+@Override
+public void displayKoFile(String remote, String file) {
+	// TODO Auto-generated method stub
+	
+}
+
+
+/* (non-Javadoc)
+ * @see chatSystemIHMs.ToUser#displayCancelFile(java.lang.String, java.lang.String)
+ */
+@Override
+public void displayCancelFile(String remote, String file) {
+	// TODO Auto-generated method stub
+	
+}
+
+
+/* (non-Javadoc)
+ * @see chatSystemIHMs.ToUser#openWindowCommunicate()
+ */
+
+
+
+
+
+
 
 }
