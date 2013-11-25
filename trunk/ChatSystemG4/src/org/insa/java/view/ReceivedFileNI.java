@@ -3,7 +3,6 @@ package org.insa.java.view;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.InterruptedIOException;
 import java.net.ServerSocket;
 import java.net.Socket;
 
@@ -49,15 +48,16 @@ public final class ReceivedFileNI implements Runnable {
 				inputStream = socket.getInputStream();
 				chatController.receivedMessage(socket.getInetAddress(), Message.fromArray(this.toByteArray(inputStream)));
 				inputStream.close();
-			} catch (InterruptedIOException e) {
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+			finally {
 				Thread.currentThread().interrupt();
 				try {
 					inputStream.close();
 				} catch (IOException e1) {
 					e1.printStackTrace();
 				}
-			} catch (IOException e) {
-				e.printStackTrace();
 			}
 		}
 	}

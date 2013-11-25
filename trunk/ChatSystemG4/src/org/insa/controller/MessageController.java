@@ -42,6 +42,7 @@ public class MessageController {
 		else if(msg instanceof Text) {
 			int selectedIndex = chatController.getSelectedIndex();
 			chatController.addMessage(user, msg);
+			chatController.getStatusBar().setTextLabel("Last message received from " + msg.getUsername());
 			
 			if(selectedIndex != -1)
 				if(chatController.getUser(selectedIndex).equals(user))
