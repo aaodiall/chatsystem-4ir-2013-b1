@@ -4,10 +4,7 @@
 package chatSystemIHMs;
 
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
 import java.util.Scanner;
-import java.util.Set;
 
 import chatSystemController.Controller;
 
@@ -22,8 +19,7 @@ public class CommandLine implements FromUser,ToUser{
 	private ArrayList<String> users;
 	private ArrayList<Boolean> lMRecipients; // list of recipients when multiple recipients
 	private boolean toMultiple;
-	private String textToSend;
-	private String username;
+	private String textToSend; 
 	
 	
 	CommandLine(Controller controller){
@@ -33,14 +29,6 @@ public class CommandLine implements FromUser,ToUser{
 		this.toMultiple = false;
 	}
 
-	void setUsers (String[] t){
-		this.users = ((ArrayList)Arrays.asList(t));
-	}
-	
-	void setUsername (String u){
-		this.username = u;
-	}
-	
 	void displayDisconnectedMenu(){
 		System.out.println("0 : Leave the chat (bad idea =/)");
 		System.out.println("1 : Connect (excellent option ^^)");
@@ -114,8 +102,8 @@ public class CommandLine implements FromUser,ToUser{
 	
 	public void connect() {
 		System.out.println("Enter a surname");
-		this.username = this.sc.nextLine();
-		this.controller.performConnect(this.username);
+		String username = this.sc.nextLine();
+		this.controller.performConnect(username);
 		this.displayConnectedMenu();
 	}
 
@@ -198,7 +186,7 @@ public class CommandLine implements FromUser,ToUser{
 	
 	private void send(){
 		// envoi du message
-		this.controller.performSendText(textToSend);
+		//this.controller.performSendText(textToSend);
 		System.out.println("message transmitted");
 	}
 	
@@ -249,26 +237,63 @@ public class CommandLine implements FromUser,ToUser{
 		System.out.println(remote + "is disconnected");
 	}
 
-	
-	public void proposeFile(String remote, String file, long size) {
-		System.out.println("Do you accept to receive the file " + file + " from "+ remote +" ?");
-		System.out.println("size of file : " + size);
+	/* (non-Javadoc)
+	 * @see chatSystemIHMs.ToUser#openWindowCommunicate(java.lang.String)
+	 */
+	@Override
+	public void openWindowCommunicate(String RemoteUsername) {
+		// TODO Auto-generated method stub
+		
 	}
 
-	
+	/* (non-Javadoc)
+	 * @see chatSystemIHMs.FromUser#sendMessage(java.lang.String)
+	 */
+	@Override
+	public void sendMessage(String user) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	/* (non-Javadoc)
+	 * @see chatSystemIHMs.ToUser#proposeFile(java.lang.String, java.lang.String, long)
+	 */
+	@Override
+	public void proposeFile(String remote, String file, long size) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	/* (non-Javadoc)
+	 * @see chatSystemIHMs.ToUser#displayOkFile(java.lang.String, java.lang.String)
+	 */
+	@Override
 	public void displayOkFile(String remote, String file) {
-		System.out.println(remote + "has accepted" + file);
-		System.out.println("Transfert in progress");		
+		// TODO Auto-generated method stub
+		
 	}
-	
-	public void displayKoFile(String remote,String file){
-		System.out.println(remote + "has refused your file");
+
+	/* (non-Javadoc)
+	 * @see chatSystemIHMs.ToUser#displayKoFile(java.lang.String, java.lang.String)
+	 */
+	@Override
+	public void displayKoFile(String remote, String file) {
+		// TODO Auto-generated method stub
+		
 	}
-	
-	
+
+	/* (non-Javadoc)
+	 * @see chatSystemIHMs.ToUser#displayCancelFile(java.lang.String, java.lang.String)
+	 */
+	@Override
 	public void displayCancelFile(String remote, String file) {
-		System.out.println(remote + "has cancelled the transfert of " + file);		
+		// TODO Auto-generated method stub
+		
 	}
+
+	/* (non-Javadoc)
+	 * @see chatSystemIHMs.ToUser#openOngletDialog()
+	 */
 	
 	
 }

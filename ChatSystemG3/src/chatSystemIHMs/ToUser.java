@@ -10,6 +10,7 @@ package chatSystemIHMs;
 public interface ToUser {
 	
 	public void initConnection();
+	public void openWindowCommunicate(String RemoteUsername);
 	public void displayMessage(String text, String remote);
 	public void proposeFile(String remote, String file, long size);
 	public void displayOkFile(String remote, String file);

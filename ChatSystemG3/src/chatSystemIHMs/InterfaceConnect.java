@@ -9,6 +9,7 @@ import javax.swing.GroupLayout.Alignment;
 import javax.swing.JLabel;
 import javax.swing.JTextField;
 import javax.swing.JButton;
+import javax.swing.SwingUtilities;
 
 import chatSystemController.Controller;
 
@@ -16,30 +17,36 @@ import java.awt.Color;
 import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.WindowEvent;
+import java.awt.event.WindowListener;
 import java.net.UnknownHostException;
 
 /**
  * @author alpha
  *
  */
-public class InterfaceConnect extends JFrame implements ActionListener{
+public class InterfaceConnect extends JFrame implements ActionListener,WindowListener{
 	
 	private static final long serialVersionUID = 1L;
-	private Controller controller;
+	
 	private JTextField tfdUsername;
 	private JButton btnConnect;
 	private JLabel lblUsername;
 	private JLabel lblWelcome;
+	private ChatGUI chatGUI;
 
 
 	/**
 	 * Create the application.
 	 */
-	public InterfaceConnect(Controller controller) {
-		this.controller=controller;
-		initialize();
-		setResizable(false);
-		this.setVisible(true);
+	public InterfaceConnect(ChatGUI chatGUI) {
+		this.chatGUI=chatGUI;
+		
+		    	initialize();
+		    	
+		
+		
+		
 
 	}
 
@@ -50,7 +57,7 @@ public class InterfaceConnect extends JFrame implements ActionListener{
 
 		this.setBounds(100, 100, 450, 300);
 		this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-
+		
 		lblUsername = new JLabel("Enter your login");
 
 		tfdUsername = new JTextField(30);
@@ -58,7 +65,8 @@ public class InterfaceConnect extends JFrame implements ActionListener{
 
 		btnConnect = new JButton("Connect");
 		btnConnect.addActionListener(this);
-
+	
+		this.getRootPane().setDefaultButton(btnConnect);
 		lblWelcome = new JLabel("     Welcome to ChatSystem!");
 		lblWelcome.setFont(new Font("Dialog", Font.BOLD, 18));
 		lblWelcome.setForeground(Color.BLACK);
@@ -94,27 +102,11 @@ public class InterfaceConnect extends JFrame implements ActionListener{
 						.addContainerGap(79, Short.MAX_VALUE))
 				);
 		getContentPane().setLayout(groupLayout);
+		this.setVisible(true);
+		this.setResizable(false);
 	}
 
-	/* (non-Javadoc)
-	 * @see java.awt.event.ActionListener#actionPerformed(java.awt.event.ActionEvent)
-	 */
-	@Override
-	public void actionPerformed(ActionEvent e) {
-		// TODO Auto-generated method stub
-		//new Thread(new Runnable() {
-		//   public void run() {
-
-		//connect();
-
-		
-		controller.performConnect(tfdUsername.getText());
-		//this.tfdUsername.setText("");
-
-		//}
-		//}).start();
-
-	}
+	
 
 
 	public String getTfdUsername() {
@@ -123,6 +115,84 @@ public class InterfaceConnect extends JFrame implements ActionListener{
 
 	public void setTfdUsername(String username) {
 		this.tfdUsername.setText(username);
+	}
+
+	/* (non-Javadoc)
+	 * @see java.awt.event.WindowListener#windowActivated(java.awt.event.WindowEvent)
+	 */
+	@Override
+	public void windowActivated(WindowEvent e) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	/* (non-Javadoc)
+	 * @see java.awt.event.WindowListener#windowClosed(java.awt.event.WindowEvent)
+	 */
+	@Override
+	public void windowClosed(WindowEvent e) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	/* (non-Javadoc)
+	 * @see java.awt.event.WindowListener#windowClosing(java.awt.event.WindowEvent)
+	 */
+	@Override
+	public void windowClosing(WindowEvent e) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	/* (non-Javadoc)
+	 * @see java.awt.event.WindowListener#windowDeactivated(java.awt.event.WindowEvent)
+	 */
+	@Override
+	public void windowDeactivated(WindowEvent e) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	/* (non-Javadoc)
+	 * @see java.awt.event.WindowListener#windowDeiconified(java.awt.event.WindowEvent)
+	 */
+	@Override
+	public void windowDeiconified(WindowEvent e) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	/* (non-Javadoc)
+	 * @see java.awt.event.WindowListener#windowIconified(java.awt.event.WindowEvent)
+	 */
+	@Override
+	public void windowIconified(WindowEvent e) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	/* (non-Javadoc)
+	 * @see java.awt.event.WindowListener#windowOpened(java.awt.event.WindowEvent)
+	 */
+	@Override
+	public void windowOpened(WindowEvent e) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	/* (non-Javadoc)
+	 * @see java.awt.event.ActionListener#actionPerformed(java.awt.event.ActionEvent)
+	 */
+	@Override
+	public void actionPerformed(ActionEvent e) {
+		// TODO Auto-generated method stub
+		if(e.getSource()==btnConnect){
+			if(!tfdUsername.getText().equals("")){
+				chatGUI.connect();
+			}
+		}
+		
+		
 	}
 
 

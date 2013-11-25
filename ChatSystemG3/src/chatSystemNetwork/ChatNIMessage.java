@@ -118,6 +118,7 @@ public class ChatNIMessage extends Thread{
 		//Iterator <String> it;
 		DatagramPacket pdu2send;
 		Text messageText = new Text(username,text2Send);
+		System.out.println("dans sendText ChatniMessage avant try");
 		try{
 			byte[] messageStream = messageText.toArray();	
 			//it = ChatSystem.getModelGroupRecipient().getGroupRecipients().iterator();
@@ -126,6 +127,7 @@ public class ChatNIMessage extends Thread{
 				//recipient = this.modelListUsers.getListUsers().get((String)it.next());
 				pdu2send = new DatagramPacket(messageStream,messageStream.length,recipient,this.socketUDP.getLocalPort());
 				this.socketUDP.send(pdu2send);
+				System.out.println("dans sendText ChatniMessage");
 			//}
 		}catch(IOException ioExc){
 			System.out.println("error : construction du stream message");

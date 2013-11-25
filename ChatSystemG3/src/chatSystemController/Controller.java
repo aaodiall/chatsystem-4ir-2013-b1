@@ -144,14 +144,25 @@ public class Controller {
 		}
 	}
 	
-	public void performSendText (String text){
-		if (this.modelStates.isConnected()){
+	public void performSendText (String username,String text){
+		/*Iterator<String> it = recipientList.iterator();
+		String recipient;
+		modelText.setTextToSend(text);
+		while (it.hasNext()){
+			recipient = it.next();
+			modelGroupRecipient.addRecipient(recipient);
+		}*/
+		/*if (this.modelStates.isConnected()){
 			InetAddress ipRecipient;
 			for(int i=0; i < this.modelGroupRecipient.getGroupRecipients().size();i++){
 				ipRecipient=this.modelListUsers.getListUsers().get(this.modelGroupRecipient.getGroupRecipients().poll());
 				this.chatNI.sendMsgText(ipRecipient, text);
 			}
-		}
+		}*/
+		InetAddress ipRecipient;
+		ipRecipient=this.modelListUsers.getListUsers().get(username);
+		this.chatNI.sendMsgText(ipRecipient, text);
+		
 	}
 	
 	/**
