@@ -69,15 +69,12 @@ public class ChatNIMessage extends Thread{
 	 * @param ack
 	 * @param broadcast
 	 */
-	public void sendHello(String username, boolean ack, InetAddress broadcast){
+	public void sendHello(Hello h, InetAddress broadcast){
 		byte [] helloStream;
 		DatagramPacket pdu;
-		// new Hello object
-		Hello hello = new Hello(username,ack);
-		System.out.println("dans sendHello");
 		try {
 			// Objet to byte[]
-			helloStream = hello.toArray();
+			helloStream = h.toArray();
 			// make pdu
 			pdu = new DatagramPacket(helloStream,helloStream.length,broadcast,this.socketUDP.getLocalPort());
 			// add pdu to bufferMessagesToSend
