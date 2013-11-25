@@ -45,7 +45,7 @@ public class ChatController {
         chatNI = new ChatNI(this);
     }
     
-    
+   
     /**************** Connection ****************/
     
     // Connexion du local user
