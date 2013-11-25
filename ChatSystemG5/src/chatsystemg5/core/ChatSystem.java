@@ -19,7 +19,7 @@ public class ChatSystem {
              * Pb surtout au niveau du Thread, nullpointerexception
              */
             
-            ChatController brain2 = new ChatController();
+            //ChatController brain2 = new ChatController();
             /*while (i<1000000000) i++;
             System.out.println("Ready to send text");
             brain.perform_send("test@127.0.1.1", "Salut test");*/

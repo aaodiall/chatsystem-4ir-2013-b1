@@ -50,6 +50,7 @@ public class ChatController {
     
     // Connexion du local user
     public void perform_connection () {
+        this.userDB.set_state(true);
         chatNI.to_connection(username, false);
     }
     
@@ -73,6 +74,8 @@ public class ChatController {
      
     // Déconnection du local user
     public void perform_disconnection () {
+        this.userDB.set_state(false);
+        this.chatGUI.dispose();
         chatNI.to_disconnection();
      }
     
