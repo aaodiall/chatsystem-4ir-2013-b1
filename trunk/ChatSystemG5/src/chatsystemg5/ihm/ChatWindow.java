@@ -109,6 +109,7 @@ public class ChatWindow extends JFrame implements Observer, ActionListener, Wind
         send_text.setLineWrap(true);
         received_text.setEditable(false);
         jScrollPane1.setViewportView(received_text);
+        jScrollPane1.setAutoscrolls(rootPaneCheckingEnabled);
 
         send_text.setColumns(20);
         send_text.setRows(5);

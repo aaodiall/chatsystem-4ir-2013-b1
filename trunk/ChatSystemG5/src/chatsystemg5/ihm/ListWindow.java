@@ -61,6 +61,7 @@ public class ListWindow extends JFrame implements Observer, ListSelectionListene
 
         list_display.setSelectionMode(javax.swing.ListSelectionModel.SINGLE_SELECTION);
         list_display.addListSelectionListener(this);
+        //list_display.add
         jScrollPane1.setViewportView(list_display);
 
         list_label.setText("Connected users");
