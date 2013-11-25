@@ -41,12 +41,10 @@ public abstract class Message implements Serializable{
         ObjectOutputStream oout = new ObjectOutputStream(output);
         
         oout.writeObject(this);
-        byte[] b = output.toByteArray();
         
-        output.close();
         oout.close();
         
-        return b;
+        return output.toByteArray();
     }
     
     public static Message fromArray(byte[] array) throws IOException{
