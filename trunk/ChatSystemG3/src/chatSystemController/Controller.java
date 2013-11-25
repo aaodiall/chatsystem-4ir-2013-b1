@@ -25,7 +25,7 @@ import runChat.ChatSystem;
  * Il ne fait pas appel a ChatNI ni a ChatGUI (les views)
  * C'est au niveau des "update" que les envois se declenchent
  */
-public class Controller {
+public class Controller extends Thread{
 
 	/* ATTRIBUTS A METTRE
 	 * ModelFile modelFile;
@@ -291,4 +291,19 @@ public class Controller {
 			System.out.println(username + " s'est deconnecté");	
 		}			
 	}
+	
+	// check les connections
+	public void run(){
+		while(true){
+			try{
+				Thread.sleep(60000);
+				if (this.modelStates.isConnected()){
+					this.chatNI.connect(false);
+				}
+			} catch (InterruptedException e){
+				e.printStackTrace();
+			}
+		}
+	}
+	
 }

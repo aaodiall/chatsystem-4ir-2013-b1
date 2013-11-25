@@ -112,7 +112,7 @@ public class ChatNI extends View implements Runnable, Observer{
 	}
 	
 	public void connect(boolean ack){
-		this.chatNIMessage.sendHello(this.cache.getUsername(), ack, this.cache.getBroadcast());
+		this.chatNIMessage.sendHello(this.cache.getHello(ack), this.cache.getBroadcast());
 	}
 	
 	
