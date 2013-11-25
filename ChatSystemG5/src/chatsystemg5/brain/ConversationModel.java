@@ -20,9 +20,11 @@ public class ConversationModel extends ChatModel {
     private ArrayList<ChatWindow> observers;
     
     private HashMap<String, LinkedList<String>> conversation;
+    private ChatController chat_control;
     
     ConversationModel (ChatController chat_control){
         this.conversation = new HashMap<String, LinkedList<String>>();
+        this.chat_control = chat_control;
         this.observers = new ArrayList<ChatWindow>();
         
         // add list window as listModel obersver
@@ -39,6 +41,9 @@ public class ConversationModel extends ChatModel {
             this.conversation.get(remote_user_and_ip).add(txt);
         }
         else {
+            if(this.chat_control.get_chatGUI().get_chat_window(remote_user_and_ip) == null){
+                this.chat_control.get_chatGUI().create_chat_window(remote_user_and_ip);
+            }
             LinkedList messages = new LinkedList<String>();
             messages.add(txt);
             this.conversation.put(remote_user_and_ip, messages);

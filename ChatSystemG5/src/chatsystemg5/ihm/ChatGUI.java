@@ -37,6 +37,17 @@ public class ChatGUI extends JFrame {
     public void delete_chat_window(String remote_username){
         this.chat_windows.remove(remote_username);
     }
+    
+        
+    public ChatWindow get_chat_window(String remote_username){
+        if(this.chat_windows.containsKey(remote_username)){
+            return this.chat_windows.get(remote_username);
+        }
+        else {
+            System.err.println("The " + remote_username + " ChatWindow doesn't exist");
+            return null;
+        }
+    }
 
     public ListWindow get_list_window() {
         return this.list_window;
@@ -44,10 +55,6 @@ public class ChatGUI extends JFrame {
     
     public void init_list_window(){
         this.list_window = new ListWindow(this.chat_control);
-    }
-    
-    public ChatWindow get_chat_window(String remote_username){
-        return this.chat_windows.get(remote_username);
     }
     
     public HashMap<String, ChatWindow> get_chat_windows() {

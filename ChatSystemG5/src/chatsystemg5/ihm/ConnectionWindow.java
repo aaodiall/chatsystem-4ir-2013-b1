@@ -53,7 +53,6 @@ public class ConnectionWindow extends JFrame implements ActionListener {
 
         }
         // TO DO : Vider la zone de texte
-     
     }
     
     private void initComponents() {
