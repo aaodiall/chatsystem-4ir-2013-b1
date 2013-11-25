@@ -226,6 +226,7 @@ public class Controller {
 	public void filePropositionReceived(String remote, String file, long size){
 		if (this.modelStates.isConnected()){
 			ModelFile f = new ModelFile(remote,file);
+			f.setStateReceivedDemand(true);
 			this.filesToReceive.add(f);
 			// signale normalement a la gui qu'on a recu une demande
 			System.out.println("file demand received from " + remote);
@@ -262,14 +263,14 @@ public class Controller {
 	public void fileTranfertCancelReceived(String remote, int idDemand){
 		
 	}
-	
 	public void messageReceived(String text, String username){
 		if (modelStates.isConnected()){
-			this.modelText.setTextReceived(text);
 			this.modelText.setRemote(username);
+			this.modelText.setTextReceived(text);
 			System.out.println (username + " : " + text);
 		}
 	}
+	
 	
 	public void connectReceived(String username,InetAddress ipRemote, boolean ack){		
 		if (modelStates.isConnected()){

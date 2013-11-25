@@ -25,6 +25,8 @@ public class ModelFile {
 	private int idDemand;
 	private ArrayBlockingQueue<byte[]> fileParts;
 	private FileInputStream reader;
+	private Boolean stateReceivedDemand;
+	
 	
 	public ModelFile(String remote, String path){
 		this.remote = remote;
@@ -64,7 +66,14 @@ public class ModelFile {
 			e.printStackTrace();
 		}
 	}
-	
+	public Boolean getStateReceivedDemand() {
+		return stateReceivedDemand;
+	}
+
+	public void setStateReceivedDemand(Boolean stateReceivedDemand) {
+		this.stateReceivedDemand = stateReceivedDemand;
+	}
+
 	public String getName(){
 		return this.name;
 	}

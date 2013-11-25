@@ -292,6 +292,24 @@ public class CommandLine implements FromUser,ToUser{
 	}
 
 	/* (non-Javadoc)
+	 * @see chatSystemIHMs.ToUser#openInterfaceDialogFile()
+	 */
+	@Override
+	public void openInterfaceDialogFile() {
+		// TODO Auto-generated method stub
+		
+	}
+
+	/* (non-Javadoc)
+	 * @see chatSystemIHMs.FromUser#sendFile(java.lang.String)
+	 */
+	@Override
+	public void sendFile(String remote) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	/* (non-Javadoc)
 	 * @see chatSystemIHMs.ToUser#openOngletDialog()
 	 */
 	

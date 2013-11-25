@@ -3,19 +3,10 @@
  */
 package chatSystemIHMs;
 
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.awt.event.WindowEvent;
-import java.awt.event.WindowListener;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Observable;
 import java.util.Observer;
-import java.util.Scanner;
-import java.util.Vector;
-
-import javax.swing.DefaultListModel;
-
 import chatSystemController.Controller;
 import chatSystemModel.ModelListUsers;
 import chatSystemModel.ModelStates;
@@ -26,11 +17,15 @@ import chatSystemModel.ModelUsername;
  * @author alpha
  *
  */
+//a faire: ouvrir un dialogue bloquand pour la demande de download file
+//penser a barre de progression
+//regler probleme exception dans file propositionReceived	
 public class ChatGUI extends View implements Observer,ToUser,FromUser{
 	private InterfaceConnect wConnect;
 	private final Map<String,InterfaceCommunicate > wCommunicate;
 	private InterfaceListUsers wListUsers=null;;
 	private CommandLine cmd;
+	private InterfaceDialogFile wDialogFile;
 	private Controller controller;
 	// private final Map<String, InterfaceCommunicate> wCommunicate;
 	//private ToUser toUser;
@@ -165,8 +160,11 @@ public void sendMessage(String remoteUsername) {
  * @see chatSystemIHMs.FromUser#sendFile()
  */
 @Override
-public void sendFile() {
+public void sendFile(String remote) {
 	// TODO Auto-generated method stub
+	this.openInterfaceDialogFile();
+	String filePath=InterfaceDialogFile.getDialogue().getSelectedFile().getPath();
+    this.controller.performPropositionFile(remote, filePath);
 
 }
 /* (non-Javadoc)
@@ -270,6 +268,16 @@ public void displayKoFile(String remote, String file) {
 public void displayCancelFile(String remote, String file) {
 	// TODO Auto-generated method stub
 	
+}
+
+
+/* (non-Javadoc)
+ * @see chatSystemIHMs.ToUser#openInterfaceDialogFile()
+ */
+@Override
+public void openInterfaceDialogFile() {
+	// TODO Auto-generated method stub
+	this.wDialogFile=new InterfaceDialogFile();
 }
 
 
