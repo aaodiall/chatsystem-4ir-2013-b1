@@ -8,6 +8,7 @@ import org.insa.model.User;
 
 public abstract class GeneralChatGUI {
 	protected ChatController chatController;
+	protected GeneralStatusBar statusBar;
 		
 	public void sendTextMessage(User selectedUser, String text) {
 		if(selectedUser != null)
@@ -34,5 +35,7 @@ public abstract class GeneralChatGUI {
 	
 	public abstract String getFilePath();
 	
-	public abstract void showFileTransferProgress(String text,int progress);
+	public GeneralStatusBar getStatusBar() {
+		return statusBar;
+	}
 }

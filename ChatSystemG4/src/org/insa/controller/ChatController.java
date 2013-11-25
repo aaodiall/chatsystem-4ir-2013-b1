@@ -6,6 +6,7 @@ import java.net.UnknownHostException;
 import java.util.logging.Level;
 
 import org.insa.general.view.GeneralChatGUI;
+import org.insa.general.view.GeneralStatusBar;
 import org.insa.java.view.ReceivedMessageNI;
 import org.insa.java.view.SendMessageNI;
 import org.insa.model.ChatModel;
@@ -24,8 +25,7 @@ public class ChatController {
 	private GeneralChatGUI chatGUI;
 	private MessageController messageController;
 	private FileController fileController;
-	private Thread receivedThread;
-	
+	private Thread receivedThread;	
 	
 	public ChatController(GeneralChatGUI chatGUI) {
 		this.chatModel = null;
@@ -152,15 +152,15 @@ public class ChatController {
 		chatModel.setLocalUser(new User(null,localUsername));
 	}
 
-	public void updateFileTransferProgress(long l) {
-		chatGUI.showFileTransferProgress("File transfer processing (" + l + "%)", (int) l);
-	}
-	
 	public ChatModel getModel() {
 		return chatModel;
 	}
 
 	public GeneralChatGUI getChatGUI() {
 		return chatGUI;
+	}
+	
+	public GeneralStatusBar getStatusBar() {
+		return chatGUI.getStatusBar();
 	}
 }

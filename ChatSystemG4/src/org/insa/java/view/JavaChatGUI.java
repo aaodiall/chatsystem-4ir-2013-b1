@@ -2,6 +2,7 @@ package org.insa.java.view;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
+import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
@@ -16,11 +17,9 @@ import java.awt.event.WindowListener;
 import javax.swing.JButton;
 import javax.swing.JFileChooser;
 import javax.swing.JFrame;
-import javax.swing.JLabel;
 import javax.swing.JList;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
-import javax.swing.JProgressBar;
 import javax.swing.JScrollPane;
 import javax.swing.JSplitPane;
 import javax.swing.JTextArea;
@@ -40,44 +39,26 @@ public class JavaChatGUI extends GeneralChatGUI implements ControllerToGui, Acti
 	private final int HEIGHT = 800;
 
 	private JTextPane chatTextPane = new JTextPane();
-	private StyledDocument chatStyledDocument;
-	private Style localUserStyle;
-	private Style remoteUserStyle;
-	private Style normalTextStyle;
 
 	private JFrame mainWindow = new JFrame();
 	private JTextArea sendTextArea = new JTextArea();
 	private JButton sendButton = new JButton("Send");
 	private JButton sendFileButton = new JButton("+");
 	private JList<User> userList = new JList<User>();
-	private JLabel statusLabel = new JLabel("Aucune notification");
-	private JProgressBar progressBar = new JProgressBar(0, 100);
 	private JPanel chatPanel = new JPanel();
 	private JPanel sendPanel = new JPanel();
 	private JPanel formPanel = new JPanel();
-	private JPanel statusPanel = new JPanel();
 
 	public JavaChatGUI() {
-		chatController = new ChatController(this);		
+		chatController = new ChatController(this);	
+		statusBar = new JavaStatusBar();
 		this.connect();
 		this.initComponents();
 	}
 	
 	private void initComponents() {		
 		userList.setModel(chatController.getModel());
-		chatStyledDocument = chatTextPane.getStyledDocument();
-		localUserStyle = chatStyledDocument.addStyle("LocalUserStyle", null);
-		remoteUserStyle = chatStyledDocument.addStyle("remoteUserStyle", null);
-		normalTextStyle = chatStyledDocument.addStyle("normalUserStyle",null);
-		StyleConstants.setForeground(localUserStyle, Color.GREEN);
-		StyleConstants.setForeground(remoteUserStyle, Color.ORANGE);
-		StyleConstants.setForeground(normalTextStyle, Color.BLACK);
-
-		statusPanel.setLayout(new BorderLayout());
-		statusPanel.add(statusLabel,BorderLayout.CENTER);
-		statusPanel.add(progressBar,BorderLayout.EAST);
-		//progressBar.setVisible(false);
-		
+	
 		sendPanel.setLayout(new GridLayout(2,1));
 		sendPanel.add(sendButton);
 		sendPanel.add(sendFileButton);
@@ -99,14 +80,14 @@ public class JavaChatGUI extends GeneralChatGUI implements ControllerToGui, Acti
 		
 		mainWindow.setLayout(new BorderLayout());
 		mainWindow.add(new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, chatPanel, userList),BorderLayout.CENTER);
-		mainWindow.add(statusPanel,BorderLayout.SOUTH);
+		mainWindow.add((Component) statusBar.getStatusBar(),BorderLayout.SOUTH);
 		mainWindow.setTitle("Chat System");
 		mainWindow.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		mainWindow.setSize(WIDTH, HEIGHT);
 		mainWindow.setLocationRelativeTo(null);
 		mainWindow.setVisible(true);
 		
-		statusPanel.setPreferredSize(new Dimension(mainWindow.getWidth(),15));	
+		((Component) statusBar.getStatusBar()).setPreferredSize(new Dimension(mainWindow.getWidth(),15));	
 	}
 
 	@Override
@@ -226,18 +207,7 @@ public class JavaChatGUI extends GeneralChatGUI implements ControllerToGui, Acti
 		fileChooser.setDialogTitle("Where do you want to save the file ?");
 		fileChooser.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
 		fileChooser.setAcceptAllFileFilterUsed(false);
-		
-		int value = fileChooser.showOpenDialog(mainWindow);
-		while(value != JFileChooser.APPROVE_OPTION){
-			JOptionPane.showMessageDialog(mainWindow, "You must select a directory.");
-			value = fileChooser.showOpenDialog(mainWindow);
-		}
+		fileChooser.showOpenDialog(mainWindow);
 		return fileChooser.getSelectedFile().toString();
-	}
-
-	@Override
-	public void showFileTransferProgress(String text, int progress) {
-		statusLabel.setText(text);
-		progressBar.setValue(progress);
 	}
 }

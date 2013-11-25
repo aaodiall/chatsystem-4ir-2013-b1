@@ -75,6 +75,9 @@ public class FileController {
 			this.receivedBuffer = ByteBuffer.wrap(receivedFile);
 			int option = JOptionPane.showConfirmDialog(null, "Vous avez reçu une demande de transfert de fichier de la part de "+msg.getUsername()+"\n Nom du fichier : "+ this.fileName +"\nTaille (en byte) : "+ this.fileSize +"\n\nVoulez-vous accepter le fichier ?", "Demande de transfert de fichier reçue", JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE);
 			if(option == JOptionPane.OK_OPTION) {
+				chatController.getStatusBar().setTextLabel("File transfer processing...");
+				chatController.getStatusBar().setProgressBarMax((int) fileSize);
+				chatController.getStatusBar().setProgressBarVisible(true);
 				receivedThread = new Thread(ReceivedFileNI.getInstance(chatController,((FileTransfertDemand) msg).getPortClient()));
 				receivedThread.start();
 				this.sendFileTransfertConfirmation(user, true, msg.getId());
@@ -84,15 +87,19 @@ public class FileController {
 		}
 		else if(msg instanceof FilePart) {
 			receivedBuffer.put(((FilePart) msg).getFilePart());
-			chatController.updateFileTransferProgress(receivedBuffer.position()*100/fileSize);
-			
+			chatController.getChatGUI().getStatusBar().setProgressBarValue(receivedBuffer.position());
 			if(((FilePart) msg).isLast()) {
-				ReceivedFileNI.getInstance(chatController, -1).running = false;	
+				chatController.getChatGUI().getStatusBar().resetProgressBar();
+				chatController.getChatGUI().getStatusBar().setProgressBarVisible(false);
+				chatController.getChatGUI().getStatusBar().setTextLabel("File transfer finished");
 				try {
-					FileOutputStream fos = new FileOutputStream(chatController.getChatGUI().getFilePath()+"\\"+this.fileName);
+					String directoryPath = chatController.getChatGUI().getFilePath();
+					if(directoryPath != null && !directoryPath.isEmpty()) {
+						FileOutputStream fos = new FileOutputStream(+"\\"+this.fileName);
 					fos.write(this.receivedFile);
 					fos.flush();
 					fos.close();
+					}
 				} catch (IOException e) {
 					e.printStackTrace();
 				}	
