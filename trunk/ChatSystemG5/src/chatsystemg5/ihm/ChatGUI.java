@@ -8,6 +8,8 @@ import java.awt.Panel;
 import java.awt.RenderingHints;
 import java.awt.image.ColorModel;
 import java.util.HashMap;
+import java.util.Iterator;
+import java.util.Map;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 
@@ -21,12 +23,15 @@ public class ChatGUI extends JFrame {
     public ChatGUI(ChatController chat_control) {
         this.chat_control = chat_control;
         this.chat_windows = new HashMap<String, ChatWindow>();
+        
         this.connection_window = new ConnectionWindow(this.chat_control);
     }
     
     public void create_chat_window(String remote_username){
-        ChatWindow chat_window = new ChatWindow(this.chat_control, remote_username);
-        this.chat_windows.put(remote_username, chat_window);
+        if(!this.chat_windows.containsKey(remote_username)){
+            ChatWindow chat_window = new ChatWindow(this.chat_control, remote_username);
+            this.chat_windows.put(remote_username, chat_window);
+        }
     }
     
     public void delete_chat_window(String remote_username){
