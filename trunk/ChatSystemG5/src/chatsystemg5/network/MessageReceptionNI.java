@@ -49,7 +49,6 @@ public class MessageReceptionNI extends Thread implements FromRemoteApp {
                 // listen and receive all the message
                 this.UDP_sock.receive(message);
 
-                this.interrupt();
                 // get the IP of the sender
                 this.IP_source = message.getAddress();
                 
