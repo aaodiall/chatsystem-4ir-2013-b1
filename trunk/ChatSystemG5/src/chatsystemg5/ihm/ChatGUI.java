@@ -49,6 +49,10 @@ public class ChatGUI extends JFrame {
     public ChatWindow get_chat_window(String remote_username){
         return this.chat_windows.get(remote_username);
     }
+    
+    public HashMap<String, ChatWindow> get_chat_windows() {
+        return this.chat_windows;
+    }
 
     public ConnectionWindow get_connection_window() {
         return this.connection_window;

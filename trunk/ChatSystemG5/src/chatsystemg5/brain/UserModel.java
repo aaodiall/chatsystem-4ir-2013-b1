@@ -21,6 +21,14 @@ public class UserModel extends ChatModel {
         return this.username;
     }
     
+    public boolean get_state() {
+        return status;
+    }
+    
+    public void set_state(boolean connected) {
+        this.status = connected;
+    }
+    
     @Override
     public void notifyObservers(){
         for(Iterator<Observer> it = this.observers.iterator(); it.hasNext();){

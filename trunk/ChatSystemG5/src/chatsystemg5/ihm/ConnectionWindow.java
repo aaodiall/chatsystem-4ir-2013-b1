@@ -49,6 +49,7 @@ public class ConnectionWindow extends JFrame implements ActionListener {
             this.username_field.setEnabled(true);
             this.connect_button.setText("Connection");
             this.chat_control.get_chatGUI().get_list_window().dispose();
+            //this.chat_control.get_chatGUI().get_chat_windows().;
 
         }
         // TO DO : Vider la zone de texte

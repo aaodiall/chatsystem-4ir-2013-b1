@@ -38,6 +38,10 @@ public class MessageHandlerNI {
         
     }
     
+    public boolean get_user_state() {
+        return chatNI.get_user_state();
+    }
+    
     /******************************************************************/
     
     // Gère la liaison reception-chatNI

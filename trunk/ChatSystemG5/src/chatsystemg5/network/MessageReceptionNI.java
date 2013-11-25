@@ -42,7 +42,7 @@ public class MessageReceptionNI extends Thread implements FromRemoteApp {
         
         try {
             // always listenning
-            while(true){    
+            while(msg_handler.get_user_state()){    
                 this.buffer = new byte[1000];
                 this.message = new DatagramPacket(buffer, buffer.length);
                 
