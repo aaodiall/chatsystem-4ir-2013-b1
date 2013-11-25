@@ -43,7 +43,7 @@ public class ListWindow extends JFrame implements Observer, ListSelectionListene
         // creation of the list
         // we know that we get an HashMap
         this.list_display.setListData(((ListModel)obs).get_hmap_users().keySet().toArray());
-        this.list_display.updateUI();
+        //this.list_display.updateUI();
     }
     
     @Override
@@ -60,6 +60,7 @@ public class ListWindow extends JFrame implements Observer, ListSelectionListene
         setDefaultCloseOperation(javax.swing.WindowConstants.HIDE_ON_CLOSE);
 
         list_display.setSelectionMode(javax.swing.ListSelectionModel.SINGLE_SELECTION);
+        list_display.addListSelectionListener(this);
         jScrollPane1.setViewportView(list_display);
 
         list_label.setText("Connected users");
@@ -72,7 +73,7 @@ public class ListWindow extends JFrame implements Observer, ListSelectionListene
                 .addContainerGap()
                 .add(layout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
                     .add(list_label)
-                    .add(jScrollPane1, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, 122, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE))
+                    .add(jScrollPane1, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, 200, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE))
                 .addContainerGap(org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(

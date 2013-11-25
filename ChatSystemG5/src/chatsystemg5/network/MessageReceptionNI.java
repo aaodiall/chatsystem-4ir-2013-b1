@@ -10,7 +10,7 @@ import java.net.SocketException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-public class MessageReceptionNI implements Runnable, FromRemoteApp {
+public class MessageReceptionNI extends Thread implements FromRemoteApp {
     
     private MessageHandlerNI msg_handler;
     private int UDP_port;
@@ -42,13 +42,14 @@ public class MessageReceptionNI implements Runnable, FromRemoteApp {
         
         try {
             // always listenning
-            while(true){     
+            while(true){    
                 this.buffer = new byte[1000];
                 this.message = new DatagramPacket(buffer, buffer.length);
                 
                 // listen and receive all the message
                 this.UDP_sock.receive(message);
-                
+
+                this.interrupt();
                 // get the IP of the sender
                 this.IP_source = message.getAddress();
                 

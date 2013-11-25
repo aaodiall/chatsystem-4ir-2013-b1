@@ -34,12 +34,13 @@ public class ConnectionWindow extends JFrame implements ActionListener {
             // On initialise et on met en place la connexion
 
             this.chat_control.init_controller(username);
+            this.chat_control.get_chatGUI().init_list_window();
+            this.chat_control.get_listDB().addObserver(chat_control.get_chatGUI().get_list_window());
+
             this.chat_control.perform_connection();
             
             this.username_field.setEnabled(false);
-            this.connect_button.setText("Disconnection");
-            this.chat_control.get_chatGUI().init_list_window();
-            this.chat_control.get_listDB().addObserver(chat_control.get_chatGUI().get_list_window());
+            this.connect_button.setText("Disconnection");          
         }
         else if ("Disconnection".equals(this.connect_button.getText())) {
             this.chat_control.perform_disconnection();

@@ -6,27 +6,14 @@ package chatsystemg5.ihm;
 
 import chatsystemg5.brain.ChatController;
 import chatsystemg5.brain.ConversationModel;
-import java.awt.BorderLayout;
-import java.awt.GridLayout;
+import java.awt.Color;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.LinkedList;
-import java.util.Observable;
-import java.util.Observer;
 import java.awt.event.WindowEvent;
-import java.awt.event.WindowListener;
 import java.util.HashMap;
-import java.util.LinkedList;
 import java.util.Observable;
 import java.util.Observer;
-import javax.swing.JButton;
 import javax.swing.JFrame;
-import javax.swing.JLabel;
-import javax.swing.JTextArea;
-import javax.swing.JTextField;
-import javax.swing.SwingUtilities;
 import sun.awt.WindowClosingListener;
 
 public class ChatWindow extends JFrame implements Observer, ActionListener, WindowClosingListener {
@@ -64,33 +51,20 @@ public class ChatWindow extends JFrame implements Observer, ActionListener, Wind
     public void actionPerformed(ActionEvent e) {
         // it's the send button which is selected
         if (e.getSource() == this.send_button) {
+            this.chat_control.get_convDB().add_conversation(this.remote_username, "YOU : " + this.send_text.getText());
             this.chat_control.perform_send(this.remote_username, this.send_text.getText());
+            this.send_text.setText(null);
         }
         else if(e.getSource() == this.file_button) {
             FileActionPerformed(e);
         }
     }
-    
-    public void update_chat_window(String remote_user){
-        this.remote_username = remote_user;
-            this.getContentPane().remove(this.received_text);
-            this.getContentPane().remove(this.send_text);
-            //this.getContentPane().invalidate();
-            this.add("3",this.received_text);
-            this.add("7",this.send_text);
-            this.repaint();
-            this.setVisible(true);
-    }
-    
-    public void display_message_chat_window (String text_message, String remote_user){
-        this.received_text.setText(text_message);
-        this.update_chat_window(remote_username);
-    }
 
     @Override
     public void update(Observable obs, Object obj){
+        this.received_text.setCaretColor(Color.blue);
         this.received_text.append(((ConversationModel)obs).get_last_text_by_user(this.remote_username));
-        this.received_text.updateUI();
+        //this.received_text.updateUI();
     }
 
     @Override
@@ -132,10 +106,13 @@ public class ChatWindow extends JFrame implements Observer, ActionListener, Wind
 
         received_text.setColumns(20);
         received_text.setRows(5);
+        send_text.setLineWrap(true);
+        received_text.setEditable(false);
         jScrollPane1.setViewportView(received_text);
 
         send_text.setColumns(20);
         send_text.setRows(5);
+        send_text.setLineWrap(true);
         jScrollPane2.setViewportView(send_text);
 
         send_button.setText("Send");

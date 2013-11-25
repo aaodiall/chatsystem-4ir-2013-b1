@@ -1,14 +1,14 @@
     package chatsystemg5.brain;
 
+import chatsystemg5.ihm.ListWindow;
 import java.util.HashMap;
 import java.util.Observer;
 
 
 public class ListModel extends ChatModel {
     
-    private Observer observer;
+    private ListWindow observer;
 
-    
     private HashMap<String,String> hmap_users;
     
     public ListModel (ChatController chat_control) {
@@ -35,5 +35,15 @@ public class ListModel extends ChatModel {
     
     public HashMap<String,String> get_hmap_users () {
         return this.hmap_users;
+    }
+    
+    @Override
+    public void notifyObservers(){
+        this.observer.update(this, this.hmap_users);
+    }
+    
+    @Override
+    public void addObserver(Observer o){ 
+        this.observer = (ListWindow)o;
     }
 }

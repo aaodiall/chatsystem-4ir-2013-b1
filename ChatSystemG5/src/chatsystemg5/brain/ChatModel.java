@@ -8,5 +8,5 @@ import java.util.Observer;
 public abstract class ChatModel extends Observable{
     
     public ChatModel (){
-    } 
+    }
 }

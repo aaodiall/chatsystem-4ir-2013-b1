@@ -7,6 +7,9 @@ import chatsystemg5.network.*;
 
 import java.net.InetAddress;
 import java.net.UnknownHostException;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -48,7 +51,6 @@ public class ChatController {
     // Connexion du local user
     public void perform_connection () {
         chatNI.to_connection(username, false);
-
     }
     
     // Connexion d'un autre user
@@ -90,8 +92,7 @@ public class ChatController {
     // Réception d'un message
     public void perform_send (String remote_user, String txt, String IP_text) {
         //display_message ()
-        String conversation = new String(txt + "\n[" + System.currentTimeMillis() + "]");
-        convDB.add_conversation(remote_user, IP_text, conversation);        
+        convDB.add_conversation(remote_user + "@" + IP_text, txt);  
     }
         
     /**************** Getters ****************/
