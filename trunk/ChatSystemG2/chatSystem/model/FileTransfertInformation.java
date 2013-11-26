@@ -106,7 +106,7 @@ public abstract class FileTransfertInformation extends Model {
     }
     
     public long getSize(){
-        return this.fileDescriptor.getTotalSpace();
+        return this.fileDescriptor.length();
     }
     
     public String getIdRemoteSystem(){

@@ -46,16 +46,21 @@ public class FileReceivingInformation extends FileTransfertInformation{
     public void addFilePart(byte[] filePart) {
         try {
             this.writerBuffer.write(filePart);
+            this.writerBuffer.flush();
             this.setProgression(this.getProgression()+filePart.length); 
-            
-            if(this.isLast){
-                this.writerBuffer.flush();
-                this.writerBuffer.close();
-                this.writer.close();
-            }
             
         } catch (IOException ex) {
             Logger.getLogger(FileTransfertInformation.class.getName()).log(Level.SEVERE, null, ex);
+        } finally {             
+            if(this.isLast){
+                try {
+                    this.writerBuffer.flush();
+                    this.writerBuffer.close();
+                    this.writer.close();
+                } catch (IOException ex) {
+                    Logger.getLogger(FileReceivingInformation.class.getName()).log(Level.SEVERE, null, ex);
+                }
+            }
         }
     }
     
