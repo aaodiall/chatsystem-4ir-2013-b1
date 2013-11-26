@@ -40,7 +40,7 @@ public class ChatGUI extends View implements ToUser, FromUser {
             if (aux != null) {
                 aux.setVisible(false);
             }*/
-            this.dWindows.remove(key);
+            this.dWindows.remove(key); //déclenche accés concurent .... /!\ a changer
         }
         cWindow.setVisible(true);
         uWindow.setVisible(false);
