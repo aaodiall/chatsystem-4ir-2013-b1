@@ -42,9 +42,12 @@ public abstract class Message implements Serializable{
         
         oout.writeObject(this);
         
-        oout.close();
+        byte[] retour = output.toByteArray();
         
-        return output.toByteArray();
+        oout.close();
+        output.close();
+        
+        return retour;
     }
     
     public static Message fromArray(byte[] array) throws IOException{
