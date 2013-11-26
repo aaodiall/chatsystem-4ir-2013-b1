@@ -48,7 +48,7 @@ public class MessageFactory {
 		return file;
 	}
 	
-	public static FileTransfertCancel getFileTransfertMessage(String username, int idDemand) {
+	public static FileTransfertCancel getFileTransfertCancelMessage(String username, int idDemand) {
 		if(fileTransfertCancel == null) {
 			fileTransfertCancel = new FileTransfertCancel(username,idDemand);
 		}

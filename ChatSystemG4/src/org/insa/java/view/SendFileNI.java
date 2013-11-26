@@ -62,15 +62,16 @@ public final class SendFileNI implements Runnable{
 					outputStream.flush();
 					outputStream.close();
 				}
-			} catch (InterruptedIOException e) {
+			} catch (IOException e) {
+				Logger.getLogger(SendFileNI.class).log(Level.SEVERE,null,e);
+			}
+			finally {
 				Thread.currentThread().interrupt();
 				try {
 					outputStream.close();
 				} catch (IOException e1) {
 					e1.printStackTrace();
 				} 
-			} catch (IOException e) {
-				Logger.getLogger(SendFileNI.class).log(Level.SEVERE,null,e);
 			}
 		}
 	}

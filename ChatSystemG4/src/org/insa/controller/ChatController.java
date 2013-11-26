@@ -84,9 +84,9 @@ public class ChatController {
 		} catch (UnknownHostException e) {
 			Logger.getLogger(GeneralChatGUI.class).log(Level.SEVERE, null, e);
 		}
-		this.sendHelloMessage(this.getLocalUser());	
 		this.enableMessageReception();
-		
+		this.sendHelloMessage(this.getLocalUser());	
+
 	}
 	
 	public void enableMessageReception() {

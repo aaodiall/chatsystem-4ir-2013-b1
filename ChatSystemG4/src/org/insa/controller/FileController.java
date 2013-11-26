@@ -53,6 +53,10 @@ public class FileController {
 		SendMessageNI.getInstance().sendMessage(MessageFactory.getFileTransfertConfirmationMessage(chatController.getLocalUser().getUsername(), isAccepetd, idDemand), user.getAddress());
 	}
 
+	private void sendFileTransferCanceled(User user, String username, int idDemand) {
+		SendMessageNI.getInstance().sendMessage(MessageFactory.getFileTransfertCancelMessage(username, idDemand), user.getAddress());
+	}
+	
 	private void sendFile(User user) {
 		SendFileNI.getInstance(this,DEFAULT_CLIENT_PORT).sendFile(user);
 		sendThread = new Thread(SendFileNI.getInstance(this,DEFAULT_CLIENT_PORT));
