@@ -22,12 +22,17 @@ public class FileSendingInformation extends FileTransfertInformation {
     private BufferedInputStream readerBuffer;
     private FileInputStream reader;
     
-    //byte[] filePart;
+    private final int tailleDernierTableau;
+    private final long nbTableau;
+    private long cptTableau;
 
     public FileSendingInformation(String idRemoteSystem, File fileToSend) {
         super(idRemoteSystem, fileToSend);
-
-        //this.filePart = new byte[FileTransfertInformation.tailleSegment];
+        
+        tailleDernierTableau = (int) (this.fileDescriptor.length()%tailleSegment);
+        System.out.println(tailleDernierTableau);
+        nbTableau = this.fileDescriptor.length()/tailleSegment;
+        cptTableau = 0;
         
         try {
             this.reader = new FileInputStream(this.fileDescriptor);
@@ -43,22 +48,41 @@ public class FileSendingInformation extends FileTransfertInformation {
      * @return file's part
      */
     public byte[] getFilePart() {
-        
-        byte[] filePart = new byte[tailleSegment];
+        byte [] filePart = new byte[tailleSegment];
+        //byte[] filePart = null;
         try {
-            if (this.readerBuffer.read(filePart) == -1) {
-                this.isLast = true;
+            /*if(cptTableau < nbTableau){
+                filePart = new byte[tailleSegment];
+                this.readerBuffer.read(filePart);
+                cptTableau++;
+                System.out.println("nbTableau : "+nbTableau+"          cptTableau : "+cptTableau);
+            }else{
+                filePart = new byte[tailleSegment];
+                this.readerBuffer.read(filePart);
+                this.isLast = true; 
+            }*/
+            
+            if(this.readerBuffer.read(filePart)==-1){
+                this.isLast = true; 
             }
-
+            
+            cptTableau++;
+            System.out.println("nbTableau : "+nbTableau+"          cptTableau : "+cptTableau);
+                
+                      
             //set isLast to true when last part has been loaded
-            this.setProgression(this.getProgression()+filePart.length); 
-            if (isLast) {
-                this.readerBuffer.close();
-                this.reader.close();
-            }
-
         } catch (IOException ex) {
             Logger.getLogger(FileTransfertInformation.class.getName()).log(Level.SEVERE, null, ex);
+        } finally {
+            this.setProgression(this.getProgression()+filePart.length); 
+            if (isLast) {
+                try {
+                    this.readerBuffer.close();
+                    this.reader.close();
+                } catch (IOException ex) {
+                    Logger.getLogger(FileSendingInformation.class.getName()).log(Level.SEVERE, null, ex);
+                }
+            }
         }
         return filePart;
     }

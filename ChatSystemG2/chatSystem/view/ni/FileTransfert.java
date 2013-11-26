@@ -13,7 +13,6 @@ import chatSystemCommon.FilePart;
 import chatSystemCommon.Message;
 import java.io.BufferedOutputStream;
 import java.io.ObjectOutputStream;
-import java.io.OutputStream;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -71,27 +70,29 @@ public class FileTransfert implements Runnable {
             this.writer = new ObjectOutputStream(writerBuffer);
 
             Message msg;
-            try {
-                do {
-                    //on récupère le morceau de fichier a envoyer et on l'écrit dans la socket
-                    msg = new FilePart(this.chatNI.getUserInfo().getUsername(), this.fileToSend.getFilePart(), this.fileToSend.isLast());//a changer mais je vais vite
+            do {
+                //on récupère le morceau de fichier a envoyer et on l'écrit dans la socket
+                msg = new FilePart(this.chatNI.getUserInfo().getUsername(), this.fileToSend.getFilePart(), this.fileToSend.isLast());//a changer mais je vais vite
 
-                    this.writer.writeObject(msg);
-                    this.writer.flush();
-                } while (!this.fileToSend.isLast());
-
-            } finally {
-                //on termine
-                this.writer.close();
-                this.writerBuffer.close();
-                this.clientSocket.close();
-                this.serverSocket.close();
-            }
+                this.writer.writeObject(msg);
+                this.writer.flush();
+            } while (!this.fileToSend.isLast());
 
             this.chatNI.fileSended(this.fileToSend.getId(), this.fileToSend.getIdRemoteSystem());
 
         } catch (IOException ex) {
             Logger.getLogger(FileTransfert.class.getName()).log(Level.SEVERE, null, ex);
+        } finally {
+            try {
+                //on termine
+                this.writer.flush();
+                this.writer.close();
+                this.writerBuffer.close();
+                this.clientSocket.close();
+                this.serverSocket.close();
+            } catch (IOException ex) {
+                Logger.getLogger(FileTransfert.class.getName()).log(Level.SEVERE, null, ex);
+            }
         }
     }
 
