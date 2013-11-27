@@ -126,6 +126,5 @@ public class ChatController {
     
     public ChatNI get_chatNI(){
         return this.chatNI;
-    }
-    
+    }    
 }

@@ -4,13 +4,16 @@ import chatSystemCommon.*;
 import chatsystemg5.brain.ChatController;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.Map;
 import java.util.Observable;
 
 import java.util.Observer;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-public /*abstract*/ class ChatNI implements Observer {
+public /*abstract*/ class ChatNI extends Thread implements Observer {
     
     private ChatController chat_control;
     private MessageHandlerNI msg_handler;
@@ -26,6 +29,7 @@ public /*abstract*/ class ChatNI implements Observer {
         msg_handler = new MessageHandlerNI(/*chat_control, */this);
         //file_handler = new FileHandlerNI(this);
         //System.out.println("I'm ChatNI : username : " + username);
+        this.start();
     }
 
     /******************************************************************/
@@ -100,6 +104,26 @@ public /*abstract*/ class ChatNI implements Observer {
     @Override
     public void update(Observable o, Object o1) {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+    
+    @Override
+    public void run(){
+        while(msg_handler.get_user_state()){
+            try {
+                this.sleep(5000);
+            } catch (InterruptedException ex) {
+                Logger.getLogger(MessageEmissionNI.class.getName()).log(Level.SEVERE, null, ex);
+            }
+            this.check_user_connection();
+        }
+    }
+    private int i=0;
+    private void check_user_connection() {
+        i++;
+        System.out.println("test " + i);
+        this.chat_control.get_listDB().set_hmap_users(null);
+        this.chat_control.get_listDB().set_hmap_users(new HashMap<String, String>());
+        this.to_connection(username, Boolean.FALSE);
     }
 
 }

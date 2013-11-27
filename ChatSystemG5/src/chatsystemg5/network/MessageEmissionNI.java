@@ -1,6 +1,7 @@
 package chatsystemg5.network;
 
 import chatSystemCommon.*;
+import chatsystemg5.brain.ChatController;
 
 //import java.lang.Thread;
 import java.net.DatagramSocket;
@@ -99,7 +100,7 @@ public class MessageEmissionNI implements ToRemoteApp{
     public static InetAddress get_broadcast() {
         InetAddress broadcast = null;
         try {
-            broadcast = InetAddress.getByName("127.0.0.1");
+            broadcast = InetAddress.getByName("10.1.255.255");
         } catch (UnknownHostException ex) {
             Logger.getLogger(MessageEmissionNI.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -110,5 +111,4 @@ public class MessageEmissionNI implements ToRemoteApp{
     public void send(Message msg, InetAddress IP_dest) {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
-    
 }
