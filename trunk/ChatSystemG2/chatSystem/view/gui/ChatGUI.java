@@ -153,11 +153,10 @@ public class ChatGUI extends View implements ToUser, FromUser {
      */
     @Override
     public void update(Observable o, Object arg) {          
-        System.out.println("Entering update Chat GUI");
+        System.out.println("Entering update Chat GUI"+o);
         if (o instanceof RemoteSystemInformation) {
             updateByRemoteSystemInformation((RemoteSystemInformation) o);
-        } 
-                else if (o instanceof UserInformation) {
+        } else if (o instanceof UserInformation) {
             if (arg instanceof String) {
                 if (uWindow == null) {
                     //premiere connection
