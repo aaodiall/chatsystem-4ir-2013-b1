@@ -33,7 +33,9 @@ public class RemoteSystemInformation extends UserInformation {
      */
     public synchronized void addMessageReceived(String message) {
         this.messages.add(message);
+        this.setChanged();
         this.notifyObservers();
+        this.clearChanged();
     }
 
     /**
@@ -58,7 +60,9 @@ public class RemoteSystemInformation extends UserInformation {
      */
     public synchronized void addMessageSent(String message) {
         this.messages.add(message); 
+        this.setChanged();
         this.notifyObservers();
+        this.clearChanged();
     }
     
 
