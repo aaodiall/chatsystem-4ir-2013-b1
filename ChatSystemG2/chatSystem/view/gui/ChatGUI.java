@@ -36,11 +36,11 @@ public class ChatGUI extends View implements ToUser, FromUser {
     @Override
     public void disconnected() {
         for (String key : this.dWindows.keySet()) {
-            /*DialogWindow aux = this.dWindows.get(key);
+            DialogWindow aux = this.dWindows.get(key);
             if (aux != null) {
                 aux.setVisible(false);
-            }*/
-            this.dWindows.remove(key); //déclenche accés concurent .... /!\ a changer
+            }
+           // this.dWindows.remove(key);
         }
         cWindow.setVisible(true);
         uWindow.setVisible(false);
@@ -67,7 +67,7 @@ public class ChatGUI extends View implements ToUser, FromUser {
         if (this.dWindows.containsKey(contact)) {
             if (this.dWindows.get(contact) == null) {
                 this.dWindows.remove(contact);
-                this.dWindows.put(contact, new DialogWindow(contact, RemoteSystems.getInstance().getRemoteSystem(contact).getMessages(), this));
+                this.dWindows.put(contact, new DialogWindow(contact,this));
             }
         }
         if (tmp instanceof FileSendingInformation) {
@@ -89,7 +89,7 @@ public class ChatGUI extends View implements ToUser, FromUser {
         if (this.dWindows.containsKey(contact)) {
             if (this.dWindows.get(contact) == null) {
                 this.dWindows.remove(contact);
-                this.dWindows.put(contact, new DialogWindow(contact, RemoteSystems.getInstance().getRemoteSystem(contact).getMessages(), this));
+                this.dWindows.put(contact, new DialogWindow(contact, this));
             }
         }
         this.dWindows.get(contact).displaySuggestion(tmp.getName(), tmp.getId());
@@ -107,7 +107,7 @@ public class ChatGUI extends View implements ToUser, FromUser {
         if (this.dWindows.containsKey(contact)) {
             if (this.dWindows.get(contact) == null) {
                 this.dWindows.remove(contact);
-                this.dWindows.put(contact, new DialogWindow(contact, RemoteSystems.getInstance().getRemoteSystem(contact).getMessages(), this));
+                this.dWindows.put(contact, new DialogWindow(contact, this));
             }
             this.dWindows.get(contact).setVisible(true);
         }
@@ -170,26 +170,36 @@ public class ChatGUI extends View implements ToUser, FromUser {
                 }
             }
         } else if (o instanceof RemoteSystems) {
-
-            System.out.println("Je suis la GUI je mets a jour les utilisateur co");
+            System.out.println("I am the GUI and I update the connected users");
             try {
                 listUser(((RemoteSystems) o).getUserList());
 
             } catch (GUIException ex) {
                 Logger.getLogger(ChatGUI.class.getName()).log(Level.SEVERE, null, ex);
             }
-
+        } else if (o instanceof RemoteSystemInformation) {
+            updateByRemoteSystemInformation((RemoteSystemInformation) o);
         } else if (o instanceof FileReceivingInformation) {
             updateByFileReceivingInformation((FileReceivingInformation) o);
-        } else if (arg instanceof FileSendingInformation) {
+        } else if (o instanceof FileSendingInformation) {
             updateByFileSendingInformation((FileSendingInformation) o);
         }
     }
+    
+    private void updateByRemoteSystemInformation(RemoteSystemInformation rsi) {
+        String id = rsi.getIdRemoteSystem();
+        System.out.println("Updating the conversation with the contact "+ id);
+        if(!this.dWindows.containsKey(id)) {
+            this.dWindows.put(id, new DialogWindow(id, this));
+        }
+            this.dWindows.get(id).updateConversation(rsi.getMessages());
+            this.dWindows.get(id).setVisible(true);
+    }
+    
 
     /**
      * Update launched if the modification occured in a FileSendingInformation
      * instance
-     *
      * @param tmp instance of FileSendingInformation which was created or
      * modified
      */

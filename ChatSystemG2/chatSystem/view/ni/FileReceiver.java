@@ -11,6 +11,7 @@ import java.io.BufferedInputStream;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.net.Socket;
+import java.net.UnknownHostException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -60,7 +61,12 @@ public class FileReceiver implements Runnable {
             } while (!((FilePart) msg).isLast());
             this.fileToReceive.setIsLast(true);
 
-        } catch (IOException | ClassNotFoundException ex) {
+        
+        } catch (UnknownHostException ex) {
+            Logger.getLogger(FileReceiver.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (IOException ex) {
+            Logger.getLogger(FileReceiver.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (ClassNotFoundException ex) {
             Logger.getLogger(FileReceiver.class.getName()).log(Level.SEVERE, null, ex);
         } finally {
             try {

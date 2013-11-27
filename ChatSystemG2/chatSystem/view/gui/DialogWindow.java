@@ -9,11 +9,13 @@ import java.awt.event.ActionListener;
 import java.io.File;
 import java.util.HashMap;
 import javax.swing.*;
+import java.util.List;
 
 
 public class DialogWindow extends JFrame implements ActionListener {
 
     private final JList conversation;
+    private final DefaultListModel conversationMessages;
     private final JButton fileButton;
     private final JScrollPane messageJScrollPane;
     private final JScrollPane conversationJScrollPane;
@@ -34,10 +36,9 @@ public class DialogWindow extends JFrame implements ActionListener {
     /**
      * Creates new form DialogWindow
      * @param contact username of the contact the local user can communicate using this instance of DialogWindow
-     * @param conversationModel conversation between the local user and the remote system
      * @param chatGUI instance of chatGUI which is responsible for this instance of DialogWindow
      */
-    public DialogWindow(String contact, DefaultListModel conversationModel, ChatGUI chatGUI) {
+    public DialogWindow(String contact, ChatGUI chatGUI) {
         this.contact = contact;
         this.gestionDownloadProgression = new HashMap<Integer,Long>();
         this.gestionUploadProgression = new HashMap<Integer,Long>();
@@ -47,7 +48,8 @@ public class DialogWindow extends JFrame implements ActionListener {
         this.sendButton = new JButton();
         this.fileButton = new JButton();
         this.conversationJScrollPane = new JScrollPane();
-        this.conversation = new JList(conversationModel);
+        this.conversationMessages = new DefaultListModel();
+        this.conversation = new JList(this.conversationMessages);
         this.uploadJProgressBar = new JProgressBar();
         this.uploadLabel = new JLabel();
         this.downloadJProgressBar = new JProgressBar();
@@ -293,6 +295,22 @@ public class DialogWindow extends JFrame implements ActionListener {
             totalTrans += gesPb.get(key).intValue();
         }
         return totalTrans;
+    }
+
+    /**
+     * Update the conversation that is happening with the contact
+     * @param newConversation updated conversation with the new messages
+     */
+        public void updateConversation(final List<String> newConversation) {   
+        SwingUtilities.invokeLater(new Runnable() {
+            @Override
+            public void run() {
+                conversationMessages.removeAllElements();
+                for (String name : newConversation){
+                    conversationMessages.addElement(name);
+                }   
+            }
+        });
     }
 
     /**

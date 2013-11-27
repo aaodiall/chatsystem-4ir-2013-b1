@@ -98,7 +98,6 @@ public class UserWindow extends JFrame implements ActionListener, MouseListener 
         this.setDefaultCloseOperation(DO_NOTHING_ON_CLOSE);
         this.deconnectButton.addActionListener(this);
         this.contactsList.addMouseListener(this);
-
     }
 
     /**
@@ -142,6 +141,10 @@ public class UserWindow extends JFrame implements ActionListener, MouseListener 
         }
     }
 
+    
+   /*ublic void setOpaqueName(String idContact) {
+        this.contactsList.getModel().getElementAt(this.contactsName.indexOf(idContact)).
+    }*/
     /**
      * Action performed when the user clicks on the contacts' list
      * to select a remote system he wants to communicate with
