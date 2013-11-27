@@ -75,7 +75,7 @@ public class RemoteSystemInformation extends UserInformation {
         if (sizeM <= 100)
             return this.messages;
         else 
-            return this.messages.subList(sizeM-101, sizeM-1);
+            return this.messages.subList(sizeM-100, sizeM);
     }
 
     /**
