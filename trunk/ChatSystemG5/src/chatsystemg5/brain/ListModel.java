@@ -51,4 +51,8 @@ public class ListModel extends ChatModel {
     public void deleteObservers(){
         this.observer.dispose();
     }
+
+    public void set_hmap_users(HashMap<String, String> o) {
+        this.hmap_users = o;
+    }
 }

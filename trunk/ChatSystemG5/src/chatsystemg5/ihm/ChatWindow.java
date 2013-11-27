@@ -6,15 +6,13 @@ package chatsystemg5.ihm;
 
 import chatsystemg5.brain.ChatController;
 import chatsystemg5.brain.ConversationModel;
-import java.awt.Color;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.awt.event.WindowEvent;
 import java.util.HashMap;
 import java.util.Observable;
 import java.util.Observer;
 import javax.swing.JFrame;
-import sun.awt.WindowClosingListener;
+import javax.swing.text.DefaultCaret;
 
 public class ChatWindow extends JFrame implements Observer, ActionListener {
     
@@ -91,8 +89,8 @@ public class ChatWindow extends JFrame implements Observer, ActionListener {
         received_text.setLineWrap(true);
         received_text.setEditable(false);
         jScrollPane1.setViewportView(received_text);
-        jScrollPane1.setAutoscrolls(rootPaneCheckingEnabled);
-        received_text.setAutoscrolls(rootPaneCheckingEnabled);
+        DefaultCaret caret = (DefaultCaret) received_text.getCaret();
+        caret.setUpdatePolicy(DefaultCaret.ALWAYS_UPDATE);
 
         send_text.setColumns(20);
         send_text.setRows(5);
