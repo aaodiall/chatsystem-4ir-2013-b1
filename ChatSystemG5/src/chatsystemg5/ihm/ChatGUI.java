@@ -32,6 +32,7 @@ public class ChatGUI extends JFrame {
             ChatWindow chat_window = new ChatWindow(this.chat_control, remote_username);
             this.chat_windows.put(remote_username, chat_window);
         }
+        this.chat_windows.get(remote_username).setVisible(true);
     }
     
     public void delete_chat_window(String remote_username){

@@ -46,4 +46,9 @@ public class ListModel extends ChatModel {
     public void addObserver(Observer o){ 
         this.observer = (ListWindow)o;
     }
+    
+    @Override
+    public void deleteObservers(){
+        this.observer.dispose();
+    }
 }
