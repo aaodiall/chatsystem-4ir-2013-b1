@@ -225,10 +225,13 @@ public class Controller extends Thread{
 	 */
 	public void filePropositionReceived(String remote, String file, long size){
 		if (this.modelStates.isConnected()){
-			ModelFile f = new ModelFile(remote,file);
+			System.out.println("file  " + file);
+			//pour differencier avec l'autre constructeur j'ai ajouter size sinon probleme
+			ModelFile f = new ModelFile(remote,file,size);
 			f.setStateReceivedDemand(true);
 			this.filesToReceive.add(f);
 			// signale normalement a la gui qu'on a recu une demande
+			this.chatgui.proposeFile(remote, file, size);
 			System.out.println("file demand received from " + remote);
 		}
 	}

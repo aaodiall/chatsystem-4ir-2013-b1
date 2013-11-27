@@ -55,6 +55,7 @@ public class ChatSystem {
 		chatNI = new ChatNI(portUDP,bufferSize,chatController);
 		chatController.setChatNI(chatNI);
 		chatGUI=new ChatGUI(chatController);
+		chatController.setChatgui(chatGUI);
 		chatNIThread = new Thread(chatNI);
 		chatNIThread.start();
 		modelUsername.addObserver(chatNI);
@@ -68,6 +69,7 @@ public class ChatSystem {
 			//	chatController.setChatgui(chatGUI);
 				//modelListUsers.addObserver(chatGUI);
 				modelUsername.addObserver(chatGUI);
+				
 				modelStates.addObserver(chatGUI);
 				modelText.addObserver(chatGUI);
 		/*
