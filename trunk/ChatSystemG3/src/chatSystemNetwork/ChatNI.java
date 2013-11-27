@@ -172,6 +172,8 @@ public class ChatNI extends View implements Runnable, Observer{
 				}else if (receivedMsg.getClass() == FileTransfertCancel.class){
 					FileTransfertCancel ftca = ((FileTransfertCancel)receivedMsg);
 					controller.fileTranfertCancelReceived(ftca.getUsername(),ftca.getIdDemand());
+				}else if (receivedMsg.getClass()==FilePart.class){
+					System.out.println("je suis dans received filepart");
 				}
 			}catch (IOException recExc){
 				System.out.println("error : cannot transform PDUdata in Message");

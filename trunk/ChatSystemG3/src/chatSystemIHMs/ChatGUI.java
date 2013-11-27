@@ -7,6 +7,9 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Observable;
 import java.util.Observer;
+
+import javax.swing.JOptionPane;
+
 import chatSystemController.Controller;
 import chatSystemModel.ModelListUsers;
 import chatSystemModel.ModelStates;
@@ -51,7 +54,7 @@ public InterfaceConnect getwConnect() {
 		this.wCommunicate=new HashMap<String,InterfaceCommunicate>();
 		this.controller=controller;
 		this.wConnect = new InterfaceConnect(this);
-		this.wListUsers=new InterfaceListUsers("alpha",this);
+		this.wListUsers=new InterfaceListUsers("",this);
 		//this.wCommunicate = new HashMap<String, InterfaceCommunicate>();
 		/*}else{
 			this.cmd = new CommandLine(controller);
@@ -237,7 +240,16 @@ public void notifyRemoteDisconnection(String remote) {
 @Override
 public void proposeFile(String remote, String file, long size) {
 	// TODO Auto-generated method stub
-	
+	String title=new String("Download File Proposition");
+	String message=new String(remote+" vous envoi ce fichier "+file+" de taille "+size);
+	this.openWindowCommunicate(remote);
+	int answer = JOptionPane.showConfirmDialog(this.wCommunicate.get(remote), message, title,JOptionPane.YES_NO_OPTION);
+	if (answer == JOptionPane.YES_OPTION) {
+		this.controller.performFileAnswer(remote, true);
+	}
+	else if (answer == JOptionPane.NO_OPTION){
+		this.controller.performFileAnswer(remote, false);
+	}
 }
 
 

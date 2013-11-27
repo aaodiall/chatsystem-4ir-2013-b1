@@ -85,6 +85,7 @@ public class InterfaceListUsers extends JFrame implements WindowListener,ActionL
 		
 	}
 	public void setUsers(Object[] objects) {
+		this.users.clear();;
 		for(int i=0;i<objects.length;i++){
 			System.out.println("Dans setUsers");
 			System.out.println((String)objects[i]);

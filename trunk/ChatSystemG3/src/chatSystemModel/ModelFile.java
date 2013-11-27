@@ -7,13 +7,14 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.util.Observable;
 import java.util.concurrent.ArrayBlockingQueue;
 
 /**
  * @author joanna
  *
  */
-public class ModelFile {
+public class ModelFile extends Observable{
 	
 	private String remote; 
 	private String name;
@@ -22,6 +23,7 @@ public class ModelFile {
 	private int readMax;
 	private int offset;
 	private File fileToSend;
+	//private File fileFromRemote;
 	private int idDemand;
 	private ArrayBlockingQueue<byte[]> fileParts;
 	private FileInputStream reader;
@@ -40,7 +42,14 @@ public class ModelFile {
 			e.printStackTrace();
 		}
 	}
-	
+	//constructeur reception pas terminer 
+	public ModelFile(String remote, String name,long size){
+		this.remote=remote;
+		this.name=name;
+		this.size=size;
+		//this.idDemand
+		
+	}
 	public void buildFile(){
 		this.offset = 0;
 		this.readMax = 1024;
@@ -72,6 +81,8 @@ public class ModelFile {
 
 	public void setStateReceivedDemand(Boolean stateReceivedDemand) {
 		this.stateReceivedDemand = stateReceivedDemand;
+		setChanged();
+		notifyObservers(this.stateReceivedDemand);
 	}
 
 	public String getName(){
