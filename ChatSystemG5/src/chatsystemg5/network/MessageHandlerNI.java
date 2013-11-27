@@ -19,11 +19,11 @@ public class MessageHandlerNI {
     private MessageEmissionNI msg_emission;
     private Thread msg_reception;
     
-    private ChatController chat_control;
+    //private ChatController chat_control;
     
-    public MessageHandlerNI (ChatController chat_control, ChatNI chatNI) {
+    public MessageHandlerNI (/*ChatController chat_control, */ChatNI chatNI) {
         
-        this.chat_control = chat_control;
+        //this.chat_control = chat_control;
         
         UDP_port = 16001;
         this.chatNI = chatNI;

@@ -23,7 +23,7 @@ public /*abstract*/ class ChatNI implements Observer {
         
         this.chat_control = chat_control;
         username = chat_control.get_userDB().get_username();
-        msg_handler = new MessageHandlerNI(chat_control, this);
+        msg_handler = new MessageHandlerNI(/*chat_control, */this);
         //file_handler = new FileHandlerNI(this);
         //System.out.println("I'm ChatNI : username : " + username);
     }
