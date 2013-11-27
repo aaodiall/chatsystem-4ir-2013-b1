@@ -153,8 +153,11 @@ public class ChatGUI extends View implements ToUser, FromUser {
      */
     @Override
     public void update(Observable o, Object arg) {          
-        //System.out.println("Entering update Chat GUI");
-        if (o instanceof UserInformation) {
+        System.out.println("Entering update Chat GUI");
+        if (o instanceof RemoteSystemInformation) {
+            updateByRemoteSystemInformation((RemoteSystemInformation) o);
+        } 
+                else if (o instanceof UserInformation) {
             if (arg instanceof String) {
                 if (uWindow == null) {
                     //premiere connection
@@ -177,8 +180,6 @@ public class ChatGUI extends View implements ToUser, FromUser {
             } catch (GUIException ex) {
                 Logger.getLogger(ChatGUI.class.getName()).log(Level.SEVERE, null, ex);
             }
-        } else if (o instanceof RemoteSystemInformation) {
-            updateByRemoteSystemInformation((RemoteSystemInformation) o);
         } else if (o instanceof FileReceivingInformation) {
             updateByFileReceivingInformation((FileReceivingInformation) o);
         } else if (o instanceof FileSendingInformation) {
