@@ -299,10 +299,11 @@ public class DialogWindow extends JFrame implements ActionListener {
 
     /**
      * Update the conversation that is happening with the contact
-     * @param newConversation updated conversation with the new messages
+     * @param newMessage message to add to update the conversation with the new messages
      */
-        public void updateConversation(final List<String> newConversation) {   
-        SwingUtilities.invokeLater(new Runnable() {
+    public void updateConversation(Object newMessage) {   
+        this.conversationMessages.addElement(newMessage);
+        /*SwingUtilities.invokeLater(new Runnable() {
             @Override
             public void run() {
                 conversationMessages.removeAllElements();
@@ -310,7 +311,7 @@ public class DialogWindow extends JFrame implements ActionListener {
                     conversationMessages.addElement(name);
                 }   
             }
-        });
+        });*/
     }
 
     /**

@@ -155,7 +155,7 @@ public class ChatGUI extends View implements ToUser, FromUser {
     public void update(Observable o, Object arg) {          
         System.out.println("Entering update Chat GUI"+o);
         if (o instanceof RemoteSystemInformation) {
-            updateByRemoteSystemInformation((RemoteSystemInformation) o);
+            updateByRemoteSystemInformation((RemoteSystemInformation) o, arg);
         } else if (o instanceof UserInformation) {
             if (arg instanceof String) {
                 if (uWindow == null) {
@@ -186,12 +186,14 @@ public class ChatGUI extends View implements ToUser, FromUser {
         }
     }
     
-    private void updateByRemoteSystemInformation(RemoteSystemInformation rsi) {
-        String id = rsi.getIdRemoteSystem();
-        System.out.println("Updating the conversation with the contact "+ id);
-        this.displayDialogWindow(id);
-        this.dWindows.get(id).updateConversation(rsi.getMessages());
-            
+    private void updateByRemoteSystemInformation(RemoteSystemInformation rsi, Object arg) {
+        if (arg instanceof String) {
+            String id = rsi.getIdRemoteSystem();
+            System.out.println("Updating the conversation with the contact "+ id);
+            this.displayDialogWindow(id);
+            this.dWindows.get(id).updateConversation(arg);
+        //this.dWindows.get(id).updateConversation(rsi.getMessages());
+        }    
     }
     
 
