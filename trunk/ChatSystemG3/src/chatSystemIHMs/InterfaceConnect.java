@@ -41,13 +41,7 @@ public class InterfaceConnect extends JFrame implements ActionListener,WindowLis
 	 */
 	public InterfaceConnect(ChatGUI chatGUI) {
 		this.chatGUI=chatGUI;
-		
-		    	initialize();
-		    	
-		
-		
-		
-
+		initialize();
 	}
 
 	/**
