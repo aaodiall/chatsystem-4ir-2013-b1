@@ -160,8 +160,8 @@ public class RemoteSystems extends Model implements Iterable<RemoteSystemInforma
         return instance;
     }
 
-    public boolean existsRemoteSystem(String idRemoteSystem) {
-        return this.remoteSystemsInformation.containsKey(idRemoteSystem);
+    public boolean isNew(String idRemoteSystem) {
+        return (!this.remoteSystemsInformation.containsKey(idRemoteSystem));
     }
     /**
      * Provide an iterator on the instance

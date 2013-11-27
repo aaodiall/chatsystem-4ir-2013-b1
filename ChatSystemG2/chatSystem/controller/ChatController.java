@@ -68,12 +68,11 @@ public class ChatController extends Controller implements GuiToCont, NiToCont {
     public void performHelloReceived(String username, String ip, boolean isAck) {
         System.out.println("Hello received, modifying the model");
         String key = RemoteSystemInformation.generateID(username, ip);
-        if (!this.remoteSystems.existsRemoteSystem(key))
-        {
+        if (this.remoteSystems.isNew(key)) {
             this.remoteSystems.addRemoteSystem(username, ip, isAck);
-            this.remoteSystems.getRemoteSystem(RemoteSystemInformation.generateID(username, ip)).addObserver(chatGUI);
+            this.remoteSystems.getRemoteSystem(key).addObserver(chatGUI);
         } else {
-            this.remoteSystems.addRemoteSystem(username, ip, isAck); 
+            this.remoteSystems.addRemoteSystem(username, ip, isAck);
         }
     }
 
