@@ -189,11 +189,9 @@ public class ChatGUI extends View implements ToUser, FromUser {
     private void updateByRemoteSystemInformation(RemoteSystemInformation rsi) {
         String id = rsi.getIdRemoteSystem();
         System.out.println("Updating the conversation with the contact "+ id);
-        if(!this.dWindows.containsKey(id)) {
-            this.dWindows.put(id, new DialogWindow(id, this));
-        }
-            this.dWindows.get(id).updateConversation(rsi.getMessages());
-            this.dWindows.get(id).setVisible(true);
+        this.displayDialogWindow(id);
+        this.dWindows.get(id).updateConversation(rsi.getMessages());
+            
     }
     
 
