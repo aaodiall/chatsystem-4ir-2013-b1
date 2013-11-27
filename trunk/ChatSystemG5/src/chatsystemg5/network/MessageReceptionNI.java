@@ -55,13 +55,17 @@ public class MessageReceptionNI extends Thread implements FromRemoteApp {
                 System.out.println("I'm Network : I'm : " + (InetAddress.getLocalHost()).getHostAddress().toString());
                 System.out.println("I'm Network : From : " + IP_source.getHostAddress().toString());
                 
+                Message msg = Message.fromArray(buffer);
+                
                 if (!(IP_source.getHostAddress()).equals(this.localhost)) {
                     // send the content of the buffer to the controller
-                    Message msg = Message.fromArray(buffer);
                     msg_handler.receive(msg, IP_source);  
-                }          
+                }         
+                else if (msg instanceof Goodbye) {
+                    // Permet de fermer la socket UDP de reception si le Goodbye vient d'ici
+                    this.close_UDP_sock();
+                }
                 //System.out.println("NI : Test 1");
-
             }
         } catch (IOException ex) {
             System.out.println("Connection error");
@@ -70,6 +74,10 @@ public class MessageReceptionNI extends Thread implements FromRemoteApp {
        
     }
 
+    public void close_UDP_sock() {
+        this.UDP_sock.close();
+    }
+    
     @Override
     public void send_to_controller(byte[] array, InetAddress IP_addr) {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.

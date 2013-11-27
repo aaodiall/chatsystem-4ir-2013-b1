@@ -77,7 +77,7 @@ public class MessageEmissionNI implements ToRemoteApp{
             this.UDP_sock.setBroadcast(false);
             
             // close the sender port ??
-            //UDP_sock.close();
+            UDP_sock.close();
         }
         catch (IOException exc) {
             System.out.println("Disonnection error\n" + exc);
