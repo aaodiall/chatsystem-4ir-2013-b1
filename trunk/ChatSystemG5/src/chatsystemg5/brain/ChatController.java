@@ -29,16 +29,17 @@ public class ChatController {
         // TO DO create view at the end
         chatGUI = new ChatGUI(this);
         
-        // initialize model
-        listDB = new ListModel(this);
-        convDB = new ConversationModel(this);
-        
     }
     
     /**************** Controller init ****************/
     public void init_controller (String username) {
         // On crée la BDD User
         userDB = new UserModel(username);
+        
+        // initialize model
+        listDB = new ListModel(this);
+        convDB = new ConversationModel(this);
+        
         username = this.userDB.get_username();
         
         // initialize network
@@ -76,6 +77,14 @@ public class ChatController {
     public void perform_disconnection () {
         this.userDB.set_state(false);
         chatNI.to_disconnection();
+        
+        // no need to call the garbage collector
+        this.listDB.deleteObservers();
+        this.chatGUI.get_list_window().dispose();
+        this.chatGUI.get_chat_windows().clear();
+        this.convDB = null;
+        this.listDB = null;
+        this.userDB.set_username(null);
      }
     
     // Déconnection d'un autre user

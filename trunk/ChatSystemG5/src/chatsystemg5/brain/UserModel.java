@@ -21,6 +21,10 @@ public class UserModel extends ChatModel {
         return this.username;
     }
     
+    public void set_username(String username){
+        this.username = username;
+    }
+    
     public boolean get_state() {
         return status;
     }
