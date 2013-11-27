@@ -50,14 +50,9 @@ public class InterfaceCommunicate extends JFrame implements ActionListener{
 	 * Create the application.
 	 */
 	public InterfaceCommunicate(String usernameRemote,ChatGUI chatGUI){
-		
-		this.chatGUI=chatGUI;
-		
-		this.setTitle(usernameRemote);
-		
-		initialize();
-		
-		
+		this.chatGUI=chatGUI;		
+		this.setTitle(usernameRemote);		
+		initialize();		
 	}
 	
 

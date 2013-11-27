@@ -54,7 +54,6 @@ public class Controller extends Thread{
 	private ModelText modelText;
 	private ModelUsername modelUsername;
 	private ModelGroupRecipient modelGroupRecipient;
-	private ModelFile modelFile;
 	private ChatGUI chatgui;
 	private ChatNI chatNI;
 	private int numFileMax;
@@ -95,7 +94,7 @@ public class Controller extends Thread{
 	
 	public void performConnect(String username){
 		// enregistrement du pseudo
-		this.modelUsername.setUsername(username);
+		this.modelUsername.setUsername(username+"@10.32.0.56");
 		// passage dans l'etat connecte
 		this.modelStates.setState(true);
 		// lancement de la connexion
@@ -138,13 +137,13 @@ public class Controller extends Thread{
 		}
 	}
 
-	public void performRemoveRecipient(String username){
+	public void performRemoveRecipient(String remote){
 		if (this.modelStates.isConnected()){
-			this.modelGroupRecipient.removeRecipient(username);
+			this.modelGroupRecipient.removeRecipient(remote);
 		}
 	}
 	
-	public void performSendText (String username,String text){
+	public void performSendText (String remote,String text){
 		/*Iterator<String> it = recipientList.iterator();
 		String recipient;
 		modelText.setTextToSend(text);
@@ -160,7 +159,7 @@ public class Controller extends Thread{
 			}
 		}*/
 		InetAddress ipRecipient;
-		ipRecipient=this.modelListUsers.getListUsers().get(username);
+		ipRecipient=this.modelListUsers.getListUsers().get(remote);
 		this.chatNI.sendMsgText(ipRecipient, text);
 		
 	}
@@ -173,6 +172,7 @@ public class Controller extends Thread{
 		int i;
 		int first = 0;	
 		ipRemote = this.modelListUsers.getListUsers().get(f.getRemote());
+		f.buildFile();
 		this.chatNI.sendMsgFile(f.getAllParts(), f.getIdDemand());
 		this.filesToSend.remove(f.getIdDemand());
 		this.numDemands--;
@@ -205,16 +205,18 @@ public class Controller extends Thread{
 	 */
 	public void performFileAnswer(String remote, boolean answer){
 		InetAddress ipRemote = this.modelListUsers.getListUsers().get(remote);
-		// recherche du bon model
+		// recherche du bon model, on part du premier element du tableau
 		ModelFile f = this.filesToReceive.get(0);
 		boolean trouve = false;
 		while (!trouve && this.filesToSend.iterator().hasNext()){
 			f = ((ModelFile)this.filesToSend.iterator().next());
+			System.out.println("file remote : " + f.getRemote() + " remote : " +remote);
 			if(f.getRemote().equals(remote)){
 				trouve = true;
 				this.chatNI.sendConfirmationFile(ipRemote, f.getName(), answer, f.getIdDemand());
 			}
 		}
+		System.out.println("dans perform file answer");
 		if (trouve == false){
 			System.out.println("file not found");
 		}
@@ -225,6 +227,7 @@ public class Controller extends Thread{
 	 */
 	public void filePropositionReceived(String remote, String file, long size){
 		if (this.modelStates.isConnected()){
+			//ModelFile f = new ModelFile(remote,file);
 			System.out.println("file  " + file);
 			//pour differencier avec l'autre constructeur j'ai ajouter size sinon probleme
 			ModelFile f = new ModelFile(remote,file,size);
@@ -240,6 +243,7 @@ public class Controller extends Thread{
 	 * Permet de signaler à l'utilisateur la réponse de l'utilisateur distant
 	 */
 	public void fileAnswerReceived(String remote,int idDemand,boolean isAccepted){
+		System.out.println("file answer received from " + remote);
 		if (this.modelStates.isConnected()){
 			ModelFile f = this.filesToSend.get(0);
 			boolean trouve = false;
@@ -247,6 +251,7 @@ public class Controller extends Thread{
 				//on cherche le fichier qui correspond
 				while(!trouve && this.filesToSend.iterator().hasNext()){
 					f = this.filesToSend.iterator().next();
+					System.out.println("file remote : " + f.getRemote());
 					if (f.getIdDemand() == idDemand){
 						trouve = true;
 					}
@@ -282,7 +287,7 @@ public class Controller extends Thread{
 				this.chatNI.connect(true);
 			}
 			if ((!modelListUsers.isInListUsers(username)) ){					
-				this.modelListUsers.addUsernameList(username, ipRemote);
+				this.modelListUsers.addUsernameList("jo@10.32.0.56",ipRemote);//username+"@10.32.0.56", ipRemote);
 				System.out.println(username + " s'est connecté");
 			}	
 		}

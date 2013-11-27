@@ -42,8 +42,9 @@ public class ChatNI extends View implements Runnable, Observer{
 	private ArrayBlockingQueue <DatagramPacket> bufferPDUReceived;
 	private byte[] streamReceived;
 	private DatagramPacket pduReceived;
-	private ArrayList<ChatNIStreamSender> lsenders; 
+	private ArrayList<ChatNIStreamReceiver> lreceivers;
 	private NICache cache;
+	private int maxTransferts;
 
 	/**
 	 * 
@@ -52,15 +53,16 @@ public class ChatNI extends View implements Runnable, Observer{
 	 * @param controller controller du NI
 	 */
 	public ChatNI(int portUDP,int numMsgMax, Controller controller){
+		this.maxTransferts = 5;
 		this.controller=controller;
 		this.cache = new NICache();
 		this.setlocalIPandBroadcast();
 		this.setUDPsocket(portUDP, numMsgMax);
-		lsenders = new ArrayList<ChatNIStreamSender> (5); 
+		lreceivers = new ArrayList<ChatNIStreamReceiver> (this.maxTransferts);
 		this.chatNIMessage = new ChatNIMessage(numMsgMax,this.socketUDP);
 		this.chatNIMessage.start();
 		this.server = new ChatNIStreamConnection();
-		this.server.start();
+		this.server.setMaxTransferts(this.maxTransferts);
 	}
 	
 	/**
@@ -111,6 +113,13 @@ public class ChatNI extends View implements Runnable, Observer{
 		}
 	}
 	
+
+	
+	public void addReceiver(ChatNIStreamReceiver receiver){
+		if((this.lreceivers != null) &&(this.lreceivers.size() < this.maxTransferts)){
+			this.lreceivers.add(receiver);
+		}
+	}
 	public void connect(boolean ack){
 		this.chatNIMessage.sendHello(this.cache.getHello(ack), this.cache.getBroadcast());
 	}
@@ -131,6 +140,9 @@ public class ChatNI extends View implements Runnable, Observer{
 	}
 	
 	public void sendConfirmationFile(InetAddress recipient, String fileName,boolean answer, int idDemand){
+		if (answer == true){
+			//ChatNIStreamReceiver sr = new ChatNIStreamReceiver(recipient);
+		}
 		this.chatNIMessage.sendFileTransfertConfirmation(this.cache.getUsername(),recipient, answer, idDemand);
 	}
 	
@@ -144,6 +156,7 @@ public class ChatNI extends View implements Runnable, Observer{
 		FilePart p = new FilePart(this.cache.getUsername(),parts.poll(),true);
 		f.add(p);
 		this.server.setParts(f);
+		this.server.start();
 	}
 	
 	public void pduAnalyze(){

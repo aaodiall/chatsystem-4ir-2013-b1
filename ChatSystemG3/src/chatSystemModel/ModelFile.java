@@ -3,9 +3,11 @@
  */
 package chatSystemModel;
 
+
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.Observable;
 import java.util.concurrent.ArrayBlockingQueue;
@@ -19,38 +21,46 @@ public class ModelFile extends Observable{
 	private String remote; 
 	private String name;
 	private String path;
-	private Long size;
+	private Long size; // en octets
 	private int readMax;
 	private int offset;
-	private File fileToSend;
+	private File file;
 	//private File fileFromRemote;
 	private int idDemand;
 	private ArrayBlockingQueue<byte[]> fileParts;
 	private FileInputStream reader;
+	private FileOutputStream fos;
 	private Boolean stateReceivedDemand;
 	
 	
 	public ModelFile(String remote, String path){
 		this.remote = remote;
 		this.path = path;
-		this.fileToSend = new File(this.path);
-		this.name = this.fileToSend.getName();
+		this.file = new File(this.path);
+		this.name = this.file.getName();
 		try {
-			this.reader = new FileInputStream(this.fileToSend);
-			this.size = this.fileToSend.getTotalSpace();
+			this.reader = new FileInputStream(this.file);
+			this.size = this.file.length();
 		} catch (FileNotFoundException e) {
 			e.printStackTrace();
 		}
-	}
+	}	
+	
 	//constructeur reception pas terminer 
 	public ModelFile(String remote, String name,long size){
 		this.remote=remote;
 		this.name=name;
 		this.size=size;
+		try {
+			this.file = File.createTempFile(name, " ");
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
 		//this.idDemand
 		
 	}
 	public void buildFile(){
+		this.fileParts = new ArrayBlockingQueue<byte[]> (1000000);
 		this.offset = 0;
 		this.readMax = 1024;
 		byte[] t;

@@ -13,7 +13,7 @@ import java.util.concurrent.BlockingQueue;
  */
 public class ModelGroupRecipient extends Observable{
 
-	BlockingQueue<String> groupRecipients;
+	private BlockingQueue<String> groupRecipients;
 
 	/**
 	 * @param groupRecipients

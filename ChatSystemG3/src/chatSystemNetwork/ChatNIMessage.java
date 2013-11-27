@@ -169,6 +169,7 @@ public class ChatNIMessage extends Thread{
 			confStream = conf.toArray();
 			pdu2send = new DatagramPacket(confStream,confStream.length,recipient,this.socketUDP.getLocalPort());
 			this.socketUDP.send(pdu2send);
+			System.out.println("confirmation sent");
 		}catch(IOException ioExc){
 			System.out.println("error : construction du fileTransfertDemand");
 			ioExc.printStackTrace();

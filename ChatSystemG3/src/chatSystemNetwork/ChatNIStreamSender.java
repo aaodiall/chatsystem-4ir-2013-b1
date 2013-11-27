@@ -28,7 +28,6 @@ public class ChatNIStreamSender extends Thread{
 		try {
 			this.out = new BufferedOutputStream(socket.getOutputStream());
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 	}
