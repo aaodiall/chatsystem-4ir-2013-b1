@@ -12,6 +12,7 @@ import chatSystem.view.ni.ChatNI;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
 import chatSystem.model.FileTransferts;
+import chatSystem.model.RemoteSystemInformation;
 import java.io.File;
 
 public class ChatController extends Controller implements GuiToCont, NiToCont {
@@ -67,6 +68,7 @@ public class ChatController extends Controller implements GuiToCont, NiToCont {
     public void performHelloReceived(String username, String ip, boolean isAck) {
         System.out.println("Hello received, modifying the model");
         this.remoteSystems.addRemoteSystem(username, ip, isAck);
+        this.remoteSystems.getRemoteSystem(RemoteSystemInformation.generateID(username, ip)).addObserver(chatGUI);
     }
 
     @Override

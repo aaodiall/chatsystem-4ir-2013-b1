@@ -6,14 +6,15 @@
 package chatSystem.model;
 
 import java.util.concurrent.ConcurrentLinkedQueue;
-import javax.swing.DefaultListModel;
+import java.util.List;
+import java.util.ArrayList;
 
 
 public class RemoteSystemInformation extends UserInformation {
 
     //faire une seule liste et faire unJlist ds la fenetre pour afficher directement la liste
     private final ConcurrentLinkedQueue<String> messagesToSend;
-    private final DefaultListModel messages; //passer à autre chose et gérer tout dans le update comme pour la liste utilisateur
+    private final List<String> messages; //passer à autre chose et gérer tout dans le update comme pour la liste utilisateur
 
     /**
      * Class' constructor
@@ -23,15 +24,16 @@ public class RemoteSystemInformation extends UserInformation {
     public RemoteSystemInformation(String username, String ip) {
         super(username, ip);
         this.messagesToSend = new ConcurrentLinkedQueue<String>();
-        this.messages = new DefaultListModel();
+        this.messages = new ArrayList<String>();
     }
 
     /**
      * Add a message in the received messages' list
      * @param message new received message
      */
-    public void addMessageReceived(String message) {
-        this.messages.addElement(message); 
+    public synchronized void addMessageReceived(String message) {
+        this.messages.add(message);
+        this.notifyObservers();
     }
 
     /**
@@ -54,9 +56,9 @@ public class RemoteSystemInformation extends UserInformation {
      * Add a message in the sent messages' list
      * @param message sent message
      */
-    public void addMessageSent(String message) {
-        this.messages.addElement(message); 
-
+    public synchronized void addMessageSent(String message) {
+        this.messages.add(message); 
+        this.notifyObservers();
     }
     
 
@@ -64,7 +66,7 @@ public class RemoteSystemInformation extends UserInformation {
      * Get the conversation between the user and this remote system
      * @return list of all the exchanges messages
      */
-    public DefaultListModel getMessages() {
+    public List<String> getMessages() {
         return this.messages;
     }
 
