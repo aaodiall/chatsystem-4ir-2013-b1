@@ -265,11 +265,17 @@ public class DialogWindow extends JFrame implements ActionListener {
        // If the transfert has terminated we stop counting it
         if(size <= sizeTransfered){
             int oldMax = pb.getMaximum();
-            pb.setMaximum(oldMax - (int) size);
+            int newMax = oldMax - (int) size;
+            if(newMax >= 0){
+                pb.setMaximum(oldMax - (int) size);
+            }else{
+                //on affiche un message de fin
+                pb.setString("Done");
+            }
             gesPb.remove(idTransfert); 
-        }
-        
-        else {
+        } else {
+            //on affiche le pourcentage
+            pb.setString(null);
             if(!gesPb.containsKey(idTransfert)){
                 int oldMax = pb.getMaximum();
                 pb.setMaximum(oldMax + (int) size);
