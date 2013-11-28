@@ -1,17 +1,8 @@
 package chatsystemg5.ihm;
 
 import chatsystemg5.brain.ChatController;
-import java.awt.BorderLayout;
-import java.awt.Composite;
-import java.awt.CompositeContext;
-import java.awt.Panel;
-import java.awt.RenderingHints;
-import java.awt.image.ColorModel;
 import java.util.HashMap;
-import java.util.Iterator;
-import java.util.Map;
 import javax.swing.JFrame;
-import javax.swing.JPanel;
 
 public class ChatGUI extends JFrame {
 
@@ -31,8 +22,8 @@ public class ChatGUI extends JFrame {
         if(!this.chat_windows.containsKey(remote_username)){
             ChatWindow chat_window = new ChatWindow(this.chat_control, remote_username);
             this.chat_windows.put(remote_username, chat_window);
-        }
-        this.chat_windows.get(remote_username).setVisible(true);
+            this.chat_windows.get(remote_username).setVisible(true);
+        } 
     }
     
     public void delete_chat_window(String remote_username){
@@ -45,7 +36,6 @@ public class ChatGUI extends JFrame {
             return this.chat_windows.get(remote_username);
         }
         else {
-            System.err.println("The " + remote_username + " ChatWindow doesn't exist");
             return null;
         }
     }

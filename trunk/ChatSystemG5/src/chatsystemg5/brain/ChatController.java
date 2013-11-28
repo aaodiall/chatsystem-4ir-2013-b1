@@ -1,17 +1,7 @@
 package chatsystemg5.brain;
-import chatSystemCommon.*;
 import chatsystemg5.ihm.ChatGUI;
-import chatsystemg5.ihm.ChatWindow;
-import chatsystemg5.ihm.ConnectionWindow;
-import chatsystemg5.network.*;
+import chatsystemg5.network.ChatNI;
 
-import java.net.InetAddress;
-import java.net.UnknownHostException;
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 public class ChatController {
 
@@ -40,7 +30,7 @@ public class ChatController {
         listDB = new ListModel(this);
         convDB = new ConversationModel(this);
         
-        username = this.userDB.get_username();
+        this.username = this.userDB.get_username();
         
         // initialize network
         chatNI = new ChatNI(this);
@@ -80,11 +70,14 @@ public class ChatController {
         
         // no need to call the garbage collector
         this.listDB.deleteObservers();
-        this.chatGUI.get_list_window().dispose();
-        this.chatGUI.get_chat_windows().clear();
-        this.convDB = null;
         this.listDB = null;
+        //this.chatGUI.get_list_window().dispose();
+        this.convDB.deleteObservers();
+        this.convDB = null;
+        this.chatGUI.get_chat_windows().clear();
+               
         this.userDB.set_username(null);
+        
      }
     
     // Déconnection d'un autre user

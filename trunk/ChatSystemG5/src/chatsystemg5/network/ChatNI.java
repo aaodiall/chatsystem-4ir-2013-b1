@@ -1,12 +1,9 @@
 package chatsystemg5.network;
 
-import chatSystemCommon.*;
 import chatsystemg5.brain.ChatController;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
 import java.util.HashMap;
-import java.util.Iterator;
-import java.util.Map;
 import java.util.Observable;
 
 import java.util.Observer;
@@ -108,20 +105,19 @@ public /*abstract*/ class ChatNI extends Thread implements Observer {
     
     @Override
     public void run(){
-        while(msg_handler.get_user_state()){
-            try {
-                this.sleep(5000);
-            } catch (InterruptedException ex) {
-                Logger.getLogger(MessageEmissionNI.class.getName()).log(Level.SEVERE, null, ex);
-            }
-            this.check_user_connection();
-        }
+//        while(msg_handler.get_user_state()){
+//            try {
+//                this.sleep(10000);
+//            } catch (InterruptedException ex) {
+//                Logger.getLogger(MessageEmissionNI.class.getName()).log(Level.SEVERE, null, ex);
+//            }
+//            this.check_user_connection();
+//        }
     }
     private int i=0;
     private void check_user_connection() {
         i++;
         System.out.println("test " + i);
-        this.chat_control.get_listDB().set_hmap_users(null);
         this.chat_control.get_listDB().set_hmap_users(new HashMap<String, String>());
         this.to_connection(username, Boolean.FALSE);
     }
