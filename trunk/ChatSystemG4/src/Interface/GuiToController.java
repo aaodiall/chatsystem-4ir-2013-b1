@@ -1,6 +1,6 @@
 package Interface;
 
-import org.insa.model.User;
+import org.insa.java.model.User;
 
 public interface GuiToController {
 	void sendHelloMessage(User user);

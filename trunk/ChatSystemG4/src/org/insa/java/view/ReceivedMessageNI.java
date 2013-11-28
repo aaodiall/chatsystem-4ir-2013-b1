@@ -5,15 +5,15 @@ import java.net.DatagramPacket;
 import java.net.DatagramSocket;
 import java.net.InetAddress;
 
-import org.insa.controller.ChatController;
+import org.insa.java.controller.ChatController;
 
 import chatSystemCommon.Message;
 
-public final class ReceivedMessageNI implements Runnable {
+public final class ReceivedMessageNI extends JavaChatNI {
 	private static ReceivedMessageNI instance = null;
 	
 	private ChatController chatController;
-	
+
 	private ReceivedMessageNI(ChatController chatController) {
 		this.chatController = chatController;
 	}
@@ -31,7 +31,7 @@ public final class ReceivedMessageNI implements Runnable {
 	public void run() {
 		DatagramSocket socket = null;
 		try {
-			socket = new DatagramSocket(16001, InetAddress.getByName("0.0.0.0"));
+			socket = new DatagramSocket(UDP_SERVER_PORT, InetAddress.getByName(UDP_BROADCAST_RECEPTION));
 			socket.setBroadcast(true);
 
 			while (true) {

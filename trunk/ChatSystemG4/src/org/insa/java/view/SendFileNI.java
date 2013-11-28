@@ -1,20 +1,19 @@
 package org.insa.java.view;
 
 import java.io.IOException;
-import java.io.InterruptedIOException;
 import java.io.OutputStream;
 import java.net.Socket;
 import java.util.logging.Level;
 
-import org.insa.controller.FileController;
-import org.insa.controller.TransferState;
-import org.insa.model.User;
+import org.insa.java.controller.FileController;
+import org.insa.java.controller.TransferState;
+import org.insa.java.model.User;
 
 import chatSystemCommon.FilePart;
 
 import com.sun.istack.internal.logging.Logger;
 
-public final class SendFileNI implements Runnable{
+public final class SendFileNI extends JavaChatNI {
 	private static SendFileNI instance = null;
 
 	private Socket socket;
@@ -54,10 +53,12 @@ public final class SendFileNI implements Runnable{
 				
 				FilePart fp = fileController.getFilePartToSend();
 				if(fp == null) {
+					fileController.finishFileTransferEmission();
 					fileController.moveToState(TransferState.TERMINATED);
 					fileController.fileTransfertProtocol(null, null, null);
 				}	
 				else {
+					fileController.setEmissionBarValue(fp.getFilePart().length);
 					outputStream.write(fp.toArray());
 					outputStream.flush();
 					outputStream.close();

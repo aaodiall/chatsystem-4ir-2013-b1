@@ -1,4 +1,4 @@
-package org.insa.model;
+package org.insa.java.model;
 
 import javax.swing.DefaultListModel;
 
@@ -7,10 +7,6 @@ public class ChatModel extends DefaultListModel<User>{
 	
 	private User localUser;
 
-	public ChatModel() {
-		this.localUser = null;
-	}
-	
 	public ChatModel(User user) {
 		this.localUser = user;
 	}
@@ -33,5 +29,9 @@ public class ChatModel extends DefaultListModel<User>{
 
 	public User get(User u) {
 		return this.get(this.indexOf(u));
+	}
+	
+	public String getLocalUsername() {
+		return localUser.getUsername();
 	}
 }
