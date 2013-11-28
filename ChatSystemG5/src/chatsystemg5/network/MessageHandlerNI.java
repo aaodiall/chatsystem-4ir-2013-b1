@@ -68,17 +68,21 @@ public class MessageHandlerNI {
     // Gère la liaison chatNI-emission
     
     public void send(Message msg, InetAddress IP_dest){
-        this.IP_dest = IP_dest;
-        // Si le message est de type Hello
-        if (msg instanceof Hello) {
-            msg_emission.transfer_connection((Hello) msg, IP_dest);
+        if (!IP_dest.isLoopbackAddress()){
+            // Si le message est de type Hello
+            if (msg instanceof Hello) {
+                msg_emission.transfer_connection((Hello) msg, IP_dest);
+            }
+            if (msg instanceof Goodbye) {
+                msg_emission.transfer_disconnection((Goodbye) msg, IP_dest);
+            }
+            if (msg instanceof Text) {
+                msg_emission.send_text((Text) msg, IP_dest);
+            }
         }
-        if (msg instanceof Goodbye) {
-            msg_emission.transfer_disconnection((Goodbye) msg, IP_dest);
-        }
-        if (msg instanceof Text) {
-            msg_emission.send_text((Text) msg, IP_dest);
-        }
+        else {
+             System.out.println("Remote user unreachable");
+         }
     }
     
     public void send_connection(InetAddress IP_dest, Boolean alrdythere) {

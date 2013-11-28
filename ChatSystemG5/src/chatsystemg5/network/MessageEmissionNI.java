@@ -50,7 +50,7 @@ public class MessageEmissionNI implements ToRemoteApp{
             //System.out.println("Envoi à : " + IP_dest + "\nTaille : " + buffer.length);
             this.message = new DatagramPacket(buffer, buffer.length, IP_dest, this.UDP_port_dest);
             this.UDP_sock.send(message);
-            
+
             if (!hi.isAck()) {
                 // disable broadcast
                 this.UDP_sock.setBroadcast(false);
