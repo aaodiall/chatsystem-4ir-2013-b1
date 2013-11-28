@@ -41,14 +41,14 @@ public class ConversationModel extends ChatModel {
             this.conversation.get(remote_user_and_ip).add(txt);
         }
         else {
-            if(this.chat_control.get_chatGUI().get_chat_window(remote_user_and_ip) == null){
+            if(!this.chat_control.get_chatGUI().get_chat_windows().containsKey(remote_user_and_ip)){
                 this.chat_control.get_chatGUI().create_chat_window(remote_user_and_ip);
             }
             LinkedList messages = new LinkedList<String>();
             messages.add(txt);
             this.conversation.put(remote_user_and_ip, messages);
         }
-        this.notifyObservers();
+        this.notifyObservers(remote_user_and_ip);
     }
     
     public String get_last_text_by_user(String remote_username){
@@ -56,10 +56,8 @@ public class ConversationModel extends ChatModel {
     }
     
     @Override
-    public void notifyObservers(){
-        for(Iterator<ChatWindow> it = this.observers.iterator(); it.hasNext();){
-            it.next().update(this, this.conversation);
-        }
+    public void notifyObservers(Object arg){
+        this.chat_control.get_chatGUI().get_chat_window((String)arg).update(this, this.conversation);
     }
     
     @Override
