@@ -166,7 +166,6 @@ public class DialogWindow extends JFrame implements ActionListener {
         SwingUtilities.invokeLater(new Runnable() {
             @Override
             public void run() {
-                // JOptionPane suggestion = new JOptionPane();
                 int choix = JOptionPane.showConfirmDialog(null, "Souhaitez-vous recevoir le fichier " + name + " proposé par " + contact + " ?",
                         "Réception d'un fichier",
                         JOptionPane.YES_NO_OPTION,
@@ -336,9 +335,6 @@ public class DialogWindow extends JFrame implements ActionListener {
                 File fileSelected = fileChooser.getSelectedFile();
                 this.chatGUI.sendFileRequest(fileSelected, contact);
             }
-
-            //uploadJProgressBar.setVisible(true);
-            //uploadLabel.setVisible(true);
         }
     }
 }
