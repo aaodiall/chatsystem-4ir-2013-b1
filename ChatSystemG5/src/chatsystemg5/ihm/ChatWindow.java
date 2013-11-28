@@ -13,19 +13,21 @@ import java.awt.event.KeyListener;
 import java.util.HashMap;
 import java.util.Observable;
 import java.util.Observer;
-import javax.swing.InputMap;
-import javax.swing.JComponent;
 import javax.swing.JFrame;
-import javax.swing.KeyStroke;
 import javax.swing.text.DefaultCaret;
 
 
 
+/**
+ *cfdfgdffg
+ * @author dufant
+ * 
+ */
 public class ChatWindow extends JFrame implements Observer, ActionListener, KeyListener {
     
     private ChatController chat_control;
     private String remote_username;
-    private HashMap conversation_list;
+
     
     // Variables declaration - do not modify                     
     private javax.swing.JButton file_button;
@@ -40,6 +42,11 @@ public class ChatWindow extends JFrame implements Observer, ActionListener, KeyL
     private javax.swing.JSeparator jSeparator2;
     // End of variables declaration  
     
+    /**
+     * COnstrutor chatWindiw
+     * @param chat_control the unique chatController
+     * @param remote_username the user
+     */
     public ChatWindow (ChatController chat_control, String remote_username) {
         this.chat_control = chat_control;
         this.remote_username = remote_username;
@@ -53,9 +60,7 @@ public class ChatWindow extends JFrame implements Observer, ActionListener, KeyL
     public void actionPerformed(ActionEvent e) {
         // it's the send button which is selected
         if (e.getSource() == this.send_button) {
-            this.chat_control.get_convDB().add_conversation(this.remote_username, "YOU : " + this.send_text.getText().trim());
-            this.chat_control.perform_send(this.remote_username, this.send_text.getText().trim());
-            this.send_text.setText(null);
+            this.evaluate_and_send();
         }
         else if(e.getSource() == this.file_button) {
             this.FileActionPerformed(e);
@@ -75,18 +80,24 @@ public class ChatWindow extends JFrame implements Observer, ActionListener, KeyL
     @Override
     public void keyPressed(KeyEvent e) {
         if(e.getKeyCode() == KeyEvent.VK_ENTER){
-            ActionEvent ae = new ActionEvent(this.send_button, 1, "send_text");
-            this.actionPerformed(ae);
+            this.evaluate_and_send();
         }
     }
 
     @Override
-    public void keyReleased(KeyEvent e) {
-
-    }
+    public void keyReleased(KeyEvent e) {}
 
     private void FileActionPerformed(java.awt.event.ActionEvent evt) {                                     
         // TODO add your handling code here:
+    }
+    
+    public void evaluate_and_send () {
+        String message = this.send_text.getText().trim();
+        if (!message.isEmpty()){
+            this.chat_control.get_convDB().add_conversation(this.remote_username, "YOU : " + message);
+            this.chat_control.perform_send(this.remote_username, this.send_text.getText().trim());
+            this.send_text.setText(null);
+        }
     }
                         
     private void initComponents() {
@@ -139,7 +150,7 @@ public class ChatWindow extends JFrame implements Observer, ActionListener, KeyL
                     .addComponent(jSeparator1, javax.swing.GroupLayout.Alignment.TRAILING)
                     .addGroup(layout.createSequentialGroup()
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 388, Short.MAX_VALUE)
+                            .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 400, Short.MAX_VALUE)
                             .addComponent(jScrollPane1)
                             .addGroup(layout.createSequentialGroup()
                                 .addComponent(label, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
@@ -159,9 +170,9 @@ public class ChatWindow extends JFrame implements Observer, ActionListener, KeyL
                     .addComponent(file_button, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(label, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jSeparator2, javax.swing.GroupLayout.PREFERRED_SIZE, 10, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(jSeparator2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 226, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 400, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jSeparator1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)

@@ -1,12 +1,10 @@
 package chatsystemg5.network;
-import chatsystemg5.brain.ChatController;
 import chatSystemCommon.*;
 
 import java.io.IOException;
 import java.net.DatagramPacket;
 import java.net.DatagramSocket;
 import java.net.InetAddress;
-import java.net.SocketException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 

@@ -34,7 +34,7 @@ public class ConversationModel extends ChatModel {
     public void add_conversation(String remote_user_and_ip, String text) {
         DateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
         Date date = new Date();
-        String txt = new String("[" + dateFormat.format(date) + "]\n" + text + "\n\n");
+        String txt = "[" + dateFormat.format(date) + "]\n" + text + "\n\n";
         // if username already in the list
         if (this.conversation.containsKey(remote_user_and_ip)) {
             // just add the message at the end of his message list
@@ -63,5 +63,12 @@ public class ConversationModel extends ChatModel {
     @Override
     public void addObserver(Observer o){ 
         this.observers.add((ChatWindow)o);
+    }
+    
+    @Override
+    public void deleteObservers(){
+        for(Iterator<ChatWindow> it = this.observers.iterator(); it.hasNext();){
+            it.next().dispose();
+        }
     }
 }
