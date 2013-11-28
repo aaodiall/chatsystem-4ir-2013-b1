@@ -8,13 +8,20 @@ import chatsystemg5.brain.ChatController;
 import chatsystemg5.brain.ConversationModel;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
 import java.util.HashMap;
 import java.util.Observable;
 import java.util.Observer;
+import javax.swing.InputMap;
+import javax.swing.JComponent;
 import javax.swing.JFrame;
+import javax.swing.KeyStroke;
 import javax.swing.text.DefaultCaret;
 
-public class ChatWindow extends JFrame implements Observer, ActionListener {
+
+
+public class ChatWindow extends JFrame implements Observer, ActionListener, KeyListener {
     
     private ChatController chat_control;
     private String remote_username;
@@ -46,20 +53,36 @@ public class ChatWindow extends JFrame implements Observer, ActionListener {
     public void actionPerformed(ActionEvent e) {
         // it's the send button which is selected
         if (e.getSource() == this.send_button) {
-            this.chat_control.get_convDB().add_conversation(this.remote_username, "YOU : " + this.send_text.getText());
-            this.chat_control.perform_send(this.remote_username, this.send_text.getText());
+            this.chat_control.get_convDB().add_conversation(this.remote_username, "YOU : " + this.send_text.getText().trim());
+            this.chat_control.perform_send(this.remote_username, this.send_text.getText().trim());
             this.send_text.setText(null);
         }
         else if(e.getSource() == this.file_button) {
-            FileActionPerformed(e);
+            this.FileActionPerformed(e);
         }
     }
 
     @Override
     public void update(Observable obs, Object obj){
         this.received_text.append(((ConversationModel)obs).get_last_text_by_user(this.remote_username));
-        this.received_text.setAutoscrolls(rootPaneCheckingEnabled);
         this.setVisible(true);
+    }
+    
+
+    @Override
+    public void keyTyped(KeyEvent e) {}
+
+    @Override
+    public void keyPressed(KeyEvent e) {
+        if(e.getKeyCode() == KeyEvent.VK_ENTER){
+            ActionEvent ae = new ActionEvent(this.send_button, 1, "send_text");
+            this.actionPerformed(ae);
+        }
+    }
+
+    @Override
+    public void keyReleased(KeyEvent e) {
+
     }
 
     private void FileActionPerformed(java.awt.event.ActionEvent evt) {                                     
@@ -94,6 +117,7 @@ public class ChatWindow extends JFrame implements Observer, ActionListener {
 
         send_text.setColumns(20);
         send_text.setRows(5);
+        
         send_text.setLineWrap(true);
         jScrollPane2.setViewportView(send_text);
 
@@ -102,6 +126,8 @@ public class ChatWindow extends JFrame implements Observer, ActionListener {
 
         file_button.setText("File");
         file_button.addActionListener(this);
+        
+        this.send_text.addKeyListener(this);
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -147,4 +173,5 @@ public class ChatWindow extends JFrame implements Observer, ActionListener {
 
         pack();
     }
+
 }
