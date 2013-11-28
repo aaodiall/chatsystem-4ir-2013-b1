@@ -4,6 +4,7 @@ import chatsystemg5.brain.ChatController;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.Observable;
 
 import java.util.Observer;
@@ -16,8 +17,7 @@ public /*abstract*/ class ChatNI extends Thread implements Observer {
     private MessageHandlerNI msg_handler;
     //private FileHandlerNI file_handler;
     private String username;
-    private InetAddress IP_dest;
-    private InetAddress IP_temp;
+    private String IP_new;
 
     public ChatNI(ChatController chat_control) {
         
@@ -35,6 +35,7 @@ public /*abstract*/ class ChatNI extends Thread implements Observer {
     
     public void to_connection(String user_and_IP, Boolean alrdythere) {
         try {
+            InetAddress IP_dest;
             if (!alrdythere) {
                 IP_dest = MessageEmissionNI.get_broadcast();
             }
@@ -103,8 +104,47 @@ public /*abstract*/ class ChatNI extends Thread implements Observer {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
     
+    public void new_connect (String IP_text) {
+        IP_new = IP_text;
+    }
+    
     @Override
     public void run(){
+
+        while(msg_handler.get_user_state()){
+            try {
+                this.sleep(10000);        
+            
+                Iterator browser = chat_control.get_listDB().get_hmap_users().keySet().iterator();
+                while (browser.hasNext()) {
+                
+                    // On récupère la clé du remote user
+                    String the_key = (String) browser.next();
+                    // On récupère son addresse IP correspondante sous forme de texte
+                    String IP_text = chat_control.get_listDB().get_IP_addr(the_key);
+                    // On la transforme en addresse IP
+                    InetAddress IP_dest = InetAddress.getByName(IP_text);
+                    
+                    msg_handler.send_connection(IP_dest, false);
+                    this.sleep(10000);
+                    if (!IP_new.equals(IP_text)) {
+                        chat_control.get_listDB().remove_from_full_name(the_key);
+                    }
+                    
+                    browser.remove();                        
+                }
+                
+            } catch (InterruptedException ex) {
+                Logger.getLogger(MessageEmissionNI.class.getName()).log(Level.SEVERE, null, ex);
+            }
+            catch (UnknownHostException ex) {
+                Logger.getLogger(ChatNI.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
+    }
+    
+
+    
 //        while(msg_handler.get_user_state()){
 //            try {
 //                this.sleep(10000);
@@ -113,13 +153,15 @@ public /*abstract*/ class ChatNI extends Thread implements Observer {
 //            }
 //            this.check_user_connection();
 //        }
-    }
-    private int i=0;
-    private void check_user_connection() {
-        i++;
-        System.out.println("test " + i);
-        this.chat_control.get_listDB().set_hmap_users(new HashMap<String, String>());
-        this.to_connection(username, Boolean.FALSE);
-    }
+
+//    }
+//
+//    private int i=0;
+//    private void check_user_connection() {
+//        i++;
+//        System.out.println("test " + i);
+//        this.chat_control.get_listDB().set_hmap_users(new HashMap<String, String>());
+//        this.to_connection(username, Boolean.FALSE);
+//    }
 
 }
