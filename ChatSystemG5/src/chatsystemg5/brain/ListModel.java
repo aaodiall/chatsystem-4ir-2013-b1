@@ -31,6 +31,7 @@ public class ListModel extends ChatModel {
         hmap_users.remove(username + "@" + IP_addr);
         this.notifyObservers();
         this.chat_control.get_chatGUI().get_chat_window(username + "@" + IP_addr).dispose();
+        this.chat_control.get_chatGUI().get_chat_windows().remove(username + "@" + IP_addr);
     }
     
     public void remove_from_full_name (String full_name) {
