@@ -6,11 +6,11 @@ import java.io.InputStream;
 import java.net.ServerSocket;
 import java.net.Socket;
 
-import org.insa.controller.ChatController;
+import org.insa.java.controller.ChatController;
 
 import chatSystemCommon.Message;
 
-public final class ReceivedFileNI implements Runnable {
+public final class ReceivedFileNI extends JavaChatNI {
 	private static ReceivedFileNI instance = null;
 
 	private ChatController chatController;

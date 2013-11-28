@@ -1,51 +1,55 @@
 package org.insa.java.view;
 
-import java.awt.GridLayout;
-
-import javax.swing.JLabel;
-import javax.swing.JPanel;
-import javax.swing.JProgressBar;
-
-import org.insa.general.view.GeneralStatusBar;
-
-public class JavaStatusBar extends GeneralStatusBar{
-	private JPanel statusPanel = new JPanel();
-	private JLabel statusLabel = new JLabel();
-	private JProgressBar statusProgress = new JProgressBar();
+public abstract class JavaStatusBar {
+	protected JavaFileTransferBar emissionBar;
+	protected JavaFileTransferBar receptionBar;
+	protected JavaStandardMessageBar messageBar;
 	
-	public JavaStatusBar() {
-		statusPanel.setLayout(new GridLayout(1, 2));
-		statusPanel.add(statusLabel);
-		statusPanel.add(statusProgress);
-		statusProgress.setVisible(false);
+	public void setEmissionBarValue(int i) {
+		emissionBar.setValue(emissionBar.getValue() + i);
 	}
 	
-	public void setProgressBarVisible(boolean b) {
-		this.statusProgress.setVisible(b);
+	public void setReceptionBarValue(int i) {
+		receptionBar.setValue(i);
 	}
 	
-	public void setProgressBarMax(int max) {
-		this.statusProgress.setMaximum(max);
+	public void setEmissionBarMax(int i) {
+		emissionBar.setMax(i);
 	}
 	
-	public void resetProgressBar() {
-		this.statusProgress.setValue(0);
+	public void setReceptionBarMax(int i) {
+		receptionBar.setMax(i);
 	}
 	
-	public void setTextLabel(String s) {
-		this.statusLabel.setText(s);
-	}
-
-	public JPanel getStatusPanel() {
-		return statusPanel;
+	public void setEmmissionBarText(String s) {
+		emissionBar.setText(s);
 	}
 	
-	public void setProgressBarValue(int i) {
-		this.statusProgress.setValue(i);
+	public void setReceptionBarText(String s) {
+		receptionBar.setText(s);
 	}
-
-	@Override
-	public Object getStatusBar() {
-		return statusPanel;
+	
+	public void setMessageBarText(String s) {
+		messageBar.setText(s);
 	}
+	
+	public void beginFileTransferEmission(int fileSize) {
+		emissionBar.beginFileTransferEmission(fileSize);
+	}
+	
+	public void beginFileTransferReception(int fileSize) {
+		receptionBar.beginFileTransferReception(fileSize);
+	}
+	
+	public void finishFileTransferEmission() {
+		emissionBar.finishFileTransferEmission();
+	}
+	
+	public void finishFileTransferReception() {
+		receptionBar.finishFileTransferReception();
+	}
+	
+	public abstract Object getContainer();
+	
 }
+

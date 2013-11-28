@@ -1,4 +1,4 @@
-package org.insa.model;
+package org.insa.java.model;
 
 import java.net.InetAddress;
 import java.util.ArrayList;

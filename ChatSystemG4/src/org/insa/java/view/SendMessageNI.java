@@ -6,16 +6,17 @@ import java.net.DatagramSocket;
 import java.net.InetAddress;
 import java.net.SocketException;
 import java.net.UnknownHostException;
+
 import chatSystemCommon.Message;
 
-public final class SendMessageNI {
+public final class SendMessageNI extends JavaChatNI {
 	private static SendMessageNI instance = null;
 	
 	private DatagramSocket datagramSocket;
 	
 	private SendMessageNI() {
 		try {
-			datagramSocket = new DatagramSocket(16000);
+			datagramSocket = new DatagramSocket(UDP_CLIENT_PORT);
 			datagramSocket.setBroadcast(true);
 		} catch (SocketException e) {
 			e.printStackTrace();
@@ -34,7 +35,7 @@ public final class SendMessageNI {
 	
 	public void sendBroadcastMessage(Message message) {	
 		try {
-			this.sendMessage(message, InetAddress.getByName("255.255.255.255"));
+			this.sendMessage(message, InetAddress.getByName(UDP_BROADCAST_EMISSION));
 		} catch (UnknownHostException e) {
 			e.printStackTrace();
 		}
@@ -43,10 +44,16 @@ public final class SendMessageNI {
 	public void sendMessage(Message message, InetAddress address) {
 		try {			
 			byte[] sendData = message.toArray();
-			DatagramPacket sendPacket = new DatagramPacket(sendData, sendData.length, address,16001);
+			DatagramPacket sendPacket = new DatagramPacket(sendData, sendData.length, address,UDP_SERVER_PORT);
 			datagramSocket.send(sendPacket);
 		} catch (IOException e) {
 			e.printStackTrace();
 		}	
+	}
+
+	@Override
+	public void run() {
+		// TODO Auto-generated method stub
+		
 	}
 }

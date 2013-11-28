@@ -1,4 +1,4 @@
-package org.java.factory;
+package org.insa.java.factory;
 
 import chatSystemCommon.FilePart;
 import chatSystemCommon.FileTransfertCancel;
