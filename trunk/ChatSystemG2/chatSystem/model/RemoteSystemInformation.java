@@ -59,6 +59,7 @@ public class RemoteSystemInformation extends UserInformation {
      * @param message sent message
      */
     public synchronized void addMessageSent(String message) {
+        System.out.println("message added");
         this.messages.add(message); 
         this.setChanged();
         this.notifyObservers(message);

@@ -91,6 +91,8 @@ public class DialogWindow extends JFrame implements ActionListener {
         fileButton.addActionListener(this);
 
         conversationJScrollPane.setViewportView(conversation);
+        this.conversationJScrollPane.setVerticalScrollBar(new JScrollBar());
+        this.conversationJScrollPane.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED);
         
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -301,17 +303,16 @@ public class DialogWindow extends JFrame implements ActionListener {
      * Update the conversation that is happening with the contact
      * @param newMessage message to add to update the conversation with the new messages
      */
-    public void updateConversation(Object newMessage) {   
-        this.conversationMessages.addElement(newMessage);
-        /*SwingUtilities.invokeLater(new Runnable() {
+    public void updateConversation(final Object newMessage) {   
+        SwingUtilities.invokeLater(new Runnable() {
             @Override
             public void run() {
-                conversationMessages.removeAllElements();
-                for (String name : newConversation){
-                    conversationMessages.addElement(name);
-                }   
+                conversationMessages.addElement(newMessage);
+                JScrollBar aux = conversationJScrollPane.getVerticalScrollBar();
+                System.out.println("max value + " + aux.getMaximum());
+                aux.setValue(aux.getMaximum()+13);
             }
-        });*/
+        });
     }
 
     /**

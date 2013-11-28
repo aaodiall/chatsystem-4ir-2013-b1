@@ -191,6 +191,7 @@ public class ChatGUI extends View implements ToUser, FromUser {
             String id = rsi.getIdRemoteSystem();
             System.out.println("Updating the conversation with the contact "+ id);
             this.displayDialogWindow(id);
+            //this.dWindows.get(id).toBack();
             this.dWindows.get(id).updateConversation(arg);
         //this.dWindows.get(id).updateConversation(rsi.getMessages());
         }    
