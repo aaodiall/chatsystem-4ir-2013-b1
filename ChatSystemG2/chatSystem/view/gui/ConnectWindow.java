@@ -45,6 +45,7 @@ public final class ConnectWindow extends JFrame implements ActionListener {
 
         this.setTitle("Connect Window");
         this.setSize(300, 400);
+        this.setResizable(true);
 
         JPanel panel = new JPanel();
         panel.setLayout(new GridBagLayout());
