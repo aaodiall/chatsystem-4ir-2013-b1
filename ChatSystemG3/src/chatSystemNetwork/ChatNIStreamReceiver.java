@@ -26,15 +26,15 @@ public class ChatNIStreamReceiver extends Thread{
 	private byte[] bytes;
 	private boolean isReceived;
 	private ArrayList<byte[]> fparts;
+	private int numberOfParts;
 	
-	// bufferSize = 1024
-	public ChatNIStreamReceiver(int remotePort,InetAddress remoteIP){
+	public ChatNIStreamReceiver(int remotePort,InetAddress remoteIP, int numberOfParts){
 		this.remotePort = remotePort;
 		this.remoteIP = remoteIP;
 		this.nextByte = 0;
 		this.isReceived = false;
 		this.fparts = new ArrayList<byte[]>();
-		this.bytes = new byte[1512];
+		this.numberOfParts = numberOfParts;
 	}
 
 	public boolean getIsReceived(){
@@ -53,6 +53,7 @@ public class ChatNIStreamReceiver extends Thread{
 		int i =0;
 		try {
 			this.rSocket = new Socket(this.remoteIP,this.remotePort);
+			this.bytes = new byte[1000000];
 			this.reader = new BufferedInputStream(this.rSocket.getInputStream());
 			while (isReceived == false){
 				while (nextByte != -1){

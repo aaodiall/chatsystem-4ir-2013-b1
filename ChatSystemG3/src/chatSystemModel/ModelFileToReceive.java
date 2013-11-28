@@ -7,7 +7,6 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.util.ArrayList;
 
 /**
  * @author joanna
@@ -19,13 +18,15 @@ public class ModelFileToReceive extends ModelFile{
 	private FileOutputStream fos;
 	private Boolean stateReceivedDemand;
 	private Boolean isReceived;
-	private int numberOfParts;
+	private int writeMax;
 	private int progression;
 	
 	public ModelFileToReceive(String remote, String name,long size, int idDemand){
 		super(remote,idDemand);
 		super.setName(name);
 		super.setSize(size);
+		this.writeMax = 1024;
+		super.setNumberParts(writeMax);
 		this.progression = 0;
 		System.out.print(System.getenv("HOME") +"/Téléchargements/"+name);
 		System.out.println(" ");
@@ -73,13 +74,8 @@ public class ModelFileToReceive extends ModelFile{
 		notifyObservers(this.stateReceivedDemand);
 	}
 
-	public void setNumberOfParts(int n){
-		this.numberOfParts = n;
-		this.setProgression();
-	}
-
 	public void setProgression(){
-		this.progression = this.progression/this.numberOfParts;
+		this.progression = this.progression/super.getNumberParts();
 	}
 	
 }

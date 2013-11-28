@@ -54,7 +54,7 @@ public class ChatNI extends View implements Runnable, Observer{
 		this.cache = new NICache();
 		this.setlocalIPandBroadcast();
 		this.setUDPsocket(portUDP, numMsgMax);
-		lreceivers = new ArrayList<ChatNIStreamReceiver> (this.maxTransferts);
+		this.lreceivers = new ArrayList<ChatNIStreamReceiver> (this.maxTransferts);
 		this.chatNIMessage = new ChatNIMessage(numMsgMax,this.socketUDP);
 		this.chatNIMessage.start();
 		this.server = new ChatNIStreamConnection();
@@ -137,12 +137,12 @@ public class ChatNI extends View implements Runnable, Observer{
 	}
 	
 	
-	public void sendConfirmationFile(String recipientName, InetAddress recipientIP, String fileName,boolean answer, int idDemand){
+	public void sendConfirmationFile(String recipientName, InetAddress recipientIP, String fileName,boolean answer, int idDemand, int numParts){
 		// si l'utilisateur veut recevoir le fichier
 		this.chatNIMessage.sendFileTransfertConfirmation(this.cache.getUsername(),recipientIP, answer, idDemand);
 		if (answer == true){
-			ChatNIStreamReceiver sr = new ChatNIStreamReceiver(this.cache.getPort(recipientName),recipientIP);
-			this.lreceivers.add(sr);
+			ChatNIStreamReceiver sr = new ChatNIStreamReceiver(this.cache.getPort(recipientName),recipientIP,numParts);
+			this.addReceiver(sr);
 			sr.start();
 		}
 	}
@@ -174,7 +174,7 @@ public class ChatNI extends View implements Runnable, Observer{
 		InetAddress ipRemoteAddr;
 		ipRemoteAddr = this.bufferPDUReceived.peek().getAddress();
 		DatagramPacket pdureceived;
-		if (!this.userIP.equals(ipRemoteAddr)){
+		if (this.userIP.equals(ipRemoteAddr)){
 			try {
 				pdureceived = this.bufferPDUReceived.poll();
 				receivedMsg = Message.fromArray(pdureceived.getData());
@@ -216,7 +216,6 @@ public class ChatNI extends View implements Runnable, Observer{
 		for (i=0;i<this.lreceivers.size();i++){
 			if(this.lreceivers.get(i).getIsReceived()){
 				ArrayList<byte[]> parts = this.lreceivers.get(i).getAllParts();
-				this.controller.setNumberFileParts(parts.size(),this.cache.getDemand(this.lreceivers.get(i).getPort()));
 				System.out.println("1 file received!!!");
 				for (j=0;j<parts.size()-1;j++){
 					this.controller.partReceived(parts.get(j), this.cache.getDemand(this.lreceivers.get(i).getPort()), false);
