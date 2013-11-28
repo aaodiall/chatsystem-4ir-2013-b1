@@ -1,4 +1,4 @@
-    package chatsystemg5.brain;
+package chatsystemg5.brain;
 
 import chatsystemg5.ihm.ChatWindow;
 import chatsystemg5.ihm.ListWindow;
@@ -15,6 +15,9 @@ public class ListModel extends ChatModel {
     private HashMap<String,String> hmap_users;
     private ChatController chat_control;
     
+    // Temporary list of remote users
+    private HashMap<String,String> hmap_temp;
+    
     public ListModel (ChatController chat_control) {
         this.chat_control = chat_control;
         hmap_users = new HashMap();
@@ -26,6 +29,20 @@ public class ListModel extends ChatModel {
         }
         this.notifyObservers();
     }
+    
+    
+    
+    public void add_user_temp (String username, String IP_addr) {
+        if (!this.hmap_temp.containsKey(username + "@" + IP_addr)) {
+            hmap_temp.put (username + "@" + IP_addr, IP_addr);
+        }
+    }
+    
+    public void new_temp() {
+        hmap_temp = new HashMap();
+    }
+    
+    
     
     public void remove_user (String username, String IP_addr) {
         hmap_users.remove(username + "@" + IP_addr);
@@ -45,6 +62,10 @@ public class ListModel extends ChatModel {
     
     public HashMap<String,String> get_hmap_users () {
         return this.hmap_users;
+    }
+    
+    public HashMap<String,String> get_hmap_temp () {
+        return this.hmap_temp;
     }
     
     @Override

@@ -14,10 +14,13 @@ public class ChatController {
     private ChatGUI chatGUI;
     private ChatNI chatNI;
     
+    private boolean buffer_state;
+    
     public ChatController () {
         // initialize view
         // TO DO create view at the end
         chatGUI = new ChatGUI(this);
+        buffer_state = false;
         
     }
     
@@ -47,11 +50,15 @@ public class ChatController {
     
     // Connexion d'un autre user
     public void perform_connection_back (String remote_user, String IP_text, Boolean alrdythere) {
-        //System.out.println("I'm Controller, receiving connection : remote user : " +remote_user + ", IP source : " + IP_text + ", already there ? " + alrdythere);
-        // Ajouter utilisateur au model
-        listDB.add_user(remote_user, IP_text);
-
-   
+        if (!buffer_state)  {
+            //System.out.println("I'm Controller, receiving connection : remote user : " +remote_user + ", IP source : " + IP_text + ", already there ? " + alrdythere);
+            // Ajouter utilisateur au model
+            listDB.add_user(remote_user, IP_text);
+        }
+        else {
+            listDB.add_user_temp(remote_user, IP_text);
+        }
+        
         // if remote user first connection
         if(!alrdythere){
             System.out.println("I'm Controller : sending back a Hello to : " + remote_user + " @ " + IP_text);
@@ -60,6 +67,13 @@ public class ChatController {
         }
      }
     
+    // Swap the 2 hmap list
+    public void swap_hmap_users () {
+        listDB.get_hmap_users().clear();
+        listDB.get_hmap_users().putAll(listDB.get_hmap_temp());
+        listDB.get_hmap_temp().clear();
+        listDB.notifyObservers();
+    }
      
     /**************** Disonnection ****************/
      
@@ -119,5 +133,9 @@ public class ChatController {
     
     public ChatNI get_chatNI(){
         return this.chatNI;
-    }    
+    }
+    
+    public void set_buffer_state (boolean state) {
+        this.buffer_state = state;
+    }
 }
