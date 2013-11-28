@@ -13,7 +13,6 @@ import java.util.Observable;
  */
 public class ModelListUsers extends Observable {
 	private HashMap<String, InetAddress> listUsers;
-
 	public ModelListUsers() {
 		super();
 		this.listUsers=new HashMap<String,InetAddress>();

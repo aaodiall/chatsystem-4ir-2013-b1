@@ -4,12 +4,10 @@
 package chatSystemNetwork;
 
 import java.net.InetAddress;
+import java.util.HashMap;
 import java.util.Observable;
 import java.util.Observer;
-import java.util.concurrent.ArrayBlockingQueue;
-
 import chatSystemCommon.Hello;
-import chatSystemModel.ModelFile;
 import chatSystemModel.ModelUsername;
 
 /**
@@ -20,12 +18,15 @@ public class NICache implements Observer{
 
 	private String username;
 	private InetAddress localBroadcast;
-	private ArrayBlockingQueue<byte[]> parts;
-	private Hello shello;
+	private HashMap<String,Integer> nPorts;
+	private HashMap<Integer,Integer> nDemands;
 	
 	NICache(){
 		username = null;
 		localBroadcast = null;
+		this.nPorts = new HashMap<String,Integer>();
+		this.nDemands = new HashMap<Integer,Integer>();
+
 	}
 	
 	Hello getHello(boolean isAck){
@@ -49,6 +50,30 @@ public class NICache implements Observer{
 	
 	void setBroadcast(InetAddress localBroadcast){
 		this.localBroadcast=localBroadcast;
+	}
+	
+	void addPort(String remote, Integer portTransfert){
+		this.nPorts.put(remote,portTransfert);
+	}
+	
+	void removePort(String remote){
+		this.nPorts.remove(remote);
+	}
+	
+	Integer getPort(String remote){
+		return this.nPorts.get(remote);
+	}
+	
+	void addDemand(Integer port, Integer numDemand){
+		this.nDemands.put(port,numDemand);
+	}
+	
+	void removeDemand(Integer port){
+		this.nDemands.remove(port);
+	}
+	
+	Integer getDemand(Integer port){
+		return this.nDemands.get(port);
 	}
 	
 	public void update(Observable arg0, Object arg1) {

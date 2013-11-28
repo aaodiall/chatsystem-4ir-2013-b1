@@ -4,15 +4,12 @@
 package chatSystemController;
 
 import java.net.InetAddress;
-import java.net.UnknownHostException;
 import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.concurrent.ArrayBlockingQueue;
+import java.util.HashMap;
 
 import chatSystemIHMs.ChatGUI;
 import chatSystemModel.*;
 import chatSystemNetwork.ChatNI;
-import runChat.ChatSystem;
 
 /* note pour plus tard : 
  *  - checkConnection a implementer
@@ -57,9 +54,10 @@ public class Controller extends Thread{
 	private ChatGUI chatgui;
 	private ChatNI chatNI;
 	private int numFileMax;
-	private ArrayList <ModelFile> filesToSend;
-	private ArrayList <ModelFile> filesToReceive;
-	private int numDemands;
+	private ArrayList <ModelFileToSend> filesToSend;
+	private HashMap <Integer,ModelFileToReceive> filesToReceive;
+	private int numReceiveDemands;
+	private int numSendDemands;
 	
 	/**
 	 * @param modelListUsers
@@ -79,9 +77,11 @@ public class Controller extends Thread{
 		this.modelUsername = modelUsername;
 		this.modelGroupRecipient = modelGroupRecipient;
 		this.numFileMax = 5;
-		this.filesToSend = new ArrayList<ModelFile> (this.numFileMax);
-		this.filesToReceive = new ArrayList<ModelFile> (this.numFileMax);
-		this.numDemands=0;
+		this.filesToSend = new ArrayList<ModelFileToSend> (this.numFileMax);
+		this.filesToReceive = new HashMap<Integer,ModelFileToReceive> (this.numFileMax);
+		this.numReceiveDemands = 0;
+		this.numSendDemands = 0;
+		this.start();
 	}
 
 	public void setChatgui(ChatGUI chatgui) {
@@ -94,27 +94,12 @@ public class Controller extends Thread{
 	
 	public void performConnect(String username){
 		// enregistrement du pseudo
-		this.modelUsername.setUsername(username+"@10.32.0.56");
+		this.modelUsername.setUsername(username);
 		// passage dans l'etat connecte
 		this.modelStates.setState(true);
 		// lancement de la connexion
 		this.chatNI.connect(false);
-		System.out.println( this.modelUsername.getUsername() + " : connected");
-		// affichage graphique de la fenêtre de communication
-		/*this.chatgui.getwConnect().setVisible(false);
-		this.chatgui.getwCommunicate().setVisible(true);*/
-		
-		//test pour modelistusers update
-		/*try {
-			this.modelListUsers.addUsernameList("alpha", InetAddress.getLocalHost());
-			this.modelListUsers.addUsernameList("alpha", InetAddress.getLocalHost());
-			this.modelListUsers.addUsernameList("alpha", InetAddress.getLocalHost());
-		} catch (UnknownHostException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}*/		
-		//ChatSystem.getChatGui().getwConnect().setTfdUsername("");
-		
+		System.out.println( this.modelUsername.getUsername() + " : connected");		
 	}
 	
 	public void performDisconnect(){
@@ -125,8 +110,6 @@ public class Controller extends Thread{
 			this.modelListUsers.clearListUsers();
 			// on lance la deconnexion
 			this.chatNI.disconnect();
-			/*this.chatgui.getwCommunicate().setVisible(false);
-			this.chatgui.getwConnect().setVisible(true);*/
 			System.out.println(this.modelUsername.getUsername() + " : disconnected");
 		}
 	}
@@ -167,15 +150,11 @@ public class Controller extends Thread{
 	/**
 	 * Demande à la GUI de lancer le processus de récupération de choix de fichier à envoyer
 	 */
-	public void performJoinFile(ModelFile f){
-		InetAddress ipRemote;
-		int i;
-		int first = 0;	
-		ipRemote = this.modelListUsers.getListUsers().get(f.getRemote());
-		f.buildFile();
+	public void performJoinFile(ModelFileToSend f){		
+		f.readFile();
 		this.chatNI.sendMsgFile(f.getAllParts(), f.getIdDemand());
 		this.filesToSend.remove(f.getIdDemand());
-		this.numDemands--;
+		this.numSendDemands--;
 	}
 	
 	/**
@@ -183,18 +162,16 @@ public class Controller extends Thread{
 	 * @param username
 	 */
 	public void performPropositionFile(String remote, String filePath){
-		// on cree le modelFile
-		ModelFile f = new ModelFile (remote,filePath);
-		if (this.numDemands < this.numFileMax){
-			// on lui donne un numero de demande
-			f.setIdDemand(this.numDemands);
-			this.numDemands++;
+		if (this.numSendDemands < this.numFileMax){
+			// on cree le modelFile
+			ModelFileToSend f = new ModelFileToSend (remote,filePath,this.numSendDemands);
+			this.numSendDemands++;
 			//on l'ajoute a la liste des fichier a envoyer;
 			this.filesToSend.add(f);
 			//On recupere l'ip du destinataire
 			InetAddress ipRemote = this.modelListUsers.getListUsers().get(remote);
 			// on envoie la proposition
-			this.chatNI.sendPropositionFile(ipRemote, f.getName(), f.getSize(),f.getIdDemand());
+			this.chatNI.sendPropositionFile(remote, ipRemote, f.getName(), f.getSize(),f.getIdDemand());
 		}else{
 			System.out.println("Too many files to send, try later");
 		}
@@ -204,35 +181,37 @@ public class Controller extends Thread{
 	 * Permet d'envoyer la réponse de l'utilisateur à une demande d'envoi de fichier
 	 */
 	public void performFileAnswer(String remote, boolean answer){
-		InetAddress ipRemote = this.modelListUsers.getListUsers().get(remote);
-		// recherche du bon model, on part du premier element du tableau
-		ModelFile f = this.filesToReceive.get(0);
-		boolean trouve = false;
-		while (!trouve && this.filesToSend.iterator().hasNext()){
-			f = ((ModelFile)this.filesToSend.iterator().next());
-			System.out.println("file remote : " + f.getRemote() + " remote : " +remote);
-			if(f.getRemote().equals(remote)){
-				trouve = true;
-				this.chatNI.sendConfirmationFile(ipRemote, f.getName(), answer, f.getIdDemand());
+		int i = 0;
+		if ((answer == true) && (this.numReceiveDemands <= this.numFileMax)){
+			InetAddress ipRemote = this.modelListUsers.getListUsers().get(remote);
+			// recherche du bon model, on part du premier element du tableau
+			boolean trouve = false;
+			while (!trouve && i<this.filesToReceive.size()){
+				ModelFileToReceive f = this.filesToReceive.get(i);
+				System.out.println("file remote : " + f.getRemote() + " remote : " +remote);
+				if(f.getRemote().equals(remote)){
+					trouve = true;
+					this.chatNI.sendConfirmationFile(remote,ipRemote, f.getName(), answer, f.getIdDemand());
+				}
+				i++;
 			}
-		}
-		System.out.println("dans perform file answer");
-		if (trouve == false){
-			System.out.println("file not found");
+			if (trouve == false){
+				System.out.println("file not found");
+			}
+		}else if (this.numReceiveDemands <= this.numFileMax){
+			// prévenir l'interface graphique
+			System.out.println("MaxFile atteint");
 		}
 	}
 	
 	/**
 	 * Permet de signaler à l'utilisateur une demande d'envoi de fichier
 	 */
-	public void filePropositionReceived(String remote, String file, long size){
+	public void filePropositionReceived(String remote, String file, long size, int idDemand){
 		if (this.modelStates.isConnected()){
-			//ModelFile f = new ModelFile(remote,file);
-			System.out.println("file  " + file);
-			//pour differencier avec l'autre constructeur j'ai ajouter size sinon probleme
-			ModelFile f = new ModelFile(remote,file,size);
+			ModelFileToReceive f = new ModelFileToReceive(remote,file,size,idDemand);
 			f.setStateReceivedDemand(true);
-			this.filesToReceive.add(f);
+			this.filesToReceive.put(idDemand, f);
 			// signale normalement a la gui qu'on a recu une demande
 			this.chatgui.proposeFile(remote, file, size);
 			System.out.println("file demand received from " + remote);
@@ -245,13 +224,12 @@ public class Controller extends Thread{
 	public void fileAnswerReceived(String remote,int idDemand,boolean isAccepted){
 		System.out.println("file answer received from " + remote);
 		if (this.modelStates.isConnected()){
-			ModelFile f = this.filesToSend.get(0);
+			ModelFileToSend f = this.filesToSend.get(0);
 			boolean trouve = false;
 			if (isAccepted){
 				//on cherche le fichier qui correspond
 				while(!trouve && this.filesToSend.iterator().hasNext()){
 					f = this.filesToSend.iterator().next();
-					System.out.println("file remote : " + f.getRemote());
 					if (f.getIdDemand() == idDemand){
 						trouve = true;
 					}
@@ -260,7 +238,7 @@ public class Controller extends Thread{
 			}else{
 				System.out.println("file refused");
 				this.filesToSend.remove(idDemand);
-				this.numDemands--;
+				this.numSendDemands--;
 			}
 		}
 	}
@@ -271,6 +249,7 @@ public class Controller extends Thread{
 	public void fileTranfertCancelReceived(String remote, int idDemand){
 		
 	}
+	
 	public void messageReceived(String text, String username){
 		if (modelStates.isConnected()){
 			this.modelText.setRemote(username);
@@ -287,7 +266,7 @@ public class Controller extends Thread{
 				this.chatNI.connect(true);
 			}
 			if ((!modelListUsers.isInListUsers(username)) ){					
-				this.modelListUsers.addUsernameList("jo@10.32.0.56",ipRemote);//username+"@10.32.0.56", ipRemote);
+				this.modelListUsers.addUsernameList(username, ipRemote);
 				System.out.println(username + " s'est connecté");
 			}	
 		}
@@ -300,14 +279,35 @@ public class Controller extends Thread{
 		}			
 	}
 	
+	public void partReceived(byte[] fileBytes, int idDemand, boolean isLast){
+		this.filesToReceive.get(idDemand).writeFilePart(fileBytes, isLast);
+		if (isLast == true){
+			this.filesToReceive.remove(idDemand);
+			this.numReceiveDemands--;
+		}
+	}
+	
+	public void setNumberFileParts(int n, int idDemand){
+		this.filesToReceive.get(idDemand).setNumberOfParts(n);
+	}
+	
 	// check les connections
 	public void run(){
+		int n = 1;
 		while(true){
 			try{
-				Thread.sleep(60000);
-				if (this.modelStates.isConnected()){
-					this.chatNI.connect(false);
+				Thread.sleep(100);
+				if (this.filesToReceive.size() >0){
+					this.chatNI.checkReceives();
+					System.out.println("check done");
 				}
+				if (n > 6000){
+					if (this.modelStates.isConnected()){
+						this.chatNI.connect(false);
+					}
+					n=0;
+				}
+				n++;
 			} catch (InterruptedException e){
 				e.printStackTrace();
 			}

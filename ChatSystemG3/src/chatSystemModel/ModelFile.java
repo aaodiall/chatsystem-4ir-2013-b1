@@ -3,14 +3,7 @@
  */
 package chatSystemModel;
 
-
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.IOException;
 import java.util.Observable;
-import java.util.concurrent.ArrayBlockingQueue;
 
 /**
  * @author joanna
@@ -18,22 +11,31 @@ import java.util.concurrent.ArrayBlockingQueue;
  */
 public class ModelFile extends Observable{
 	
-	private String remote; 
+	private String remote;
 	private String name;
-	private String path;
+	//private String path;
 	private Long size; // en octets
-	private int readMax;
-	private int offset;
-	private File file;
-	//private File fileFromRemote;
+	//private int readMax;
+	//private int offset;
+	//private File file;
 	private int idDemand;
-	private ArrayBlockingQueue<byte[]> fileParts;
-	private FileInputStream reader;
-	private FileOutputStream fos;
-	private Boolean stateReceivedDemand;
+	//private ArrayBlockingQueue<byte[]> fileParts;
+	//private FileInputStream reader;
+	//private FileOutputStream fos;
+	//private Boolean stateReceivedDemand;
+	
+	/**
+	 * 
+	 * @param remote nom de l'utilisateur distant
+	 * @param idDemand numero de la demande
+	 */
+	public ModelFile(String remote, int idDemand){
+		this.remote = remote;
+		this.idDemand = idDemand;
+	}
 	
 	
-	public ModelFile(String remote, String path){
+	/*public ModelFile(String remote, String path){
 		this.remote = remote;
 		this.path = path;
 		this.file = new File(this.path);
@@ -58,8 +60,9 @@ public class ModelFile extends Observable{
 		}
 		//this.idDemand
 		
-	}
-	public void buildFile(){
+	}*/
+	
+	/*public void buildFile(){
 		this.fileParts = new ArrayBlockingQueue<byte[]> (1000000);
 		this.offset = 0;
 		this.readMax = 1024;
@@ -85,41 +88,31 @@ public class ModelFile extends Observable{
 			e.printStackTrace();
 		}
 	}
-	public Boolean getStateReceivedDemand() {
-		return stateReceivedDemand;
-	}
+	*/
 
-	public void setStateReceivedDemand(Boolean stateReceivedDemand) {
-		this.stateReceivedDemand = stateReceivedDemand;
-		setChanged();
-		notifyObservers(this.stateReceivedDemand);
-	}
-
+	
 	public String getName(){
 		return this.name;
 	}
 	
-	public long getSize(){
+	public void setName(String name){
+		this.name = name;
+	}
+	
+	public Long getSize(){
 		return this.size;
 	}
 	
-	public ArrayBlockingQueue<byte[]> getAllParts(){
-		return this.fileParts;
-	}
-	
-	public String getRemote(){
-		return this.remote;
+	public void setSize(long size){
+		this.size = size;
 	}
 	
 	public int getIdDemand(){
 		return this.idDemand;
 	}
 	
-	public void setIdDemand(int id){
-		this.idDemand = id;
+	public String getRemote(){
+		return this.remote;
 	}
 	
-	public int getNumParts(){
-		return this.fileParts.size();
-	}
 }

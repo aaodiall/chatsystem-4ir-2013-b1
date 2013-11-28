@@ -3,9 +3,8 @@
  */
 package chatSystemNetwork;
 
-import java.io.BufferedOutputStream;
+
 import java.io.IOException;
-import java.net.InetAddress;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.ArrayList;
@@ -53,21 +52,27 @@ public class ChatNIStreamConnection extends Thread{
 		}
 	}
 	
+	public void checkSends(){
+		int i; 
+		for (i=0; i<this.lsenders.size();i++){
+			if (this.lsenders.get(i).getIsSent()){
+				
+			}
+		}
+	}
+	
 	public void run(){
 		Socket socket;
-		while(true){
-			try {
-				Thread.sleep(100);
-				System.out.println("avant accept");
-				socket = this.serverSocket.accept();
-				System.out.println("après accept");
-				ChatNIStreamSender s = new ChatNIStreamSender(socket, this.fParts);
-			} catch (InterruptedException e) {
-				e.printStackTrace();
-			} catch (IOException e) {
-				System.out.println("Error : accept in StreamConnection");
-				e.printStackTrace();
-			} 
-		}
+		try {
+			System.out.println("avant accept");
+			socket = this.serverSocket.accept();
+			System.out.println("après accept");
+			ChatNIStreamSender s = new ChatNIStreamSender(socket, this.fParts);
+			this.lsenders.add(s);
+			s.start();
+		} catch (IOException e) {
+			System.out.println("Error : accept in StreamConnection");
+			e.printStackTrace();
+		} 
 	}
 }
