@@ -48,6 +48,7 @@ public class MessageHandlerNI {
         String IP_text = IP_source.getHostAddress();
         if (msg instanceof Hello) {
             System.out.println("I'm MsgHandler : Hello received from " + msg.getUsername() + ", IP source : " + IP_text);
+            chatNI.new_connect(IP_text);
             chatNI.from_connection(msg.getUsername(), IP_text, ((Hello) msg).isAck());
             //chat_control.perform_connection(msg.getUsername(), IP_text, ((Hello) msg).isAck());
         }
