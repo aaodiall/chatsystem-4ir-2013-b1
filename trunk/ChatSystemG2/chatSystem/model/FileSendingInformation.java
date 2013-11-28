@@ -1,8 +1,7 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
+/**
+ * Information about a file that is being sent by the local user
  */
+
 package chatSystem.model;
 
 import java.io.BufferedInputStream;
@@ -13,15 +12,16 @@ import java.io.IOException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-/**
- *
- * @author Jules
- */
 public class FileSendingInformation extends FileTransfertInformation {
 
     private BufferedInputStream readerBuffer;
     private FileInputStream reader;
 
+    /**
+     * Class' constructor
+     * @param idRemoteSystem id of the remote system the file is being sent to
+     * @param fileToSend file which is to be sent 
+     */
     public FileSendingInformation(String idRemoteSystem, File fileToSend) {
         super(idRemoteSystem, fileToSend);
         
@@ -35,7 +35,6 @@ public class FileSendingInformation extends FileTransfertInformation {
 
     /**
      * Obtaining the next file's part to send
-     *
      * @return file's part
      */
     public byte[] getFilePart() {

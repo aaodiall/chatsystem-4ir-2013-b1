@@ -1,7 +1,5 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
+/**
+ * Information about a file that is being received by the local user
  */
 
 package chatSystem.model;
@@ -14,10 +12,7 @@ import java.io.IOException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-/**
- *
- * @author Jules
- */
+
 public class FileReceivingInformation extends FileTransfertInformation{
     
     private FileOutputStream writer;
@@ -26,6 +21,14 @@ public class FileReceivingInformation extends FileTransfertInformation{
     private final long size;
     private final int portServer;
 
+    /**
+     * Class' constructor
+     * @param idTransfert file transfert's id
+     * @param idRemoteSystem id of the remote system which is sending the file
+     * @param size file's size
+     * @param name file's name
+     * @param portServer port which is used for the transfert
+     */
     public FileReceivingInformation(int idTransfert, String idRemoteSystem, long size, String name, int portServer) {
         super(idTransfert, idRemoteSystem, new File(name));
         
@@ -41,7 +44,7 @@ public class FileReceivingInformation extends FileTransfertInformation{
     
     /**
      * Add a new file part
-     * @param filePart
+     * @param filePart file's part which is to be added
      */
     public void addFilePart(byte[] filePart) {
         try {
@@ -64,6 +67,10 @@ public class FileReceivingInformation extends FileTransfertInformation{
         }
     }
     
+    /**
+     * Setting where to save the file which is being received
+     * @param fileToSave File which is going to represents the receiving file
+     */
     public void setFileDescriptor(File fileToSave){
         this.fileDescriptor = fileToSave;
         try {
@@ -74,6 +81,10 @@ public class FileReceivingInformation extends FileTransfertInformation{
         }
     }
     
+    /**
+     * Determine the file's size
+     * @return file's size
+     */
     @Override
     public long getSize(){
         return size;

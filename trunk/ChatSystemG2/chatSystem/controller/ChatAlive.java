@@ -10,10 +10,6 @@ import chatSystem.model.RemoteSystems;
 import chatSystem.model.UserInformation;
 import chatSystem.model.UserState;
 
-/**
- *
- * @author Marjorie
- */
 public class ChatAlive extends Thread{
 
     private final long msBetweenHellos;
@@ -32,6 +28,9 @@ public class ChatAlive extends Thread{
         this.msTimeToAnswer = 4000; //4s
     } 
     
+    /**
+     * Action to be executed
+     */
     @Override
     public void run() {
         while (this.usrInfo.getUserState() == UserState.CONNECTED) {

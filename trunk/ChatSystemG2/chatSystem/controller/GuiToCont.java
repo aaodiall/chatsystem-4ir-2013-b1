@@ -1,17 +1,11 @@
 /*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
+ * Interface modelizing the messages that can be sent from the user interface to the controller
  */
 
 package chatSystem.controller;
 
 import java.io.File;
 
-/**
- *
- * @author Marjorie
- */
 public interface GuiToCont {
     
     	public void performConnect(String username);
