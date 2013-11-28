@@ -15,40 +15,39 @@ public class MessageReceiver implements Runnable {
 
     final static int portUdpReception = 16001;
     final static int tailleMaxDatagram = 1024;
-    
+
     final String ipLocal;
 
-    private DatagramSocket serverSocket;
-    private byte[] messageReceived;
-    private ChatNI chatni;
+    private final DatagramSocket serverSocket;
+    private final byte[] messageReceived;
+    private final ChatNI chatni;
 
     /**
      * Class' constructor
+     *
      * @param chatni chatNI responsible for this messageReceiver instance
+     * @throws java.net.SocketException this error have to be catched to warn the user
      */
-    public MessageReceiver(ChatNI chatni) {
-        try {
-            this.serverSocket = new DatagramSocket(MessageReceiver.portUdpReception);
-            this.messageReceived = new byte[MessageReceiver.tailleMaxDatagram];
-            this.chatni = chatni;
-        } catch (SocketException exc) {
-            System.err.println("Probleme à la création du socket server");
-        }
+    public MessageReceiver(ChatNI chatni) throws SocketException {
+
+        this.serverSocket = new DatagramSocket(MessageReceiver.portUdpReception);
+        this.messageReceived = new byte[MessageReceiver.tailleMaxDatagram];
+        this.chatni = chatni;
         InetAddress localIP = null;
         try {
             localIP = InetAddress.getLocalHost();
         } catch (UnknownHostException ex) {
             Logger.getLogger(MessageReceiver.class.getName()).log(Level.SEVERE, null, ex);
         }
-        if (localIP != null)
+        if (localIP != null) {
             this.ipLocal = localIP.getHostAddress();
-        else 
+        } else {
             this.ipLocal = null;
+        }
     }
 
     /**
-     * Receive a message and analyze it
-     * Call for the right chatNI's method
+     * Receive a message and analyze it Call for the right chatNI's method
      */
     private void receiveMessage() {
         while (this.chatni.getUserInfo().getUserState() == UserState.CONNECTED) {
@@ -68,7 +67,7 @@ public class MessageReceiver implements Runnable {
                         this.chatni.textMessageReceived(msgText.getText(), RemoteSystemInformation.generateID(msg.getUsername(), from));
                     } else if (msgClass == Goodbye.class) {
                         Goodbye gbReceived = (Goodbye) msg;
-                        this.chatni.goodbyeReceived(RemoteSystemInformation.generateID(gbReceived.getUsername(),from));
+                        this.chatni.goodbyeReceived(RemoteSystemInformation.generateID(gbReceived.getUsername(), from));
                     } else if (msgClass == FileTransfertDemand.class) {
                         FileTransfertDemand ftd = (FileTransfertDemand) msg;
                         this.chatni.fileTransfertDemandReceived(ftd.getName(), ftd.getUsername(), from, ftd.getSize(), ftd.getIdDemand(), ftd.getPortClient());

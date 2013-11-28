@@ -24,4 +24,8 @@ public interface NiToCont {
 	public void performFilePartReceived(int idTransfert, byte[] filePart, boolean isLast);
         
         public void performFileSended(int idTransfert, String idRemoteSystem);
+        
+        public void performConnectionError();
+        
+        public void performFileTransfertError(int idTransfert);
 }

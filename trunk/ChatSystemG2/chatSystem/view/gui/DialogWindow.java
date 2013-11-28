@@ -253,6 +253,58 @@ public class DialogWindow extends JFrame implements ActionListener {
     }
     
     /**
+     * Reset the progression of a file (sending side)
+     * @param idTransfert id of the file's transfert
+     * @param size file's size
+     */
+    public void resetFileSendingProgression(final int idTransfert, final long size){
+         SwingUtilities.invokeLater(new Runnable() {
+            @Override
+            public void run() {
+                int updateValue = gestionProgressionBar(idTransfert, size, Long.MAX_VALUE, uploadJProgressBar, gestionUploadProgression);
+                uploadJProgressBar.setValue(updateValue);
+                
+                if(!uploadJProgressBar.isVisible()){
+                    uploadJProgressBar.setVisible(true);
+                    uploadLabel.setVisible(true);
+                }
+            }
+        });
+    }
+    
+    /**
+     * Reset the progression of a file (receiving side)
+     * @param idTransfert id of the file's transfert
+     * @param size file's size
+     */
+    public void resetFileReceivingProgression(final int idTransfert, final long size){
+         SwingUtilities.invokeLater(new Runnable() {
+            @Override
+            public void run() {
+                int updateValue = gestionProgressionBar(idTransfert, size, Long.MAX_VALUE, downloadJProgressBar, gestionDownloadProgression);
+                downloadJProgressBar.setValue(updateValue);
+                
+                if(!downloadJProgressBar.isVisible()){
+                    downloadJProgressBar.setVisible(true);
+                    downloadLabel.setVisible(true);
+                }
+            }
+        });
+    }
+    
+    void displayFileTransfertError(final String fileName) {
+            SwingUtilities.invokeLater(new Runnable() {
+            @Override
+            public void run() {
+                JOptionPane.showConfirmDialog(null, "Problems occurs during the transfert of " + fileName + " please try again",
+                        "Connection Error",
+                        JOptionPane.CLOSED_OPTION,
+                        JOptionPane.WARNING_MESSAGE);
+            }
+        });
+    }
+    
+    /**
      * Gestion of the progression bar in the window
      * We decided to only show one progress bar in reception and one in sending, even when there are several files
      * The progress bar show the progression all the sendings (or receptions) seen as a whole
@@ -267,11 +319,13 @@ public class DialogWindow extends JFrame implements ActionListener {
     public int gestionProgressionBar(int idTransfert,long size,long sizeTransfered, JProgressBar pb, HashMap<Integer, Long> gesPb) {
        // If the transfert has terminated we stop counting it
         if(size <= sizeTransfered){
+            System.out.println("--------------------------------------");
             int oldMax = pb.getMaximum();
             int newMax = oldMax - (int) size;
-            if(newMax >= 0){
+            if(newMax > 0){
                 pb.setMaximum(oldMax - (int) size);
             }else{
+                System.out.println("--------------------------------------ok");
                 //on affiche un message de fin
                 pb.setString("Done");
             }
@@ -308,7 +362,6 @@ public class DialogWindow extends JFrame implements ActionListener {
             public void run() {
                 conversationMessages.addElement(newMessage);
                 JScrollBar aux = conversationJScrollPane.getVerticalScrollBar();
-                System.out.println("max value + " + aux.getMaximum());
                 aux.setValue(aux.getMaximum()+13);
             }
         });

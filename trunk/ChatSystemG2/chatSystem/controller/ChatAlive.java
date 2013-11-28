@@ -14,17 +14,17 @@ public class ChatAlive extends Thread{
 
     private final long msBetweenHellos;
     private final long msTimeToAnswer;
-    private UserInformation usrInfo;
+    private final UserInformation usrInfo;
     private RemoteSystems rmInstance = null;
       
     /**
      * Class' constructor
-     * @userInfor information about the local user
+     * @param usrInfo information about the local user
      */
     public ChatAlive(UserInformation usrInfo) {
         this.rmInstance = RemoteSystems.getInstance();
         this.usrInfo = usrInfo;
-        this.msBetweenHellos = 10000; //1min
+        this.msBetweenHellos = 10000; //10s
         this.msTimeToAnswer = 4000; //4s
     } 
     
@@ -35,9 +35,9 @@ public class ChatAlive extends Thread{
     public void run() {
         while (this.usrInfo.getUserState() == UserState.CONNECTED) {
             try {
-                this.sleep(this.msBetweenHellos - this.msTimeToAnswer);
+                ChatAlive.sleep(this.msBetweenHellos - this.msTimeToAnswer);
                 rmInstance.setAllMaybeOffline();
-                this.sleep(this.msTimeToAnswer);
+                ChatAlive.sleep(this.msTimeToAnswer);
                 this.rmInstance.removeOfflineRemoteSystem();
             } catch (InterruptedException e) {
                 System.err.println("Someone interrupted ChatAlive for no reason");

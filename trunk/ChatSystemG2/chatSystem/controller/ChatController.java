@@ -58,7 +58,7 @@ public class ChatController extends Controller implements GuiToCont, NiToCont {
         this.localUser.setUserState(UserState.CONNECTED);
         this.chatAlive = new ChatAlive(this.localUser);
         this.chatAlive.setName("chat alive");
-        //this.chatAlive.start();
+        this.chatAlive.start();
     }
 
     /**
@@ -234,6 +234,28 @@ public class ChatController extends Controller implements GuiToCont, NiToCont {
     public void performFileSended(int idTransfert, String idRemoteSystem) {
         FileSendingInformation tmp = (FileSendingInformation)this.fileTransferts.getFileTransfertInformation(idTransfert);
         this.remoteSystems.addMessageSentToRemoteSystem("The file " + tmp.getName() + " has been sent to " + tmp.getIdRemoteSystem(), tmp.getIdRemoteSystem());
+        tmp.deleteObservers();
+        this.fileTransferts.deleteTransfert(idTransfert);
+    }
+
+    /**
+     * Ask the GUI to display a notification to inform the user that a problem occurs during the connection
+     */
+    @Override
+    public void performConnectionError() {
+        this.chatGUI.displayConnectionErrorNotification();
+    }
+    
+    /**
+     * Ask the GUI to display a notification to inform the user that a problem occurs during a file Transfert
+     * @param idTransfert the id of the transfert where error occurs
+     */
+    @Override
+    public void performFileTransfertError(int idTransfert){
+        FileTransfertInformation tmp = this.fileTransferts.getFileTransfertInformation(idTransfert);
+        this.chatGUI.displayFileTransfertErrorNotification(tmp.getIdRemoteSystem(), tmp.getName());
+        tmp.setState(FileState.TERMINATED);
+        this.remoteSystems.addMessageSentToRemoteSystem("An error occurs during the transfert of " + tmp.getName(),tmp.getIdRemoteSystem());
         tmp.deleteObservers();
         this.fileTransferts.deleteTransfert(idTransfert);
     }
