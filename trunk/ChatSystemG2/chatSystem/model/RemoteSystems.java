@@ -27,6 +27,7 @@ public class RemoteSystems extends Model implements Iterable<RemoteSystemInforma
      * Add a remote system in the remote system's list
      * @param username contact's username
      * @param ip remote system's ip address
+     * @param isAck whether or not the remote system expects an answer
      */
     public synchronized void addRemoteSystem(String username, String ip, boolean isAck) {
         
