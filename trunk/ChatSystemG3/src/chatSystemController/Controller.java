@@ -191,7 +191,7 @@ public class Controller extends Thread{
 				System.out.println("file remote : " + f.getRemote() + " remote : " +remote);
 				if(f.getRemote().equals(remote)){
 					trouve = true;
-					this.chatNI.sendConfirmationFile(remote,ipRemote, f.getName(), answer, f.getIdDemand());
+					this.chatNI.sendConfirmationFile(remote,ipRemote, f.getName(), answer, f.getIdDemand(),f.getNumberParts());
 				}
 				i++;
 			}
@@ -287,21 +287,18 @@ public class Controller extends Thread{
 		}
 	}
 	
-	public void setNumberFileParts(int n, int idDemand){
-		this.filesToReceive.get(idDemand).setNumberOfParts(n);
-	}
 	
 	// check les connections
 	public void run(){
 		int n = 1;
 		while(true){
 			try{
-				Thread.sleep(100);
+				Thread.sleep(1000);
 				if (this.filesToReceive.size() >0){
 					this.chatNI.checkReceives();
 					System.out.println("check done");
 				}
-				if (n > 6000){
+				if (n > 60){
 					if (this.modelStates.isConnected()){
 						this.chatNI.connect(false);
 					}

@@ -17,7 +17,6 @@ public class ModelFileToSend extends ModelFile{
 
 	private String path;
 	private int readMax;
-	private int offset;
 	private FileInputStream reader;
 	private File fileToSend;
 	private ArrayBlockingQueue<byte[]> fileParts;
@@ -37,26 +36,21 @@ public class ModelFileToSend extends ModelFile{
 	
 	public void readFile(){
 		this.readMax = 1024;
-		int numberOfParts = super.getSize().intValue() / this.readMax;
-		if ( super.getSize().intValue() % this.readMax != 0){
-			numberOfParts++;
-		}
-		this.fileParts = new ArrayBlockingQueue<byte[]> (numberOfParts);
-		this.offset = 0;
+		super.setNumberParts(readMax);
+		System.out.println("number parts = "+ super.getNumberParts());
+		this.fileParts = new ArrayBlockingQueue<byte[]> (super.getNumberParts());
+		int  i = 0;
 		byte[] t;
 		try{
+			t = new byte[this.readMax];
+			while ((i < super.getNumberParts()) && (super.getSize().intValue() > this.readMax)){
+				reader.read(t);
+				this.fileParts.add(t);
+				i++;
+			}
 			if (super.getSize().intValue() <= this.readMax){
 				t = new byte[super.getSize().intValue()];
 				reader.read(t);
-				this.fileParts.add(t);
-			}else{
-				t = new byte[this.readMax];
-				while ((this.offset + this.readMax) < super.getSize()){
-					reader.read(t, this.offset, t.length);
-					this.fileParts.add(t);
-					this.offset += this.readMax;
-				}
-				reader.read(t, this.offset, (super.getSize().intValue()-this.offset));
 				this.fileParts.add(t);
 			}
 		} catch (FileNotFoundException e){
@@ -64,7 +58,6 @@ public class ModelFileToSend extends ModelFile{
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
-		System.out.println("number parts = "+this.fileParts.size());
 	}
 	
 	public int getNumParts(){
