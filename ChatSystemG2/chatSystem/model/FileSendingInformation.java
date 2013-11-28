@@ -16,6 +16,8 @@ public class FileSendingInformation extends FileTransfertInformation {
 
     private BufferedInputStream readerBuffer;
     private FileInputStream reader;
+    private byte [] filePart;
+    private final byte [] filePartInit;
 
     /**
      * Class' constructor
@@ -24,6 +26,9 @@ public class FileSendingInformation extends FileTransfertInformation {
      */
     public FileSendingInformation(String idRemoteSystem, File fileToSend) {
         super(idRemoteSystem, fileToSend);
+        
+        this.filePart = new byte[tailleSegment];
+        this.filePartInit = new byte[tailleSegment];
         
         try {
             this.reader = new FileInputStream(this.fileDescriptor);
@@ -38,7 +43,7 @@ public class FileSendingInformation extends FileTransfertInformation {
      * @return file's part
      */
     public byte[] getFilePart() {
-        byte [] filePart = new byte[tailleSegment];
+        this.filePart = this.filePartInit;
         try {
             
             if(this.readerBuffer.read(filePart)==-1){
@@ -58,7 +63,9 @@ public class FileSendingInformation extends FileTransfertInformation {
                 }
             }
         }
-        return filePart;
+        //consomme moins de mémoire que l'utilisation d'un nouveau tableau à chaque fois mais n'arrange pas le problème 
+        // de saturation de la mémoire pour des fichiers énormes
+        return filePart.clone();
     }
 
 }

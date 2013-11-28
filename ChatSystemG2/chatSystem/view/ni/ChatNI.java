@@ -4,25 +4,28 @@ import chatSystem.view.gui.View;
 import chatSystem.controller.ChatController;
 import chatSystem.model.*;
 import chatSystem.view.ni.messageTransferts.*;
+import java.net.SocketException;
 import java.util.Observable;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 public class ChatNI extends View {
 
     private Thread threadMessageReceiver;
     private Thread threadMessageTransfert;
-    private final MessageReceiver messageReceiver;
+    private MessageReceiver messageReceiver;
     private final MessageTransferts messageTransfert;
-    //private final FileReceiver[] fileReceivers;
-    //private final FileTransfert[] fileTransferts;
 
     private UserInformation usrInfo;
 
     public ChatNI(ChatController controller) {
         super(controller);
-
-        //this.fileReceivers = new FileReceiver[5];
-        //this.fileTransferts = new FileTransfert[5];
-        this.messageReceiver = new MessageReceiver(this);
+        try {
+            this.messageReceiver = new MessageReceiver(this);
+        } catch (SocketException ex) {
+            ((ChatController) controller).performConnectionError();
+            Logger.getLogger(ChatNI.class.getName()).log(Level.SEVERE, null, ex);
+        }
         this.messageTransfert = new MessageTransferts(this);
         this.threadMessageReceiver = new Thread(this.messageReceiver);
         this.threadMessageTransfert = new Thread(this.messageTransfert);
@@ -189,5 +192,9 @@ public class ChatNI extends View {
 
     public UserInformation getUserInfo() {
         return this.usrInfo;
+    }
+
+    public void fileTransfertError(int idTransfert) {
+        ((ChatController)controller).performFileTransfertError(idTransfert);
     }
 }

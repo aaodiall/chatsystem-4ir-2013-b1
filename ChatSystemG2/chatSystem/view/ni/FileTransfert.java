@@ -40,6 +40,7 @@ public class FileTransfert implements Runnable {
         try {
             this.serverSocket = new ServerSocket(0); // let the OS find the right port
         } catch (IOException ex) {
+            this.chatNI.fileTransfertError(this.fileToSend.getId());
             Logger.getLogger(FileTransfert.class.getName()).log(Level.SEVERE, null, ex);
         }
         this.fileToSend = (FileSendingInformation) FileTransferts.getInstance().getFileTransfertInformation(idTransfert);
@@ -81,6 +82,7 @@ public class FileTransfert implements Runnable {
             this.chatNI.fileSended(this.fileToSend.getId(), this.fileToSend.getIdRemoteSystem());
 
         } catch (IOException ex) {
+            this.chatNI.fileTransfertError(this.fileToSend.getId());
             Logger.getLogger(FileTransfert.class.getName()).log(Level.SEVERE, null, ex);
         } finally {
             try {
@@ -91,6 +93,7 @@ public class FileTransfert implements Runnable {
                 this.clientSocket.close();
                 this.serverSocket.close();
             } catch (IOException ex) {
+                this.chatNI.fileTransfertError(this.fileToSend.getId());
                 Logger.getLogger(FileTransfert.class.getName()).log(Level.SEVERE, null, ex);
             }
         }

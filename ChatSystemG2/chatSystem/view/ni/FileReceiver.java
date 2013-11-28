@@ -63,10 +63,13 @@ public class FileReceiver implements Runnable {
 
         
         } catch (UnknownHostException ex) {
+            this.chatNI.fileTransfertError(this.fileToReceive.getId());
             Logger.getLogger(FileReceiver.class.getName()).log(Level.SEVERE, null, ex);
         } catch (IOException ex) {
+            this.chatNI.fileTransfertError(this.fileToReceive.getId());
             Logger.getLogger(FileReceiver.class.getName()).log(Level.SEVERE, null, ex);
         } catch (ClassNotFoundException ex) {
+            this.chatNI.fileTransfertError(this.fileToReceive.getId());
             Logger.getLogger(FileReceiver.class.getName()).log(Level.SEVERE, null, ex);
         } finally {
             try {
@@ -74,6 +77,7 @@ public class FileReceiver implements Runnable {
                 this.readerBuffer.close();
                 this.socketClient.close();
             } catch (IOException ex) {
+                this.chatNI.fileTransfertError(this.fileToReceive.getId());
                 Logger.getLogger(FileReceiver.class.getName()).log(Level.SEVERE, null, ex);
             }
         }

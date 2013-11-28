@@ -95,6 +95,23 @@ public final class ConnectWindow extends JFrame implements ActionListener {
     }
 
     /**
+     * Opens a window to show the user a problem has been detected during the connection
+     * The program close after that
+     */
+    public void displayConnectionError() {
+        SwingUtilities.invokeLater(new Runnable() {
+            @Override
+            public void run() {
+                JOptionPane.showConfirmDialog(null, "Problems occurs at connect. Please check that the UDP Port 16001 was not already used and try again",
+                        "Connection Error",
+                        JOptionPane.CLOSED_OPTION,
+                        JOptionPane.WARNING_MESSAGE);
+                System.exit(1);
+            }
+        });
+    }
+    
+    /**
      * Action performed when an event is detected
      * @param ae actionEvent detected
      */
