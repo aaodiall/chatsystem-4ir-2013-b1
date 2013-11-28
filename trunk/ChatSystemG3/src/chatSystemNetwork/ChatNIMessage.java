@@ -111,21 +111,12 @@ public class ChatNIMessage extends Thread{
 	 * @param username
 	 */
 	public void sendText(InetAddress recipient, String text2Send,String username){
-		//InetAddress recipient;
-		//Iterator <String> it;
 		DatagramPacket pdu2send;
 		Text messageText = new Text(username,text2Send);
-		System.out.println("dans sendText ChatniMessage avant try");
 		try{
 			byte[] messageStream = messageText.toArray();	
-			//it = ChatSystem.getModelGroupRecipient().getGroupRecipients().iterator();
-			//it = usernameList.iterator();
-			//while(it.hasNext()){
-				//recipient = this.modelListUsers.getListUsers().get((String)it.next());
-				pdu2send = new DatagramPacket(messageStream,messageStream.length,recipient,this.socketUDP.getLocalPort());
-				this.socketUDP.send(pdu2send);
-				System.out.println("dans sendText ChatniMessage");
-			//}
+			pdu2send = new DatagramPacket(messageStream,messageStream.length,recipient,this.socketUDP.getLocalPort());
+			this.socketUDP.send(pdu2send);
 		}catch(IOException ioExc){
 			System.out.println("error : construction du stream message");
 			ioExc.printStackTrace();
@@ -197,13 +188,13 @@ public class ChatNIMessage extends Thread{
 	}
 	
 	public void run(){
-		System.out.println("thread send active");
 		while(true){
 			// il dort
 			try{
 				Thread.sleep(100);
 				// envoie d'un pdu si le buffer n'est pas vide
 				if (this.bufferMsg2Send.isEmpty() == false){
+					System.out.println("message à envoyer");
 					try{
 						this.socketUDP.send(this.bufferMsg2Send.poll());
 						System.out.println("message envoyé");				

@@ -1,10 +1,6 @@
 package runChat;
-import java.io.IOException;
-import java.net.InetAddress;
-import java.net.UnknownHostException;
-import java.util.ArrayList;
-import java.util.Scanner;
 
+import java.net.UnknownHostException;
 import chatSystemModel.*;
 import chatSystemNetwork.*;
 import chatSystemController.Controller;
@@ -21,27 +17,12 @@ public class ChatSystem {
 	private static ModelText modelText;
 	private static ModelGroupRecipient modelGroupRecipient;
 	
-	/*public static Controller getController(){ return chatController; }
-	
-	public static ChatGUI getChatGui(){	return chatGUI;	}
-	
-	public static ChatNI getChatNI(){ return chatNI; }
-	
-	public static ModelListUsers getModelListUsers(){ return modelListUsers; }
-	
-	public static ModelUsername getModelUsername(){ return modelUsername; }
-	
-	public static ModelStates getModelStates(){	return modelStates;	}
-	
-	public static ModelText getModelText(){	return modelText; }
-	
-	public static ModelGroupRecipient getModelGroupRecipient(){	return modelGroupRecipient; }*/
 	
 	/**
 	 * @param args
 	 * @throws UnknownHostException 
 	 */
-	public static void main(String[] args) throws UnknownHostException{
+	public static void main(String[] args) throws UnknownHostException{	
 		// pour des tests locaux demander a l'utilisateur d'entrer un numero de port
 		int portUDP=16001;
 		int bufferSize = 50;
@@ -61,17 +42,10 @@ public class ChatSystem {
 		modelUsername.addObserver(chatNI);
 		modelStates.addObserver(chatNI);
 		modelGroupRecipient.addObserver(chatNI);
-		
-		//chatController.setChatgui(chatGUI);
 		modelListUsers.addObserver(chatGUI);
-		// TEST du System avec GUI -> modifier aussi le ChatController
-				//chatGUI=new ChatGUI(chatController);
-			//	chatController.setChatgui(chatGUI);
-				//modelListUsers.addObserver(chatGUI);
-				modelUsername.addObserver(chatGUI);
-				
-				modelStates.addObserver(chatGUI);
-				modelText.addObserver(chatGUI);
+		modelUsername.addObserver(chatGUI);
+		modelStates.addObserver(chatGUI);
+		modelText.addObserver(chatGUI);
 		/*
 		 				/\
 		  			   /  \				Je n'ai pas implémenter la relation de mon interface commandeLine
