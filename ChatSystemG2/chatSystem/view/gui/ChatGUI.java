@@ -21,7 +21,6 @@ public class ChatGUI extends View implements ToUser, FromUser {
 
     /**
      * Class' constructor
-     *
      * @param controller instance of controller responsible for this instance of
      * chat gui
      */
@@ -87,7 +86,6 @@ public class ChatGUI extends View implements ToUser, FromUser {
         } else if (tmp instanceof FileReceivingInformation) {
             this.getDialogWindow(tmp.getIdRemoteSystem()).displayFileReceivingProgression(tmp.getId(), tmp.getSize(), tmp.getProgression());
         }
-
     }
     
     /**
@@ -108,7 +106,6 @@ public class ChatGUI extends View implements ToUser, FromUser {
 
     /**
      * Modify the interface to show the user a file transfert's suggestion
-     *
      * @param tmp
      */
     @Override
@@ -119,7 +116,6 @@ public class ChatGUI extends View implements ToUser, FromUser {
     /**
      * Modify the interface to show the user the dialog window of the remote
      * system he wishes to communicate with
-     *
      * @param contact
      */
     @Override
@@ -129,14 +125,18 @@ public class ChatGUI extends View implements ToUser, FromUser {
 
     /**
      * Modify the interface to update the list of available contacts
-     *
      * @param newList new list of available contact
      * @throws GUIException security in case the update was launched before
      * creating the user list window
      */
     @Override
     public void listUser(List<String> newList) throws GUIException {
-
+        
+        for (String contact: this.dWindows.keySet()) {
+            if (!newList.contains(contact))
+                this.dWindows.get(contact).hideWindow();
+        }
+        
         for (String contact : newList) {
             if (!(this.dWindows.containsKey(contact))) {
                 //on mets null pour si on ne lui parle jamais

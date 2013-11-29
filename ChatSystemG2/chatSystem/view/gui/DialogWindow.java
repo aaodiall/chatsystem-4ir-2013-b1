@@ -9,7 +9,6 @@ import java.awt.event.ActionListener;
 import java.io.File;
 import java.util.HashMap;
 import javax.swing.*;
-import java.util.List;
 
 
 public class DialogWindow extends JFrame implements ActionListener {
@@ -65,7 +64,6 @@ public class DialogWindow extends JFrame implements ActionListener {
     private void initWindow() {
 
         setTitle("Dialog Window : "+contact);
-        
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
 
         message.setColumns(20);
@@ -389,5 +387,9 @@ public class DialogWindow extends JFrame implements ActionListener {
                 this.chatGUI.sendFileRequest(fileSelected, contact);
             }
         }
+    }
+    
+    public void hideWindow() {
+        this.setVisible(false);
     }
 }
