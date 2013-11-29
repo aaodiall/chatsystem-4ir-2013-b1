@@ -59,7 +59,7 @@ public class MessageReceptionNI extends Thread implements FromRemoteApp {
                     // send the content of the buffer to the controller
                     msg_handler.receive(msg, IP_source);  
                 }         
-                else if (msg instanceof Goodbye) {
+                else if (!msg_handler.get_user_state()) {
                     // Permet de fermer la socket UDP de reception si le Goodbye vient d'ici
                     this.close_UDP_sock();
                 }

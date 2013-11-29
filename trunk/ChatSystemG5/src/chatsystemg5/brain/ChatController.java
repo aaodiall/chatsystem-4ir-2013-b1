@@ -98,6 +98,10 @@ public class ChatController {
     public void perform_disconnection (String remote_user, String IP_text) {
         // remove the user who disconnected from the list
         listDB.remove_user(remote_user, IP_text);
+        if (this.get_chatGUI().get_chat_window(remote_user + "@" + IP_text) != null) {
+            this.get_chatGUI().get_chat_window(remote_user + "@" + IP_text).dispose();
+            this.get_chatGUI().get_chat_windows().remove(remote_user + "@" + IP_text);
+        } 
     }
     
     /**************** Communication by text ****************/
