@@ -1,16 +1,13 @@
 package chatsystemg5.brain;
 
-import chatsystemg5.ihm.ChatWindow;
 import chatsystemg5.ihm.ListWindow;
 import java.util.HashMap;
-import java.util.LinkedList;
 import java.util.Observer;
 
 
 public class ListModel extends ChatModel {
     
     private ListWindow observer_list;
-    private HashMap<String, ChatWindow> observers_chat_window;
 
     private HashMap<String,String> hmap_users;
     private ChatController chat_control;
@@ -45,8 +42,10 @@ public class ListModel extends ChatModel {
     
     
     public void remove_user (String username, String IP_addr) {
-        hmap_users.remove(username + "@" + IP_addr);
-        this.notifyObservers();
+        if(hmap_users.containsKey(username + "@" + IP_addr)){
+            hmap_users.remove(username + "@" + IP_addr);
+            this.notifyObservers();
+        }
     }
     
     public void remove_from_full_name (String full_name) {

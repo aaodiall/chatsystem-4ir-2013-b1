@@ -49,7 +49,10 @@ public class ChatGUI extends JFrame {
     }
     
     public HashMap<String, ChatWindow> get_chat_windows() {
-        return this.chat_windows;
+        if(this.chat_windows != null){
+            return this.chat_windows;
+        }
+        return null;
     }
 
     public ConnectionWindow get_connection_window() {
