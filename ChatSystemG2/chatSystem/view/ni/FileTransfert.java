@@ -82,6 +82,9 @@ public class FileTransfert implements Runnable {
         } catch (IOException ex) {
             this.chatNI.fileTransfertError(this.fileToSend.getId());
             Logger.getLogger(FileTransfert.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (Exception ex) {
+            this.chatNI.fileTransfertError(this.fileToSend.getId());
+            Logger.getLogger(FileReceiver.class.getName()).log(Level.SEVERE, null, ex);
         } finally {
             try {
                 //finishing

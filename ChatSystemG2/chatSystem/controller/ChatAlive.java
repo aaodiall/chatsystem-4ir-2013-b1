@@ -24,8 +24,8 @@ public class ChatAlive extends Thread{
     public ChatAlive(UserInformation usrInfo) {
         this.rmInstance = RemoteSystems.getInstance();
         this.usrInfo = usrInfo;
-        this.msBetweenHellos = 10000; //10s
-        this.msTimeToAnswer = 6000; //6s
+        this.msBetweenHellos = 20000; //10s
+        this.msTimeToAnswer = 15000; //6s
     } 
     
     /**

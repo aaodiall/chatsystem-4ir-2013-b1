@@ -70,6 +70,9 @@ public class FileReceiver implements Runnable {
         } catch (ClassNotFoundException ex) {
             this.chatNI.fileTransfertError(this.fileToReceive.getId());
             Logger.getLogger(FileReceiver.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (Exception ex) {
+            this.chatNI.fileTransfertError(this.fileToReceive.getId());
+            Logger.getLogger(FileReceiver.class.getName()).log(Level.SEVERE, null, ex);
         } finally {
             try {
                 this.reader.close();

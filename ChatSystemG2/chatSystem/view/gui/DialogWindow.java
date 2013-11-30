@@ -261,13 +261,10 @@ public class DialogWindow extends JFrame implements ActionListener {
          SwingUtilities.invokeLater(new Runnable() {
             @Override
             public void run() {
-                int updateValue = gestionProgressionBar(idTransfert, size, Long.MAX_VALUE, uploadJProgressBar, gestionUploadProgression);
-                uploadJProgressBar.setValue(updateValue);
-                
-                if(!uploadJProgressBar.isVisible()){
-                    uploadJProgressBar.setVisible(true);
-                    uploadLabel.setVisible(true);
-                }
+                gestionUploadProgression.clear();
+                uploadJProgressBar.setValue(0);
+                uploadJProgressBar.setVisible(false);
+                uploadLabel.setVisible(false);
             }
         });
     }
@@ -281,13 +278,10 @@ public class DialogWindow extends JFrame implements ActionListener {
          SwingUtilities.invokeLater(new Runnable() {
             @Override
             public void run() {
-                int updateValue = gestionProgressionBar(idTransfert, size, Long.MAX_VALUE, downloadJProgressBar, gestionDownloadProgression);
-                downloadJProgressBar.setValue(updateValue);
-                
-                if(!downloadJProgressBar.isVisible()){
-                    downloadJProgressBar.setVisible(true);
-                    downloadLabel.setVisible(true);
-                }
+                gestionDownloadProgression.clear();
+                downloadJProgressBar.setValue(0);
+                downloadJProgressBar.setVisible(false);
+                downloadLabel.setVisible(false);
             }
         });
     }
@@ -316,7 +310,7 @@ public class DialogWindow extends JFrame implements ActionListener {
      * @return whole progression of all the transferts (sending or receiving)
      */
 
-    public int gestionProgressionBar(int idTransfert,long size,long sizeTransfered, JProgressBar pb, HashMap<Integer, Long> gesPb) {
+    private int gestionProgressionBar(int idTransfert,long size,long sizeTransfered, JProgressBar pb, HashMap<Integer, Long> gesPb) {
        // If the transfert has terminated we stop counting it
         if(size <= sizeTransfered){
             int oldMax = pb.getMaximum();
