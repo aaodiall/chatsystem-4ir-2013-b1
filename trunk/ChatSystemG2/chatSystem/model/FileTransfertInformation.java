@@ -23,7 +23,7 @@ public abstract class FileTransfertInformation extends Model {
      * Class' constructor to receive the file
      * @param idTransfert idTransfert choosed by the remote system
      * @param idRemoteSystem id of the sending remote system
-     * @param fileToSend file's descriptor
+     * @param fileToReceive file's descriptor
      */
     public FileTransfertInformation(int idTransfert, String idRemoteSystem, File fileToReceive) {
         
