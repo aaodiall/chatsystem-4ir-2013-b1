@@ -5,9 +5,6 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.nio.ByteBuffer;
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.logging.Level;
 
 import javax.swing.JOptionPane;
@@ -29,16 +26,13 @@ import chatSystemCommon.Message;
 import com.sun.istack.internal.logging.Logger;
 
 public class FileController {
-	private final int FILE_PART_SIZE = 5000;
+	private final int FILE_PART_SIZE = 10000;
 	private final int DEFAULT_CLIENT_PORT = 12345;
 	
-	private ChatController chatController;
+	//private ChatController chatController;
 	private ChatModel chatModel;
 	private JavaChatGUI chatGUI;
 	
-	private ArrayList<byte[]> sendBuffer = new ArrayList<byte[]>();
-	private ByteBuffer receivedBuffer;
-	private byte[] receivedFile;
 	private String fileName;
 	private long receptionFileSize;
 	private long emissionFileSize;
@@ -46,23 +40,24 @@ public class FileController {
 	private Thread sendThread = null;
 	private Thread receivedThread = null;
 	
+	private File file;
+	private FileInputStream fileInputStream;
+	private FileOutputStream fileOutputStream;
+	private int emissionPosition = 0;
+	
 	public FileController(ChatController chatController, JavaChatGUI chatGUI, ChatModel chatModel) {
-		this.chatController = chatController;
+		//this.chatController = chatController;
 		this.chatGUI = chatGUI;
 		this.chatModel = chatModel;
 	}
 
-	public void sendFileTransfertDemand(User user,File file) {
+	public void sendFileTransfertDemand(User user) {
 		emissionFileSize = file.length();
 		SendMessageNI.getInstance().sendMessage(MessageFactory.getFileTransfertDemandMessage(chatModel.getLocalUsername(), file.getName(), emissionFileSize,DEFAULT_CLIENT_PORT), user.getAddress());
 	}
 
 	public void sendFileTransfertConfirmation(User user, boolean isAccepetd, int idDemand) {
 		SendMessageNI.getInstance().sendMessage(MessageFactory.getFileTransfertConfirmationMessage(chatModel.getLocalUsername(), isAccepetd, idDemand), user.getAddress());
-	}
-
-	private void sendFileTransferCanceled(User user, String username, int idDemand) {
-		SendMessageNI.getInstance().sendMessage(MessageFactory.getFileTransfertCancelMessage(username, idDemand), user.getAddress());
 	}
 	
 	private void sendFile(User user) {
@@ -71,7 +66,7 @@ public class FileController {
 		sendThread.start();
 	}
 	
-	public void receivedMessage(User user, Message msg) {
+	public void receivedMessage(User user, Message msg) throws IOException {
 		if(msg instanceof FileTransfertCancel) {
 			this.moveToState(TransferState.CANCELED);
 			this.fileTransfertProtocol(user, null, msg);
@@ -86,12 +81,12 @@ public class FileController {
 		else if(msg instanceof FileTransfertDemand) {
 			this.fileName = ((FileTransfertDemand) msg).getName();
 			this.receptionFileSize = ((FileTransfertDemand) msg).getSize();
-			this.receivedFile = new byte[(int) this.receptionFileSize];
-			this.receivedBuffer = ByteBuffer.wrap(receivedFile);
 			int option = JOptionPane.showConfirmDialog(null, "Vous avez reçu une demande de transfert de fichier de la part de "+msg.getUsername()+"\n Nom du fichier : "+ this.fileName +"\nTaille (en byte) : "+ this.receptionFileSize +"\n\nVoulez-vous accepter le fichier ?", "Demande de transfert de fichier reçue", JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE);
 			if(option == JOptionPane.OK_OPTION) {
-				chatGUI.getStatusBar().beginFileTransferReception((int) receptionFileSize);
-				receivedThread = new Thread(ReceivedFileNI.getInstance(chatController,((FileTransfertDemand) msg).getPortClient()));
+				String repositoryPath = chatGUI.getFilePath();
+				fileOutputStream = new FileOutputStream(repositoryPath + this.fileName, true);
+				chatGUI.getStatusBar().beginFileTransferReception((int) receptionFileSize);		
+				receivedThread = new Thread(ReceivedFileNI.getInstance(this,((FileTransfertDemand) msg).getPortClient()));
 				receivedThread.start();
 				this.sendFileTransfertConfirmation(user, true, msg.getId());
 			}
@@ -99,27 +94,18 @@ public class FileController {
 				this.sendFileTransfertConfirmation(user, false, msg.getId());
 		}
 		else if(msg instanceof FilePart) {
-			receivedBuffer.put(((FilePart) msg).getFilePart());
-			chatGUI.getStatusBar().setReceptionBarValue(receivedBuffer.position());
-			if(((FilePart) msg).isLast()) {		
+			chatGUI.getStatusBar().setReceptionBarValue(((FilePart) msg).getFilePart().length);
+			fileOutputStream.write(((FilePart) msg).getFilePart());
+			if(((FilePart) msg).isLast()) {
+				fileOutputStream.close();
 				chatGUI.getStatusBar().finishFileTransferReception();
-				try {
-					String directoryPath = chatGUI.getFilePath();
-					if(directoryPath != null && !directoryPath.isEmpty()) {
-						FileOutputStream fos = new FileOutputStream(directoryPath+"\\"+this.fileName);
-					fos.write(this.receivedFile);
-					fos.flush();
-					fos.close();
-					}
-				} catch (IOException e) {
-					e.printStackTrace();
-				}	
 			}
 		}
 	}
 
 	public void beginFileTransfertProtocol(User user, File file) {
 		if(SendFileNI.getInstance(this,DEFAULT_CLIENT_PORT).getFileTransfertState() == TransferState.AVAILABLE) {
+			this.file = file;
 			this.fileTransfertProtocol(user, file,null);
 		}
 		else
@@ -130,8 +116,8 @@ public class FileController {
 		Logger.getLogger(FileController.class).log(Level.INFO, SendFileNI.getInstance(this,DEFAULT_CLIENT_PORT).getFileTransfertState().name());
 		switch(SendFileNI.getInstance(this,DEFAULT_CLIENT_PORT).getFileTransfertState()) {
 		case AVAILABLE:
-			this.splitFile(file);
-			this.sendFileTransfertDemand(user,file);	
+			this.readFile(file);
+			this.sendFileTransfertDemand(user);	
 			this.moveToState(TransferState.PROCESSING);
 			break;
 		case PROCESSING :
@@ -144,7 +130,9 @@ public class FileController {
 			this.moveToState(TransferState.AVAILABLE);
 			break;
 		case CANCELED :
-			sendBuffer.clear();
+			sendThread = null;			//TODO verify if it is necessary
+			chatGUI.getStatusBar().finishFileTransferEmission();
+			chatGUI.getStatusBar().setEmmissionBarText("/!\\ Transfer emission canceled (remote user unreachable) /!\\");	
 			this.moveToState(TransferState.AVAILABLE);
 			break;
 		}
@@ -155,43 +143,43 @@ public class FileController {
 		if(SendFileNI.getInstance(this,DEFAULT_CLIENT_PORT).getFileTransfertState() == TransferState.CANCELED)
 			this.fileTransfertProtocol(null, null, null);
 	}
-	
-	public void splitFile(File file) {
-		byte[] bFile = new byte[(int) file.length()];
-		FileInputStream fileInputStream;
+
+	public void readFile(File file) {
 		try {
 			fileInputStream = new FileInputStream(file);
-			fileInputStream.read(bFile);
-			fileInputStream.close();
 		} catch (FileNotFoundException e) {
 			e.printStackTrace();
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-		//Divide the file in parts
-		int fileParts = (bFile.length / FILE_PART_SIZE) + 1;
-		for(int i=0; i<fileParts; i++){
-			if(i+1==fileParts)
-				sendBuffer.add(Arrays.copyOfRange(bFile,i*FILE_PART_SIZE,bFile.length));
-			else
-				sendBuffer.add(Arrays.copyOfRange(bFile,i*FILE_PART_SIZE,i*FILE_PART_SIZE+FILE_PART_SIZE));
 		}
 	}
 
 	public FilePart getFilePartToSend() {
-		byte[] toSend = null;
-		if(!sendBuffer.isEmpty()) {
-			toSend = sendBuffer.get(0);		
-			if(sendBuffer.size() > 1) {
-				sendBuffer.remove(0);
-				return MessageFactory.getFileMessage(chatModel.getLocalUser().getUsername(), toSend, false);
-			}		
-			else {
-				sendBuffer.remove(0);
-				return MessageFactory.getFileMessage(chatModel.getLocalUser().getUsername(), toSend, true);
-			}	
-		}
+		if(emissionPosition + FILE_PART_SIZE >= file.length())
+			return this.getFilePart((int) (file.length()-emissionPosition));
+		else if (emissionPosition + FILE_PART_SIZE < file.length()) 
+			return this.getFilePart(FILE_PART_SIZE);
 		return null;
+	}
+	
+	private FilePart getFilePart(int bufferSize) {
+		byte[] buf = new byte[bufferSize];
+		this.setEmissionBarValue(bufferSize);
+		emissionPosition += bufferSize;
+		try {
+			fileInputStream.read(buf);
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		if(bufferSize == FILE_PART_SIZE) {
+			return MessageFactory.getFileMessage(chatModel.getLocalUser().getUsername(), buf, false);
+		}
+		else {
+			try {
+				fileInputStream.close();
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+			return MessageFactory.getFileMessage(chatModel.getLocalUser().getUsername(), buf, true);
+		}
 	}
 	
 	public void setEmissionBarValue(int i ) {
@@ -200,5 +188,18 @@ public class FileController {
 	
 	public void finishFileTransferEmission() {
 		chatGUI.getStatusBar().finishFileTransferEmission();
+		this.moveToState(TransferState.TERMINATED);
+		this.fileTransfertProtocol(null, null, null);
+	}
+	
+	public void closeSocket() {
+		try {
+			if(ReceivedFileNI.getInstance(this,-1).getSocket() != null)
+				ReceivedFileNI.getInstance(this,-1).getSocket().close();
+			if(ReceivedFileNI.getInstance(this,-1).getServerSocket() != null)
+				ReceivedFileNI.getInstance(this,-1).getServerSocket().close();
+		} catch(IOException e) {
+			
+		}
 	}
 }

@@ -1,6 +1,7 @@
 package org.insa.java.controller;
 
 import java.io.File;
+import java.io.IOException;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
 import java.util.logging.Level;
@@ -50,7 +51,7 @@ public class ChatController {
 		messageController.sendGoodbyeMessage(MessageFactory.getByeMessage(chatModel.getLocalUser().getUsername()));
 	}
 	
-	public int receivedMessage(InetAddress inetAddress, Message msg) {
+	public int receivedMessage(InetAddress inetAddress, Message msg){
 		try {
 			if(inetAddress.equals(InetAddress.getLocalHost()))
 				return -1;
@@ -66,7 +67,11 @@ public class ChatController {
 			messageController.receivedMessage(user,msg);
 		}
 		else {
-			fileController.receivedMessage(user,msg);
+			try {
+				fileController.receivedMessage(user,msg);
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
 		}
 		return 0;
 	}

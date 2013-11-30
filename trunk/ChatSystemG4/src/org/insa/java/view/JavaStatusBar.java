@@ -10,7 +10,7 @@ public abstract class JavaStatusBar {
 	}
 	
 	public void setReceptionBarValue(int i) {
-		receptionBar.setValue(i);
+		receptionBar.setValue(receptionBar.getValue() + i);
 	}
 	
 	public void setEmissionBarMax(int i) {
