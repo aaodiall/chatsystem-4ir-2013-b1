@@ -111,13 +111,14 @@ public class RemoteSystems extends Model implements Iterable<RemoteSystemInforma
 
     /**
      * Get the contacts username's list
+     * This method is synchronized to avoid the use of iterator by 
+     * more than one thread (see ConcurrentHashMap javadoc) 
+     * 
      * @return usernames' list
      */
-    public List<String> getUserList() {
+    public synchronized List<String> getUserList() {
         List<String> userList = new ArrayList<String>();
-        for (String rs : this.remoteSystemsInformation.keySet()) {
-            userList.add(this.remoteSystemsInformation.get(rs).getIdRemoteSystem());
-        }
+        userList.addAll(this.remoteSystemsInformation.keySet());
         return userList;
     }
 
@@ -125,24 +126,32 @@ public class RemoteSystems extends Model implements Iterable<RemoteSystemInforma
      * Set all the remote systems' state as maybeoffline
      * Will launch a search for the remote systems which are still connected
      * And those who are not
+     * We synchronized it just in case an other thread will need it and because
+     * the use of iterator may lead to a deadlock
      */
-    public void setAllMaybeOffline() {
+    public synchronized void setAllMaybeOffline() {
         for (RemoteSystemInformation rsi: this) {
             rsi.setUserState(UserState.MAYBEOFFLINE);
         }
-        //this.setChanged();
-        //this.notifyObservers();
-        //this.clearChanged();
+        this.setChanged();
+        /**
+         * if the GUI try to update here, we will enter in a deadlock,
+         * Indeed, the use of iterators of ConcurentHashMap may lead to
+         * a deadlock if it is used by more than one thread
+         **/
+        this.notifyObservers(UserState.MAYBEOFFLINE);
+        this.clearChanged();
     }
     
     /**
      * Remove from the list the remote systems which appeared to be offline
      */
     public void removeOfflineRemoteSystem() {
-        for (RemoteSystemInformation rsi: this) {
-            if (rsi.getUserState() == UserState.MAYBEOFFLINE)
-                //rsi.setUserState(UserState.DISCONNECTED);
-                this.remoteSystemsInformation.remove(rsi.getIdRemoteSystem());
+        List<String> rsList = this.getUserList();
+        for(String key : rsList){
+            if (this.remoteSystemsInformation.get(key).getUserState() == UserState.MAYBEOFFLINE){
+                this.deleteRemoteSystem(key);
+            }
         }
     }
     

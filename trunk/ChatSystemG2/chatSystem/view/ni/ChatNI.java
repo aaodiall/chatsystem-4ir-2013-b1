@@ -123,7 +123,8 @@ public class ChatNI extends View {
                 updateByUserInformation((UserInformation) o, (UserState) arg);
             }
         } else if (o instanceof RemoteSystems) {
-            if (arg == null) {
+            if (arg == null || arg == UserState.MAYBEOFFLINE) {
+                //the arg can be null or the MAYBEOFFLINE State because we need this trick to avoid a deadlock (see RemoteSystem implementation)
                 this.messageTransfert.setHelloTask();
             } else if (arg instanceof String) { //ip
                 this.messageTransfert.setHelloTask((String) arg);

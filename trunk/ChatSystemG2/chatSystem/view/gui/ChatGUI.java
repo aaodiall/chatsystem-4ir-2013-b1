@@ -200,7 +200,8 @@ public class ChatGUI extends View implements ToUser, FromUser {
                     disconnected();
                 }
             }
-        } else if (o instanceof RemoteSystems) {
+        } else if (o instanceof RemoteSystems && arg != UserState.MAYBEOFFLINE) {
+            //we look that the arg is not the MAYBEOFFLINE State because it leads to a deadlock (see RemoteSystem implementation)
             System.out.println("I am the GUI and I update the connected users");
             try {
                 listUser(((RemoteSystems) o).getUserList());
