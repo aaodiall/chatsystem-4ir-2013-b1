@@ -1,3 +1,8 @@
+/**
+ * View of the network
+ * controls the sending and receiving of messages and files
+ */
+
 package chatSystem.view.ni;
 
 import chatSystem.view.gui.View;
@@ -18,6 +23,10 @@ public class ChatNI extends View {
 
     private UserInformation usrInfo;
 
+    /**
+     * Class' constructor
+     * @param controller instance of ChatController that controls this view
+     */
     public ChatNI(ChatController controller) {
         super(controller);
         try {
@@ -31,36 +40,78 @@ public class ChatNI extends View {
         this.threadMessageTransfert = new Thread(this.messageTransfert);
     }
 
+    /**
+     * Informs the controller of the reception of a hello message
+     * @param username username of the contact who sent the hello message
+     * @param ip ip adress of the contact
+     * @param isAck whether or not the contact expects an answer
+     */
     public void helloReceived(String username, String ip, boolean isAck) {
         ((ChatController) (this.controller)).performHelloReceived(username, ip, isAck);
     }
 
+    /**
+     * Informs the controller of the reception of a text message
+     * @param msg text message's content
+     * @param username username of the contact who sent the text message
+     */
     public void textMessageReceived(String msg, String username) {
         ((ChatController) (this.controller)).performMessageReceived(msg, username);
     }
 
+    /**
+     * Informs the controller of the reception of a goodbye message
+     * @param username username of the contact who sent the goodbye message 
+     */
     public void goodbyeReceived(String username) {
         ((ChatController) (this.controller)).performGoodbyeReceived(username);
     }
 
+    /**
+     * Informs the controller of the reception of a file transfert request
+     * @param name file's name
+     * @param username  username of the contact who sent the request
+     * @param ip ip adress of the contact
+     * @param size file's size
+     * @param id transfert's id
+     * @param portServer port the transfert is going to use
+     */
     public void fileTransfertDemandReceived(String name, String username, String ip, long size, int id, int portServer) {
         ((ChatController) (this.controller)).performSuggestionReceived(name, size, RemoteSystemInformation.generateID(username, ip), id, portServer);
     }
 
+    /**
+     * Informs the controller of the reception of a file transfert confirmation
+     * @param ip ip adress of the contact who answered the request
+     * @param idTransfert transfert's id
+     * @param accepted whether or not the contact accepted the transfert
+     */
     public void fileTransfertConfirmationReceived(String ip, int idTransfert, boolean accepted) {
         ((ChatController) (this.controller)).performConfirmationReceived(ip, idTransfert, accepted);
     }
 
+    /**
+     * Informs the controller of the reception of a file's part
+     * @param idTransfert transfert's id
+     * @param filePart file part received
+     * @param isLast whether or not this is the last part of the transfert
+     */
     public void filePartReceived(int idTransfert, byte[] filePart, boolean isLast) {
         ((ChatController) (this.controller)).performFilePartReceived(idTransfert, filePart, isLast);
     }
 
+    /**
+     * Informs the controller of the sending of a file
+     * @param idTransfert transfert's id
+     * @param idRemoteSystem id of the remote system the file was sent to
+     */
     public void fileSended(int idTransfert, String idRemoteSystem) {
         ((ChatController) (this.controller)).performFileSended(idTransfert, idRemoteSystem);
     }
 
     /**
-     *
+     * Update launched when one of the Observable objects the chatNI is following
+     * is modified
      * @param o : part of the model which send a the notification
      * @param arg : argument sended by the model
      */
@@ -69,32 +120,28 @@ public class ChatNI extends View {
         //System.out.println("Entering update ChatNI" + o + " : " + arg);
         if (o instanceof UserInformation) {
             if (arg instanceof UserState) {
-
                 updateByUserInformation((UserInformation) o, (UserState) arg);
-
             }
         } else if (o instanceof RemoteSystems) {
             if (arg == null) {
                 this.messageTransfert.setHelloTask();
             } else if (arg instanceof String) { //ip
-
                 this.messageTransfert.setHelloTask((String) arg);
-
             } else if (arg instanceof RemoteSystemInformation) {
                 updateByRemoteSystems((RemoteSystemInformation) arg);
             }
-        } else if (o instanceof FileReceivingInformation && arg == null) { // arg == null -> evite de recevoir les notification de progression
-
+        } else if (o instanceof FileReceivingInformation && arg == null) {
+            //testing arg == null avoids to analyze the progression notifications
             updateByFileReceivingInformation((FileReceivingInformation) o);
-
         } else if (o instanceof FileSendingInformation && arg == null) {
-
             updateByFileSendingInformation((FileSendingInformation) o);
-
         }
-
     }
 
+    /**
+     * Update launched when an instance of FileReceivingInformation is modified
+     * @param tmp instance of FileReceivingInformation that was modified
+     */
     public void updateByFileReceivingInformation(FileReceivingInformation tmp) {
         switch (tmp.getState()) {
             case ACCEPTED:
@@ -119,6 +166,10 @@ public class ChatNI extends View {
         }
     }
 
+    /**
+     * Update launched when an instance of FileSendingInformation is modified
+     * @param tmp instance of FileSendingInformation that was modified
+     */
     public void updateByFileSendingInformation(FileSendingInformation tmp) {
         switch (tmp.getState()) {
             case ACCEPTED:
@@ -144,41 +195,51 @@ public class ChatNI extends View {
         }
     }
 
+    /**
+     * Update launched when the instance of UserInformation is modified
+     * @param usrInfo instance of UserInformation that was modified
+     * @param state new user's state
+     */
     public void updateByUserInformation(UserInformation usrInfo, UserState state) {
 
         if (state == UserState.CONNECTED) {
             //create and start new Threads
-            // this.gestionThread();
-            //on est connecté, on commence l'écoute
+            //this.gestionThread();
+            //system connected, starting to wait for messages
             if (!(this.threadMessageReceiver.getState() == Thread.State.RUNNABLE)) {
                 this.gestionThread();
                 System.out.println("Demarrage de la reception");
-                //a changer completement il faudrait pouvoir couper le thread et le lancer comme on veut
                 this.usrInfo = usrInfo;
                 this.threadMessageReceiver.start();
                 this.threadMessageReceiver.setName("Thread Reception UDP");
                 this.threadMessageTransfert.start();
                 this.threadMessageTransfert.setName("Thread Envoi UDP");
             }
-            //et on le guele car on est content :)
             this.messageTransfert.setHelloTask();
         } else {
             this.messageTransfert.setGoodbyeTask();
-            //this.threadReceiver = null;
         }
     }
 
+    /**
+     * Private function to create new threads
+     */
     private synchronized void gestionThread() {
         if (!this.threadMessageReceiver.isAlive()) {
             this.threadMessageReceiver = new Thread(this.messageReceiver);
-            // this.threadMessageReceiver.start();
         }
         if (!this.threadMessageTransfert.isAlive()) {
             this.threadMessageTransfert = new Thread(this.messageTransfert);
-            //   this.threadMessageTransfert.start();
         }
     }
 
+    /**
+     * Update launched when the instance of RemoteSystems
+     * alerts a instance of RemoteSystemInformation was modified
+     * We decided to receive the notification from RemoteSystems to centralize the information
+     * and for the chatNI not to be disturbed by the RemoteSystemInformation instances' notifications for the chatGUI
+     * @param aux instance of RemoteSystemInformation that was modified
+     */
     public void updateByRemoteSystems(RemoteSystemInformation aux) {
         String msgToSend = aux.getMessageToSend();
         if (msgToSend != null) {
@@ -186,14 +247,27 @@ public class ChatNI extends View {
         }
     }
 
+    /**
+     * Informs the controller a text message was sent
+     * @param msg text message's content
+     * @param idRemoteSystem id of the remote system the message has been sent to
+     */
     public void messageSent(String msg, String idRemoteSystem) {
         ((ChatController) this.controller).performMessageSent(msg, idRemoteSystem);
     }
 
+    /**
+     * Return the UserInformation instance
+     * @return information about the local user
+     */
     public UserInformation getUserInfo() {
         return this.usrInfo;
     }
 
+    /**
+     * Informs the controller there has been an error during a file transfert
+     * @param idTransfert transfert's id
+     */
     public void fileTransfertError(int idTransfert) {
         ((ChatController)controller).performFileTransfertError(idTransfert);
     }
