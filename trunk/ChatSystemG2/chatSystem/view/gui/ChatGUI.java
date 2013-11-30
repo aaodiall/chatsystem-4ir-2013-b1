@@ -136,7 +136,8 @@ public class ChatGUI extends View implements ToUser, FromUser {
         
         for (String contact : newList) {
             if (!(this.dWindows.containsKey(contact))) {
-                //on mets null pour si on ne lui parle jamais
+                //contact created with no window associated
+                //in case the user never speaks to him
                 this.dWindows.put(contact, null);
             }
         }
@@ -187,8 +188,8 @@ public class ChatGUI extends View implements ToUser, FromUser {
         } else if (o instanceof UserInformation) {
             if (arg instanceof String) {
                 if (uWindow == null) {
-                    //premiere connection
-                    //on créée la UserWindow avc le pseudo choisi
+                    //first connection
+                    //create the UserWindow with the chosen username
                     this.uWindow = new UserWindow((String) arg, this);
                 }
                 this.uWindow.setUsername((String) arg);
@@ -217,7 +218,6 @@ public class ChatGUI extends View implements ToUser, FromUser {
     /**
      * Updates the chatGUI and its components have to do because of the
      * modification of a RemoteSystemInformation instance
-     *
      * @param rsi RemoteSystemInformation instance that was modified
      * @param arg modification in the instance
      */
@@ -226,9 +226,7 @@ public class ChatGUI extends View implements ToUser, FromUser {
             String id = rsi.getIdRemoteSystem();
             System.out.println("Updating the conversation with the contact " + id);
             this.displayDialogWindow(id);
-            //this.dWindows.get(id).toBack();
             this.dWindows.get(id).updateConversation(arg);
-            //this.dWindows.get(id).updateConversation(rsi.getMessages());
         }
     }
 
