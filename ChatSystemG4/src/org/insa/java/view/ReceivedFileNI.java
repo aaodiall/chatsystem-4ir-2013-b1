@@ -7,13 +7,15 @@ import java.net.ServerSocket;
 import java.net.Socket;
 
 import org.insa.java.controller.ChatController;
+import org.insa.java.controller.FileController;
+import org.insa.java.model.User;
 
 import chatSystemCommon.Message;
 
 public final class ReceivedFileNI extends JavaChatNI {
 	private static ReceivedFileNI instance = null;
 
-	private ChatController chatController;
+	private FileController fileController;
 
 	private ServerSocket serverSocket;
 	private Socket socket;
@@ -21,33 +23,28 @@ public final class ReceivedFileNI extends JavaChatNI {
 
 	public boolean running = true;
 
-	private ReceivedFileNI(ChatController chatController, int portClient) {
-		this.chatController = chatController;
+	private ReceivedFileNI(FileController fileController, int portClient) {
+		this.fileController = fileController;
 		try {
-			serverSocket = new ServerSocket(portClient);
+			if(portClient > 1024)
+				serverSocket = new ServerSocket(portClient);
 		} catch (IOException e) {
-			e.printStackTrace();
+			
 		}
 	}
 
-	public final static ReceivedFileNI getInstance(ChatController chatController, int portClient) {
+	public final static ReceivedFileNI getInstance(FileController fileController, int portClient) {
 		if(ReceivedFileNI.instance == null) {
 			synchronized(ReceivedFileNI.class) {
 				if(ReceivedFileNI.instance == null)
-					ReceivedFileNI.instance = new ReceivedFileNI(chatController,portClient);
+					ReceivedFileNI.instance = new ReceivedFileNI(fileController,portClient);
 			}
 		}
 		return ReceivedFileNI.instance;
 	}
 
 	public void closeSocket() {
-		try {
-			socket.close();
-			serverSocket.close();
-		}catch(IOException e) {
-			
-		}
-		
+		fileController.closeSocket();
 	}
 	
 	@Override
@@ -56,13 +53,14 @@ public final class ReceivedFileNI extends JavaChatNI {
 			try {
 				socket = serverSocket.accept();	
 				inputStream = socket.getInputStream();
-				chatController.receivedMessage(socket.getInetAddress(), Message.fromArray(this.toByteArray(inputStream)));
+				Message m = Message.fromArray(this.toByteArray(inputStream));
+				fileController.receivedMessage(new User(socket.getInetAddress(),m.getUsername()),m);
 				inputStream.close();
 			} catch (IOException e) {
 				e.printStackTrace();
 			}
 			finally {
-				Thread.currentThread().interrupt( );
+				//Thread.currentThread().interrupt( );
 				try {
 					inputStream.close();
 				} catch (IOException e1) {
@@ -81,5 +79,13 @@ public final class ReceivedFileNI extends JavaChatNI {
 			reads = is.read();
 		}
 		return baos.toByteArray();
+	}
+
+	public ServerSocket getServerSocket() {
+		return serverSocket;
+	}
+
+	public Socket getSocket() {
+		return socket;
 	}
 }

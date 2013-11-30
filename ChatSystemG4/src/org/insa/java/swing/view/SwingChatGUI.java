@@ -88,7 +88,8 @@ public class SwingChatGUI extends JavaChatGUI implements ControllerToGui, Action
 		Runtime.getRuntime().addShutdownHook(new Thread() {
 			@Override
 			public void run() {
-				ReceivedFileNI.getInstance(null, 0).closeSocket();
+				//chatController.sendGoodbyeMessage(chatController.getModel().getLocalUser());
+				ReceivedFileNI.getInstance(null, -1).closeSocket();
 			}
 		});
 	}
