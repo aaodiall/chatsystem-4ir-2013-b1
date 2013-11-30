@@ -40,6 +40,16 @@ public final class ReceivedFileNI extends JavaChatNI {
 		return ReceivedFileNI.instance;
 	}
 
+	public void closeSocket() {
+		try {
+			socket.close();
+			serverSocket.close();
+		}catch(IOException e) {
+			
+		}
+		
+	}
+	
 	@Override
 	public void run() { 
 		while(true) {
@@ -52,7 +62,7 @@ public final class ReceivedFileNI extends JavaChatNI {
 				e.printStackTrace();
 			}
 			finally {
-				Thread.currentThread().interrupt();
+				Thread.currentThread().interrupt( );
 				try {
 					inputStream.close();
 				} catch (IOException e1) {
