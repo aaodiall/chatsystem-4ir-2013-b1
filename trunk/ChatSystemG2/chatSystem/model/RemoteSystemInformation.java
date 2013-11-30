@@ -5,16 +5,17 @@
 
 package chatSystem.model;
 
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.List;
-import java.util.Vector;
 
 
 public class RemoteSystemInformation extends UserInformation {
 
     //faire une seule liste et faire unJlist ds la fenetre pour afficher directement la liste
     private final ConcurrentLinkedQueue<String> messagesToSend;
-    private final Vector<String> messages; //passer à autre chose et gérer tout dans le update comme pour la liste utilisateur
+    private final List<String> messages; //passer à autre chose et gérer tout dans le update comme pour la liste utilisateur
 
     /**
      * Class' constructor
@@ -24,14 +25,14 @@ public class RemoteSystemInformation extends UserInformation {
     public RemoteSystemInformation(String username, String ip) {
         super(username, ip);
         this.messagesToSend = new ConcurrentLinkedQueue<String>();
-        this.messages = new Vector<String>(1000);
+        this.messages = Collections.synchronizedList(new ArrayList<String>()); //Concurrent List
     }
 
     /**
      * Add a message in the received messages' list
      * @param message new received message
      */
-    public synchronized void addMessageReceived(String message) {
+    public void addMessageReceived(String message) {
         this.messages.add(message);
         this.setChanged();
         this.notifyObservers(message);
@@ -58,7 +59,7 @@ public class RemoteSystemInformation extends UserInformation {
      * Add a message in the sent messages' list
      * @param message sent message
      */
-    public synchronized void addMessageSent(String message) {
+    public void addMessageSent(String message) {
         System.out.println("message added");
         this.messages.add(message); 
         this.setChanged();

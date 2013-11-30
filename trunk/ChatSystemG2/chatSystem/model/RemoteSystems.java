@@ -6,10 +6,10 @@
 package chatSystem.model;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
 public class RemoteSystems extends Model implements Iterable<RemoteSystemInformation> {
 
@@ -20,7 +20,7 @@ public class RemoteSystems extends Model implements Iterable<RemoteSystemInforma
      * Private class' constructor
      */
     private RemoteSystems() {
-        this.remoteSystemsInformation = new HashMap<String, RemoteSystemInformation>();
+        this.remoteSystemsInformation = new ConcurrentHashMap<String, RemoteSystemInformation>();
     }
 
     /**
@@ -29,7 +29,7 @@ public class RemoteSystems extends Model implements Iterable<RemoteSystemInforma
      * @param ip remote system's ip address
      * @param isAck whether or not the remote system expects an answer
      */
-    public synchronized void addRemoteSystem(String username, String ip, boolean isAck) {
+    public void addRemoteSystem(String username, String ip, boolean isAck) {
         
         String key = RemoteSystemInformation.generateID(username, ip);
         if (!this.remoteSystemsInformation.containsKey(key)) {
@@ -59,7 +59,7 @@ public class RemoteSystems extends Model implements Iterable<RemoteSystemInforma
      * Remove a remote system from the list
      * @param idRemoteSystem id of the remote system to be removed
      */
-    public synchronized void deleteRemoteSystem(String idRemoteSystem) {
+    public void deleteRemoteSystem(String idRemoteSystem) {
         this.remoteSystemsInformation.remove(idRemoteSystem);
         this.setChanged();
         this.notifyObservers();
@@ -80,7 +80,7 @@ public class RemoteSystems extends Model implements Iterable<RemoteSystemInforma
      * @param idRemoteSystem id of the remote system
      * @param message message which is to be added
      */
-    public synchronized void addMessageReceivedToRemote(String idRemoteSystem, String message) {
+    public void addMessageReceivedToRemote(String idRemoteSystem, String message) {
         this.remoteSystemsInformation.get(idRemoteSystem).addMessageReceived(message);
     }
 
@@ -89,7 +89,7 @@ public class RemoteSystems extends Model implements Iterable<RemoteSystemInforma
      * @param idRemoteSystem remote system the message has to be sent to
      * @param message message which has to be sent
      */
-    public synchronized void addMessageToSendToRemote(String idRemoteSystem, String message) {
+    public void addMessageToSendToRemote(String idRemoteSystem, String message) {
         if (this.remoteSystemsInformation.containsKey(idRemoteSystem)) {
             this.remoteSystemsInformation.get(idRemoteSystem).addMessageToSend(message);
             this.setChanged();
@@ -175,7 +175,7 @@ public class RemoteSystems extends Model implements Iterable<RemoteSystemInforma
     private class RSIterator implements Iterator<RemoteSystemInformation> {
 
         //private Set<RemoteSystemInformation> info;
-        private Iterator<String> it;
+        private final Iterator<String> it;
 
         public RSIterator() {
             this.it = remoteSystemsInformation.keySet().iterator();
