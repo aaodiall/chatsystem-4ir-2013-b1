@@ -361,8 +361,10 @@ public class DialogWindow extends JFrame implements ActionListener {
             @Override
             public void run() {
                 conversationMessages.addElement(newMessage);
-                JScrollBar aux = conversationJScrollPane.getVerticalScrollBar();
-                aux.setValue(aux.getMaximum()+13);
+                conversation.ensureIndexIsVisible(conversationMessages.getSize()-1);
+                //elem.ensureIndexIsVisible(liste.getSize() - 1);
+                //JScrollBar aux = conversationJScrollPane.getVerticalScrollBar();
+                //aux.setValue(aux.getMaximum()+13);
             }
         });
     }
