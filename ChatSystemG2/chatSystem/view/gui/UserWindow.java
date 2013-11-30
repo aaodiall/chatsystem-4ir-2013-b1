@@ -141,10 +141,6 @@ public class UserWindow extends JFrame implements ActionListener, MouseListener 
         }
     }
 
-    
-   /*ublic void setOpaqueName(String idContact) {
-        this.contactsList.getModel().getElementAt(this.contactsName.indexOf(idContact)).
-    }*/
     /**
      * Action performed when the user clicks on the contacts' list
      * to select a remote system he wants to communicate with
@@ -163,6 +159,10 @@ public class UserWindow extends JFrame implements ActionListener, MouseListener 
         }
     }
 
+    /**
+     * Fonctions we had to overwrite but will not use for this application
+     * @param me event
+     */
     @Override
     public void mousePressed(MouseEvent me) {
         // throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.

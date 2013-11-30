@@ -64,7 +64,7 @@ public class DialogWindow extends JFrame implements ActionListener {
     private void initWindow() {
 
         setTitle("Dialog Window : "+contact);
-        //semble ne pas exister sur les machines du gei...
+        //seems not to exist on the gei's computers
         this.setAutoRequestFocus(false);
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
 
@@ -362,9 +362,6 @@ public class DialogWindow extends JFrame implements ActionListener {
             public void run() {
                 conversationMessages.addElement(newMessage);
                 conversation.ensureIndexIsVisible(conversationMessages.getSize()-1);
-                //elem.ensureIndexIsVisible(liste.getSize() - 1);
-                //JScrollBar aux = conversationJScrollPane.getVerticalScrollBar();
-                //aux.setValue(aux.getMaximum()+13);
             }
         });
     }
@@ -393,7 +390,12 @@ public class DialogWindow extends JFrame implements ActionListener {
         }
     }
     
+    /**
+     * Show the local user the remote system got disconnected
+     * We decided to do it by printing a message in the window if this one is opened
+     */
     public void displayUserDisconnected() {
-        this.updateConversation("THE USER GOT DISCONNECTED");
+        if (this.isVisible())
+            this.updateConversation("THE USER GOT DISCONNECTED");
     }
 }
