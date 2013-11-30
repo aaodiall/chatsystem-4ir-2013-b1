@@ -83,19 +83,22 @@ public class FileController {
 			this.receptionFileSize = ((FileTransfertDemand) msg).getSize();
 			int option = JOptionPane.showConfirmDialog(null, "Vous avez reçu une demande de transfert de fichier de la part de "+msg.getUsername()+"\n Nom du fichier : "+ this.fileName +"\nTaille (en byte) : "+ this.receptionFileSize +"\n\nVoulez-vous accepter le fichier ?", "Demande de transfert de fichier reçue", JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE);
 			if(option == JOptionPane.OK_OPTION) {
-				String repositoryPath = chatGUI.getFilePath();
-				fileOutputStream = new FileOutputStream(repositoryPath + this.fileName, true);
 				chatGUI.getStatusBar().beginFileTransferReception((int) receptionFileSize);		
 				receivedThread = new Thread(ReceivedFileNI.getInstance(this,((FileTransfertDemand) msg).getPortClient()));
 				receivedThread.start();
+				String repositoryPath = chatGUI.getFilePath();
+				fileOutputStream = new FileOutputStream(repositoryPath + "\\" + this.fileName, true);
 				this.sendFileTransfertConfirmation(user, true, msg.getId());
 			}
 			else
 				this.sendFileTransfertConfirmation(user, false, msg.getId());
 		}
 		else if(msg instanceof FilePart) {
+			Logger.getLogger(ChatController.class).log(Level.INFO, "Message received >> " + msg.toString());
+			
 			chatGUI.getStatusBar().setReceptionBarValue(((FilePart) msg).getFilePart().length);
 			fileOutputStream.write(((FilePart) msg).getFilePart());
+			fileOutputStream.flush();
 			if(((FilePart) msg).isLast()) {
 				fileOutputStream.close();
 				chatGUI.getStatusBar().finishFileTransferReception();
