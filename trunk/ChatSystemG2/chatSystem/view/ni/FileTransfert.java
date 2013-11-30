@@ -30,7 +30,6 @@ public class FileTransfert implements Runnable {
 
     /**
      * Class' constructor
-     *
      * @param idTransfert id of the file transfert the instance has to execute
      * @param chatNI instance of chat ni which is responsible for this file
      * transferts instance
@@ -49,7 +48,6 @@ public class FileTransfert implements Runnable {
 
     /**
      * Determine the port the file transfert is going to be executing on
-     *
      * @return port
      */
     public int getPort() {
@@ -63,16 +61,16 @@ public class FileTransfert implements Runnable {
     public void run() {
 
         try {
-            //attente de connection
+            //waiting for a connection
             this.clientSocket = this.serverSocket.accept();
 
-            //on est connecté, on prépare de transfert
+            //we are connected, preparing for a transfert
             this.writerBuffer = new BufferedOutputStream(clientSocket.getOutputStream());
             this.writer = new ObjectOutputStream(writerBuffer);
 
             Message msg;
             do {
-                //on récupère le morceau de fichier a envoyer et on l'écrit dans la socket
+                //recover the file's part to send and write it in the socket
                 msg = new FilePart(this.chatNI.getUserInfo().getUsername(), this.fileToSend.getFilePart(), this.fileToSend.isLast());//a changer mais je vais vite
 
                 this.writer.writeObject(msg);
@@ -86,7 +84,7 @@ public class FileTransfert implements Runnable {
             Logger.getLogger(FileTransfert.class.getName()).log(Level.SEVERE, null, ex);
         } finally {
             try {
-                //on termine
+                //finishing
                 this.writer.flush();
                 this.writer.close();
                 this.writerBuffer.close();
@@ -98,5 +96,4 @@ public class FileTransfert implements Runnable {
             }
         }
     }
-
 }

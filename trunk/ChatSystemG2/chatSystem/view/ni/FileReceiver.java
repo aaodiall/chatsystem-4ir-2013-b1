@@ -28,7 +28,6 @@ public class FileReceiver implements Runnable {
 
     /**
      * Class' constructor
-     *
      * @param fileToReceive
      * @param ipServer ip adress of the remote system sending the file
      * @param portServer port the remote system is going to use
@@ -48,7 +47,7 @@ public class FileReceiver implements Runnable {
     @Override
     public void run() {
         try {
-            //Le client commence par tenter la connection
+            //The client starts by trying to connect himself
             this.socketClient = new Socket(this.ipServer, this.portServer);
             this.readerBuffer = new BufferedInputStream(socketClient.getInputStream());
             this.reader = new ObjectInputStream(this.readerBuffer);
@@ -81,7 +80,5 @@ public class FileReceiver implements Runnable {
                 Logger.getLogger(FileReceiver.class.getName()).log(Level.SEVERE, null, ex);
             }
         }
-
     }
-
 }
