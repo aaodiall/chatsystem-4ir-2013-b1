@@ -3,8 +3,9 @@
  */
 package chatSystemNetwork;
 
-import java.io.BufferedInputStream;
+
 import java.io.IOException;
+import java.io.ObjectInputStream;
 import java.net.InetAddress;
 import java.net.Socket;
 import java.util.ArrayList;
@@ -21,8 +22,7 @@ public class ChatNIStreamReceiver extends Thread{
 	private Socket rSocket;
 	private int remotePort;
 	private InetAddress remoteIP;
-	private BufferedInputStream reader;
-	private int nextByte;
+	private ObjectInputStream objectReader;
 	private byte[] bytes;
 	private boolean isReceived;
 	private ArrayList<byte[]> fparts;
@@ -31,7 +31,6 @@ public class ChatNIStreamReceiver extends Thread{
 	public ChatNIStreamReceiver(int remotePort,InetAddress remoteIP, int numberOfParts){
 		this.remotePort = remotePort;
 		this.remoteIP = remoteIP;
-		this.nextByte = 0;
 		this.isReceived = false;
 		this.fparts = new ArrayList<byte[]>();
 		this.numberOfParts = numberOfParts;
@@ -50,27 +49,32 @@ public class ChatNIStreamReceiver extends Thread{
 	}
 	
 	public void run(){
-		int i =0;
+		int i=0;
+		Object objectRead;
+		FilePart f;
 		try {
 			this.rSocket = new Socket(this.remoteIP,this.remotePort);
-			this.bytes = new byte[1000000];
-			this.reader = new BufferedInputStream(this.rSocket.getInputStream());
+			this.bytes = new byte[1204];//this.rSocket.getReceiveBufferSize()];
+			this.objectReader = new ObjectInputStream(this.rSocket.getInputStream());
 			while (isReceived == false){
-				while (nextByte != -1){
-					nextByte = this.reader.read();
-					bytes[i] = (byte)nextByte;
-					i++;
-				}
-				FilePart f = (FilePart)Message.fromArray(this.bytes);
-				this.fparts.add(f.getFilePart());
-				if (f.isLast() == true){
-					this.isReceived = true;
-				}
+				 objectRead= this.objectReader.readObject();
+				 f = (FilePart)objectRead;
+				 this.fparts.add(f.getFilePart());
+				 if (f.isLast() == true){
+					 this.isReceived = true;
+				 }
 			}
-			System.out.println("part received");
-			this.reader.close();
-		} catch (IOException e) {
+			System.out.println("file received");
+		} catch (ClassNotFoundException e) {
 			e.printStackTrace();
+		} catch (IOException e) {
+			e.printStackTrace(); 
+		} finally{
+			try {
+				this.objectReader.close();
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
 		}
 	}
 	

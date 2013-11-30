@@ -16,7 +16,7 @@ import chatSystemCommon.FilePart;
  * @author joanna
  *
  */
-public class ChatNIStreamConnection extends Thread{
+public class ChatNIStreamConnection implements Runnable{
 	
 	private ServerSocket serverSocket;
 	private ArrayBlockingQueue<FilePart> fParts;
@@ -73,6 +73,6 @@ public class ChatNIStreamConnection extends Thread{
 		} catch (IOException e) {
 			System.out.println("Error : accept in StreamConnection");
 			e.printStackTrace();
-		} 
+		}
 	}
 }

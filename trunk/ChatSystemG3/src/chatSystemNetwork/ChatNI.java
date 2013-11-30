@@ -32,6 +32,7 @@ public class ChatNI extends View implements Runnable, Observer{
 	private Controller controller;
 	private ChatNIMessage chatNIMessage;
 	private ChatNIStreamConnection server;
+	private Thread streamConnectionThread;
 	private DatagramSocket socketUDP;
 	private InetAddress userIP;
 	private InetAddress userIPBroadcast;
@@ -151,19 +152,15 @@ public class ChatNI extends View implements Runnable, Observer{
 	public void sendMsgFile(ArrayBlockingQueue<byte[]> parts,int idDemand){
 		ArrayBlockingQueue <FilePart> f = new ArrayBlockingQueue<FilePart>(parts.size());
 		int i;
-		if (parts.size() == 1){
-			FilePart p = new FilePart(this.cache.getUsername(),parts.poll(),true);
-			f.add(p);
-		}else{
-			for (i=0;i<(parts.size()-1);i++){
-				FilePart p = new FilePart(this.cache.getUsername(),parts.poll(),false);
-				f.add(p);
-			}
-			FilePart p = new FilePart(this.cache.getUsername(),parts.poll(),true);
+		while (parts.size()>1){
+			FilePart p = new FilePart(this.cache.getUsername(),parts.poll(),false);
 			f.add(p);
 		}
+		FilePart p = new FilePart(this.cache.getUsername(),parts.poll(),true);
+		f.add(p);
 		this.server.setParts(f);
-		this.server.start();
+		this.streamConnectionThread = new Thread(this.server);
+		this.streamConnectionThread.start();
 	}
 	
 	/**

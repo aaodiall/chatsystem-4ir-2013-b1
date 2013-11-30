@@ -16,22 +16,28 @@ public class ModelFile extends Observable{
 	private Long size; // en octets
 	private int idDemand;
 	private int numberOfParts;
+	private int max;
 	
 	/**
 	 * 
 	 * @param remote nom de l'utilisateur distant
 	 * @param idDemand numero de la demande
 	 */
-	public ModelFile(String remote, int idDemand){
+	public ModelFile(String remote, int idDemand, int max){
 		this.remote = remote;
 		this.idDemand = idDemand;
+		this.max = max;
 	}
 	
-	public void setNumberParts(int maxTransmit){
-		this.numberOfParts = this.size.intValue() / maxTransmit;
-		if ((this.size.intValue() % maxTransmit) != 0){
+	public void setNumberParts(){
+		this.numberOfParts = this.size.intValue() / this.max;
+		if ((this.size.intValue() % this.max) != 0){
 			this.numberOfParts++;
 		} 
+	}
+	
+	public int getMax(){
+		return this.max;
 	}
 	
 	public int getNumberParts(){
