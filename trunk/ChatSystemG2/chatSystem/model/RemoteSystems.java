@@ -130,9 +130,9 @@ public class RemoteSystems extends Model implements Iterable<RemoteSystemInforma
         for (RemoteSystemInformation rsi: this) {
             rsi.setUserState(UserState.MAYBEOFFLINE);
         }
-        this.setChanged();
-        this.notifyObservers();
-        this.clearChanged();
+        //this.setChanged();
+        //this.notifyObservers();
+        //this.clearChanged();
     }
     
     /**

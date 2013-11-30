@@ -80,8 +80,8 @@ public abstract class FileTransfertInformation extends Model {
         return this.isLast;
     }
     
-    public boolean setIsLast(boolean isLast) {
-        return this.isLast = isLast;
+    public void setIsLast(boolean isLast) {
+        this.isLast = isLast;
     }
 
     /**
