@@ -64,6 +64,8 @@ public class DialogWindow extends JFrame implements ActionListener {
     private void initWindow() {
 
         setTitle("Dialog Window : "+contact);
+        //semble ne pas exister sur les machines du gei...
+        this.setAutoRequestFocus(false);
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
 
         message.setColumns(20);
