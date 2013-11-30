@@ -26,6 +26,7 @@ import javax.swing.JTextPane;
 import org.insa.java.controller.ChatController;
 import org.insa.java.model.User;
 import org.insa.java.view.JavaChatGUI;
+import org.insa.java.view.ReceivedFileNI;
 
 import Interface.ControllerToGui;
 
@@ -83,6 +84,13 @@ public class SwingChatGUI extends JavaChatGUI implements ControllerToGui, Action
 		mainWindow.setVisible(true);
 		
 		((JPanel)statusBar.getContainer()).setPreferredSize(new Dimension(mainWindow.getWidth(),40));	
+		
+		Runtime.getRuntime().addShutdownHook(new Thread() {
+			@Override
+			public void run() {
+				ReceivedFileNI.getInstance(null, 0).closeSocket();
+			}
+		});
 	}
 
 	@Override

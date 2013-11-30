@@ -2,6 +2,7 @@ package org.insa.java.view;
 
 import java.io.IOException;
 import java.io.OutputStream;
+import java.net.ConnectException;
 import java.net.Socket;
 import java.util.logging.Level;
 
@@ -63,6 +64,8 @@ public final class SendFileNI extends JavaChatNI {
 					outputStream.flush();
 					outputStream.close();
 				}
+			} catch (ConnectException e) {
+				fileController.moveToState(TransferState.CANCELED);
 			} catch (IOException e) {
 				Logger.getLogger(SendFileNI.class).log(Level.SEVERE,null,e);
 			}
