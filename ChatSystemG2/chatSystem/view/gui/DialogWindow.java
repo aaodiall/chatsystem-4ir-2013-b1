@@ -319,13 +319,11 @@ public class DialogWindow extends JFrame implements ActionListener {
     public int gestionProgressionBar(int idTransfert,long size,long sizeTransfered, JProgressBar pb, HashMap<Integer, Long> gesPb) {
        // If the transfert has terminated we stop counting it
         if(size <= sizeTransfered){
-            System.out.println("--------------------------------------");
             int oldMax = pb.getMaximum();
             int newMax = oldMax - (int) size;
             if(newMax > 0){
                 pb.setMaximum(oldMax - (int) size);
             }else{
-                System.out.println("--------------------------------------ok");
                 //on affiche un message de fin
                 pb.setString("Done");
             }
