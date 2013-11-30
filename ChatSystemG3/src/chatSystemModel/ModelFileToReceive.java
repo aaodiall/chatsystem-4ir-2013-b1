@@ -18,15 +18,13 @@ public class ModelFileToReceive extends ModelFile{
 	private FileOutputStream fos;
 	private Boolean stateReceivedDemand;
 	private Boolean isReceived;
-	private int writeMax;
 	private int progression;
 	
-	public ModelFileToReceive(String remote, String name,long size, int idDemand){
-		super(remote,idDemand);
+	public ModelFileToReceive(String remote, String name,long size, int idDemand,int maxWrite){
+		super(remote,idDemand, maxWrite);
 		super.setName(name);
 		super.setSize(size);
-		this.writeMax = 1024;
-		super.setNumberParts(writeMax);
+		super.setNumberParts();
 		this.progression = 0;
 		System.out.print(System.getenv("HOME") +"/Téléchargements/"+name);
 		System.out.println(" ");
@@ -38,15 +36,16 @@ public class ModelFileToReceive extends ModelFile{
 		}
 	}
 	
-	public void writeFilePart(byte[] part, boolean isLast){
+	public void writeFilePart(byte[] part, boolean isReceived){
 		try {
-			System.out.println("writing file...");
-			this.fos = new FileOutputStream(this.fileToReceive);
+			this.fos = new FileOutputStream(this.fileToReceive,true);
 			this.fos.write(part);
-			System.out.println("part written");
 			this.fos.flush();
 			this.progression++;
 			this.setProgression();
+			if (isReceived == true){
+				this.setIsReceived();
+			}
 		} catch (FileNotFoundException e) {
 			e.printStackTrace();
 		} catch (IOException e) {

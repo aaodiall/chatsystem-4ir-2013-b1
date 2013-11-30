@@ -4,8 +4,8 @@
 package chatSystemNetwork;
 
 
-import java.io.BufferedOutputStream;
 import java.io.IOException;
+import java.io.ObjectOutputStream;
 import java.net.Socket;
 import java.util.concurrent.ArrayBlockingQueue;
 
@@ -18,7 +18,7 @@ import chatSystemCommon.FilePart;
  */
 public class ChatNIStreamSender extends Thread{
 	
-	private BufferedOutputStream out;
+	private ObjectOutputStream out;
 	private ArrayBlockingQueue<FilePart> fParts;
 	private boolean isSent;
 	
@@ -26,7 +26,7 @@ public class ChatNIStreamSender extends Thread{
 		this.fParts = parts;
 		this.isSent = false;
 		try {
-			this.out = new BufferedOutputStream(socket.getOutputStream());
+			this.out = new ObjectOutputStream(socket.getOutputStream());
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
@@ -40,8 +40,7 @@ public class ChatNIStreamSender extends Thread{
 		try {			
 			System.out.println("sender actif");
 			while (!this.fParts.isEmpty()){
-				System.out.println("before write");
-				this.out.write(this.fParts.poll().toArray());
+				this.out.writeObject((Object)this.fParts.poll());
 				this.out.flush();
 			}
 			System.out.println("end writing");

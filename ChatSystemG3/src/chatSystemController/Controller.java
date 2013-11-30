@@ -24,28 +24,6 @@ import chatSystemNetwork.ChatNI;
  */
 public class Controller extends Thread{
 
-	/* ATTRIBUTS A METTRE
-	 * ModelFile modelFile;
-	 * ModelFileInformation modelFileInformation;
-	 * ModelGroupRecipient modelGroupRecipient;
-	 * ModelListUsers modelListUsers;
-	 * ModelStates modelStates;
-	 * ModelText modelText;
-	 * ModelUsername modelUsername;
-	 * 
-	 * METHODES A IMPLEMENTER
-	 * public void performConnect(String username);
-	 * public void performDisconnect(String username);
-	 * public void performSendText(String text, ArrayList<String> recipientList);
-	 * public void performSendFile(String recipient, String fileName);
-	 * public void textReceived(String text, String username);
-	 * public void connectReceived(String username,InetAddress ipRemote, boolean ack);
-	 * public void disconnectReceived(String username)
-	 * public void confirmationFileReceived(String recipient, String fileName);
-	 * public void demandFileReceived(String sender, String fileName,String extension,int size);
-	 * public void cancelFileReceived(String sender, int idDemand);
-	 */
-
 	private ModelListUsers modelListUsers;
 	private ModelStates modelStates;	
 	private ModelText modelText;
@@ -54,6 +32,8 @@ public class Controller extends Thread{
 	private ChatGUI chatgui;
 	private ChatNI chatNI;
 	private int numFileMax;
+	private int maxWrite;
+	private int maxRead;
 	private ArrayList <ModelFileToSend> filesToSend;
 	private HashMap <Integer,ModelFileToReceive> filesToReceive;
 	private int numReceiveDemands;
@@ -77,6 +57,8 @@ public class Controller extends Thread{
 		this.modelUsername = modelUsername;
 		this.modelGroupRecipient = modelGroupRecipient;
 		this.numFileMax = 5;
+		this.maxRead = 1024;
+		this.maxWrite = 1024;
 		this.filesToSend = new ArrayList<ModelFileToSend> (this.numFileMax);
 		this.filesToReceive = new HashMap<Integer,ModelFileToReceive> (this.numFileMax);
 		this.numReceiveDemands = 0;
@@ -164,7 +146,7 @@ public class Controller extends Thread{
 	public void performPropositionFile(String remote, String filePath){
 		if (this.numSendDemands < this.numFileMax){
 			// on cree le modelFile
-			ModelFileToSend f = new ModelFileToSend (remote,filePath,this.numSendDemands);
+			ModelFileToSend f = new ModelFileToSend (remote,filePath,this.numSendDemands,this.maxRead);
 			this.numSendDemands++;
 			//on l'ajoute a la liste des fichier a envoyer;
 			this.filesToSend.add(f);
@@ -209,7 +191,7 @@ public class Controller extends Thread{
 	 */
 	public void filePropositionReceived(String remote, String file, long size, int idDemand){
 		if (this.modelStates.isConnected()){
-			ModelFileToReceive f = new ModelFileToReceive(remote,file,size,idDemand);
+			ModelFileToReceive f = new ModelFileToReceive(remote,file,size,idDemand,this.maxWrite);
 			f.setStateReceivedDemand(true);
 			this.filesToReceive.put(idDemand, f);
 			// signale normalement a la gui qu'on a recu une demande
@@ -251,7 +233,7 @@ public class Controller extends Thread{
 	}
 	
 	public void messageReceived(String text, String username){
-		if (modelStates.isConnected()){
+		if (modelStates.isConnected() && this.modelListUsers.isInListUsers(username)){
 			this.modelText.setRemote(username);
 			this.modelText.setTextReceived(text);
 			System.out.println (username + " : " + text);
@@ -280,8 +262,10 @@ public class Controller extends Thread{
 	}
 	
 	public void partReceived(byte[] fileBytes, int idDemand, boolean isLast){
-		this.filesToReceive.get(idDemand).writeFilePart(fileBytes, isLast);
-		if (isLast == true){
+		System.out.println(" size read " + fileBytes.length);	
+		if (isLast == false){
+			this.filesToReceive.get(idDemand).writeFilePart(fileBytes, isLast);
+		}else{
 			this.filesToReceive.remove(idDemand);
 			this.numReceiveDemands--;
 		}
@@ -294,7 +278,7 @@ public class Controller extends Thread{
 		while(true){
 			try{
 				Thread.sleep(1000);
-				if (this.filesToReceive.size() >0){
+				if (this.filesToReceive.size() > 0){
 					this.chatNI.checkReceives();
 					System.out.println("check done");
 				}

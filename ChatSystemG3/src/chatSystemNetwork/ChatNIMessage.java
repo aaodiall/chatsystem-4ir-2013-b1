@@ -29,24 +29,6 @@ import java.util.concurrent.ArrayBlockingQueue;
 
 public class ChatNIMessage extends Thread{
 	
-	/* ATTRIBUTS A METTRE
-	 * DatagramSocket socketUDP;
-	 * ModelListUsers modelListUsers;
-	 * InetAddress userIP;
-	 * InetAddress userIPBroadcast;
-	 * ArrayList<byte[]> bufferMsg2Send;
-	 * 
-	 * METHODES A IMPLEMENTER
-	 * public ChatNIMessage(DatagramSocket socketUDP, ModelListUsers modelListUsers);
-	 * public void sendHello(String username, boolean ack);
-	 * public void sendBye();
-	 * public void sendText(ArrayList<String> usernameList, String text2Send);
-	 * public void sendFileTransfertDemand(String recipient, String fileName);
-	 * public void sendFileTransfertConfirmation(String recipient, String fileName, boolean answer);
-	 * public void sendTransfertCancel(String recipient, String fileName);
-	 * public void run();
-	*/
-	
 	private DatagramSocket socketUDP;
 	private ArrayBlockingQueue <DatagramPacket> bufferMsg2Send;
 	private int numMsgMax;
