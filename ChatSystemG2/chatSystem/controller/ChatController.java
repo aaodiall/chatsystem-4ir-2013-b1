@@ -14,7 +14,7 @@ import java.io.File;
 
 public class ChatController extends Controller implements GuiToCont, NiToCont {
 
-    private UserInformation localUser; //mettre dans une HasMap créée dans la classe mère
+    private UserInformation localUser;
     private RemoteSystems remoteSystems;
     private FileTransferts fileTransferts;
     private final ChatGUI chatGUI;
@@ -71,40 +71,6 @@ public class ChatController extends Controller implements GuiToCont, NiToCont {
     }
     
     /**
-     * React after the reception of a hello message 
-     * @param username contact who sent the hello message
-     * @param ip contact's ip
-     * @param isAck whether or not the hello message is a answer
-     */
-    @Override
-    public void performHelloReceived(String username, String ip, boolean isAck) {
-        System.out.println("Hello received, modifying the model");
-        this.remoteSystems.addRemoteSystem(username, ip, isAck);
-        this.remoteSystems.getRemoteSystem(RemoteSystemInformation.generateID(username, ip)).addObserver(chatGUI);
-    }
-
-    /**
-     * React after the reception of a goodbye message
-     * @param idRemoteSystem id of the remote system which sent the goodbye message
-     */
-    @Override
-    public void performGoodbyeReceived(String idRemoteSystem) {
-        System.out.println("Goodbye received, modifying the model");
-        this.remoteSystems.deleteRemoteSystem(idRemoteSystem);
-    }
-
-    /**
-     * React after the reception of a text message
-     * @param msg text message's content
-     * @param idRemoteSystem id of the remote system which sent the text message
-     */
-    @Override
-    public void performMessageReceived(String msg, String idRemoteSystem) {
-        System.out.println("Text received, modifying the model");
-        this.remoteSystems.addMessageReceivedToRemote(idRemoteSystem, idRemoteSystem + " : " +msg);
-    }
-
-    /**
      * Send a text message to a given remote system
      * @param message text message' content
      * @param idRemoteSystem id of the remote system the text message is to be sent to
@@ -114,19 +80,8 @@ public class ChatController extends Controller implements GuiToCont, NiToCont {
         System.out.println("Message to be send to " + idRemoteSystem + ", modifying the model");
         this.remoteSystems.addMessageToSendToRemote(idRemoteSystem, message);
     }
-
-    /**
-     * React after having sent a text message to a given remote system
-     * @param message text message' content
-     * @param idRemoteSystem id of the remote system the text message has been sent to
-     */
-    @Override
-    public void performMessageSent(String message, String idRemoteSystem) {
-       System.out.println("Message sent to " + idRemoteSystem + ", modifying the model");
-       this.remoteSystems.addMessageSentToRemoteSystem(this.localUser.getUsername() + " : " +message, idRemoteSystem);
-    }
-
-    /**
+    
+     /**
      * Perform the sending of a file transfert deman to a given remote system
      * @param fileToSend file the user wants to send
      * @param idRemoteSystem id of the remote system the request is to be sent to
@@ -161,6 +116,61 @@ public class ChatController extends Controller implements GuiToCont, NiToCont {
     }
     
     /**
+     * Perform the copy of the file
+     * @param fileToSave file which is to be saved
+     * @param idTransfert transfert's id
+     */
+    @Override
+    public void performSaveFile(File fileToSave, int idTransfert) {
+        ((FileReceivingInformation)this.fileTransferts.getFileTransfertInformation(idTransfert)).setFileDescriptor(fileToSave);
+    }
+    
+    /**
+     * React after the reception of a hello message 
+     * @param username contact who sent the hello message
+     * @param ip contact's ip
+     * @param isAck whether or not the hello message is a answer
+     */
+    @Override
+    public void performHelloReceived(String username, String ip, boolean isAck) {
+        System.out.println("Hello received, modifying the model");
+        this.remoteSystems.addRemoteSystem(username, ip, isAck);
+        this.remoteSystems.getRemoteSystem(RemoteSystemInformation.generateID(username, ip)).addObserver(chatGUI);
+    }
+
+    /**
+     * React after the reception of a goodbye message
+     * @param idRemoteSystem id of the remote system which sent the goodbye message
+     */
+    @Override
+    public void performGoodbyeReceived(String idRemoteSystem) {
+        System.out.println("Goodbye received, modifying the model");
+        this.remoteSystems.deleteRemoteSystem(idRemoteSystem);
+    }
+
+    /**
+     * React after the reception of a text message
+     * @param msg text message's content
+     * @param idRemoteSystem id of the remote system which sent the text message
+     */
+    @Override
+    public void performMessageReceived(String msg, String idRemoteSystem) {
+        System.out.println("Text received, modifying the model");
+        this.remoteSystems.addMessageReceivedToRemote(idRemoteSystem, idRemoteSystem + " : " +msg);
+    }
+
+    /**
+     * React after having sent a text message to a given remote system
+     * @param message text message' content
+     * @param idRemoteSystem id of the remote system the text message has been sent to
+     */
+    @Override
+    public void performMessageSent(String message, String idRemoteSystem) {
+       System.out.println("Message sent to " + idRemoteSystem + ", modifying the model");
+       this.remoteSystems.addMessageSentToRemoteSystem(this.localUser.getUsername() + " : " +message, idRemoteSystem);
+    }
+  
+    /**
      * React after the reception of a file transfert demand
      * @param name file's name
      * @param size file's size
@@ -177,16 +187,6 @@ public class ChatController extends Controller implements GuiToCont, NiToCont {
         this.fileTransferts.getFileTransfertInformation(idTransfert).setState(FileState.WAITANSWER);
     }
     
-    /**
-     * Perform the copy of the file
-     * @param fileToSave file which is to be saved
-     * @param idTransfert transfert's id
-     */
-    @Override
-    public void performSaveFile(File fileToSave, int idTransfert) {
-        ((FileReceivingInformation)this.fileTransferts.getFileTransfertInformation(idTransfert)).setFileDescriptor(fileToSave);
-    }
-
     /**
      * React after the reception of file transfert's confirmation
      * @param idRemoteSystem id of the remote system which confirmed the file's transfert
@@ -259,5 +259,4 @@ public class ChatController extends Controller implements GuiToCont, NiToCont {
         tmp.deleteObservers();
         this.fileTransferts.deleteTransfert(idTransfert);
     }
-
 }
