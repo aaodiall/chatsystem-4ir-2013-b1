@@ -49,7 +49,7 @@ public final class ReceivedFileNI extends JavaChatNI {
 	
 	@Override
 	public void run() { 
-		while(true) {
+		while(running) {
 			try {
 				socket = serverSocket.accept();	
 				inputStream = socket.getInputStream();
@@ -60,7 +60,7 @@ public final class ReceivedFileNI extends JavaChatNI {
 				e.printStackTrace();
 			}
 			finally {
-				//Thread.currentThread().interrupt( );
+				Thread.currentThread().interrupt( );
 				try {
 					inputStream.close();
 				} catch (IOException e1) {
@@ -88,4 +88,10 @@ public final class ReceivedFileNI extends JavaChatNI {
 	public Socket getSocket() {
 		return socket;
 	}
+	
+	/*
+	public void stop() {
+		running = false;
+	}
+	*/
 }

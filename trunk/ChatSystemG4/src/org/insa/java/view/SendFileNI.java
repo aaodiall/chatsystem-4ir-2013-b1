@@ -58,7 +58,7 @@ public final class SendFileNI extends JavaChatNI {
 						fileController.finishFileTransferEmission();
 				}
 			} catch (IOException e) {
-				fileController.moveToState(TransferState.CANCELED);
+				//fileController.moveToState(TransferState.CANCELED);
 			}
 			finally {
 				//Thread.currentThread().interrupt();
