@@ -391,7 +391,7 @@ public class DialogWindow extends JFrame implements ActionListener {
         }
     }
     
-    public void hideWindow() {
-        this.setVisible(false);
+    public void displayUserDisconnected() {
+        this.updateConversation("THE USER GOT DISCONNECTED");
     }
 }
