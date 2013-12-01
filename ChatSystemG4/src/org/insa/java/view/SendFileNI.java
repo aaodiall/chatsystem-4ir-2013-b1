@@ -18,13 +18,12 @@ public final class SendFileNI extends JavaChatNI {
 
 	private TransferState fileTransfertState = TransferState.AVAILABLE;
 	private FileController fileController;
-	private int portClient;
 
 	private OutputStream outputStream = null;
 	
-	private SendFileNI(FileController fileController, int portClient) {
+	private SendFileNI(FileController fileController, int clientPort) {
 		this.fileController = fileController;
-		this.portClient = portClient;
+		this.TCP_CLIENT_PORT = clientPort;
 	}
 
 	public final static SendFileNI getInstance(FileController fileController, int portClient) {
@@ -45,7 +44,7 @@ public final class SendFileNI extends JavaChatNI {
 	public void run(){	
 		while(this.fileTransfertState == TransferState.PROCESSING) {
 			try {
-				socket = new Socket(remoteUser.getAddress(), portClient);
+				socket = new Socket(remoteUser.getAddress(), TCP_CLIENT_PORT);
 				outputStream = socket.getOutputStream();
 
 				FilePart fp = fileController.getFilePartToSend();
@@ -58,16 +57,22 @@ public final class SendFileNI extends JavaChatNI {
 						fileController.finishFileTransferEmission();
 				}
 			} catch (IOException e) {
-				//fileController.moveToState(TransferState.CANCELED);
+				fileController.moveToState(TransferState.CANCELED);
 			}
 			finally {
-				//Thread.currentThread().interrupt();
 				try {
 					outputStream.close();
 				} catch (IOException e1) {
 					e1.printStackTrace();
 				} 
 			}
+		}
+	}
+	
+	public void closeSocket() throws IOException {
+		if(socket != null) {
+			socket.close();
+			socket = null;
 		}
 	}
 

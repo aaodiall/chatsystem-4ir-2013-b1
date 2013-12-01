@@ -6,7 +6,6 @@ import java.io.InputStream;
 import java.net.ServerSocket;
 import java.net.Socket;
 
-import org.insa.java.controller.ChatController;
 import org.insa.java.controller.FileController;
 import org.insa.java.model.User;
 
@@ -41,10 +40,6 @@ public final class ReceivedFileNI extends JavaChatNI {
 			}
 		}
 		return ReceivedFileNI.instance;
-	}
-
-	public void closeSocket() {
-		fileController.closeSocket();
 	}
 	
 	@Override
@@ -84,14 +79,15 @@ public final class ReceivedFileNI extends JavaChatNI {
 	public ServerSocket getServerSocket() {
 		return serverSocket;
 	}
-
-	public Socket getSocket() {
-		return socket;
+	
+	public void closeSocket() throws IOException {
+		if(socket != null) {
+			socket.close();
+			socket = null;
+		}
 	}
 	
-	/*
 	public void stop() {
 		running = false;
 	}
-	*/
 }

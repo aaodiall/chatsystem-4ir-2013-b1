@@ -26,6 +26,10 @@ public abstract class JavaChatGUI {
 		chatController.sendGoodbyeMessage(chatController.getModel().getLocalUser());
 	}
 
+	public JavaStatusBar getStatusBar() {
+		return statusBar;
+	}
+	
 	public abstract String usernameInput();
 
 	public abstract void setChatText(String talk);
@@ -35,8 +39,4 @@ public abstract class JavaChatGUI {
 	public abstract String getFilePath();
 
 	public abstract Object getFrame();
-
-	public JavaStatusBar getStatusBar() {
-		return statusBar;
-	}
 }

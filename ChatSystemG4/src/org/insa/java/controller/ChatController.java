@@ -36,7 +36,7 @@ public class ChatController {
 		Message text = new Text(chatModel.getLocalUser().getUsername(),message);
 		chatModel.get(selectedUser).addMessage(text);
 		SendMessageNI.getInstance().sendMessage(text,selectedUser.getAddress());
-		this.getTalk(chatModel.indexOf(selectedUser));	
+		this.updateTalk(chatModel.indexOf(selectedUser));	
 	}
 	
 	public void sendFile(User user, File file) {
@@ -44,11 +44,11 @@ public class ChatController {
 	}
 
 	public void sendHelloMessage(User localUser) {
-		messageController.sendHelloMessage(MessageFactory.getHelloMessage(chatModel.getLocalUser().getUsername(), false));
+		messageController.sendHelloMessage(MessageFactory.getHelloMessage(chatModel.getLocalUsername(), false));
 	}
 
 	public void sendGoodbyeMessage(User localUser) {
-		messageController.sendGoodbyeMessage(MessageFactory.getByeMessage(chatModel.getLocalUser().getUsername()));
+		messageController.sendGoodbyeMessage(MessageFactory.getByeMessage(chatModel.getLocalUsername()));
 	}
 	
 	public int receivedMessage(InetAddress inetAddress, Message msg){
@@ -63,9 +63,8 @@ public class ChatController {
 		
 		Logger.getLogger(ChatController.class).log(Level.INFO, "Message received >> " + msg.toString());
 		
-		if(msg instanceof Hello || msg instanceof Goodbye || msg instanceof Text) {
+		if(msg instanceof Hello || msg instanceof Goodbye || msg instanceof Text)
 			messageController.receivedMessage(user,msg);
-		}
 		else {
 			try {
 				fileController.receivedMessage(user,msg);
@@ -83,7 +82,7 @@ public class ChatController {
 			localUsername += "@" + InetAddress.getLocalHost().getHostAddress();
 			chatModel = new ChatModel(new User(InetAddress.getLocalHost(),localUsername));
 			this.messageController = new MessageController(this,chatGUI,chatModel);
-			this.fileController = new FileController(this,chatGUI,chatModel);
+			this.fileController = new FileController(chatGUI,chatModel);
 		} catch (UnknownHostException e) {
 			Logger.getLogger(JavaChatGUI.class).log(Level.SEVERE, null, e);
 		}
@@ -99,18 +98,25 @@ public class ChatController {
 	public void checkLocalUsername(String localUsername) {
 		if ((localUsername == null) || (localUsername.length() <= 0))
 			System.exit(-1);
-		try {
-			localUsername += "@"+InetAddress.getLocalHost().getHostAddress();
-		} catch (UnknownHostException e) {
-			e.printStackTrace();
-		}
 	}
 	
-	public void getTalk(int index) {
-		messageController.getTalk(index);
+	public void updateTalk(int index) {
+		messageController.updateTalk(index);
 	}
 
 	public ChatModel getModel() {
 		return chatModel;
+	}
+
+	public void fileEmissionCanceled() {
+		fileController.fileEmissionCanceled();
+	}
+
+	public void fileReceptionCanceled() {
+		try {
+			fileController.fileReceptionCanceled();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
 	}
 }

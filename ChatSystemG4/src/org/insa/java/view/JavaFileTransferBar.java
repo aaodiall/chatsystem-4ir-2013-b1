@@ -15,6 +15,8 @@ public abstract class JavaFileTransferBar {
 	
 	public abstract Object getContainer();
 	
+	public abstract Object getCancelbutton();
+	
 	public void beginFileTransferEmission(int fileSize) {
 		this.setVisible(true);
 		this.setText("File emission processing...");
