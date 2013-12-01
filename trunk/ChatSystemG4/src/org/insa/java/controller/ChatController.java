@@ -52,12 +52,17 @@ public class ChatController {
 	}
 	
 	public int receivedMessage(InetAddress inetAddress, Message msg){
+		if(msg.getUsername().equals(chatModel.getLocalUsername()))
+			return -1;
+		
+		/*
 		try {
 			if(inetAddress.equals(InetAddress.getLocalHost()))
 				return -1;
 		} catch (UnknownHostException e) {
 			e.printStackTrace();
 		}
+		*/
 		
 		User user = new User(inetAddress,msg.getUsername());
 		

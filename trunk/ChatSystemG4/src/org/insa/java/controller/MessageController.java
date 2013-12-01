@@ -46,7 +46,6 @@ public class MessageController {
 			
 		}
 		else if(msg instanceof Goodbye) {
-			System.out.println(chatModel.getLocalUser());
 			chatModel.removeUser(new User(user.getAddress(),msg.getUsername()));
 		}
 		else if(msg instanceof Text) {
