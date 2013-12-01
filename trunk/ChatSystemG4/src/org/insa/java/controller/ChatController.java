@@ -118,10 +118,6 @@ public class ChatController {
 	}
 
 	public void fileReceptionCanceled() {
-		try {
-			fileController.fileReceptionCanceled();
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
+		fileController.fileReceptionCanceled();
 	}
 }
