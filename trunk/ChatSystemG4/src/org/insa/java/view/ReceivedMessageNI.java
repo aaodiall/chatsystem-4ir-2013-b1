@@ -13,6 +13,7 @@ public final class ReceivedMessageNI extends JavaChatNI {
 	private static ReceivedMessageNI instance = null;
 	
 	private ChatController chatController;
+	private boolean running = true;
 
 	private ReceivedMessageNI(ChatController chatController) {
 		this.chatController = chatController;
@@ -34,7 +35,7 @@ public final class ReceivedMessageNI extends JavaChatNI {
 			socket = new DatagramSocket(UDP_SERVER_PORT, InetAddress.getByName(UDP_BROADCAST_RECEPTION));
 			socket.setBroadcast(true);
 
-			while (true) {
+			while (running) {
 				byte[] recvBuf = new byte[15000];
 				DatagramPacket packet = new DatagramPacket(recvBuf, recvBuf.length);
 				socket.receive(packet);
@@ -46,5 +47,9 @@ public final class ReceivedMessageNI extends JavaChatNI {
 		finally {
 			socket.close();
 		}
+	}
+	
+	public void stop() {
+		running = false;
 	}
 }

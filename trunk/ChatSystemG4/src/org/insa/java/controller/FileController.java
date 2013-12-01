@@ -29,31 +29,28 @@ public class FileController {
 	private final int FILE_PART_SIZE = 10000;
 	private final int DEFAULT_CLIENT_PORT = 12345;
 	
-	//private ChatController chatController;
 	private ChatModel chatModel;
 	private JavaChatGUI chatGUI;
 	
-	private String fileName;
+	private String receptionFileName;
 	private long receptionFileSize;
-	private long emissionFileSize;
-	
-	private Thread sendThread = null;
+	private FileOutputStream fileOutputStream;
 	private Thread receivedThread = null;
 	
-	private File file;
+	private long emissionFileSize;
+	private File emissionFile;
 	private FileInputStream fileInputStream;
-	private FileOutputStream fileOutputStream;
 	private int emissionPosition = 0;
+	private Thread sendThread = null;
 	
-	public FileController(ChatController chatController, JavaChatGUI chatGUI, ChatModel chatModel) {
-		//this.chatController = chatController;
+	public FileController(JavaChatGUI chatGUI, ChatModel chatModel) {
 		this.chatGUI = chatGUI;
 		this.chatModel = chatModel;
 	}
 
 	public void sendFileTransfertDemand(User user) {
-		emissionFileSize = file.length();
-		SendMessageNI.getInstance().sendMessage(MessageFactory.getFileTransfertDemandMessage(chatModel.getLocalUsername(), file.getName(), emissionFileSize,DEFAULT_CLIENT_PORT), user.getAddress());
+		emissionFileSize = emissionFile.length();
+		SendMessageNI.getInstance().sendMessage(MessageFactory.getFileTransfertDemandMessage(chatModel.getLocalUsername(), emissionFile.getName(), emissionFileSize,DEFAULT_CLIENT_PORT), user.getAddress());
 	}
 
 	public void sendFileTransfertConfirmation(User user, boolean isAccepetd, int idDemand) {
@@ -76,26 +73,23 @@ public class FileController {
 				chatGUI.getStatusBar().beginFileTransferEmission((int) emissionFileSize);
 				this.fileTransfertProtocol(user, null, msg);
 			}
-				
 		}
 		else if(msg instanceof FileTransfertDemand) {
-			this.fileName = ((FileTransfertDemand) msg).getName();
+			this.receptionFileName = ((FileTransfertDemand) msg).getName();
 			this.receptionFileSize = ((FileTransfertDemand) msg).getSize();
-			int option = JOptionPane.showConfirmDialog(null, "Vous avez reçu une demande de transfert de fichier de la part de "+msg.getUsername()+"\n Nom du fichier : "+ this.fileName +"\nTaille (en byte) : "+ this.receptionFileSize +"\n\nVoulez-vous accepter le fichier ?", "Demande de transfert de fichier reçue", JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE);
+			int option = JOptionPane.showConfirmDialog(null, "You received a file transfer demand from "+msg.getUsername()+"\nFile name : "+ this.receptionFileName +"\nSize (in byte) : "+ this.receptionFileSize +"\n\nDo you want to accept ?", "File transfer demand received", JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE);
 			if(option == JOptionPane.OK_OPTION) {
 				chatGUI.getStatusBar().beginFileTransferReception((int) receptionFileSize);		
 				receivedThread = new Thread(ReceivedFileNI.getInstance(this,((FileTransfertDemand) msg).getPortClient()));
 				receivedThread.start();
 				String repositoryPath = chatGUI.getFilePath();
-				fileOutputStream = new FileOutputStream(repositoryPath + "\\" + this.fileName, true);
+				fileOutputStream = new FileOutputStream(repositoryPath + "\\" + this.receptionFileName, true);
 				this.sendFileTransfertConfirmation(user, true, msg.getId());
 			}
 			else
 				this.sendFileTransfertConfirmation(user, false, msg.getId());
 		}
 		else if(msg instanceof FilePart) {
-			Logger.getLogger(ChatController.class).log(Level.INFO, "Message received >> " + msg.toString());
-			
 			chatGUI.getStatusBar().setReceptionBarValue(((FilePart) msg).getFilePart().length);
 			fileOutputStream.write(((FilePart) msg).getFilePart());
 			fileOutputStream.flush();
@@ -108,18 +102,18 @@ public class FileController {
 
 	public void beginFileTransfertProtocol(User user, File file) {
 		if(SendFileNI.getInstance(this,DEFAULT_CLIENT_PORT).getFileTransfertState() == TransferState.AVAILABLE) {
-			this.file = file;
+			this.emissionFile = file;
 			this.fileTransfertProtocol(user, file,null);
 		}
 		else
-			Logger.getLogger(ChatController.class).log(Level.INFO, "Imposible d'envoyer un fichier, un transfert est déjà en cours");
+			chatGUI.getStatusBar().setMessageBarText("A file emission is already processing ! You must wait the end or cancel it");
 	}
 
 	public void fileTransfertProtocol(User user, File file, Message msg) {
 		Logger.getLogger(FileController.class).log(Level.INFO, SendFileNI.getInstance(this,DEFAULT_CLIENT_PORT).getFileTransfertState().name());
 		switch(SendFileNI.getInstance(this,DEFAULT_CLIENT_PORT).getFileTransfertState()) {
 		case AVAILABLE:
-			this.readFile(file);
+			this.initFile(file);
 			this.sendFileTransfertDemand(user);	
 			this.moveToState(TransferState.PROCESSING);
 			break;
@@ -133,10 +127,7 @@ public class FileController {
 			this.moveToState(TransferState.AVAILABLE);
 			break;
 		case CANCELED :
-			sendThread = null;			//TODO verify if it is necessary
-			chatGUI.getStatusBar().finishFileTransferEmission();
-			chatGUI.getStatusBar().setEmmissionBarText("/!\\ Transfer emission canceled (remote user unreachable) /!\\");	
-			this.moveToState(TransferState.AVAILABLE);
+			this.fileEmissionCanceled();
 			break;
 		}
 	}
@@ -147,7 +138,7 @@ public class FileController {
 			this.fileTransfertProtocol(null, null, null);
 	}
 
-	public void readFile(File file) {
+	public void initFile(File file) {
 		try {
 			fileInputStream = new FileInputStream(file);
 		} catch (FileNotFoundException e) {
@@ -156,9 +147,9 @@ public class FileController {
 	}
 
 	public FilePart getFilePartToSend() {
-		if(emissionPosition + FILE_PART_SIZE >= file.length())
-			return this.getFilePart((int) (file.length()-emissionPosition));
-		else if (emissionPosition + FILE_PART_SIZE < file.length()) 
+		if(emissionPosition + FILE_PART_SIZE >= emissionFile.length())
+			return this.getFilePart((int) (emissionFile.length()-emissionPosition));
+		else if (emissionPosition + FILE_PART_SIZE < emissionFile.length()) 
 			return this.getFilePart(FILE_PART_SIZE);
 		return null;
 	}
@@ -185,7 +176,7 @@ public class FileController {
 		}
 	}
 	
-	public void setEmissionBarValue(int i ) {
+	public void setEmissionBarValue(int i) {
 		chatGUI.getStatusBar().setEmissionBarValue(i);
 	}
 	
@@ -194,15 +185,25 @@ public class FileController {
 		this.moveToState(TransferState.TERMINATED);
 		this.fileTransfertProtocol(null, null, null);
 	}
-	
-	public void closeSocket() {
+
+	public void fileEmissionCanceled() {
+		SendFileNI.getInstance(this, DEFAULT_CLIENT_PORT).setFileTransfertState(TransferState.CANCELED);
 		try {
-			if(ReceivedFileNI.getInstance(this,-1).getSocket() != null)
-				ReceivedFileNI.getInstance(this,-1).getSocket().close();
-			if(ReceivedFileNI.getInstance(this,-1).getServerSocket() != null)
-				ReceivedFileNI.getInstance(this,-1).getServerSocket().close();
-		} catch(IOException e) {
-			
+			SendFileNI.getInstance(this, DEFAULT_CLIENT_PORT).closeSocket();
+		} catch (IOException e) {
+			e.printStackTrace();
 		}
+		sendThread = null;
+		chatGUI.getStatusBar().finishFileTransferEmission();
+		chatGUI.getStatusBar().setEmmissionBarText("/!\\ Transfer emission canceled /!\\");	
+		this.moveToState(TransferState.AVAILABLE);
+	}
+
+	public void fileReceptionCanceled() throws IOException {
+		ReceivedFileNI.getInstance(this, DEFAULT_CLIENT_PORT).stop();
+		ReceivedFileNI.getInstance(this, DEFAULT_CLIENT_PORT).closeSocket();
+		receivedThread = null;
+		chatGUI.getStatusBar().finishFileTransferReception();
+		chatGUI.getStatusBar().setReceptionBarText("/!\\ Transfer emission canceled /!\\");	
 	}
 }

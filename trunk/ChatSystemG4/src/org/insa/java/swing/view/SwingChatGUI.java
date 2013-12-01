@@ -26,12 +26,11 @@ import javax.swing.JTextPane;
 import org.insa.java.controller.ChatController;
 import org.insa.java.model.User;
 import org.insa.java.view.JavaChatGUI;
-import org.insa.java.view.ReceivedFileNI;
 
 import Interface.ControllerToGui;
 
 public class SwingChatGUI extends JavaChatGUI implements ControllerToGui, ActionListener, MouseListener, KeyListener, WindowListener{
-	private final int WIDTH = 600;
+	private final int WIDTH = 800;
 	private final int HEIGHT = 800;
 
 	private JTextPane chatTextPane = new JTextPane();
@@ -47,7 +46,7 @@ public class SwingChatGUI extends JavaChatGUI implements ControllerToGui, Action
 
 	public SwingChatGUI() {
 		chatController = new ChatController(this);	
-		statusBar = new SwingStatusBar();
+		statusBar = new SwingStatusBar(chatController);
 		this.connect();
 		this.initComponents();
 	}
@@ -85,11 +84,11 @@ public class SwingChatGUI extends JavaChatGUI implements ControllerToGui, Action
 		
 		((JPanel)statusBar.getContainer()).setPreferredSize(new Dimension(mainWindow.getWidth(),40));	
 		
+		//Equivalent to disconnect method
 		Runtime.getRuntime().addShutdownHook(new Thread() {
 			@Override
 			public void run() {
-				//chatController.sendGoodbyeMessage(chatController.getModel().getLocalUser());
-				ReceivedFileNI.getInstance(null, -1).closeSocket();
+				chatController.sendGoodbyeMessage(chatController.getModel().getLocalUser());
 			}
 		});
 	}
@@ -118,13 +117,50 @@ public class SwingChatGUI extends JavaChatGUI implements ControllerToGui, Action
 		}
 			
 	}
+	
+	@Override
+	public void keyPressed(KeyEvent e) {
+		if(e.getSource() == sendTextArea && e.getKeyCode() == KeyEvent.VK_ENTER)
+			this.sendTextMessage(userList.getSelectedValue(), sendTextArea.getText());
+	}
 
 	@Override
 	public void mouseClicked(MouseEvent e) {
 		if(e.getSource() == userList)
-			chatController.getTalk(userList.locationToIndex(e.getPoint()));
+			chatController.updateTalk(userList.locationToIndex(e.getPoint()));
+	}
+	
+	@Override
+	public void windowClosing(WindowEvent e) {
+		this.disconnect();
+	}
+	
+	public JFrame getMainWindow() {
+		return mainWindow;
 	}
 
+	@Override
+	public int getSelectedIndex() {
+		return userList.getSelectedIndex();
+	}
+
+	@Override
+	public String getFilePath() {
+		JFileChooser fileChooser = new JFileChooser(); 
+		fileChooser.setDialogTitle("Where do you want to save the file ?");
+		fileChooser.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
+		fileChooser.setAcceptAllFileFilterUsed(false);
+		fileChooser.showOpenDialog(mainWindow);
+		return fileChooser.getSelectedFile().toString();
+	}
+
+	@Override
+	public Object getFrame() {
+		return mainWindow;
+	}
+	
+	
+	//Unused actions
 	@Override
 	public void mouseEntered(MouseEvent e) {
 
@@ -143,12 +179,6 @@ public class SwingChatGUI extends JavaChatGUI implements ControllerToGui, Action
 	@Override
 	public void mouseReleased(MouseEvent e) {
 
-	}
-
-	@Override
-	public void keyPressed(KeyEvent e) {
-		if(e.getSource() == sendTextArea && e.getKeyCode() == KeyEvent.VK_ENTER)
-			this.sendTextMessage(userList.getSelectedValue(), sendTextArea.getText());
 	}
 
 	@Override
@@ -172,11 +202,6 @@ public class SwingChatGUI extends JavaChatGUI implements ControllerToGui, Action
 	}
 
 	@Override
-	public void windowClosing(WindowEvent e) {
-		this.disconnect();
-	}
-
-	@Override
 	public void windowDeactivated(WindowEvent e) {
 		
 	}
@@ -194,29 +219,5 @@ public class SwingChatGUI extends JavaChatGUI implements ControllerToGui, Action
 	@Override
 	public void windowOpened(WindowEvent e) {
 		
-	}
-
-	public JFrame getMainWindow() {
-		return mainWindow;
-	}
-
-	@Override
-	public int getSelectedIndex() {
-		return userList.getSelectedIndex();
-	}
-
-	@Override
-	public String getFilePath() {
-		JFileChooser fileChooser = new JFileChooser(); 
-		fileChooser.setDialogTitle("Where do you want to save the file ?");
-		fileChooser.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
-		fileChooser.setAcceptAllFileFilterUsed(false);
-		fileChooser.showOpenDialog(mainWindow);
-		return fileChooser.getSelectedFile().toString();
-	}
-
-	@Override
-	public Object getFrame() {
-		return mainWindow;
 	}
 }

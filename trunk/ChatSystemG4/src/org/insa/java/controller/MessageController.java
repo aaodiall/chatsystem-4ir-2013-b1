@@ -52,11 +52,11 @@ public class MessageController {
 			
 			if(selectedIndex != -1)
 				if(chatModel.get(selectedIndex).equals(user))
-					chatController.getTalk(selectedIndex);
+					chatController.updateTalk(selectedIndex);
 		}
 	}
 
-	public void getTalk(int index) {
+	public void updateTalk(int index) {
 		User u = chatModel.get(index);
 		String talk = "";
 		
