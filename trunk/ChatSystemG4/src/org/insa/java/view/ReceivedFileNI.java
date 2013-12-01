@@ -56,7 +56,7 @@ public final class ReceivedFileNI extends JavaChatNI {
 				fileController.fileReceptionCanceled();
 			}
 			finally {
-				Thread.currentThread().interrupt( );
+				//Thread.currentThread().interrupt( );
 				try {
 					inputStream.close();
 				} catch (IOException e1) {

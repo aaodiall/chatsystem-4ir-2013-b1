@@ -94,8 +94,8 @@ public class FileController {
 			fileOutputStream.write(((FilePart) msg).getFilePart());
 			fileOutputStream.flush();
 			if(((FilePart) msg).isLast()) {
+				finishFileTransferReception();
 				fileOutputStream.close();
-				chatGUI.getStatusBar().finishFileTransferReception();
 			}
 		}
 	}
@@ -191,9 +191,27 @@ public class FileController {
 	}
 	
 	public void finishFileTransferEmission() {
+		try {
+			SendFileNI.getInstance(this, DEFAULT_CLIENT_PORT).closeSocket();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		emissionPosition = 0;
+		sendThread = null;
 		chatGUI.getStatusBar().finishFileTransferEmission();
 		this.moveToState(TransferState.TERMINATED);
 		this.fileTransfertProtocol(null, null, null);
+	}
+	
+	public void finishFileTransferReception() {
+		ReceivedFileNI.getInstance(this, DEFAULT_CLIENT_PORT).stop();
+		try {
+			ReceivedFileNI.getInstance(this, DEFAULT_CLIENT_PORT).closeSocket();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		receivedThread = null;
+		chatGUI.getStatusBar().finishFileTransferReception();
 	}
 
 	public void fileEmissionCanceled() {
@@ -211,14 +229,7 @@ public class FileController {
 	}
 
 	public void fileReceptionCanceled() {
-		ReceivedFileNI.getInstance(this, DEFAULT_CLIENT_PORT).stop();
-		try {
-			ReceivedFileNI.getInstance(this, DEFAULT_CLIENT_PORT).closeSocket();
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-		receivedThread = null;
-		chatGUI.getStatusBar().finishFileTransferReception();
+		this.finishFileTransferReception();
 		chatGUI.getStatusBar().setReceptionBarText("/!\\ Transfer emission canceled /!\\");	
 	}
 }
