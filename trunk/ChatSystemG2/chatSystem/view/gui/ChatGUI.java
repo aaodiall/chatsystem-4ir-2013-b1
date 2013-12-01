@@ -131,7 +131,7 @@ public class ChatGUI extends View implements ToUser, FromUser {
         
         for (String contact: this.dWindows.keySet()) {
             if (!newList.contains(contact))
-                this.dWindows.get(contact).displayUserDisconnected();
+                this.getDialogWindow(contact).displayUserDisconnected();
         }
         
         for (String contact : newList) {

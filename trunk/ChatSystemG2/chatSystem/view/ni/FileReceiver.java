@@ -55,10 +55,12 @@ public class FileReceiver implements Runnable {
             Object msg;
             do {
                 msg = reader.readObject();
+                if(((FilePart) msg).isLast()){
+                     this.fileToReceive.setIsLast(true);
+                }
                 this.chatNI.filePartReceived(this.fileToReceive.getId(), ((FilePart) msg).getFilePart(), ((FilePart) msg).isLast());
 
             } while (!((FilePart) msg).isLast());
-            this.fileToReceive.setIsLast(true);
 
         
         } catch (UnknownHostException ex) {
