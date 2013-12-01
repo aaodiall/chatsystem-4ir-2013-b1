@@ -49,14 +49,14 @@ public class User {
 
 	@Override
 	public String toString() {
-		return username;
+		return username.split("@")[0];
 	}
 
 	@Override
 	public boolean equals(Object o) {
 		User u = (User) o;
-		if(!address.equals(u.getAddress()))
-			return false;
+		//if(!address.equals(u.getAddress()))
+		//	return false;
 		if(!username.equals(u.getUsername()))
 			return false;
 		return true;
