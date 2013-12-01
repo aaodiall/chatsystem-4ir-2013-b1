@@ -32,9 +32,8 @@ public final class ReceivedMessageNI extends JavaChatNI {
 	public void run() {
 		DatagramSocket socket = null;
 		try {
-			socket = new DatagramSocket(UDP_SERVER_PORT, InetAddress.getByName(UDP_BROADCAST_RECEPTION));
+			socket = new DatagramSocket(UDP_SERVER_PORT);
 			socket.setBroadcast(true);
-
 			while (running) {
 				byte[] recvBuf = new byte[15000];
 				DatagramPacket packet = new DatagramPacket(recvBuf, recvBuf.length);
