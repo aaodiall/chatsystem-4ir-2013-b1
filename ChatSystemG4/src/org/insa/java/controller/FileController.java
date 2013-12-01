@@ -83,8 +83,7 @@ public class FileController {
 				receivedThread = new Thread(ReceivedFileNI.getInstance(this,((FileTransfertDemand) msg).getPortClient()));
 				receivedThread.start();
 				ReceivedFileNI.getInstance(this,((FileTransfertDemand) msg).getPortClient()).go();
-				String repositoryPath = chatGUI.getFilePath();
-				fileOutputStream = new FileOutputStream(repositoryPath + "\\" + this.receptionFileName, true);
+				fileOutputStream = new FileOutputStream(this.getFilePath(), true);
 				this.sendFileTransfertConfirmation(user, true, msg.getId());
 			}
 			else
@@ -99,6 +98,16 @@ public class FileController {
 				chatGUI.getStatusBar().finishFileTransferReception();
 			}
 		}
+	}
+	
+	public String getFilePath() {
+		String path = chatGUI.getFilePath();
+		if(System.getProperty("os.name").toLowerCase().equals("win"))
+			path += "\\";
+		else
+			path += "/";
+		path += this.receptionFileName;
+		return path;
 	}
 
 	public void beginFileTransfertProtocol(User user, File file) {
@@ -194,6 +203,7 @@ public class FileController {
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
+		emissionPosition = 0;
 		sendThread = null;
 		chatGUI.getStatusBar().finishFileTransferEmission();
 		chatGUI.getStatusBar().setEmmissionBarText("/!\\ Transfer emission canceled /!\\");	
