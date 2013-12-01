@@ -199,9 +199,13 @@ public class FileController {
 		this.moveToState(TransferState.AVAILABLE);
 	}
 
-	public void fileReceptionCanceled() throws IOException {
+	public void fileReceptionCanceled() {
 		ReceivedFileNI.getInstance(this, DEFAULT_CLIENT_PORT).stop();
-		ReceivedFileNI.getInstance(this, DEFAULT_CLIENT_PORT).closeSocket();
+		try {
+			ReceivedFileNI.getInstance(this, DEFAULT_CLIENT_PORT).closeSocket();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
 		receivedThread = null;
 		chatGUI.getStatusBar().finishFileTransferReception();
 		chatGUI.getStatusBar().setReceptionBarText("/!\\ Transfer emission canceled /!\\");	

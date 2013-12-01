@@ -43,7 +43,6 @@ public class MessageController {
 				if(!((Hello) msg).isAck())
 					this.sendWelcomeMessage(MessageFactory.getHelloMessage(chatModel.getLocalUsername(), true), user.getAddress());
 			}
-			
 		}
 		else if(msg instanceof Goodbye) {
 			chatModel.removeUser(new User(user.getAddress(),msg.getUsername()));
