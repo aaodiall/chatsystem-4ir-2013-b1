@@ -22,8 +22,9 @@ public class SwingFileTransferBar extends JavaFileTransferBar{
 		this.textLabel = new JLabel();
 		this.progressBar = new JProgressBar();
 		this.cancelButton = new JButton("x");
-		cancelButton.setPreferredSize(new Dimension(15,15));
-		cancelButton.setVisible(false);
+		cancelButton.setBorder(null);
+		cancelButton.setPreferredSize(new Dimension(20,20));
+		
 		
 		buttonContainer.setLayout(new BorderLayout());
 		buttonContainer.add(progressBar,BorderLayout.CENTER);
@@ -33,6 +34,7 @@ public class SwingFileTransferBar extends JavaFileTransferBar{
 		container.add(textLabel);
 		container.add(buttonContainer);
 		progressBar.setVisible(false);
+		cancelButton.setVisible(false);
 	}
 
 	@Override
@@ -62,7 +64,8 @@ public class SwingFileTransferBar extends JavaFileTransferBar{
 
 	@Override
 	public void setVisible(boolean b) {
-		buttonContainer.setVisible(b);
+		cancelButton.setVisible(b);
+		progressBar.setVisible(b);
 	}
 
 	@Override

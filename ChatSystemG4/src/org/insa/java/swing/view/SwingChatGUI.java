@@ -82,7 +82,7 @@ public class SwingChatGUI extends JavaChatGUI implements ControllerToGui, Action
 		mainWindow.setLocationRelativeTo(null);
 		mainWindow.setVisible(true);
 		
-		((JPanel)statusBar.getContainer()).setPreferredSize(new Dimension(mainWindow.getWidth(),40));	
+		//((JPanel)statusBar.getContainer()).setPreferredSize(new Dimension(mainWindow.getWidth(),40));	
 		
 		//Equivalent to disconnect method
 		Runtime.getRuntime().addShutdownHook(new Thread() {

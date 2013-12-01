@@ -31,7 +31,6 @@ public class SwingStatusBar extends JavaStatusBar implements ActionListener{
 		this.messageBar.setText("No message");
 		this.emissionBar.setText("No file transfer emmission processing");
 		this.receptionBar.setText("No file transfer reception processing");
-		
 	}
 
 	@Override
