@@ -54,7 +54,7 @@ public class FileReceivingInformation extends FileTransfertInformation{
             
         } catch (IOException ex) {
             Logger.getLogger(FileTransfertInformation.class.getName()).log(Level.SEVERE, null, ex);
-        } finally {             
+        } finally {
             if(this.isLast){
                 try {
                     this.writerBuffer.flush();
