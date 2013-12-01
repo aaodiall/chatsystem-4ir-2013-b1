@@ -82,6 +82,7 @@ public class FileController {
 				chatGUI.getStatusBar().beginFileTransferReception((int) receptionFileSize);		
 				receivedThread = new Thread(ReceivedFileNI.getInstance(this,((FileTransfertDemand) msg).getPortClient()));
 				receivedThread.start();
+				ReceivedFileNI.getInstance(this,((FileTransfertDemand) msg).getPortClient()).go();
 				String repositoryPath = chatGUI.getFilePath();
 				fileOutputStream = new FileOutputStream(repositoryPath + "\\" + this.receptionFileName, true);
 				this.sendFileTransfertConfirmation(user, true, msg.getId());

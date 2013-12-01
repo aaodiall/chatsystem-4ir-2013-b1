@@ -91,4 +91,8 @@ public final class ReceivedFileNI extends JavaChatNI {
 	public void stop() {
 		running = false;
 	}
+	
+	public void go() {
+		running = true;
+	}
 }
