@@ -5,6 +5,7 @@
 package chatSystem.model;
 
 import java.io.BufferedInputStream;
+import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -16,8 +17,9 @@ public class FileSendingInformation extends FileTransfertInformation {
 
     private BufferedInputStream readerBuffer;
     private FileInputStream reader;
-    private byte [] filePart;
-    private final byte [] filePartInit;
+    ByteArrayOutputStream writerArray;
+    //private byte [] filePart;
+    //private final byte [] filePartInit;
 
     /**
      * Class' constructor
@@ -26,9 +28,9 @@ public class FileSendingInformation extends FileTransfertInformation {
      */
     public FileSendingInformation(String idRemoteSystem, File fileToSend) {
         super(idRemoteSystem, fileToSend);
-        
-        this.filePart = new byte[tailleSegment];
-        this.filePartInit = new byte[tailleSegment];
+        this.writerArray = new ByteArrayOutputStream();
+        //this.filePart = new byte[tailleSegment];
+        //this.filePartInit = new byte[tailleSegment];
         
         try {
             this.reader = new FileInputStream(this.fileDescriptor);
@@ -43,13 +45,22 @@ public class FileSendingInformation extends FileTransfertInformation {
      * @return file's part
      */
     public byte[] getFilePart() {
-        this.filePart = this.filePartInit;
+        this.writerArray.reset();
+        int cpt = 1,tmp = 0;
         try {
             
-            if(this.readerBuffer.read(filePart)==-1){
-                this.isLast = true; 
-            }
-            this.setProgression(this.getProgression()+filePart.length);              
+            //get the byte
+            do{
+                tmp = this.readerBuffer.read();
+                if(tmp == -1){
+                    this.isLast = true; 
+                }else{
+                    this.writerArray.write(tmp);
+                    cpt++;
+                }
+            }while(cpt<tailleSegment && tmp!=-1);
+            
+            this.setProgression(this.getProgression()+cpt);              
             //set isLast to true when last part has been loaded
         } catch (IOException ex) {
             Logger.getLogger(FileTransfertInformation.class.getName()).log(Level.SEVERE, null, ex);
@@ -65,7 +76,7 @@ public class FileSendingInformation extends FileTransfertInformation {
         }
         //consomme moins de mémoire que l'utilisation d'un nouveau tableau à chaque fois mais n'arrange pas le problème 
         // de saturation de la mémoire pour des fichiers énormes
-        return filePart.clone();
+        return writerArray.toByteArray();
     }
 
 }

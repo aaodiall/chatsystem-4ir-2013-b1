@@ -74,7 +74,7 @@ public class FileTransfert implements Runnable {
                 msg = new FilePart(this.chatNI.getUserInfo().getUsername(), this.fileToSend.getFilePart(), this.fileToSend.isLast());//a changer mais je vais vite
 
                 this.writer.writeObject(msg);
-                this.writer.flush();
+                this.writerBuffer.flush();
             } while (!this.fileToSend.isLast());
 
             this.chatNI.fileSended(this.fileToSend.getId(), this.fileToSend.getIdRemoteSystem());
@@ -88,7 +88,7 @@ public class FileTransfert implements Runnable {
         } finally {
             try {
                 //finishing
-                this.writer.flush();
+                this.writerBuffer.flush();
                 this.writer.close();
                 this.writerBuffer.close();
                 this.clientSocket.close();
