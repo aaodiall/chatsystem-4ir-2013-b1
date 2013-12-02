@@ -59,6 +59,7 @@ public class InterfaceConnect extends JFrame implements ActionListener,WindowLis
 
 		btnConnect = new JButton("Connect");
 		btnConnect.addActionListener(this);
+		
 	
 		this.getRootPane().setDefaultButton(btnConnect);
 		lblWelcome = new JLabel("     Welcome to ChatSystem!");

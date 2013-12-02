@@ -16,6 +16,7 @@ public interface ToUser {
 	public void proposeFile(String remote, String file, long size);
 	public void notifyAnswerFile(String remote, String file,boolean answer);
 	public void displayCancelFile(String remote,String file);
+	public void notifyFileReceived(String remote);
 	public void notifyRemoteConnection(String remote);
 	public void notifyRemoteDisconnection(String remote);
 	public void openInterfaceDialogFile();

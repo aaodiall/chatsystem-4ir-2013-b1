@@ -34,6 +34,7 @@ public class Controller extends Thread{
 	private int numFileMax;
 	private int maxWrite;
 	private int maxRead;
+	private ModelFile modelFile;
 	private ArrayList <ModelFileToSend> filesToSend;
 	private HashMap <Integer,ModelFileToReceive> filesToReceive;
 	private int numReceiveDemands;
@@ -50,7 +51,7 @@ public class Controller extends Thread{
 	public Controller(ModelListUsers modelListUsers,
 			ModelStates modelStates,
 			ModelText modelText,
-			ModelUsername modelUsername, ModelGroupRecipient modelGroupRecipient) {
+			ModelUsername modelUsername, ModelGroupRecipient modelGroupRecipient,ModelFile modelFile) {
 		this.modelListUsers = modelListUsers;
 		this.modelStates = modelStates;
 		this.modelText = modelText;
@@ -59,6 +60,7 @@ public class Controller extends Thread{
 		this.numFileMax = 5;
 		this.maxRead = 1024;
 		this.maxWrite = 1024;
+		this.modelFile=modelFile;
 		this.filesToSend = new ArrayList<ModelFileToSend> (this.numFileMax);
 		this.filesToReceive = new HashMap<Integer,ModelFileToReceive> (this.numFileMax);
 		this.numReceiveDemands = 0;
@@ -266,8 +268,12 @@ public class Controller extends Thread{
 		if (isLast == false){
 			this.filesToReceive.get(idDemand).writeFilePart(fileBytes, isLast);
 		}else{
+			System.out.println("Dans part receive "+this.filesToReceive.get(idDemand).getRemote());
+			String remote=new String(this.filesToReceive.get(idDemand).getRemote());
 			this.filesToReceive.remove(idDemand);
 			this.numReceiveDemands--;
+			
+			this.modelFile.setFileReceived(true,remote);
 		}
 	}
 	

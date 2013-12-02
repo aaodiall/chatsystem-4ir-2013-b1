@@ -20,9 +20,7 @@ public class InterfaceDialogFile {
         
             // création de la boîte de dialogue
             dialogue = new JFileChooser();
-             
-            // affichage
-            dialogue.showOpenDialog(null);
+          
 		
 	}
 	public static JFileChooser getDialogue() {
