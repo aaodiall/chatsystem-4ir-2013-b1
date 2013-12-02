@@ -91,6 +91,7 @@ public class ChatController {
         this.chatGUI.get_chat_windows().clear();
                
         this.userDB.set_username(null);
+        this.chatNI.interrupt();
         
      }
     

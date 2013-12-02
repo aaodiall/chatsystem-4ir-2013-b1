@@ -21,13 +21,14 @@ public /*abstract*/ class ChatNI extends Thread implements Observer {
 
     public ChatNI(ChatController chat_control) {
         
+        this.setPriority(MIN_PRIORITY);
         this.chat_control = chat_control;
         username = chat_control.get_userDB().get_username();
         msg_handler = new MessageHandlerNI(/*chat_control, */this);
         //file_handler = new FileHandlerNI(this);
         //System.out.println("I'm ChatNI : username : " + username);
 
-       // this.start();
+        this.start();
 
     }
 
@@ -37,11 +38,13 @@ public /*abstract*/ class ChatNI extends Thread implements Observer {
     
     public void to_connection(String user_and_IP, Boolean alrdythere) {
         try {
+            //System.out.println("I'm ChatNI : IP to connection : " + user_and_IP);
             InetAddress IP_dest;
             if (!alrdythere) {
                 IP_dest = MessageEmissionNI.get_broadcast();
             }
             else {
+                System.out.println("I'm ChatNI : IP to connection : " + chat_control.get_listDB().get_IP_addr(user_and_IP));
                 IP_dest = InetAddress.getByName(chat_control.get_listDB().get_IP_addr(user_and_IP));
             }
             System.out.println("I'm ChatNI : IP dest : " + IP_dest.getHostAddress());
@@ -110,31 +113,34 @@ public /*abstract*/ class ChatNI extends Thread implements Observer {
         IP_new = IP_text;
     }
     
-//    @Override
-//    public void run(){
-//
-//        try {
-//            while(msg_handler.get_user_state()){
-//                
-//                this.sleep(10000);
-//                
-//                if(msg_handler.get_user_state()){
-//                    //this.chat_control.get_listDB().set_hmap_users(new HashMap<String, String>());
-//                    // The temporary list is created
-//                    chat_control.get_listDB().new_temp();
-//                    // The controller will now add remote users into the temporary list
-//                    chat_control.set_buffer_state(true);
-//                    this.to_connection(username, false);
-//                }
-//                this.sleep(10000);
-//                if(msg_handler.get_user_state()){
-//                    chat_control.swap_hmap_users();
-//                    chat_control.set_buffer_state(false);
-//                }
-//                
-//            }
-//        } catch (InterruptedException ex) {
-//            Logger.getLogger(ChatNI.class.getName()).log(Level.SEVERE, null, ex);
-//        }
-//    }
+    @Override
+    public void run(){
+
+        try {
+            while(msg_handler.get_user_state()){
+                
+                this.sleep(10000);
+                
+                if(msg_handler.get_user_state()){
+                    //this.chat_control.get_listDB().set_hmap_users(new HashMap<String, String>());
+                    // The temporary list is created
+                    chat_control.get_listDB().new_temp();
+                    // The controller will now add remote users into the temporary list
+                    chat_control.set_buffer_state(true);
+                    this.to_connection(username, false);
+                }
+                System.out.println("I'm ChatNI : CONNECTION CONTROL IS NOW RUNNING");
+                this.sleep(10000);
+                if(msg_handler.get_user_state()){
+                    chat_control.swap_hmap_users();
+                    chat_control.set_buffer_state(false);
+                }
+                System.out.println("I'm ChatNI : CONNECTION CONTROL IS NOW STOPPED............");
+                
+            }
+        } catch (InterruptedException ex) {
+            Logger.getLogger(ChatNI.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+    
 }
