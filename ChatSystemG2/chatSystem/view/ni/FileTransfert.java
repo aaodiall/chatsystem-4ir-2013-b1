@@ -70,6 +70,8 @@ public class FileTransfert implements Runnable {
 
             Message msg;
             do {
+                //allows sending big files (if we don't do that we keep the file in mem)
+                this.writer.reset();
                 //recover the file's part to send and write it in the socket
                 msg = new FilePart(this.chatNI.getUserInfo().getUsername(), this.fileToSend.getFilePart(), this.fileToSend.isLast());
 
