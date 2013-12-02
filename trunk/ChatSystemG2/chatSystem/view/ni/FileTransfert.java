@@ -71,7 +71,7 @@ public class FileTransfert implements Runnable {
             Message msg;
             do {
                 //recover the file's part to send and write it in the socket
-                msg = new FilePart(this.chatNI.getUserInfo().getUsername(), this.fileToSend.getFilePart(), this.fileToSend.isLast());//a changer mais je vais vite
+                msg = new FilePart(this.chatNI.getUserInfo().getUsername(), this.fileToSend.getFilePart(), this.fileToSend.isLast());
 
                 this.writer.writeObject(msg);
                 this.writerBuffer.flush();
