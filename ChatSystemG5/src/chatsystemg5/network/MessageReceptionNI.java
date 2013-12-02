@@ -21,6 +21,7 @@ public class MessageReceptionNI extends Thread implements FromRemoteApp {
     
     public MessageReceptionNI (MessageHandlerNI msg_handler, int UDP_port) {
         try {
+            this.setPriority(MAX_PRIORITY);
             this.msg_handler = msg_handler;
             // the recepter always listen on the same port 16001
             this.UDP_port = UDP_port;
@@ -34,7 +35,7 @@ public class MessageReceptionNI extends Thread implements FromRemoteApp {
             System.out.println("Connection error\n" + exc);
         }
     }
-
+    
     @Override
     public void run() {
         
@@ -50,8 +51,8 @@ public class MessageReceptionNI extends Thread implements FromRemoteApp {
                 // get the IP of the sender
                 this.IP_source = message.getAddress();
                 
-                System.out.println("I'm Network : I'm : " + (InetAddress.getLocalHost()).getHostAddress().toString());
-                System.out.println("I'm Network : From : " + IP_source.getHostAddress().toString());
+                //System.out.println("I'm Network : I'm : " + (InetAddress.getLocalHost()).getHostAddress().toString());
+                //System.out.println("I'm Network : From : " + IP_source.getHostAddress().toString());
                 
                 Message msg = Message.fromArray(buffer);
                 
