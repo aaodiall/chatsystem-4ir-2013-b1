@@ -17,23 +17,60 @@ public class ModelFile extends Observable{
 	private int idDemand;
 	private int numberOfParts;
 	private int max;
+	private Boolean fileReceived;
+	private Integer fileSent;
 	
+
 	/**
 	 * 
 	 * @param remote nom de l'utilisateur distant
 	 * @param idDemand numero de la demande
 	 */
-	public ModelFile(String remote, int idDemand, int max){
-		this.remote = remote;
-		this.idDemand = idDemand;
-		this.max = max;
+	public ModelFile(){
+		this.remote = new String();
+		this.idDemand =0;
+		this.max =1;
 	}
 	
+	
+
+	public void setRemote(String remote) {
+		this.remote = remote;
+	}
+
+
+
+	public void setIdDemand(int idDemand) {
+		this.idDemand = idDemand;
+	}
+
+
+
+	public void setMax(int max) {
+		this.max = max;
+	}
+
+
+
 	public void setNumberParts(){
 		this.numberOfParts = this.size.intValue() / this.max;
 		if ((this.size.intValue() % this.max) != 0){
 			this.numberOfParts++;
 		} 
+	}
+	public void setFileReceived(Boolean fileReceived,String remote) {
+		this.fileReceived = fileReceived;
+		System.out.println("dans setFileReceived de modelFile"+ this.getRemote());
+		setChanged();
+		notifyObservers(remote);
+		
+	}
+	public void setFileSent(Integer fileSent ,String remote) {
+		this.fileSent = fileSent;
+		System.out.println("dans setFileReceived de modelFile"+ this.getRemote());
+		setChanged();
+		notifyObservers(remote);
+		
 	}
 	
 	public int getMax(){

@@ -8,8 +8,13 @@ import java.util.Map;
 import java.util.Observable;
 import java.util.Observer;
 import java.util.Scanner;
+
+import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
+
 import chatSystemController.Controller;
+import chatSystemModel.ModelFile;
+import chatSystemModel.ModelFileToReceive;
 import chatSystemModel.ModelListUsers;
 import chatSystemModel.ModelStates;
 import chatSystemModel.ModelText;
@@ -65,7 +70,7 @@ public class ChatGUI extends View implements Observer,ToUser,FromUser{
 	
 	
 	public void updateModelText(Observable arg0,Object arg1){
-		String txtReceived=new String(((ModelText)arg0).getTextReceived());
+		String txtReceived=new String(((ModelText)arg0).getTextReceived().trim());
 		String remote=new String(((ModelText)arg0).getRemote());
 		this.displayMessage(txtReceived,remote);
 
@@ -83,6 +88,15 @@ public class ChatGUI extends View implements Observer,ToUser,FromUser{
 			System.out.println("modelList modifier");
 			this.wListUsers.setUsers(((HashMap<?, ?>)arg1 ).keySet().toArray()) ;
 		}
+	}
+	public void updateModelFile(Object arg1){
+		//if (this.mode == 0){
+			
+		//}else{
+		System.out.println("dans updateModelFile");
+		System.out.println((String)arg1);
+			this.wCommunicate.get((String)arg1).getBtnFileReceived().setVisible(true);
+		//}
 	}
 	
 	public void updateModelUsername(Object arg1){
@@ -107,6 +121,9 @@ public class ChatGUI extends View implements Observer,ToUser,FromUser{
 			this.updateModelListUsers(arg1);
 		}else if(arg0 instanceof ModelUsername){
 			this.updateModelUsername(arg1);
+		}else if(arg0 instanceof ModelFile){
+			System.out.println("Dans update file");
+			this.updateModelFile(arg1);
 		}
 		//	wCommunicate.setVisible(true);
 		//wCommunicate.setLblUsername(((String)arg1));
@@ -119,7 +136,7 @@ public class ChatGUI extends View implements Observer,ToUser,FromUser{
 		if (this.mode == 0){
 			this.controller.performConnect(this.cmd.getUsername());
 		}else{
-			this.controller.performConnect(this.wConnect.getTfdUsername());
+			this.controller.performConnect(this.wConnect.getTfdUsername().trim());
 		}
 	}
 
@@ -134,18 +151,26 @@ public class ChatGUI extends View implements Observer,ToUser,FromUser{
 			this.controller.performSendText(remoteUsername, this.cmd.getTextToSend());
 		}else{
 			String localUsername=this.wListUsers.getLblUsername();
-			String text2Send =this.wCommunicate.get(remoteUsername).gettAreaMessageText();
+			String text2Send =this.wCommunicate.get(remoteUsername).gettAreaMessageText().trim();
 			this.wCommunicate.get(remoteUsername).settAreaHistoryCom(localUsername+" :"+text2Send+"\n");
-			controller.performSendText(remoteUsername,wCommunicate.get(remoteUsername).gettAreaMessageText());
+			
+			controller.performSendText(remoteUsername,wCommunicate.get(remoteUsername).gettAreaMessageText().trim());
 			this.wCommunicate.get(remoteUsername).settAreaMessageText("");
+			
 		}
 		
 	}
 	
 	public void sendFile(String remote) {
 		this.openInterfaceDialogFile();
-		String filePath=InterfaceDialogFile.getDialogue().getSelectedFile().getPath();
-	    this.controller.performPropositionFile(remote, filePath);
+		if (InterfaceDialogFile.getDialogue().showOpenDialog(null)==JFileChooser.APPROVE_OPTION){
+			String filePath=InterfaceDialogFile.getDialogue().getSelectedFile().getPath();
+			this.wCommunicate.get(remote).getProgressBarFile().setVisible(true);
+		    this.controller.performPropositionFile(remote, filePath);
+		    System.out.println("dans sendFile dans chatGui");
+		    this.wCommunicate.get(remote).getProgressBarFile().setVisible(false);
+		}
+		
 	
 	}
 
@@ -186,6 +211,7 @@ public class ChatGUI extends View implements Observer,ToUser,FromUser{
 			this.cmd.displayMessage(text, remote);
 		}else{
 			System.out.println("dans display");
+			this.openWindowCommunicate(remote);
 			this.wCommunicate.get(remote).settAreaHistoryCom("   "+remote+" :"+text+"\n");
 		}	
 	}
@@ -237,7 +263,7 @@ public class ChatGUI extends View implements Observer,ToUser,FromUser{
 
 
 	public void initConnection() {
-		Scanner sc = new Scanner(System.in);
+	Scanner sc = new Scanner(System.in);
 		System.out.println("Choose the mode : 1 for graphical , 0 for command line");
 		int a = sc.nextInt();
 		if (a == 0){
@@ -248,7 +274,7 @@ public class ChatGUI extends View implements Observer,ToUser,FromUser{
 			this.mode = 1;
 			this.wCommunicate=new HashMap<String,InterfaceCommunicate>();
 			this.wConnect = new InterfaceConnect(this);
-			this.wListUsers=new InterfaceListUsers("alpha",this);
+			this.wListUsers=new InterfaceListUsers("",this);
 		}
 	}
 
@@ -275,4 +301,24 @@ public class ChatGUI extends View implements Observer,ToUser,FromUser{
 		// TODO Auto-generated method stub
 		
 	}
+
+
+	/* (non-Javadoc)
+	 * @see chatSystemIHMs.ToUser#notifyFileReceived(java.lang.String)
+	 */
+	@Override
+	public void notifyFileReceived(String remote) {
+		// TODO Auto-generated method stub
+		
+			
+		JOptionPane.showMessageDialog(this.wCommunicate.get(remote), "File Receveid and Stocked in directory Download",
+				      "File",
+				      JOptionPane.WARNING_MESSAGE);
+		this.wCommunicate.get(remote).getBtnFileReceived().setVisible(false);
+	}
+	
+
+
+	
+	
 }

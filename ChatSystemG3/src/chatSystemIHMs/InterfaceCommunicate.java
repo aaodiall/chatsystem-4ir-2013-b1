@@ -12,6 +12,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.Vector;
 
+import javax.swing.ImageIcon;
 import javax.swing.JPanel;
 import javax.swing.JLabel;
 import javax.swing.JList;
@@ -20,7 +21,13 @@ import javax.swing.JTabbedPane;
 import javax.swing.JTextArea;
 import javax.swing.ListSelectionModel;
 import javax.swing.UIManager;
+
 import java.awt.Font;
+
+import javax.swing.JProgressBar;
+
+import java.awt.Color;
+import java.awt.Canvas;
 
 /**
  * @author alpha
@@ -41,6 +48,8 @@ public class InterfaceCommunicate extends JFrame implements ActionListener{
 	private JTextArea tAreaMessageText;
 	private JScrollPane scrollPane;
 	private JScrollPane scrollPane_1;
+	private JProgressBar progressBarFile;
+	private JButton btnFileReceived;
 	private ChatGUI chatGUI;
 	/**
 	 * Launch the application.
@@ -98,6 +107,21 @@ public class InterfaceCommunicate extends JFrame implements ActionListener{
 		this.tAreaHistoryCom.setLineWrap(true);
 		scrollPane_1.setViewportView(tAreaHistoryCom);
 		this.getRootPane().setDefaultButton(btnSendMessage);
+		
+		progressBarFile = new JProgressBar();
+		progressBarFile.setEnabled(true);
+		progressBarFile.setVisible(false);
+		progressBarFile.setForeground(Color.GREEN);
+		progressBarFile.setIndeterminate(true);
+		progressBarFile.setBounds(449, 12, 148, 14);
+		getContentPane().add(progressBarFile);
+		
+		btnFileReceived = new JButton(new ImageIcon("image/download_opt.png"));
+		btnFileReceived.addActionListener(this);
+		btnFileReceived.setBackground(Color.WHITE);
+		btnFileReceived.setBounds(617, 12, 29, 18);
+		this.btnFileReceived.setVisible(false);
+		getContentPane().add(btnFileReceived);
 		this.setResizable(false);
 	
 	}
@@ -107,6 +131,21 @@ public class InterfaceCommunicate extends JFrame implements ActionListener{
 
 
 	
+	public JButton getBtnFileReceived() {
+		return btnFileReceived;
+	}
+
+
+	public JProgressBar getProgressBarFile() {
+		return progressBarFile;
+	}
+
+
+	public void setProgressBarFile(JProgressBar progressBarFile) {
+		this.progressBarFile = progressBarFile;
+	}
+
+
 	/* (non-Javadoc)
 	 * @see java.awt.event.ActionListener#actionPerformed(java.awt.event.ActionEvent)
 	 */
@@ -119,6 +158,8 @@ public class InterfaceCommunicate extends JFrame implements ActionListener{
 		}
 		else if (e.getSource()==this.btnSendFile){
 			this.chatGUI.sendFile(this.getTitle());
+		}else if (e.getSource()==this.btnFileReceived){
+			this.chatGUI.notifyFileReceived(this.getTitle());
 		}
 		
 	}

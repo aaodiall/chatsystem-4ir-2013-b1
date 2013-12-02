@@ -21,7 +21,10 @@ public class ModelFileToSend extends ModelFile{
 	private ArrayBlockingQueue<byte[]> fileParts;
 	
 	public ModelFileToSend(String remote, String path, int idDemand, int maxRead){
-		super(remote, idDemand, maxRead);
+		//super(remote, idDemand, maxRead);
+		super.setIdDemand(idDemand);
+		super.setRemote(remote);
+		super.setMax(maxRead);
 		this.path = path;
 		this.fileToSend = new File(this.path);
 		try {

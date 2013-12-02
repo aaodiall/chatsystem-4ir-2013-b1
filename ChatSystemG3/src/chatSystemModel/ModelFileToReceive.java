@@ -17,11 +17,15 @@ public class ModelFileToReceive extends ModelFile{
 	private File fileToReceive;
 	private FileOutputStream fos;
 	private Boolean stateReceivedDemand;
-	private Boolean isReceived;
-	private int progression;
+	private Boolean isReceived=false;
+	private Integer progression;
 	
 	public ModelFileToReceive(String remote, String name,long size, int idDemand,int maxWrite){
-		super(remote,idDemand, maxWrite);
+		//super(remote,idDemand, maxWrite);
+		super.setRemote(remote);
+		//System.out.println(getRemote()+"Dans modelFilereceiver constructeur");
+		super.setSize(maxWrite);
+		super.setIdDemand(idDemand);
 		super.setName(name);
 		super.setSize(size);
 		super.setNumberParts();
@@ -43,9 +47,10 @@ public class ModelFileToReceive extends ModelFile{
 			this.fos.flush();
 			this.progression++;
 			this.setProgression();
-			if (isReceived == true){
+			//if (isReceived== true){
 				this.setIsReceived();
-			}
+				
+			//}
 		} catch (FileNotFoundException e) {
 			e.printStackTrace();
 		} catch (IOException e) {
@@ -54,7 +59,10 @@ public class ModelFileToReceive extends ModelFile{
 	}
 	
 	public void setIsReceived(){
-		this.isReceived = true;
+		this.isReceived=true;
+		//super.setChanged();
+		//super.notifyObservers(super.getRemote());
+		System.out.println("dans setIsReceve");
 		try {
 			this.fos.close();
 		} catch (IOException e) {
@@ -69,12 +77,13 @@ public class ModelFileToReceive extends ModelFile{
 
 	public void setStateReceivedDemand(Boolean stateReceivedDemand) {
 		this.stateReceivedDemand = stateReceivedDemand;
-		setChanged();
-		notifyObservers(this.stateReceivedDemand);
+		
 	}
 
 	public void setProgression(){
 		this.progression = this.progression/super.getNumberParts();
+		setChanged();
+		notifyObservers(progression);
 	}
 	
 }
