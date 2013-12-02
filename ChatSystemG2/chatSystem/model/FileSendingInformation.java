@@ -18,8 +18,6 @@ public class FileSendingInformation extends FileTransfertInformation {
     private BufferedInputStream readerBuffer;
     private FileInputStream reader;
     ByteArrayOutputStream writerArray;
-    //private byte [] filePart;
-    //private final byte [] filePartInit;
 
     /**
      * Class' constructor
@@ -29,8 +27,6 @@ public class FileSendingInformation extends FileTransfertInformation {
     public FileSendingInformation(String idRemoteSystem, File fileToSend) {
         super(idRemoteSystem, fileToSend);
         this.writerArray = new ByteArrayOutputStream();
-        //this.filePart = new byte[tailleSegment];
-        //this.filePartInit = new byte[tailleSegment];
         
         try {
             this.reader = new FileInputStream(this.fileDescriptor);
