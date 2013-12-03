@@ -84,7 +84,7 @@ public class FileController {
 				receivedThread.start();
 				ReceivedFileNI.getInstance(this,((FileTransfertDemand) msg).getPortClient()).go();
 				fileOutputStream = new FileOutputStream(this.getFilePath(), true);
-				this.sendFileTransfertConfirmation(user, true, msg.getId());
+				this.sendFileTransfertConfirmation(user, true, ((FileTransfertDemand) msg).getIdDemand());
 			}
 			else
 				this.sendFileTransfertConfirmation(user, false, msg.getId());
