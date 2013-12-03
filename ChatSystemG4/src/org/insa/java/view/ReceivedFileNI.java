@@ -22,17 +22,12 @@ public final class ReceivedFileNI extends JavaChatNI {
 	private Socket socket;
 	private InputStream inputStream;
 
+	private int portClient;
 	public boolean running = true;
 
 	private ReceivedFileNI(FileController fileController, int portClient) {
 		this.fileController = fileController;
-		try {
-			socket = new Socket(InetAddress.getLocalHost(), portClient);
-		} catch (UnknownHostException e) {
-			e.printStackTrace();
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
+		this.portClient = portClient;
 	}
 
 	public final static ReceivedFileNI getInstance(FileController fileController, int portClient) {
@@ -49,7 +44,7 @@ public final class ReceivedFileNI extends JavaChatNI {
 	public void run() { 
 		while(running) {
 			try {
-				//socket = serverSocket.accept();		
+				socket = new Socket(InetAddress.getLocalHost(), portClient);
 				inputStream = socket.getInputStream();
 				Message m = Message.fromArray(this.toByteArray(inputStream));
 				fileController.receivedMessage(new User(socket.getInetAddress(),m.getUsername()),m);
@@ -63,8 +58,7 @@ public final class ReceivedFileNI extends JavaChatNI {
 					inputStream.close();
 				} catch (IOException e1) {
 					e1.printStackTrace();
-				}
-				
+				}	
 			}
 		}
 		/*

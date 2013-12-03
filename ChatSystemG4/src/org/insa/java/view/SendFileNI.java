@@ -23,21 +23,20 @@ public final class SendFileNI extends JavaChatNI {
 
 	private OutputStream outputStream = null;
 	
-	private SendFileNI(FileController fileController, int clientPort) {
+	private SendFileNI(FileController fileController) {
 		this.fileController = fileController;
 		try {
-			if(clientPort > 1024)
-				serverSocket = new ServerSocket(clientPort);
+			serverSocket = new ServerSocket(0);
 		} catch (IOException e) {
 			
 		}
 	}
 
-	public final static SendFileNI getInstance(FileController fileController, int portClient) {
+	public final static SendFileNI getInstance(FileController fileController) {
 		if(SendFileNI.instance == null) {
 			synchronized(SendFileNI.class) {
 				if(SendFileNI.instance == null)
-					SendFileNI.instance = new SendFileNI(fileController,portClient);
+					SendFileNI.instance = new SendFileNI(fileController);
 			}
 		}
 		return SendFileNI.instance;
@@ -89,5 +88,9 @@ public final class SendFileNI extends JavaChatNI {
 
 	public void setFileTransfertState(TransferState fileTransfertState) {
 		this.fileTransfertState = fileTransfertState;
+	}
+	
+	public int getPort() {
+		return this.serverSocket.getLocalPort();
 	}
 }
