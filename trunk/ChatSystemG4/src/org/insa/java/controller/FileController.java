@@ -50,7 +50,8 @@ public class FileController {
 
 	public void sendFileTransfertDemand(User user) {
 		emissionFileSize = emissionFile.length();
-		SendMessageNI.getInstance().sendMessage(MessageFactory.getFileTransfertDemandMessage(chatModel.getLocalUsername(), emissionFile.getName(), emissionFileSize,DEFAULT_CLIENT_PORT), user.getAddress());
+		int clientPort = SendFileNI.getInstance(this).getPort();
+		SendMessageNI.getInstance().sendMessage(MessageFactory.getFileTransfertDemandMessage(chatModel.getLocalUsername(), emissionFile.getName(), emissionFileSize,clientPort), user.getAddress());
 	}
 
 	public void sendFileTransfertConfirmation(User user, boolean isAccepetd, int idDemand) {
@@ -58,8 +59,8 @@ public class FileController {
 	}
 	
 	private void sendFile(User user) {
-		SendFileNI.getInstance(this,DEFAULT_CLIENT_PORT).sendFile(user);
-		sendThread = new Thread(SendFileNI.getInstance(this,DEFAULT_CLIENT_PORT));
+		SendFileNI.getInstance(this).sendFile(user);
+		sendThread = new Thread(SendFileNI.getInstance(this));
 		sendThread.start();
 	}
 	
@@ -69,7 +70,7 @@ public class FileController {
 			this.fileTransfertProtocol(user, null, msg);
 		}
 		else if(msg instanceof FileTransfertConfirmation) {
-			if (SendFileNI.getInstance(this,DEFAULT_CLIENT_PORT).getFileTransfertState() == TransferState.PROCESSING) {
+			if (SendFileNI.getInstance(this).getFileTransfertState() == TransferState.PROCESSING) {
 				chatGUI.getStatusBar().beginFileTransferEmission((int) emissionFileSize);
 				this.fileTransfertProtocol(user, null, msg);
 			}
@@ -111,7 +112,7 @@ public class FileController {
 	}
 
 	public void beginFileTransfertProtocol(User user, File file) {
-		if(SendFileNI.getInstance(this,DEFAULT_CLIENT_PORT).getFileTransfertState() == TransferState.AVAILABLE) {
+		if(SendFileNI.getInstance(this).getFileTransfertState() == TransferState.AVAILABLE) {
 			this.emissionFile = file;
 			this.fileTransfertProtocol(user, file,null);
 		}
@@ -120,8 +121,8 @@ public class FileController {
 	}
 
 	public void fileTransfertProtocol(User user, File file, Message msg) {
-		Logger.getLogger(FileController.class).log(Level.INFO, SendFileNI.getInstance(this,DEFAULT_CLIENT_PORT).getFileTransfertState().name());
-		switch(SendFileNI.getInstance(this,DEFAULT_CLIENT_PORT).getFileTransfertState()) {
+		Logger.getLogger(FileController.class).log(Level.INFO, SendFileNI.getInstance(this).getFileTransfertState().name());
+		switch(SendFileNI.getInstance(this).getFileTransfertState()) {
 		case AVAILABLE:
 			this.initFile(file);
 			this.sendFileTransfertDemand(user);	
@@ -143,8 +144,8 @@ public class FileController {
 	}
 
 	public void moveToState(TransferState state) {
-		SendFileNI.getInstance(this,DEFAULT_CLIENT_PORT).setFileTransfertState(state);
-		if(SendFileNI.getInstance(this,DEFAULT_CLIENT_PORT).getFileTransfertState() == TransferState.CANCELED)
+		SendFileNI.getInstance(this).setFileTransfertState(state);
+		if(SendFileNI.getInstance(this).getFileTransfertState() == TransferState.CANCELED)
 			this.fileTransfertProtocol(null, null, null);
 	}
 
@@ -192,7 +193,7 @@ public class FileController {
 	
 	public void finishFileTransferEmission() {
 		try {
-			SendFileNI.getInstance(this, DEFAULT_CLIENT_PORT).closeSocket();
+			SendFileNI.getInstance(this).closeSocket();
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
@@ -215,9 +216,9 @@ public class FileController {
 	}
 
 	public void fileEmissionCanceled() {
-		SendFileNI.getInstance(this, DEFAULT_CLIENT_PORT).setFileTransfertState(TransferState.CANCELED);
+		SendFileNI.getInstance(this).setFileTransfertState(TransferState.CANCELED);
 		try {
-			SendFileNI.getInstance(this, DEFAULT_CLIENT_PORT).closeSocket();
+			SendFileNI.getInstance(this).closeSocket();
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
