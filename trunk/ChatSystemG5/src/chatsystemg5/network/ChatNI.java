@@ -11,6 +11,12 @@ import java.util.Observer;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+/**
+ * The ChatNI does the link between the ChatController and the network
+ * The ChatController does not know anything about how the network is used
+ * The ChatNI has the control on how the message or files are sent or received
+ * @author belliot
+ */
 public /*abstract*/ class ChatNI extends Thread implements Observer {
     
     private ChatController chat_control;
@@ -19,6 +25,12 @@ public /*abstract*/ class ChatNI extends Thread implements Observer {
     private String username;
     private String IP_new;
 
+    /**
+     * The constructor of the ChatNI is instancied with a ChatController's object
+     * The username is kept in a variable
+     * The MessageHandlerNI is instancied
+     * @param chat_control : the same for every object in the ChatSystem
+     */
     public ChatNI(ChatController chat_control) {
         
         this.setPriority(MIN_PRIORITY);
@@ -29,13 +41,20 @@ public /*abstract*/ class ChatNI extends Thread implements Observer {
         //System.out.println("I'm ChatNI : username : " + username);
 
         this.start();
-
     }
 
-    /******************************************************************/
+    // _________________________________________________________________________________________
     
     // PARTIE MESSAGE EMISSION
     
+    /**
+     * This function is used to transfer a connection asked by the ChatController
+     * It is then performed by the MessageHandlerNI
+     * It uses the remote user's name to get its IP address
+     * If it is a new connection, the connection is broadcasted
+     * @param user_and_IP : the hello message is sent to this remote user
+     * @param alrdythere : the function needs to know if it is a first connection or not
+     */
     public void to_connection(String user_and_IP, Boolean alrdythere) {
         try {
             //System.out.println("I'm ChatNI : IP to connection : " + user_and_IP);
@@ -55,10 +74,20 @@ public /*abstract*/ class ChatNI extends Thread implements Observer {
         }
     }
     
+    /**
+     * This function is used to transfer a disconnection asked by the ChatController
+     * It is then performed by the MessageHandlerNI
+     */
     public void to_disconnection() {
         msg_handler.send_disconnection();
     }
     
+    /**
+     * This function is used to transfer a text message coming from the ChatController
+     * It gets the destination IP address thanks to the username given
+     * @param username_and_IP : the text message is sent to this remote user
+     * @param text : this is the text message
+     */
     public void to_send_text(String username_and_IP, String text) {
         try {
             // On récupère l'@IP associée à l'username
@@ -72,10 +101,16 @@ public /*abstract*/ class ChatNI extends Thread implements Observer {
     }
     
     
-    /******************************************************************/
-    
+    // _________________________________________________________________________________________
+
     // PARTIE MESSAGE RECEPTION
     
+    /**
+     * This function is used to transfer a connection to the ChatController coming from the MessageHandlerNI
+     * @param remote_user : connection coming from this remote user
+     * @param IP_text : IP address of the remote user in a textual style
+     * @param alrdythere : indicating if it is a new connection or not
+     */
     public void from_connection(String remote_user, String IP_text, Boolean alrdythere) {
         //try {
             System.out.println("I'm ChatNI : IP source received : " + IP_text);
@@ -86,20 +121,39 @@ public /*abstract*/ class ChatNI extends Thread implements Observer {
 //        }
     }
     
+    /**
+     * This function is used to transfer a disconnection to the ChatController coming from the MessageHandlerNI
+     * @param remote_user : disconnection coming from this remote user
+     * @param IP_text : its IP address is given in a textual style
+     */
     public void from_disconnection(String remote_user, String IP_text) {
         chat_control.perform_disconnection(remote_user, IP_text);
     }
     
+    /**
+     * This function is used to transfer a text message to the ChatController coming from the MessageHandlerNI
+     * @param remote_user : text message coming from this remote user
+     * @param txt : the text message
+     * @param IP_text : its IP address is given in a textual style
+     */
     public void from_receive_text(String remote_user, String txt, String IP_text) {
         chat_control.perform_send(remote_user, txt, IP_text);
     }
     
     
     
+    /**
+     * This function return the username of the local user
+     * @return username of the local user
+     */
     public String get_user() {
         return username;
     }
     
+    /**
+     * This function get the state of the user, he is either connected or disconnected
+     * @return true (connected) or false (disconnected)
+     */
     public boolean get_user_state() {
         return chat_control.get_userDB().get_state();
     }
@@ -109,9 +163,13 @@ public /*abstract*/ class ChatNI extends Thread implements Observer {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
     
-    public void new_connect (String IP_text) {
-        IP_new = IP_text;
-    }
+//    /**
+//     *
+//     * @param IP_text
+//     */
+//    public void new_connect (String IP_text) {
+//        IP_new = IP_text;
+//    }
     
     @Override
     public void run(){

@@ -13,6 +13,10 @@ import java.util.logging.Logger;
 import java.net.UnknownHostException;      
 
     
+/**
+ *
+ * @author belliot
+ */
 public class MessageEmissionNI implements ToRemoteApp{
 
     private int UDP_port_dest;
@@ -21,6 +25,10 @@ public class MessageEmissionNI implements ToRemoteApp{
     private DatagramPacket message;
     //private Message message_to_send;
     
+    /**
+     *
+     * @param UDP_port
+     */
     public MessageEmissionNI (int UDP_port) {
         
         this.UDP_port_dest = UDP_port;
@@ -36,6 +44,11 @@ public class MessageEmissionNI implements ToRemoteApp{
     }
     
     
+    /**
+     *
+     * @param hi
+     * @param IP_dest
+     */
     public void transfer_connection(Hello hi, InetAddress IP_dest) {
          try {
             
@@ -62,6 +75,11 @@ public class MessageEmissionNI implements ToRemoteApp{
         }
     }
     
+    /**
+     *
+     * @param bye
+     * @param IP_dest
+     */
     public void transfer_disconnection(Goodbye bye, InetAddress IP_dest) {
         
         try {
@@ -82,6 +100,11 @@ public class MessageEmissionNI implements ToRemoteApp{
         }
     }
     
+    /**
+     *
+     * @param txt
+     * @param IP_dest
+     */
     public void send_text (Text txt, InetAddress IP_dest) {
         try {
             byte[] buffer = txt.toArray();
@@ -94,6 +117,10 @@ public class MessageEmissionNI implements ToRemoteApp{
         }
     }
     
+    /**
+     *
+     * @return
+     */
     public static InetAddress get_broadcast() {
         InetAddress broadcast = null;
         try {
@@ -104,6 +131,11 @@ public class MessageEmissionNI implements ToRemoteApp{
         return broadcast;
     }
 
+    /**
+     *
+     * @param msg
+     * @param IP_dest
+     */
     @Override
     public void send(Message msg, InetAddress IP_dest) {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.

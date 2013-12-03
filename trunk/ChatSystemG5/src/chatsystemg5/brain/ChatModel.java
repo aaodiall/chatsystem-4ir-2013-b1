@@ -2,8 +2,15 @@
 
 import java.util.Observable;
 
+/**
+ *
+ * @author belliot
+ */
 public abstract class ChatModel extends Observable{
     
+    /**
+     *
+     */
     public ChatModel (){
     }
 }
