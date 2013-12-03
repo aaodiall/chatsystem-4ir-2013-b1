@@ -40,7 +40,7 @@ public /*abstract*/ class ChatNI extends Thread implements Observer {
         //file_handler = new FileHandlerNI(this);
         //System.out.println("I'm ChatNI : username : " + username);
 
-        this.start();
+        //this.start();
     }
 
     // _________________________________________________________________________________________

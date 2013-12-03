@@ -14,10 +14,8 @@ import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.Observer;
 
-
 /**
  *
- * @author belliot
  */
 public class ConversationModel extends ChatModel {
     

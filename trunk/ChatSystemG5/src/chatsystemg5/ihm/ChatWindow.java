@@ -19,8 +19,10 @@ import javax.swing.text.DefaultCaret;
 
 
 /**
- *cfdfgdffg
- * @author dufant
+ * Represents a ChatWindow frame
+ * Implements Observer to be aware of the changes in the model
+ * Implements ActionListener to launch actions when a user clicks on a button
+ * Implements KeyListener to send message when the enter key is pressed
  * 
  */
 public class ChatWindow extends JFrame implements Observer, ActionListener, KeyListener {
@@ -43,9 +45,13 @@ public class ChatWindow extends JFrame implements Observer, ActionListener, KeyL
     // End of variables declaration  
     
     /**
-     * COnstrutor chatWindiw
-     * @param chat_control the unique chatController
-     * @param remote_username the user
+     * Links the ChatGUI to the unique controller<p>
+     * Links the ChatWindow to a specific remote user<p>
+     * Links the ChatWindow to its subject, in the model : ConversationModel<p>
+     * Create and display components of the ChatWindow
+     * 
+     * @param chat_control references the unique ChatController
+     * @param remote_username references the remote username to which is linked the ChatWindow
      */
     public ChatWindow (ChatController chat_control, String remote_username) {
         this.chat_control = chat_control;
@@ -56,17 +62,32 @@ public class ChatWindow extends JFrame implements Observer, ActionListener, KeyL
         this.setVisible(true);
     }
 
+    /**
+     * Checks what is the action source<p>
+     * If its the send_button then perform the send() funtion<p>
+     * Else perform the FileActionPerformed(e) function
+     * 
+     * @param e references the action initializer
+     */
     @Override
     public void actionPerformed(ActionEvent e) {
         // it's the send button which is selected
         if (e.getSource() == this.send_button) {
-            this.evaluate_and_send();
+            this.send();
         }
         else if(e.getSource() == this.file_button) {
             this.FileActionPerformed(e);
         }
     }
 
+    /**
+     * This function is called each time the ConversationModel linked to this ChatWindow changes<p>
+     * Gets the last message put in the ConversationModel and referencing this ChatWindow and writes it in the "received textarea"<p>
+     * Displays the ChatWindow
+     * 
+     * @param obs references the ConversationModel
+     * @param obj references the attribute conversation of the ConversationModel
+     */
     @Override
     public void update(Observable obs, Object obj){
         this.received_text.append(((ConversationModel)obs).get_last_text_by_user(this.remote_username));
@@ -77,10 +98,16 @@ public class ChatWindow extends JFrame implements Observer, ActionListener, KeyL
     @Override
     public void keyTyped(KeyEvent e) {}
 
+    /**
+     * Checks which key is pressed by the user<p>
+     * If the enter key is pressed then it calls the send() function<p>
+     * Else nothing happens
+     * @param e 
+     */
     @Override
     public void keyPressed(KeyEvent e) {
         if(e.getKeyCode() == KeyEvent.VK_ENTER){
-            this.evaluate_and_send();
+            this.send();
         }
     }
 
@@ -92,17 +119,17 @@ public class ChatWindow extends JFrame implements Observer, ActionListener, KeyL
     }
     
     /**
-     *
+     * Gets the text typed by the local user and gives it to the unique chatController<p>
+     * Removes the text displayed in the "send textarea"
      */
-    public void evaluate_and_send () {
-        String message = this.send_text.getText().trim();
-        if (!message.isEmpty()){
-            this.chat_control.get_convDB().add_conversation(this.remote_username, "YOU : " + message);
-            this.chat_control.perform_send(this.remote_username, this.send_text.getText().trim());
-            this.send_text.setText(null);
-        }
+    public void send () {
+        this.chat_control.perform_send(this.remote_username, this.send_text.getText());
+        this.send_text.setText(null);
     }
-                        
+
+    /**
+     * Creates components of the ChatWindow
+     */
     private void initComponents() {
 
         label = new javax.swing.JLabel();

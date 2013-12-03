@@ -2,10 +2,8 @@ package chatsystemg5.brain;
 import chatsystemg5.ihm.ChatGUI;
 import chatsystemg5.network.ChatNI;
 
-
 /**
  *
- * @author belliot
  */
 public class ChatController {
 
@@ -128,14 +126,25 @@ public class ChatController {
         } 
     }
     
-    /**************** Communication by text ***************
-     * @param username_and_IP
-     * @param text  
+    /**
+     ************** Communication by text ***************
+     * 
+     * Removes the white spaces before and after a text to send
+     * Checks is the message isn't just a blank
+     * Add the "YOU : " label before each message send from the local user
+     * Add to the model the 
+     *
+     * @param username_and_IP 
+     * @param text 
      */
     
     // Envoi d'un messsage texte
     public void perform_send (String username_and_IP, String text) {
-        chatNI.to_send_text(username_and_IP, text);
+        String message = text.trim();
+        if (!message.isEmpty()){
+            this.get_convDB().add_conversation(username_and_IP, "YOU : " + message);
+            chatNI.to_send_text(username_and_IP, message);
+        }
     }
     
     // Réception d'un message

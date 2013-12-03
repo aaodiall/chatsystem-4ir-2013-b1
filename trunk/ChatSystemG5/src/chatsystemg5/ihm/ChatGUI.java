@@ -4,9 +4,13 @@ import chatsystemg5.brain.ChatController;
 import java.util.HashMap;
 import javax.swing.JFrame;
 
+
 /**
- *
- * @author belliot
+ * Control each frame displayed
+ * 
+ * 
+ * 
+ * 
  */
 public class ChatGUI extends JFrame {
 
@@ -16,8 +20,11 @@ public class ChatGUI extends JFrame {
     private HashMap<String, ChatWindow> chat_windows;
 
     /**
-     *
-     * @param chat_control
+     * Links the ChatGUI with the ChatController<p>
+     * Initializes a new HasmMap<p>
+     * Displays the connection window
+     * 
+     * @param chat_control references the unique ChatController
      */
     public ChatGUI(ChatController chat_control) {
         this.chat_control = chat_control;
@@ -26,9 +33,13 @@ public class ChatGUI extends JFrame {
         this.connection_window = new ConnectionWindow(this.chat_control);
     }
     
+
     /**
-     *
-     * @param remote_username
+     * Create a ChatWindow linked to a specific remote user and add it to the ChatWindows list<p>
+     * If a ChatWindow linked to the remote user doesn't exist yet then it creates a new ChatWindow linked to this user<p>
+     * Else nothing happens
+     * 
+     * @param remote_username references the remote username used to link the ChatWindow
      */
     public void create_chat_window(String remote_username){
         if(!this.chat_windows.containsKey(remote_username)){
@@ -37,20 +48,28 @@ public class ChatGUI extends JFrame {
             this.chat_windows.get(remote_username).setVisible(true);
         } 
     }
-    
+
     /**
-     *
-     * @param remote_username
+     * Delete a ChatWindow linked to a specific remote user from the ChatWindows list<p>
+     * If the ChatWindow linked to the specific user exists then it removes it<p>
+     * Else nothing happens
+     * 
+     * @param remote_username references the remote username used to link the ChatWindow
      */
     public void delete_chat_window(String remote_username){
-        this.chat_windows.remove(remote_username);
+        if(this.chat_windows.containsKey(remote_username)){
+            this.chat_windows.remove(remote_username);
+        }
     }
     
         
     /**
-     *
-     * @param remote_username
-     * @return
+     * Allows to get a ChatWindow linked to a specific user from the ChatWindows list<p>
+     * If the ChatWindow linked to the specific user exists then it returns it<p>
+     * Else it returns null
+     * 
+     * @param remote_username references the remote username used to link the ChatWindow to it
+     * @return a specific ChatWindow
      */
     public ChatWindow get_chat_window(String remote_username){
         if(this.chat_windows.containsKey(remote_username)){
@@ -62,34 +81,40 @@ public class ChatGUI extends JFrame {
     }
 
     /**
-     *
-     * @return
+     * Allows to get the ListWindow
+     * 
+     * @return the listWindow
      */
     public ListWindow get_list_window() {
         return this.list_window;
     }
     
     /**
-     *
+     * Initializes the a ListWindow
      */
     public void init_list_window(){
         this.list_window = new ListWindow(this.chat_control);
     }
     
     /**
-     *
-     * @return
+     * Allows to get the ChatWindows list<p>
+     * If the ChatWindows List isn't null then it returns it<p>
+     * Else it returns null
+     * @return the ChatWindows list
      */
     public HashMap<String, ChatWindow> get_chat_windows() {
         if(this.chat_windows != null){
             return this.chat_windows;
         }
+        else {
         return null;
+        }
     }
 
     /**
-     *
-     * @return
+     * Allows to get the ConnectionWindow
+     * 
+     * @return the ConnectionWindow
      */
     public ConnectionWindow get_connection_window() {
         return this.connection_window;
