@@ -4,8 +4,17 @@ import chatSystemCommon.*;
 
 import java.net.InetAddress;
 
+/**
+ *
+ * @author belliot
+ */
 public interface ToRemoteApp {
     
-     abstract public void send (Message msg, InetAddress IP_dest);
+     /**
+     *
+     * @param msg
+     * @param IP_dest
+     */
+    abstract public void send (Message msg, InetAddress IP_dest);
 	
 }

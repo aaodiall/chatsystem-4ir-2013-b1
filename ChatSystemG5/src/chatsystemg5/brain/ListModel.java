@@ -5,6 +5,10 @@ import java.util.HashMap;
 import java.util.Observer;
 
 
+/**
+ *
+ * @author belliot
+ */
 public class ListModel extends ChatModel {
     
     private ListWindow observer_list;
@@ -15,11 +19,20 @@ public class ListModel extends ChatModel {
     // Temporary list of remote users
     private HashMap<String,String> hmap_temp;
     
+    /**
+     *
+     * @param chat_control
+     */
     public ListModel (ChatController chat_control) {
         this.chat_control = chat_control;
         hmap_users = new HashMap();
     }
     
+    /**
+     *
+     * @param username
+     * @param IP_addr
+     */
     public void add_user (String username, String IP_addr) {
         if (!this.hmap_users.containsKey(username + "@" + IP_addr)) {
             hmap_users.put (username + "@" + IP_addr, IP_addr);
@@ -29,18 +42,31 @@ public class ListModel extends ChatModel {
     
     
     
+    /**
+     *
+     * @param username
+     * @param IP_addr
+     */
     public void add_user_temp (String username, String IP_addr) {
         if (!this.hmap_temp.containsKey(username + "@" + IP_addr)) {
             hmap_temp.put (username + "@" + IP_addr, IP_addr);
         }
     }
     
+    /**
+     *
+     */
     public void new_temp() {
         hmap_temp = new HashMap();
     }
     
     
     
+    /**
+     *
+     * @param username
+     * @param IP_addr
+     */
     public void remove_user (String username, String IP_addr) {
         if(hmap_users.containsKey(username + "@" + IP_addr)){
             hmap_users.remove(username + "@" + IP_addr);
@@ -48,19 +74,36 @@ public class ListModel extends ChatModel {
         }
     }
     
+    /**
+     *
+     * @param full_name
+     */
     public void remove_from_full_name (String full_name) {
         hmap_users.remove(full_name);
         this.notifyObservers();
     }
     
+    /**
+     *
+     * @param username
+     * @return
+     */
     public String get_IP_addr (String username) {
         return hmap_users.get(username);
     }
     
+    /**
+     *
+     * @return
+     */
     public HashMap<String,String> get_hmap_users () {
         return this.hmap_users;
     }
     
+    /**
+     *
+     * @return
+     */
     public HashMap<String,String> get_hmap_temp () {
         return this.hmap_temp;
     }
@@ -80,6 +123,10 @@ public class ListModel extends ChatModel {
         this.observer_list.dispose();
     }
 
+    /**
+     *
+     * @param o
+     */
     public void set_hmap_users(HashMap<String, String> o) {
         this.hmap_users = o;
     }

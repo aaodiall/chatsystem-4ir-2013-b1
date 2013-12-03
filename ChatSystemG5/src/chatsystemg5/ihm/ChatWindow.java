@@ -91,6 +91,9 @@ public class ChatWindow extends JFrame implements Observer, ActionListener, KeyL
         // TODO add your handling code here:
     }
     
+    /**
+     *
+     */
     public void evaluate_and_send () {
         String message = this.send_text.getText().trim();
         if (!message.isEmpty()){

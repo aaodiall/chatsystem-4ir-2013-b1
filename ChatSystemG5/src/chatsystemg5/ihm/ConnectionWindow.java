@@ -8,6 +8,10 @@ import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JTextField;
 
+/**
+ *
+ * @author belliot
+ */
 public class ConnectionWindow extends JFrame implements ActionListener {
     
     private ChatController chat_control;
@@ -18,6 +22,10 @@ public class ConnectionWindow extends JFrame implements ActionListener {
     private JTextField username_field;
     // End of variables declaration  
     
+    /**
+     *
+     * @param chat_control
+     */
     public ConnectionWindow (ChatController chat_control) {
 
         this.chat_control = chat_control;

@@ -15,6 +15,10 @@ import java.util.LinkedList;
 import java.util.Observer;
 
 
+/**
+ *
+ * @author belliot
+ */
 public class ConversationModel extends ChatModel {
     
     private ArrayList<ChatWindow> observers;
@@ -31,6 +35,11 @@ public class ConversationModel extends ChatModel {
         //this.addObserver(chat_control.get_chatGUI().get_chat_window());
     }
     
+    /**
+     *
+     * @param remote_user_and_ip
+     * @param text
+     */
     public void add_conversation(String remote_user_and_ip, String text) {
         DateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
         Date date = new Date();
@@ -51,6 +60,11 @@ public class ConversationModel extends ChatModel {
         this.notifyObservers(remote_user_and_ip);
     }
     
+    /**
+     *
+     * @param remote_username
+     * @return
+     */
     public String get_last_text_by_user(String remote_username){
         return this.conversation.get(remote_username).getLast();
     }

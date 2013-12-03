@@ -8,6 +8,10 @@ import java.net.InetAddress;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+/**
+ *
+ * @author belliot
+ */
 public class MessageReceptionNI extends Thread implements FromRemoteApp {
     
     private MessageHandlerNI msg_handler;
@@ -19,6 +23,11 @@ public class MessageReceptionNI extends Thread implements FromRemoteApp {
     private byte[] buffer; 
     private String text;
     
+    /**
+     *
+     * @param msg_handler
+     * @param UDP_port
+     */
     public MessageReceptionNI (MessageHandlerNI msg_handler, int UDP_port) {
         try {
             this.setPriority(MAX_PRIORITY);
@@ -73,10 +82,18 @@ public class MessageReceptionNI extends Thread implements FromRemoteApp {
        
     }
 
+    /**
+     *
+     */
     public void close_UDP_sock() {
         this.UDP_sock.close();
     }
     
+    /**
+     *
+     * @param array
+     * @param IP_addr
+     */
     @Override
     public void send_to_controller(byte[] array, InetAddress IP_addr) {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.

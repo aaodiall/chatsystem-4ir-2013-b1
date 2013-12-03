@@ -31,6 +31,10 @@ public class ListWindow extends JFrame implements Observer, ListSelectionListene
     private javax.swing.JScrollPane jScrollPane1;
     // End of variables declaration  
     
+    /**
+     *
+     * @param chat_control
+     */
     public ListWindow(ChatController chat_control){
         this.chat_control = chat_control;
         

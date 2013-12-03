@@ -4,6 +4,10 @@ import java.util.ArrayList;
 import java.util.Observer;
 import java.util.Iterator;
 
+/**
+ *
+ * @author belliot
+ */
 public class UserModel extends ChatModel {
     
     private ArrayList<Observer> observers;
@@ -11,24 +15,44 @@ public class UserModel extends ChatModel {
     private String username;
     private Boolean status;
     
+    /**
+     *
+     * @param username
+     */
     public UserModel (String username) {
         this.username = username;
         status = true;
         this.observers = new ArrayList<Observer>();
     }
     
+    /**
+     *
+     * @return
+     */
     public String get_username(){
         return this.username;
     }
     
+    /**
+     *
+     * @param username
+     */
     public void set_username(String username){
         this.username = username;
     }
     
+    /**
+     *
+     * @return
+     */
     public boolean get_state() {
         return status;
     }
     
+    /**
+     *
+     * @param connected
+     */
     public void set_state(boolean connected) {
         this.status = connected;
     }

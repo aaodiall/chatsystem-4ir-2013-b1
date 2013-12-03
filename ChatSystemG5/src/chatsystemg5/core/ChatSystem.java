@@ -2,9 +2,17 @@
 
 import chatsystemg5.brain.ChatController;
 
+/**
+ *
+ * @author belliot
+ */
 public class ChatSystem {
 	
-	public static void main (String[] args) {
+	/**
+     *
+     * @param args
+     */
+    public static void main (String[] args) {
 
             ChatController brain = new ChatController();
 
