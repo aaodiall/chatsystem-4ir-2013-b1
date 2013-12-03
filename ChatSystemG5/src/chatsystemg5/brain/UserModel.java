@@ -6,7 +6,6 @@ import java.util.Iterator;
 
 /**
  *
- * @author belliot
  */
 public class UserModel extends ChatModel {
     

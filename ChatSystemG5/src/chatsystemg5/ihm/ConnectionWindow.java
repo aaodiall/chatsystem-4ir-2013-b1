@@ -9,8 +9,9 @@ import javax.swing.JLabel;
 import javax.swing.JTextField;
 
 /**
- *
- * @author belliot
+ * Represents the ConnectionWindow frame
+ * Implements ActionListener to launch actions when a user clicks on the button
+ * 
  */
 public class ConnectionWindow extends JFrame implements ActionListener {
     
@@ -23,8 +24,10 @@ public class ConnectionWindow extends JFrame implements ActionListener {
     // End of variables declaration  
     
     /**
-     *
-     * @param chat_control
+     * Links the ConnectionWindow to the unique Controller<p>
+     * Create and display components of the ConnectionWindow
+     * 
+     * @param chat_control references the unique ChatController
      */
     public ConnectionWindow (ChatController chat_control) {
 

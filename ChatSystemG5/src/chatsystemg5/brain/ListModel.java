@@ -4,10 +4,8 @@ import chatsystemg5.ihm.ListWindow;
 import java.util.HashMap;
 import java.util.Observer;
 
-
 /**
  *
- * @author belliot
  */
 public class ListModel extends ChatModel {
     
