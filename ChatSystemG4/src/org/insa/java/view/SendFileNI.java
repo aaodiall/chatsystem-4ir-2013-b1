@@ -2,6 +2,7 @@ package org.insa.java.view;
 
 import java.io.IOException;
 import java.io.OutputStream;
+import java.net.ServerSocket;
 import java.net.Socket;
 
 import org.insa.java.controller.FileController;
@@ -13,6 +14,7 @@ import chatSystemCommon.FilePart;
 public final class SendFileNI extends JavaChatNI {
 	private static SendFileNI instance = null;
 
+	private ServerSocket serverSocket;
 	private Socket socket;
 	private User remoteUser;
 
@@ -23,7 +25,12 @@ public final class SendFileNI extends JavaChatNI {
 	
 	private SendFileNI(FileController fileController, int clientPort) {
 		this.fileController = fileController;
-		this.TCP_CLIENT_PORT = clientPort;
+		try {
+			if(clientPort > 1024)
+				serverSocket = new ServerSocket(clientPort);
+		} catch (IOException e) {
+			
+		}
 	}
 
 	public final static SendFileNI getInstance(FileController fileController, int portClient) {
@@ -44,7 +51,7 @@ public final class SendFileNI extends JavaChatNI {
 	public void run(){	
 		while(this.fileTransfertState == TransferState.PROCESSING) {
 			try {
-				socket = new Socket(remoteUser.getAddress(), TCP_CLIENT_PORT);
+				socket = serverSocket.accept(); //new Socket(remoteUser.getAddress(), TCP_CLIENT_PORT);
 				outputStream = socket.getOutputStream();
 
 				FilePart fp = fileController.getFilePartToSend();

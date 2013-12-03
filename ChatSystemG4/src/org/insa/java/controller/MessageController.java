@@ -38,11 +38,10 @@ public class MessageController {
 
 	public void receivedMessage(User user, Message msg) {
 		if(msg instanceof Hello) {
-			if(!chatModel.contains(user)) {
+			if(!chatModel.contains(user)) 
 				chatModel.addUser(user);
-				if(!((Hello) msg).isAck())
-					this.sendWelcomeMessage(MessageFactory.getHelloMessage(chatModel.getLocalUsername(), true), user.getAddress());
-			}
+			if(!((Hello) msg).isAck())
+				this.sendWelcomeMessage(MessageFactory.getHelloMessage(chatModel.getLocalUsername(), true), user.getAddress());
 		}
 		else if(msg instanceof Goodbye) {
 			chatModel.removeUser(new User(user.getAddress(),msg.getUsername()));

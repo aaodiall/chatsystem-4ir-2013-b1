@@ -3,8 +3,10 @@ package org.insa.java.view;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.net.InetAddress;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.net.UnknownHostException;
 
 import org.insa.java.controller.FileController;
 import org.insa.java.model.User;
@@ -16,7 +18,7 @@ public final class ReceivedFileNI extends JavaChatNI {
 
 	private FileController fileController;
 
-	private ServerSocket serverSocket;
+	//private ServerSocket serverSocket;
 	private Socket socket;
 	private InputStream inputStream;
 
@@ -25,10 +27,11 @@ public final class ReceivedFileNI extends JavaChatNI {
 	private ReceivedFileNI(FileController fileController, int portClient) {
 		this.fileController = fileController;
 		try {
-			if(portClient > 1024)
-				serverSocket = new ServerSocket(portClient);
+			socket = new Socket(InetAddress.getLocalHost(), portClient);
+		} catch (UnknownHostException e) {
+			e.printStackTrace();
 		} catch (IOException e) {
-			
+			e.printStackTrace();
 		}
 	}
 
@@ -46,24 +49,50 @@ public final class ReceivedFileNI extends JavaChatNI {
 	public void run() { 
 		while(running) {
 			try {
-				socket = serverSocket.accept();	
+				//socket = serverSocket.accept();		
 				inputStream = socket.getInputStream();
 				Message m = Message.fromArray(this.toByteArray(inputStream));
 				fileController.receivedMessage(new User(socket.getInetAddress(),m.getUsername()),m);
 				inputStream.close();
 			} catch (IOException e) {
 				e.printStackTrace();
-				//fileController.fileReceptionCanceled();
+				fileController.fileReceptionCanceled();
 			}
 			finally {
-				//Thread.currentThread().interrupt( );
 				try {
 					inputStream.close();
 				} catch (IOException e1) {
 					e1.printStackTrace();
 				}
+				
 			}
 		}
+		/*
+		try {
+			//socket = serverSocket.accept();		
+			inputStream = socket.getInputStream();
+			while(running) {
+				//int i;
+				//if((i = this.toByteArray(inputStream).length) > 0) {
+					Message m = Message.fromArray(this.toByteArray(inputStream));
+					fileController.receivedMessage(new User(socket.getInetAddress(),m.getUsername()),m);
+				//}
+					
+				//	System.out.println(i);
+				
+			}
+		}
+		catch (IOException e) {
+			e.printStackTrace();
+		}
+		finally {
+			try {
+				inputStream.close();
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+			}
+		}
+		*/
 	}
 	
 	private byte[] toByteArray(InputStream is) throws IOException{
@@ -77,10 +106,6 @@ public final class ReceivedFileNI extends JavaChatNI {
 		return baos.toByteArray();
 	}
 
-	public ServerSocket getServerSocket() {
-		return serverSocket;
-	}
-	
 	public void closeSocket() throws IOException {
 		if(socket != null) {
 			socket.close();
