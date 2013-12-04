@@ -146,9 +146,9 @@ public class SwingChatGUI extends JavaChatGUI implements ControllerToGui, Action
 
 	@Override
 	public String getFilePath() {
-		JFileChooser fileChooser = new JFileChooser(); 
+		JFileChooser fileChooser = new JFileChooser();
+		fileChooser.setDialogType(JFileChooser.SAVE_DIALOG);
 		fileChooser.setDialogTitle("Where do you want to save the file ?");
-		fileChooser.setApproveButtonText("Save");
 		fileChooser.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
 		fileChooser.setAcceptAllFileFilterUsed(false);
 		fileChooser.showOpenDialog(mainWindow);

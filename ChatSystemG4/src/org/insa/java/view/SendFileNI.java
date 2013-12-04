@@ -1,6 +1,8 @@
 package org.insa.java.view;
 
+import java.io.BufferedOutputStream;
 import java.io.IOException;
+import java.io.ObjectOutputStream;
 import java.io.OutputStream;
 import java.net.ServerSocket;
 import java.net.Socket;
@@ -10,18 +12,22 @@ import org.insa.java.controller.TransferState;
 import org.insa.java.model.User;
 
 import chatSystemCommon.FilePart;
+import chatSystemCommon.Message;
 
 public final class SendFileNI extends JavaChatNI {
 	private static SendFileNI instance = null;
 
 	private ServerSocket serverSocket;
 	private Socket socket;
-	private User remoteUser;
 
 	private TransferState fileTransfertState = TransferState.AVAILABLE;
 	private FileController fileController;
 
 	private OutputStream outputStream = null;
+
+	private BufferedOutputStream writerBuffer;
+
+	private ObjectOutputStream writer;
 	
 	private SendFileNI(FileController fileController) {
 		this.fileController = fileController;
@@ -42,17 +48,40 @@ public final class SendFileNI extends JavaChatNI {
 		return SendFileNI.instance;
 	}
 
-	synchronized public void sendFile(User user){
-		this.remoteUser = user;
+	synchronized public void sendFile() throws IOException{
+		socket = serverSocket.accept();
+		outputStream = socket.getOutputStream();
 	}
 
 	@Override
-	public void run(){	
+	public void run(){
+		 //waiting for a connection
+        try {
+			this.socket = this.serverSocket.accept();
+			 //we are connected, preparing for a transfert
+	        this.writerBuffer = new BufferedOutputStream(socket.getOutputStream());
+	        this.writer = new ObjectOutputStream(writerBuffer);
+
+	        Message msg;
+	        while(this.fileTransfertState == TransferState.PROCESSING) {
+	            //allows sending big files (if we don't do that we keep the file in mem)
+	            this.writer.reset();
+	            //recover the file's part to send and write it in the socket
+	            msg =  fileController.getFilePartToSend();
+
+	            this.writer.writeObject(msg);
+	            this.writerBuffer.flush();
+	        }
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+
+       
+		
+		/*
 		while(this.fileTransfertState == TransferState.PROCESSING) {
 			try {
-				socket = serverSocket.accept(); //new Socket(remoteUser.getAddress(), TCP_CLIENT_PORT);
-				outputStream = socket.getOutputStream();
-
 				FilePart fp = fileController.getFilePartToSend();
 
 				if(fp != null) {
@@ -65,14 +94,13 @@ public final class SendFileNI extends JavaChatNI {
 			} catch (IOException e) {
 				fileController.fileEmissionCanceled();
 			}
-			finally {
-				try {
-					outputStream.close();
-				} catch (IOException e1) {
-					e1.printStackTrace();
-				} 
-			}
 		}
+		try {
+			outputStream.close();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		*/
 	}
 	
 	public void closeSocket() throws IOException {
