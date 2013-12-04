@@ -6,7 +6,8 @@ package chatSystemIHMs;
 import chatSystemController.Controller;
 
 /**
- * @author alpha
+ * @author Alpha DIALLO &  Joanna VIGNE
+ * version 1.0
  *
  */
 public abstract class View {

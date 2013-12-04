@@ -51,7 +51,7 @@ public class Controller extends Thread{
 	public Controller(ModelListUsers modelListUsers,
 			ModelStates modelStates,
 			ModelText modelText,
-			ModelUsername modelUsername, ModelGroupRecipient modelGroupRecipient,ModelFile modelFile) {
+			ModelUsername modelUsername, ModelGroupRecipient modelGroupRecipient) {
 		this.modelListUsers = modelListUsers;
 		this.modelStates = modelStates;
 		this.modelText = modelText;
@@ -60,11 +60,12 @@ public class Controller extends Thread{
 		this.numFileMax = 5;
 		this.maxRead = 1024;
 		this.maxWrite = 1024;
-		this.modelFile=modelFile;
+		//this.modelFile=modelFile;
 		this.filesToSend = new ArrayList<ModelFileToSend> (this.numFileMax);
 		this.filesToReceive = new HashMap<Integer,ModelFileToReceive> (this.numFileMax);
 		this.numReceiveDemands = 0;
 		this.numSendDemands = 0;
+		
 		this.start();
 	}
 
@@ -134,9 +135,11 @@ public class Controller extends Thread{
 	/**
 	 * Demande à la GUI de lancer le processus de récupération de choix de fichier à envoyer
 	 */
-	public void performJoinFile(ModelFileToSend f){		
+	public void performJoinFile(ModelFileToSend f){	
+		
 		f.readFile();
 		this.chatNI.sendMsgFile(f.getAllParts(), f.getIdDemand());
+		this.filesToSend.get(f.getIdDemand()).resetProgress();
 		this.filesToSend.remove(f.getIdDemand());
 		this.numSendDemands--;
 	}
@@ -196,6 +199,7 @@ public class Controller extends Thread{
 			ModelFileToReceive f = new ModelFileToReceive(remote,file,size,idDemand,this.maxWrite);
 			f.setStateReceivedDemand(true);
 			this.filesToReceive.put(idDemand, f);
+			
 			// signale normalement a la gui qu'on a recu une demande
 			this.chatgui.proposeFile(remote, file, size);
 			System.out.println("file demand received from " + remote);
@@ -218,6 +222,11 @@ public class Controller extends Thread{
 						trouve = true;
 					}
 				}
+				if (f==this.filesToSend.get(idDemand)){
+					System.out.println("in text addObserver");
+					this.filesToSend.get(idDemand).addObserver(chatgui);	
+				}
+				
 				this.performJoinFile(f);
 			}else{
 				System.out.println("file refused");
@@ -268,12 +277,13 @@ public class Controller extends Thread{
 		if (isLast == false){
 			this.filesToReceive.get(idDemand).writeFilePart(fileBytes, isLast);
 		}else{
-			System.out.println("Dans part receive "+this.filesToReceive.get(idDemand).getRemote());
+			
 			String remote=new String(this.filesToReceive.get(idDemand).getRemote());
+			this.chatgui.updateModelFileReceive(remote);
 			this.filesToReceive.remove(idDemand);
 			this.numReceiveDemands--;
+		
 			
-			this.modelFile.setFileReceived(true,remote);
 		}
 	}
 	

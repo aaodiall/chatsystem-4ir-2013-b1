@@ -171,7 +171,7 @@ public class ChatNI extends View implements Runnable, Observer{
 		InetAddress ipRemoteAddr;
 		ipRemoteAddr = this.bufferPDUReceived.peek().getAddress();
 		DatagramPacket pdureceived;
-		if (!this.userIP.equals(ipRemoteAddr)){
+		if (this.userIP.equals(ipRemoteAddr)){
 			try {
 				pdureceived = this.bufferPDUReceived.poll();
 				receivedMsg = Message.fromArray(pdureceived.getData());

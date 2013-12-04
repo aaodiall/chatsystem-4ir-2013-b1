@@ -4,7 +4,9 @@
 package chatSystemIHMs;
 
 /**
- * @author alpha
+ * represents all the actions initiate by the user 
+ * @author Alpha DIALLO & Joanna VIGNE
+ * version 1.0
  *
  */
 public interface FromUser{
