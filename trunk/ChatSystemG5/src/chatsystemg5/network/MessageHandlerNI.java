@@ -4,7 +4,7 @@ import chatSystemCommon.*;
 import java.net.InetAddress;
 
 /**
- * The MessageHandler is the intermediate between the ChatNI and the emission and reception of messages only
+ * The MessageHandlerNI is the intermediate between the ChatNI and the emission and reception of messages only
  * with the UDP protocol
  * It knows the Message type to handle
  * It builds messages for the emission and disassemble messages for the reception

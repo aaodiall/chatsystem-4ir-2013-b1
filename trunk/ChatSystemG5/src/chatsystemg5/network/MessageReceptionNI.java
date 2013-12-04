@@ -9,7 +9,8 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 /**
- *
+ * The MessageReceptionNI is the intermediate between the MessageHandlerNI and the remote system for receiving
+ * The MessageReceptionNI is a thread
  * @author belliot
  */
 public class MessageReceptionNI extends Thread implements FromRemoteApp {
@@ -24,9 +25,11 @@ public class MessageReceptionNI extends Thread implements FromRemoteApp {
     private String text;
     
     /**
-     *
-     * @param msg_handler
-     * @param UDP_port
+     * The MessageEmissionNI is instancied with a unique UDP port and the MessageHandlerNI object
+     * It instantiates the MessageHandlerNI and the UDP port
+     * It creates a datagram socket, listening on the network and waiting for datagram packets
+     * @param msg_handler : the unique MessageHandlerNI used to transfer messages
+     * @param UDP_port : the UDP port to listen on
      */
     public MessageReceptionNI (MessageHandlerNI msg_handler, int UDP_port) {
         try {
@@ -83,7 +86,7 @@ public class MessageReceptionNI extends Thread implements FromRemoteApp {
     }
 
     /**
-     *
+     * This function closes the reception socket
      */
     public void close_UDP_sock() {
         this.UDP_sock.close();
