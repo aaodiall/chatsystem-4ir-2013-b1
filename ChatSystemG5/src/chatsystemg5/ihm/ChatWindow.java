@@ -1,7 +1,3 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
 package chatsystemg5.ihm;
 
 import chatsystemg5.brain.ChatController;
@@ -10,7 +6,6 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
-import java.util.HashMap;
 import java.util.Observable;
 import java.util.Observer;
 import javax.swing.JFrame;
@@ -24,14 +19,15 @@ import javax.swing.text.DefaultCaret;
  * Implements ActionListener to launch actions when a user clicks on a button
  * Implements KeyListener to send message when the enter key is pressed
  * 
+ * chat_control : references the unique ChatController<p>
+ * remote_username : references the remote user id composed by "username@IP"<p>
+
  */
 public class ChatWindow extends JFrame implements Observer, ActionListener, KeyListener {
     
     private ChatController chat_control;
     private String remote_username;
-
-    
-    // Variables declaration - do not modify                     
+                    
     private javax.swing.JButton file_button;
     private javax.swing.JButton send_button;
     private javax.swing.JTextArea received_text;
@@ -42,7 +38,6 @@ public class ChatWindow extends JFrame implements Observer, ActionListener, KeyL
     private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JSeparator jSeparator1;
     private javax.swing.JSeparator jSeparator2;
-    // End of variables declaration  
     
     /**
      * Links the ChatGUI to the unique controller<p>
@@ -51,11 +46,11 @@ public class ChatWindow extends JFrame implements Observer, ActionListener, KeyL
      * Create and display components of the ChatWindow
      * 
      * @param chat_control references the unique ChatController
-     * @param remote_username references the remote username to which is linked the ChatWindow
+     * @param id references the remote username and IP to which is linked the ChatWindow
      */
-    public ChatWindow (ChatController chat_control, String remote_username) {
+    public ChatWindow (ChatController chat_control, String id) {
         this.chat_control = chat_control;
-        this.remote_username = remote_username;
+        this.remote_username = id;
         this.chat_control.get_convDB().addObserver(this);
         
         initComponents();

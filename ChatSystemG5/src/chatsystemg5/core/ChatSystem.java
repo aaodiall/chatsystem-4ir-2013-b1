@@ -2,10 +2,6 @@
 
 import chatsystemg5.brain.ChatController;
 
-/**
- *
- * @author belliot
- */
 public class ChatSystem {
 	
 	/**

@@ -6,15 +6,20 @@ import javax.swing.JFrame;
 
 
 /**
- * Control each frame displayed
+ * Control each frame displayed<p>
  * 
+ * Handles operations to the ChatController<p>
+ * Handles operations from the ChatModel<p>
  * 
- * 
- * 
+ * chat_control : references the unique ChatController<p>
+ * connection_window : references the unique ConnectionWindow<p>
+ * list_window : references the unique ListWindow<p>
+ * chat_windows : references all the active ChatWindows (not closed by disconnection)<p>
  */
 public class ChatGUI extends JFrame {
 
     private ChatController chat_control;
+    
     private ConnectionWindow connection_window;
     private ListWindow list_window;
     private HashMap<String, ChatWindow> chat_windows;
@@ -39,13 +44,13 @@ public class ChatGUI extends JFrame {
      * If a ChatWindow linked to the remote user doesn't exist yet then it creates a new ChatWindow linked to this user<p>
      * Else nothing happens
      * 
-     * @param remote_username references the remote username used to link the ChatWindow
+     * @param id references the remote username and IP used to link the ChatWindow
      */
-    public void create_chat_window(String remote_username){
-        if(!this.chat_windows.containsKey(remote_username)){
-            ChatWindow chat_window = new ChatWindow(this.chat_control, remote_username);
-            this.chat_windows.put(remote_username, chat_window);
-            this.chat_windows.get(remote_username).setVisible(true);
+    public void create_chat_window(String id){
+        if(!this.chat_windows.containsKey(id)){
+            ChatWindow chat_window = new ChatWindow(this.chat_control, id);
+            this.chat_windows.put(id, chat_window);
+            this.chat_windows.get(id).setVisible(true);
         } 
     }
 
@@ -54,26 +59,25 @@ public class ChatGUI extends JFrame {
      * If the ChatWindow linked to the specific user exists then it removes it<p>
      * Else nothing happens
      * 
-     * @param remote_username references the remote username used to link the ChatWindow
+     * @param id references the remote username and IP used to link the ChatWindow
      */
-    public void delete_chat_window(String remote_username){
-        if(this.chat_windows.containsKey(remote_username)){
-            this.chat_windows.remove(remote_username);
+    public void delete_chat_window(String id){
+        if(this.chat_windows.containsKey(id)){
+            this.chat_windows.remove(id);
         }
     }
-    
         
     /**
      * Allows to get a ChatWindow linked to a specific user from the ChatWindows list<p>
      * If the ChatWindow linked to the specific user exists then it returns it<p>
      * Else it returns null
      * 
-     * @param remote_username references the remote username used to link the ChatWindow to it
+     * @param id references the remote username and IP used to link the ChatWindow to it
      * @return a specific ChatWindow
      */
-    public ChatWindow get_chat_window(String remote_username){
-        if(this.chat_windows.containsKey(remote_username)){
-            return this.chat_windows.get(remote_username);
+    public ChatWindow get_chat_window(String id){
+        if(this.chat_windows.containsKey(id)){
+            return this.chat_windows.get(id);
         }
         else {
             return null;

@@ -1,70 +1,58 @@
 package chatsystemg5.brain;
 
-import java.util.ArrayList;
-import java.util.Observer;
-import java.util.Iterator;
-
 /**
- *
+ * Represents the UserModel<p>
+ * Handles the local user username and status<p>
+ * 
+ * username : references the local user username<p>
+ * status : references the local user state : connected or disconnected
  */
 public class UserModel extends ChatModel {
-    
-    private ArrayList<Observer> observers;
 
     private String username;
     private Boolean status;
     
     /**
-     *
-     * @param username
+     * Initilizes the UserModel next to the local user connection<p>
+     * Gets the username input in the ConnectionWindow<p>
+     * Set the status to connected by default at the initilization
+     * 
+     * @param username the username input of the ConnectionWindow
      */
     public UserModel (String username) {
         this.username = username;
-        status = true;
-        this.observers = new ArrayList<Observer>();
+        this.status = true;
     }
     
     /**
-     *
-     * @return
+     * Allows to get the local user username
+     * @return the local user username
      */
     public String get_username(){
         return this.username;
     }
     
     /**
-     *
-     * @param username
+     * Allows to set the local user username
+     * @param username the local user username
      */
     public void set_username(String username){
         this.username = username;
     }
     
     /**
-     *
-     * @return
+     * Allows to get the local user state
+     * @return the local user state
      */
     public boolean get_state() {
         return status;
     }
     
     /**
-     *
-     * @param connected
+     * Allow to set the local user state
+     * @param connected the local user state
      */
     public void set_state(boolean connected) {
         this.status = connected;
-    }
-    
-    @Override
-    public void notifyObservers(){
-        for(Iterator<Observer> it = this.observers.iterator(); it.hasNext();){
-            it.next().update(this, this.username);
-        }
-    }
-    
-    @Override
-    public void addObserver(Observer o){ 
-        this.observers.add((Observer)o);
     }
 }

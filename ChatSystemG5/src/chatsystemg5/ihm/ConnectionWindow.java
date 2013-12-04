@@ -12,16 +12,15 @@ import javax.swing.JTextField;
  * Represents the ConnectionWindow frame
  * Implements ActionListener to launch actions when a user clicks on the button
  * 
+ * chat_control : references the unique ChatController<p>
  */
 public class ConnectionWindow extends JFrame implements ActionListener {
     
     private ChatController chat_control;
-    
-    // Variables declaration - do not modify                     
+                        
     private JButton connect_button;
     private JLabel username_label;
     private JTextField username_field;
-    // End of variables declaration  
     
     /**
      * Links the ConnectionWindow to the unique Controller<p>
@@ -37,7 +36,22 @@ public class ConnectionWindow extends JFrame implements ActionListener {
         this.setVisible(true);
         
     }
-
+    
+    /**
+     * Makes actions when the connect button is pressed<p>
+     * Checks how is the connect_button<p>
+     * If its written "Connection" then :<p>
+     * - gets the username field<p>
+     * - initializes the continuation of the controller via the ChatController<p>
+     * - set to disabled the username field<p>
+     * - display the disconnection button<p>
+     * Else :<p>
+     * - performs disconnection via the CHatController<p>
+     * - set to enabled the username field<p>
+     * - display the connection button
+     * 
+     * @param e references the action initializer
+     */
     @Override
     public void actionPerformed(ActionEvent e) {
         if ("Connection".equals(this.connect_button.getText())) {
@@ -45,10 +59,6 @@ public class ConnectionWindow extends JFrame implements ActionListener {
             // On initialise et on met en place la connexion
 
             this.chat_control.init_controller(username);
-            this.chat_control.get_chatGUI().init_list_window();
-            this.chat_control.get_listDB().addObserver(chat_control.get_chatGUI().get_list_window());
-
-            this.chat_control.perform_connection();
             
             this.username_field.setEnabled(false);
             this.connect_button.setText("Disconnection");          
@@ -64,6 +74,9 @@ public class ConnectionWindow extends JFrame implements ActionListener {
         // TO DO : Vider la zone de texte
     }
     
+    /**
+     * Creates components of the ConnectionWindow
+     */
     private void initComponents() {
 
         username_label = new JLabel("ChatSystem BLT-DFT");
