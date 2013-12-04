@@ -30,18 +30,14 @@ import java.awt.Color;
 import java.awt.Canvas;
 
 /**
- * @author alpha
- *
+ * represents the conversation window
+ *@author Alpha DIALLO & Joanna VIGNE
+ *@version 1.0
  */
 public class InterfaceCommunicate extends JFrame implements ActionListener{
 	
-	/**
-	 * 
-	 */
+	
 	private static final long serialVersionUID = 1L;
-//	private Controller controller;
-	//private Vector<String> users;
-	//private JButton btnJoinFile;
 	private JTextArea tAreaHistoryCom;
 	private JButton btnSendFile;
 	private JButton btnSendMessage;
@@ -51,13 +47,14 @@ public class InterfaceCommunicate extends JFrame implements ActionListener{
 	private JProgressBar progressBarFile;
 	private JButton btnFileReceived;
 	private ChatGUI chatGUI;
-	/**
-	 * Launch the application.
-	 */
+	
 	
 	/**
 	 * Create the application.
+	 * @param usernameRemote
+	 * @param chatGUI
 	 */
+	
 	public InterfaceCommunicate(String usernameRemote,ChatGUI chatGUI){
 		this.chatGUI=chatGUI;		
 		this.setTitle(usernameRemote);		
@@ -111,8 +108,10 @@ public class InterfaceCommunicate extends JFrame implements ActionListener{
 		progressBarFile = new JProgressBar();
 		progressBarFile.setEnabled(true);
 		progressBarFile.setVisible(false);
+		progressBarFile.setMaximum(100);
+		progressBarFile.setMinimum(0);
 		progressBarFile.setForeground(Color.GREEN);
-		progressBarFile.setIndeterminate(true);
+		progressBarFile.setIndeterminate(false);
 		progressBarFile.setBounds(449, 12, 148, 14);
 		getContentPane().add(progressBarFile);
 		
@@ -129,24 +128,34 @@ public class InterfaceCommunicate extends JFrame implements ActionListener{
 	
 
 
-
+/**
+ * returns the FileReceived button
+ * @return btnFileReceived
+ */
 	
 	public JButton getBtnFileReceived() {
 		return btnFileReceived;
 	}
 
-
+/**
+ * returns the progressBarFile 
+ * @return progressBarFile
+ */
 	public JProgressBar getProgressBarFile() {
 		return progressBarFile;
 	}
 
-
+/**
+ * sets the progressBarFile
+ * @param progressBarFile
+ */
 	public void setProgressBarFile(JProgressBar progressBarFile) {
 		this.progressBarFile = progressBarFile;
 	}
 
 
-	/* (non-Javadoc)
+	/* captures the events from the user in a conversation window
+	 * (non-Javadoc)
 	 * @see java.awt.event.ActionListener#actionPerformed(java.awt.event.ActionEvent)
 	 */
 	@Override
@@ -165,21 +174,35 @@ public class InterfaceCommunicate extends JFrame implements ActionListener{
 	}
 
 	
-
+/**
+ * returns JTextArea which is the field where messages is displayed
+ * @return tAreaHistoryCom
+ */
 	public JTextArea gettAreaHistoryCom() {
 		return tAreaHistoryCom;
 	}
 
-
+/**
+ * sets the text of JTextArea which is the field where messages is displayed
+ * @param text
+ * 			the message write by the user
+ */
 	public void settAreaHistoryCom(String text) {
 		this.tAreaHistoryCom.append(text);;
 	}
 
-
+/**
+ * returns the text of JTextArea which is the field where the user write his messages
+ * @return tAreaMessageText
+ * 
+ */
 	public String gettAreaMessageText() {
 		return tAreaMessageText.getText();
 	}
-
+/**
+ * sets the text of JTextArea which is the field where the user write his messages
+ * @param tAreaMessageText
+ */
 	public void settAreaMessageText(String tAreaMessageText) {
 		this.tAreaMessageText.setText(tAreaMessageText);
 	}

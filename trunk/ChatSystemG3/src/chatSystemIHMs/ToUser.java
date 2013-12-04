@@ -4,7 +4,9 @@
 package chatSystemIHMs;
 
 /**
- * @author alpha
+ * represents 
+ * @author Alpha DIALLO & Joanna VIGNE
+ * version 1.0
  *
  */
 public interface ToUser {

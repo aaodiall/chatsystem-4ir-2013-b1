@@ -23,9 +23,9 @@ import javax.swing.ScrollPaneConstants;
 import javax.swing.JLabel;
 import javax.swing.JButton;
 
-/**
- * @author alpha
- *
+/**represents the connected users window
+ * @author Alpha DIALLO & Joanna VIGNE
+ *Version 1.0
  */
 public class InterfaceListUsers extends JFrame implements WindowListener,ActionListener, MouseListener{
 	
@@ -42,6 +42,11 @@ public class InterfaceListUsers extends JFrame implements WindowListener,ActionL
 	private JButton btnDeconnexion;
 	private static ChatGUI chatgui;
 	
+	/**
+	 * creates the application
+	 * @param username
+	 * @param chatgui
+	 */
 	public InterfaceListUsers(String username, ChatGUI chatgui) {
 	
 		setResizable(false);
@@ -52,7 +57,11 @@ public class InterfaceListUsers extends JFrame implements WindowListener,ActionL
 		this.setVisible(false);
 	}
 	
-	
+	/**
+	 * Initialize the contents of the frame.
+	 * @param username
+	 * 			local user username
+	 */			
 	public void initWindows(String username){
 		this.setBounds(100, 100, 331, 509);
 		this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -84,6 +93,10 @@ public class InterfaceListUsers extends JFrame implements WindowListener,ActionL
 	
 		
 	}
+	/**
+	 * sets the list of connected users
+	 * @param objects
+	 */
 	public void setUsers(Object[] objects) {
 		this.users.clear();;
 		for(int i=0;i<objects.length;i++){
@@ -93,7 +106,8 @@ public class InterfaceListUsers extends JFrame implements WindowListener,ActionL
 		}
 	}
 	
-	/* (non-Javadoc)
+	/* captures the event when the user pushes the disconnect button
+	 * (non-Javadoc)
 	 * @see java.awt.event.ActionListener#actionPerformed(java.awt.event.ActionEvent)
 	 */
 	@Override
@@ -103,15 +117,15 @@ public class InterfaceListUsers extends JFrame implements WindowListener,ActionL
 			this.chatgui.disconnect();
 		}
 	}
-
+/**
+ * returns connected users list 
+ * @return users
+ */
 	public DefaultListModel getUsers() {
 		return users;
 	}
 
 
-	public void setUsers(DefaultListModel users) {
-		this.users = users;
-	}
 
 
 	/* (non-Javadoc)
@@ -197,7 +211,8 @@ public class InterfaceListUsers extends JFrame implements WindowListener,ActionL
 	}
 
 
-	/* (non-Javadoc)
+	/* captures the event when the users clicks on a user of connected users list
+	 * (non-Javadoc)
 	 * @see java.awt.event.MouseListener#mouseClicked(java.awt.event.MouseEvent)
 	 */
 	@Override

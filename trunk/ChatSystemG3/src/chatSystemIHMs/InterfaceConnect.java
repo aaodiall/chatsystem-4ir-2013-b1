@@ -22,7 +22,9 @@ import java.awt.event.WindowListener;
 import java.net.UnknownHostException;
 
 /**
- * @author alpha
+ * Represents a connection window
+ * @author Alpha DIALLO & Joanna VIGNE
+ * Version 1.0
  *
  */
 public class InterfaceConnect extends JFrame implements ActionListener,WindowListener{
@@ -38,6 +40,7 @@ public class InterfaceConnect extends JFrame implements ActionListener,WindowLis
 
 	/**
 	 * Create the application.
+	 * @param chatGUI
 	 */
 	public InterfaceConnect(ChatGUI chatGUI) {
 		this.chatGUI=chatGUI;
@@ -102,12 +105,20 @@ public class InterfaceConnect extends JFrame implements ActionListener,WindowLis
 	}
 
 	
-
+/**
+ * returns the local user username
+ * @return tfdUsername
+ * 
+ */
 
 	public String getTfdUsername() {
 		return tfdUsername.getText();
 	}
-
+/**
+ * sets the local user username
+ * @param username
+ * 			local user username
+ */
 	public void setTfdUsername(String username) {
 		this.tfdUsername.setText(username);
 	}
@@ -175,7 +186,8 @@ public class InterfaceConnect extends JFrame implements ActionListener,WindowLis
 		
 	}
 
-	/* (non-Javadoc)
+	/* captures the event linked to the connection button
+	 * (non-Javadoc)
 	 * @see java.awt.event.ActionListener#actionPerformed(java.awt.event.ActionEvent)
 	 */
 	@Override

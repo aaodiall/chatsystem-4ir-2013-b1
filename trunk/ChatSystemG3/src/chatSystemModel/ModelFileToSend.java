@@ -19,12 +19,15 @@ public class ModelFileToSend extends ModelFile{
 	private FileInputStream reader;
 	private File fileToSend;
 	private ArrayBlockingQueue<byte[]> fileParts;
+	private Integer progression;
 	
 	public ModelFileToSend(String remote, String path, int idDemand, int maxRead){
-		//super(remote, idDemand, maxRead);
-		super.setIdDemand(idDemand);
-		super.setRemote(remote);
-		super.setMax(maxRead);
+		super(remote, idDemand, maxRead);
+		//super.setIdDemand(idDemand);
+		//super.setRemote(remote);
+		//super.setMax(maxRead);
+		//super.createProgression(0);
+		this.progression=new Integer(0);
 		this.path = path;
 		this.fileToSend = new File(this.path);
 		try {
@@ -38,6 +41,7 @@ public class ModelFileToSend extends ModelFile{
 	}
 	
 	public void readFile(){
+		int level=0;
 		super.setNumberParts();
 		System.out.println("number parts = "+ super.getNumberParts());
 		this.fileParts = new ArrayBlockingQueue<byte[]> (super.getNumberParts());
@@ -50,6 +54,8 @@ public class ModelFileToSend extends ModelFile{
 				t = new byte[super.getSize().intValue()];
 				reader.read(t);
 				this.fileParts.add(t);
+				level++;
+				this.setProgress(level);;
 			}else{
 				while (nbBytesRead >= 0){
 					t = new byte[super.getMax()];
@@ -61,8 +67,12 @@ public class ModelFileToSend extends ModelFile{
 							swap[i] = t[i];
 						}
 						this.fileParts.add(swap);
+						level++;
+						this.setProgress(level);
 					}else if (nbBytesRead == super.getMax()){
-						this.fileParts.add(t); 
+						fileParts.add(t);
+						level++;
+						this.setProgress(level);
 					}
 				}
 
@@ -71,6 +81,22 @@ public class ModelFileToSend extends ModelFile{
 			e.printStackTrace();
 		}	
 	}
+	public void setProgress(int level){
+		this.progression=(Integer)(100*level/(this.numberOfParts));
+		System.out.println("dans setProgress de modelFile "+ this.getRemote()+" progression"+this.progression);
+		setChanged();
+		notifyObservers();
+		System.out.println("dans setProgress de modelFile apres notify"+ this.getRemote());
+	}
+	public Integer getProgression() {
+		return progression;
+	}
+	
+	public void resetProgress(){
+		this.progression=0;
+	}
+	
+	
 	
 	public int getNumParts(){
 		return this.fileParts.size();
