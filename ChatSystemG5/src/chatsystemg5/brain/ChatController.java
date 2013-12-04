@@ -214,16 +214,10 @@ ate to connected
         String message = "[" + dateFormat.format(date) + "]\n" + txt + "\n\n";
         String id = remote_user + "@" + IP_address;
         
-        if (convDB.get_conversation().containsKey(id)) {
-            // just add the message at the end of his message list
-            convDB.add_conversation(id, message);
+        if(!chatGUI.get_chat_windows().containsKey(id)){
+            chatGUI.create_chat_window(id);
         }
-        else {
-            if(!chatGUI.get_chat_windows().containsKey(id)){
-                chatGUI.create_chat_window(id);
-            }
-            convDB.add_conversation(id, message);
-        }
+        convDB.add_conversation(id, message);
     }
         
     /**
