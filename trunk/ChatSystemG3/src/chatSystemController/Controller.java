@@ -301,11 +301,13 @@ public class Controller extends Thread{
 					part=f.readNextPart();
 					this.chatNI.sendPart(part, f.getIdDemand(),false);
 					nbPartsSent++;
-					//System.out.println(nbPartsSent);
+					System.out.println(nbPartsSent);
 				}
 				part=f.readNextPart();
 				this.chatNI.sendPart(part, f.getIdDemand(),true);		
 				nbPartsSent++;
+				// toutes les parties sont envoyees
+				f.resetLevel();
 			}
 		}
 	}

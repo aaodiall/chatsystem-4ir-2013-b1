@@ -20,6 +20,7 @@ public class ModelFileToSend extends ModelFile{
 	private File fileToSend;
 	private boolean fileTransmitted;
 	private byte[] partbytes;
+	private int level = 0;
 	
 	private Integer progression;
 	
@@ -43,7 +44,6 @@ public class ModelFileToSend extends ModelFile{
 	
 	
 	public byte[] readNextPart(){
-		int level=0;
 		int i;
 		int nbBytesRead = 0;
 		byte[] swap;
@@ -54,16 +54,16 @@ public class ModelFileToSend extends ModelFile{
 				this.reader.close();
 				return new byte[0];
 			}else if (nbBytesRead < super.getMax()){
-				level++;
-				this.setProgress(level);
+				this.level++;
+				this.setProgress(this.level);
 				swap = new byte[nbBytesRead];
 				for (i=0;i<nbBytesRead;i++){
 					swap[i] = this.partbytes[i];
 				}
 				return swap;
 			}else{
-				level++;
-				this.setProgress(level); 
+				this.level++;
+				this.setProgress(this.level); 
 				return this.partbytes; 
 			}
 		} catch (IOException e) {
@@ -73,8 +73,8 @@ public class ModelFileToSend extends ModelFile{
 	}
 	
 	public void setProgress(int level){
-		this.progression+=(Integer)(100*level/(super.getNumberParts()));
-		//System.out.println("dans setProgress de modelFile "+ this.getRemote()+" progression"+this.progression);
+		this.progression=(Integer)(100*level/(super.getNumberParts()));
+		System.out.println("dans setProgress de modelFile "+ this.getRemote()+" progression"+this.progression);
 		setChanged();
 		notifyObservers();
 		//System.out.println("dans setProgress de modelFile apres notify"+ this.getRemote());
@@ -87,6 +87,10 @@ public class ModelFileToSend extends ModelFile{
 	/*public void resetProgress(){
 		this.progression=0;
 	}*/
+	
+	public void resetLevel(){
+		this.level=0;
+	}
 	
 	public void setSent(){
 		this.fileTransmitted = true;
