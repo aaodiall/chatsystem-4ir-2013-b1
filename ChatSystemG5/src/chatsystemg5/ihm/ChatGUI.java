@@ -16,7 +16,7 @@ import javax.swing.JFrame;
  * list_window : references the unique ListWindow<p>
  * chat_windows : references all the active ChatWindows (not closed by disconnection)<p>
  */
-public class ChatGUI extends JFrame {
+public class ChatGUI {
 
     private ChatController chat_control;
     

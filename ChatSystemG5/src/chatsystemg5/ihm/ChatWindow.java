@@ -85,7 +85,7 @@ public class ChatWindow extends JFrame implements Observer, ActionListener, KeyL
      */
     @Override
     public void update(Observable obs, Object obj){
-        this.received_text.append(((ConversationModel)obs).get_last_text_by_user(this.remote_username));
+        this.received_text.append(((ConversationModel)obs).get_last_text(this.remote_username));
         this.setVisible(true);
     }
     

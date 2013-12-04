@@ -76,7 +76,13 @@ public class ChatController {
    
     /**
      * Performs connection of the local user
-     * Set the local user state to connected
+     * Set the local user st
+
+
+
+
+
+ate to connected
      */
     public void perform_connection () {
         this.userDB.set_state(true);
@@ -182,8 +188,12 @@ public class ChatController {
     public void perform_send (String username_and_IP, String text) {
         String message = text.trim();
         if (!message.isEmpty()){
-            this.get_convDB().add_conversation(username_and_IP, "YOU : " + message);
             chatNI.to_send_text(username_and_IP, message);
+            DateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
+            Date date = new Date();
+            message = "[" + dateFormat.format(date) + "]\n" + message + "\n\n";
+            this.get_convDB().add_conversation(username_and_IP, "YOU : " + message + "\n\n");
+            
         }
     }
     
@@ -206,7 +216,7 @@ public class ChatController {
         
         if (convDB.get_conversation().containsKey(id)) {
             // just add the message at the end of his message list
-            convDB.get_conversation().get(id).add(message);
+            convDB.add_conversation(id, message);
         }
         else {
             if(!chatGUI.get_chat_windows().containsKey(id)){
@@ -214,9 +224,6 @@ public class ChatController {
             }
             convDB.add_conversation(id, message);
         }
-        
-        
-        convDB.add_conversation(remote_user + "@" + IP_address, message);  
     }
         
     /**
