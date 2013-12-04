@@ -8,17 +8,13 @@ import java.net.DatagramPacket;
 import java.net.DatagramSocket;
 import java.net.InetAddress;
 import java.net.SocketException;
-import java.util.ArrayList;
-import java.util.Iterator;
 
 import chatSystemCommon.FileTransfertCancel;
 import chatSystemCommon.FileTransfertConfirmation;
 import chatSystemCommon.FileTransfertDemand;
 import chatSystemCommon.Goodbye;
 import chatSystemCommon.Hello;
-import chatSystemCommon.Message;
 import chatSystemCommon.Text;
-import chatSystemModel.ModelListUsers;
 import java.util.concurrent.ArrayBlockingQueue;
 
 /**
@@ -27,15 +23,17 @@ import java.util.concurrent.ArrayBlockingQueue;
  * Il n'y a que les messages de type File qu'elle ne peut pas envoyer
  */
 
-public class ChatNIMessage extends Thread{
+public class ChatNIDatagramSender extends Thread{
 	
 	private DatagramSocket socketUDP;
 	private ArrayBlockingQueue <DatagramPacket> bufferMsg2Send;
 	private int numMsgMax;
+	private boolean connected;
 	
-	public ChatNIMessage(int numMsgMax, DatagramSocket socketChatNIMessage){
+	public ChatNIDatagramSender(int numMsgMax, DatagramSocket socketChatNIMessage){
 		this.socketUDP = socketChatNIMessage;
 		this.numMsgMax = numMsgMax;
+		this.connected = true;
 		// Enable Broadcast
 		try{
 			this.socketUDP.setBroadcast(true);
@@ -65,6 +63,10 @@ public class ChatNIMessage extends Thread{
 			System.out.println("connection failed");
 		}
 
+	}
+	
+	void setConnected(boolean isConnected){
+		this.connected = isConnected;
 	}
 
 	/**
@@ -170,7 +172,7 @@ public class ChatNIMessage extends Thread{
 	}
 	
 	public void run(){
-		while(true){
+		while(this.connected){
 			// il dort
 			try{
 				Thread.sleep(100);

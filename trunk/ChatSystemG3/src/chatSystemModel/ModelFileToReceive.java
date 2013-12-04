@@ -17,38 +17,36 @@ public class ModelFileToReceive extends ModelFile{
 	private File fileToReceive;
 	private FileOutputStream fos;
 	private Boolean stateReceivedDemand;
-	private Boolean isReceived=false;
-	//private Integer progression;
+	private boolean isReceived;
 	
 	public ModelFileToReceive(String remote, String name,long size, int idDemand,int maxWrite){
 		super(remote,idDemand, maxWrite);
-		//super.setRemote(remote);
-		//System.out.println(getRemote()+"Dans modelFilereceiver constructeur");
-		//super.setSize(maxWrite);
-		//super.setIdDemand(idDemand);
 		super.setName(name);
 		super.setSize(size);
 		super.setNumberParts();
-		
+		this.isReceived = false;
 		System.out.print(System.getenv("HOME") +"/Téléchargements/"+name);
 		System.out.println(" ");
 		this.fileToReceive = new File(System.getenv("HOME") +"/Téléchargements/"+name);
 		try {
 			this.fileToReceive.createNewFile();
+			this.fos = new FileOutputStream(this.fileToReceive,true);
+		} catch (FileNotFoundException e) {
+			e.printStackTrace();
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
 	}
+
 	
 	public void writeFilePart(byte[] part, boolean isReceived){
 		try {
-			this.fos = new FileOutputStream(this.fileToReceive,true);
 			this.fos.write(part);
 			this.fos.flush();
 			
 			if (isReceived== true){
+				this.fos.close();
 				this.setIsReceived();
-				
 			}
 		} catch (FileNotFoundException e) {
 			e.printStackTrace();
@@ -61,14 +59,16 @@ public class ModelFileToReceive extends ModelFile{
 		this.isReceived=true;
 		setChanged();
 		notifyObservers();
-		System.out.println("dans setIsReceve");
+	}
+	
+	public void deleteFile(){
+		this.fileToReceive.delete();
 		try {
 			this.fos.close();
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
 	}
-	
 	
 	public Boolean getStateReceivedDemand() {
 		return stateReceivedDemand;
@@ -79,10 +79,4 @@ public class ModelFileToReceive extends ModelFile{
 		
 	}
 
-	/*public void setProgression(){
-		this.progression = this.progression/super.getNumberParts();
-		setChanged();
-		notifyObservers(progression);
-	}*/
-	
 }

@@ -17,7 +17,7 @@ public class ChatSystem {
 	private static ModelText modelText; 
 	private static ModelFile modelFile;
 	private static ModelGroupRecipient modelGroupRecipient;
-	
+
 	
 	/**
 	 * @param args
@@ -27,7 +27,7 @@ public class ChatSystem {
 		// pour des tests locaux demander a l'utilisateur d'entrer un numero de port
 		int portUDP=16001;
 		int bufferSize = 50;
-		Thread chatNIThread;
+		//int maxFileTransfert = 5;
 		modelListUsers = new ModelListUsers();
 		modelUsername = new ModelUsername();
 		modelStates = new ModelStates();
@@ -39,8 +39,6 @@ public class ChatSystem {
 		chatController.setChatNI(chatNI);
 		chatGUI=new ChatGUI(chatController);
 		chatController.setChatgui(chatGUI);
-		chatNIThread = new Thread(chatNI);
-		chatNIThread.start();
 		modelUsername.addObserver(chatNI);
 		modelStates.addObserver(chatNI);
 		modelGroupRecipient.addObserver(chatNI);
