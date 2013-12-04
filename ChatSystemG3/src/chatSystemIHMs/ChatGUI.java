@@ -152,13 +152,19 @@ public class ChatGUI extends View implements Observer,ToUser,FromUser{
  */
 	public void updateModelUsername(Object arg1){
 		if (this.mode != 0){
-			if(this.wListUsers==null){//premiere connection on cree la liste users
-				this.wListUsers=new InterfaceListUsers(((String)arg1), this);
-			}else {
-				this.wListUsers.setLblUsername((String)arg1);
+			if (((String)arg1).equals("MODE_DEBUG")){
+				this.mode = 0;
+				this.cmd = new CommandLine(this);
+				this.cmd.initialize();
+			}else{
+				if(this.wListUsers==null){//premiere connection on cree la liste users
+					this.wListUsers=new InterfaceListUsers(((String)arg1), this);
+				}else {
+					this.wListUsers.setLblUsername((String)arg1);
+				}
+				wConnect.setVisible(false);
+				this.wListUsers.setVisible(true);
 			}
-			wConnect.setVisible(false);
-			this.wListUsers.setVisible(true);
 		}
 	}
 
@@ -368,19 +374,10 @@ public class ChatGUI extends View implements Observer,ToUser,FromUser{
  * initializes the connection window
  */
 	public void initConnection() {
-		Scanner sc = new Scanner(System.in);
-		System.out.println("Choose the mode : 1 for graphical , 0 for command line");
-		int a = sc.nextInt();
-		if (a == 0){
-			this.mode = 0;
-			this.cmd = new CommandLine(this);
-			this.cmd.initialize();
-		}else{
-			this.mode = 1;
-			this.wCommunicate=new HashMap<String,InterfaceCommunicate>();
-			this.wConnect = new InterfaceConnect(this);
-			this.wListUsers=new InterfaceListUsers("",this);
-		}
+		this.mode = 1;
+		this.wCommunicate=new HashMap<String,InterfaceCommunicate>();
+		this.wConnect = new InterfaceConnect(this);
+		this.wListUsers=new InterfaceListUsers("",this);
 	}
 
 /**

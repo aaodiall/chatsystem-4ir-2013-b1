@@ -4,14 +4,12 @@
 package chatSystemNetwork;
 
 
+import java.io.BufferedInputStream;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.net.InetAddress;
 import java.net.Socket;
-import java.util.ArrayList;
-
 import chatSystemCommon.FilePart;
-import chatSystemCommon.Message;
 
 /**
  * @author joanna
@@ -22,59 +20,44 @@ public class ChatNIStreamReceiver extends Thread{
 	private Socket rSocket;
 	private int remotePort;
 	private InetAddress remoteIP;
-	private ObjectInputStream objectReader;
-	private byte[] bytes;
-	private boolean isReceived;
-	private ArrayList<byte[]> fparts;
-	private int numberOfParts;
+	private ChatNI chatNI;
+	private int idDemand;
 	
-	public ChatNIStreamReceiver(int remotePort,InetAddress remoteIP, int numberOfParts){
+	public ChatNIStreamReceiver(ChatNI chatNI, int remotePort,InetAddress remoteIP,int idDemand){
+		this.idDemand = idDemand;
+		this.chatNI = chatNI;
 		this.remotePort = remotePort;
 		this.remoteIP = remoteIP;
-		this.isReceived = false;
-		this.fparts = new ArrayList<byte[]>();
-		this.numberOfParts = numberOfParts;
 	}
+	
+	
+	public int getidDemand(){
+		return this.idDemand;
+	}
+	
 
-	public boolean getIsReceived(){
-		return this.isReceived;
-	}
-	
-	public ArrayList<byte[]> getAllParts(){
-		return this.fparts;
-	}
-	
-	public int getPort(){
-		return this.remotePort;
-	}
-	
 	public void run(){
-		int i=0;
 		Object objectRead;
 		FilePart f;
+		boolean isReceived = false;
 		try {
 			this.rSocket = new Socket(this.remoteIP,this.remotePort);
-			this.bytes = new byte[1204];//this.rSocket.getReceiveBufferSize()];
-			this.objectReader = new ObjectInputStream(this.rSocket.getInputStream());
+			ObjectInputStream objectReader = new ObjectInputStream(new BufferedInputStream(this.rSocket.getInputStream()));
 			while (isReceived == false){
-				 objectRead= this.objectReader.readObject();
-				 f = (FilePart)objectRead;
-				 this.fparts.add(f.getFilePart());
-				 if (f.isLast() == true){
-					 this.isReceived = true;
-				 }
+				objectRead = objectReader.readObject();
+				f = (FilePart)objectRead;
+				this.chatNI.filePartReceived(f.getFilePart(), this.idDemand, f.isLast());
+				if (f.isLast() == true){
+					isReceived = true;
+					objectReader.close();
+				}
 			}
 			System.out.println("file received");
+			this.chatNI.fileReceived(this.idDemand);
 		} catch (ClassNotFoundException e) {
 			e.printStackTrace();
 		} catch (IOException e) {
 			e.printStackTrace(); 
-		} finally{
-			try {
-				this.objectReader.close();
-			} catch (IOException e) {
-				e.printStackTrace();
-			}
 		}
 	}
 	

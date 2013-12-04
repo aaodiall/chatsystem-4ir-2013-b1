@@ -15,7 +15,7 @@ public class ModelFile extends Observable{
 	private String name;
 	private Long size; // en octets
 	private int idDemand;
-	protected int numberOfParts;
+	private int numberOfParts;
 	private int max;
 	
 	
@@ -35,11 +35,6 @@ public class ModelFile extends Observable{
 		this.max =max;
 		
 	}
-	
-	
-
-	
-
 
 	public void setNumberParts(){
 		this.numberOfParts = this.size.intValue() / this.max;

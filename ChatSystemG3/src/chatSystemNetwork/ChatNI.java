@@ -3,45 +3,38 @@
  */
 package chatSystemNetwork;
 
-import java.io.IOException;
 import java.net.DatagramSocket;
-import java.net.DatagramPacket;
 import java.net.InetAddress;
 import java.net.InterfaceAddress;
 import java.net.NetworkInterface;
 import java.net.SocketException;
-import java.util.ArrayList;
 import java.util.Enumeration;
 import java.util.Iterator;
 import java.util.Observable;
 import java.util.Observer;
-import java.util.concurrent.ArrayBlockingQueue;
 import chatSystemIHMs.View;
+import chatSystemModel.ModelStates;
 import chatSystemModel.ModelUsername;
-import chatSystemCommon.*;
+import chatSystemCommon.FilePart;
 import chatSystemController.Controller;
 
 /* Note pour plus tard : 
- *  - decider si on utilise a chaque fois un seul objet hello,bye,text juste en modifiant les attributs
  *  - ecrire la javadoc et les commentaires
  */
 
 
-public class ChatNI extends View implements Runnable, Observer{	
+public class ChatNI extends View implements Runnable,Observer,FromRemoteApp,ToRemoteApp{	
 	
 	private Controller controller;
-	private ChatNIMessage chatNIMessage;
-	private ChatNIStreamConnection server;
-	private Thread streamConnectionThread;
+	private ChatNIDatagramSender chatNIMessage;
 	private DatagramSocket socketUDP;
 	private InetAddress userIP;
 	private InetAddress userIPBroadcast;
-	private ArrayBlockingQueue <DatagramPacket> bufferPDUReceived;
-	private byte[] streamReceived;
-	private DatagramPacket pduReceived;
-	private ArrayList<ChatNIStreamReceiver> lreceivers;
 	private NICache cache;
-	private int maxTransferts;
+	private boolean connected;
+	private Thread chatNIThread;
+	private int numMsgMax;
+	
 
 	/**
 	 * 
@@ -50,29 +43,26 @@ public class ChatNI extends View implements Runnable, Observer{
 	 * @param controller controller du NI
 	 */
 	public ChatNI(int portUDP,int numMsgMax, Controller controller){
-		this.maxTransferts = 5;
 		this.controller=controller;
 		this.cache = new NICache();
 		this.setlocalIPandBroadcast();
 		this.setUDPsocket(portUDP, numMsgMax);
-		this.lreceivers = new ArrayList<ChatNIStreamReceiver> (this.maxTransferts);
-		this.chatNIMessage = new ChatNIMessage(numMsgMax,this.socketUDP);
+		this.chatNIMessage = new ChatNIDatagramSender(numMsgMax,this.socketUDP);
 		this.chatNIMessage.start();
-		this.server = new ChatNIStreamConnection();
-		this.server.setMaxTransferts(this.maxTransferts);
+		this.numMsgMax = numMsgMax;
+		this.connected = true;
+		this.chatNIThread = new Thread(this);
+		this.chatNIThread.start();
 	}
 	
 	/**
 	 * 
-	 * @param port port UDP de reception et d'emission
+	 * @param port port UDP de reception
 	 * @param numMsgMax nombre de pdu UDP qu'on peut stocker au maximum
 	 */
 	public void setUDPsocket(int port, int numMsgMax){
 		try {
 			this.socketUDP = new DatagramSocket(port);
-			this.bufferPDUReceived = new ArrayBlockingQueue<DatagramPacket>(numMsgMax) ;
-			this.streamReceived = new byte[this.socketUDP.getReceiveBufferSize()];
-			this.pduReceived = new DatagramPacket(this.streamReceived,this.streamReceived.length);
 		}catch(SocketException sockExc){
 			if (this.socketUDP == null)
 				System.out.println("socketUDP : socket exception");
@@ -108,160 +98,130 @@ public class ChatNI extends View implements Runnable, Observer{
 			System.out.println("error : socket exception ip adresses");
 			e.printStackTrace();
 		}
-	}
-
+	}	
 	
-	public void addReceiver(ChatNIStreamReceiver receiver){
-		if((this.lreceivers != null) &&(this.lreceivers.size() < this.maxTransferts)){
-			this.lreceivers.add(receiver);
-		}
-	}
 	public void connect(boolean ack){
 		this.chatNIMessage.sendHello(this.cache.getHello(ack), this.cache.getBroadcast());
-	}
-	
+	}	
 	
 	public void disconnect(){
 		this.chatNIMessage.sendBye(this.cache.getUsername(), this.cache.getBroadcast());
-	}
-	
+	}	
 	
 	public void sendMsgText(InetAddress recipient, String text2Send){
 		this.chatNIMessage.sendText(recipient, text2Send, this.cache.getUsername());
+	}	
+	
+	public void sendPropositionFile(String remote, InetAddress recipient, String fileName, long size, int idDemand, int nbParts){
+		// on cree un ChatNIStreamSender pour envoyer le fichier
+		ChatNIStreamSender sender = new ChatNIStreamSender(this,nbParts,idDemand);
+		System.out.println("port server  "+sender.getNumPort());
+		this.cache.addSender(idDemand,sender);
+		this.chatNIMessage.sendFileTransfertDemand(this.cache.getUsername(),recipient,fileName,size,sender.getNumPort(),idDemand);	
 	}
 	
-	
-	public void sendPropositionFile(String remote, InetAddress recipient, String fileName, long size, int idDemand){
-		this.chatNIMessage.sendFileTransfertDemand(this.cache.getUsername(),recipient,fileName, size,this.server.getNumPort(),idDemand);
-		this.cache.removePort(remote);
-		this.cache.addPort(remote, this.server.getNumPort());
-	}
-	
-	
-	public void sendConfirmationFile(String recipientName, InetAddress recipientIP, String fileName,boolean answer, int idDemand, int numParts){
+	public void sendConfirmationFile(String recipientName, InetAddress recipientIP, String fileName,boolean answer, int idDemand){
 		// si l'utilisateur veut recevoir le fichier
 		this.chatNIMessage.sendFileTransfertConfirmation(this.cache.getUsername(),recipientIP, answer, idDemand);
 		if (answer == true){
-			ChatNIStreamReceiver sr = new ChatNIStreamReceiver(this.cache.getPort(recipientName),recipientIP,numParts);
-			this.addReceiver(sr);
+			ChatNIStreamReceiver sr = new ChatNIStreamReceiver(this,this.cache.getRemotePort(idDemand),recipientIP,idDemand);
 			sr.start();
+		}else{
+			this.cache.removeRemotePort(idDemand);
+			this.cache.removeRemoteUsername(idDemand);
 		}
 	}
 	
-	
-	public void sendMsgFile(ArrayBlockingQueue<byte[]> parts,int idDemand){
-		ArrayBlockingQueue <FilePart> f = new ArrayBlockingQueue<FilePart>(parts.size());
-		int i;
-		while (parts.size()>1){
-			FilePart p = new FilePart(this.cache.getUsername(),parts.poll(),false);
-			f.add(p);
-		}
-		FilePart p = new FilePart(this.cache.getUsername(),parts.poll(),true);
-		f.add(p);
-		this.server.setParts(f);
-		this.streamConnectionThread = new Thread(this.server);
-		this.streamConnectionThread.start();
+	public void sendPart(byte[] part, int idDemand, boolean isLast){
+		FilePart f = new FilePart(this.cache.getUsername(),part,isLast);
+		this.cache.getSender(idDemand).sendPart(f);
 	}
 	
-	/**
-	 * analyze all the pdu UDP received and transmit information to controller
-	 */
-	public void pduAnalyze(){
-		Message receivedMsg;
-		InetAddress ipRemoteAddr;
-		ipRemoteAddr = this.bufferPDUReceived.peek().getAddress();
-		DatagramPacket pdureceived;
-		if (this.userIP.equals(ipRemoteAddr)){
-			try {
-				pdureceived = this.bufferPDUReceived.poll();
-				receivedMsg = Message.fromArray(pdureceived.getData());
-				// Hello
-				if (receivedMsg.getClass() == Hello.class){
-					controller.connectReceived(this.makeUsername(receivedMsg.getUsername(),ipRemoteAddr), ipRemoteAddr,((Hello)receivedMsg).isAck());
-				// Text	
-				}else if(receivedMsg.getClass() == Text.class){
-					controller.messageReceived(((Text)receivedMsg).getText(), this.makeUsername(receivedMsg.getUsername(),ipRemoteAddr));
-				// Goodbye
-				}else if(receivedMsg.getClass() == Goodbye.class){
-					controller.disconnectReceived(this.makeUsername(receivedMsg.getUsername(),ipRemoteAddr));
-				// FileTransfertDemand
-				}else if (receivedMsg.getClass() == FileTransfertDemand.class){
-					FileTransfertDemand ftd = ((FileTransfertDemand)receivedMsg);
-					// on enregistre le port ouvert par le remote
-					this.cache.addPort(this.makeUsername(ftd.getUsername(),ipRemoteAddr), ftd.getPortClient());
-					this.cache.addDemand(ftd.getPortClient(), ftd.getIdDemand());
-					controller.filePropositionReceived(this.makeUsername(ftd.getUsername(),ipRemoteAddr),ftd.getName(),ftd.getSize(),ftd.getIdDemand());
-				// FileTransfertConfirmation
-				}else if (receivedMsg.getClass() == FileTransfertConfirmation.class){
-					FileTransfertConfirmation ftco = ((FileTransfertConfirmation)receivedMsg);
-					controller.fileAnswerReceived(this.makeUsername(ftco.getUsername(),ipRemoteAddr),ftco.getIdDemand(),ftco.isAccepted());
-				// FileTransfertCancel
-				}else if (receivedMsg.getClass() == FileTransfertCancel.class){
-					FileTransfertCancel ftca = ((FileTransfertCancel)receivedMsg);
-					controller.fileTranfertCancelReceived(this.makeUsername(ftca.getUsername(),ipRemoteAddr),ftca.getIdDemand());
-				}
-			}catch (IOException recExc){
-				System.out.println("error : cannot transform PDUdata in Message");
-				recExc.printStackTrace();
-			}
-		}
+	
+	public void helloReceived(String remoteUsername, InetAddress remoteIP, boolean isAck){
+		this.controller.connectReceived(remoteUsername, remoteIP, isAck);
 	}
 	
-	public void checkReceives(){
-		int i;
-		int j;
-		for (i=0;i<this.lreceivers.size();i++){
-			if(this.lreceivers.get(i).getIsReceived()){
-				ArrayList<byte[]> parts = this.lreceivers.get(i).getAllParts();
-				System.out.println("1 file received!!!");
-				for (j=0;j<parts.size()-1;j++){
-					this.controller.partReceived(parts.get(j), this.cache.getDemand(this.lreceivers.get(i).getPort()), false);
-				}
-				this.controller.partReceived(parts.get(j), this.cache.getDemand(this.lreceivers.get(i).getPort()), true);
-				this.lreceivers.remove(i);
-			}
+	public void goodbyeReceived(String remoteUsername){
+		this.controller.disconnectReceived(remoteUsername);
+	}
+	
+	public void textReceived(String remoteUsername, String text){
+		this.controller.messageReceived(text, remoteUsername);
+	}
+	
+	public void fileTansfertDemandReceived(String remoteUsername, String fileName, long fileSize, int idDemand, int remotePort){
+		System.out.println(remoteUsername +"  demand  "+ idDemand +" port  "+remotePort);
+		this.cache.addRemotePort(idDemand,remotePort);
+		this.cache.addRemoteUsername(remoteUsername, idDemand);
+		this.controller.filePropositionReceived(remoteUsername,fileName,fileSize,idDemand);
+	}
+	
+	public void fileTansfertConfirmationReceived(String remoteUsername,int idDemand, boolean isAccepted){
+		if (isAccepted){
+			// on lance le thread
+			this.cache.getSender(idDemand).start();//this.cache.getLocalDemand(idDemand)).start();
+		}else{
+			this.cache.removeSender(idDemand);//this.cache.getLocalDemand(idDemand));
+			//this.cache.removeLocalDemand(idDemand);
 		}
+		this.controller.fileAnswerReceived(remoteUsername,idDemand,isAccepted);
+	}
+	
+	public void fileTansfertCancelReceived(String remoteUsername,int idDemand){
+		this.controller.fileTranfertCancelReceived(remoteUsername,idDemand);
+	}
+	
+	public void filePartReceived(byte[] fileBytes, int idDemand, boolean isLast){
+		this.controller.partReceived(fileBytes, idDemand, isLast);
+	}	
+	
+	public void fileSent(int idDemand){
+		// suppression au niveau du cache des informations sur le fichier envoye 
+		this.cache.removeSender(idDemand);
+		// notification du "controller"
+		this.controller.fileSent(idDemand);
+	}
+	
+	public void fileReceived(int idDemand){
+		// suppression, au niveau du cache, des informations sur le fichier reçu
+		this.cache.removeRemotePort(idDemand);
+		this.cache.removeRemoteUsername(idDemand);
+		// notification du "controller"
+		this.controller.fileReceived(idDemand);
 	}
 	
 	public void run(){
-		while(true){
-			// on se met en attente de reception d'un pdu
-			try {
-				Thread.sleep(60);
-				System.out.println("attend pdu");
-				this.socketUDP.receive(this.pduReceived);
-				System.out.println("fin attend pdu");
-				// on a recu un pdu donc on traite le message qu'il contient
-				this.bufferPDUReceived.add(pduReceived);
-				this.pduAnalyze();
-			}catch (InterruptedException e) {
-				System.out.println("error : sleep interrupted in R-Thread");	
+		ChatNIDatagramReceiver chatNIDatagramReceiver = new ChatNIDatagramReceiver(this,this.numMsgMax,this.socketUDP,this.userIP);
+		chatNIDatagramReceiver.start();
+		while(this.connected){
+			try{
+				Thread.sleep(120000);
+				this.connect(false);
+			} catch (InterruptedException e){
 				e.printStackTrace();
-			}catch (IOException sockRec){
-				System.out.println("error : receive socket");	
-				sockRec.printStackTrace();
 			}
 		}
+		chatNIDatagramReceiver.setConnected(false);
+		this.cache.clear();
+		this.cache = null;
 	}
 	
 	
-	public String makeUsername(String username, InetAddress ip){		
-		return username +"@"+ ip.getHostAddress();
-	}
-
-
 	public void update(Observable arg0, Object arg1) {
-		//s'il y a eu un setUsername
+		// si il y a eu un changement de username
 		if(arg0.getClass() == ModelUsername.class){
 			this.cache.setUsername((String)arg1);
-		}/*else
+		}
 		// si il y a eu un setStateConnected
 		if(arg0.getClass().equals(ModelStates.class)){
-			// utilisateur deconnecte
+			System.out.println("in model");
+			// utilisateur est deconnecte
 			if (arg1.equals(false)){
-				this.disconnect(ChatSystem.getModelUsername().getUsername());
+				this.connected = false;
+				this.chatNIMessage.setConnected(false);
 			}
-		}*/
+		}
 	}
 
 }
