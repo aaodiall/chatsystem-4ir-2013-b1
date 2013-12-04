@@ -14,7 +14,7 @@ import java.net.UnknownHostException;
 
     
 /**
- *
+ * The MessageEmissionNI is the intermediate between the MessageHandlerNI and the remote system for sending
  * @author belliot
  */
 public class MessageEmissionNI implements ToRemoteApp{
@@ -26,8 +26,9 @@ public class MessageEmissionNI implements ToRemoteApp{
     //private Message message_to_send;
     
     /**
-     *
-     * @param UDP_port
+     * The MessageEmissionNI is instancied with a unique UDP port
+     * It creates a datagram socket to permit the sending of datagram packets
+     * @param UDP_port : UDP port used for transfers
      */
     public MessageEmissionNI (int UDP_port) {
         
@@ -45,9 +46,11 @@ public class MessageEmissionNI implements ToRemoteApp{
     
     
     /**
-     *
-     * @param hi
-     * @param IP_dest
+     * This function is used to initiate a connection with one or several remote system
+     * It can be send on broadcast or individually
+     * The Hello message is tranformed in an array and a datagram packet is created with the array, its  size, the IP address to send and the UDP port to use
+     * @param hi : the Hello message
+     * @param IP_dest : the IP address to send
      */
     public void transfer_connection(Hello hi, InetAddress IP_dest) {
          try {
@@ -76,9 +79,11 @@ public class MessageEmissionNI implements ToRemoteApp{
     }
     
     /**
-     *
-     * @param bye
-     * @param IP_dest
+     * This function is used to initiate a disconnection with remote systems
+     * It is sent on broadcast
+     * The Goodbye message is tranformed in an array and a datagram packet is created with the array, its  size, the IP address to send and the UDP port to use
+     * @param bye : the Goodbye message
+     * @param IP_dest : the IP address to send (broadcast)
      */
     public void transfer_disconnection(Goodbye bye, InetAddress IP_dest) {
         
@@ -101,13 +106,14 @@ public class MessageEmissionNI implements ToRemoteApp{
     }
     
     /**
-     *
-     * @param txt
-     * @param IP_dest
+     * This function is used to send a message to a remote system
+     * The Text message is tranformed in an array and a datagram packet is created with the array, its  size, the IP address to send and the UDP port to use
+     * @param txt : the Text message
+     * @param IP_dest : the IP address to send
      */
     public void send_text (Text txt, InetAddress IP_dest) {
         try {
-            byte[] buffer = txt.toArray();
+            byte[] buffer = ((Message) txt).toArray();
             message = new DatagramPacket(buffer, buffer.length, IP_dest, UDP_port_dest);
             UDP_sock.send(message);
             
@@ -118,8 +124,8 @@ public class MessageEmissionNI implements ToRemoteApp{
     }
     
     /**
-     *
-     * @return
+     * The function returns the IP address for broadcasting on the network
+     * @return : the broadcast's IP address
      */
     public static InetAddress get_broadcast() {
         InetAddress broadcast = null;
