@@ -1,8 +1,10 @@
 package org.insa.java.view;
 
+import java.io.BufferedInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.ObjectInputStream;
 import java.net.InetAddress;
 import java.net.ServerSocket;
 import java.net.Socket;
@@ -11,6 +13,7 @@ import java.net.UnknownHostException;
 import org.insa.java.controller.FileController;
 import org.insa.java.model.User;
 
+import chatSystemCommon.FilePart;
 import chatSystemCommon.Message;
 
 public final class ReceivedFileNI extends JavaChatNI {
@@ -23,18 +26,24 @@ public final class ReceivedFileNI extends JavaChatNI {
 	private InputStream inputStream;
 
 	private int portClient;
-	public boolean running = true;
+	private boolean running = true;
+	private User user;
 
-	private ReceivedFileNI(FileController fileController, int portClient) {
+	private BufferedInputStream readerBuffer;
+
+	private ObjectInputStream reader;
+
+	private ReceivedFileNI(FileController fileController, int portClient, User user) {
 		this.fileController = fileController;
 		this.portClient = portClient;
+		this.user = user;
 	}
 
-	public final static ReceivedFileNI getInstance(FileController fileController, int portClient) {
+	public final static ReceivedFileNI getInstance(FileController fileController, int portClient, User user) {
 		if(ReceivedFileNI.instance == null) {
 			synchronized(ReceivedFileNI.class) {
 				if(ReceivedFileNI.instance == null)
-					ReceivedFileNI.instance = new ReceivedFileNI(fileController,portClient);
+					ReceivedFileNI.instance = new ReceivedFileNI(fileController,portClient, user);
 			}
 		}
 		return ReceivedFileNI.instance;
@@ -42,51 +51,56 @@ public final class ReceivedFileNI extends JavaChatNI {
 	
 	@Override
 	public void run() { 
-		while(running) {
-			try {
-				socket = new Socket(InetAddress.getLocalHost(), portClient);
-				inputStream = socket.getInputStream();
+		try {
+			//The client starts by trying to connect himself
+			socket = new Socket(user.getAddress(), portClient);
+            this.readerBuffer = new BufferedInputStream(socket.getInputStream());
+            this.reader = new ObjectInputStream(this.readerBuffer);
+           
+            Message msg = null;
+            /*
+            do {
+                msg = reader.readObject();
+                if(((FilePart) msg).isLast()){
+                     this.fileToReceive.setIsLast(true);
+                }
+                this.chatNI.filePartReceived(this.fileToReceive.getId(), ((FilePart) msg).getFilePart(), ((FilePart) msg).isLast());
+
+            } while (!((FilePart) msg).isLast());
+			*/
+
+			
+			//inputStream = socket.getInputStream();
+			while(running) {
+				try {
+					msg = (Message) reader.readObject();
+				} catch (ClassNotFoundException e) {
+					e.printStackTrace();
+				}
+				if(msg != null)
+					fileController.receivedMessage(new User(socket.getInetAddress(),msg.getUsername()),msg);
+				
+				/*
+				 * while(running) {
 				Message m = Message.fromArray(this.toByteArray(inputStream));
 				fileController.receivedMessage(new User(socket.getInetAddress(),m.getUsername()),m);
-				inputStream.close();
-			} catch (IOException e) {
-				e.printStackTrace();
-				fileController.fileReceptionCanceled();
-			}
-			finally {
-				try {
-					inputStream.close();
-				} catch (IOException e1) {
-					e1.printStackTrace();
-				}	
-			}
-		}
-		/*
-		try {
-			//socket = serverSocket.accept();		
-			inputStream = socket.getInputStream();
-			while(running) {
-				//int i;
-				//if((i = this.toByteArray(inputStream).length) > 0) {
-					Message m = Message.fromArray(this.toByteArray(inputStream));
-					fileController.receivedMessage(new User(socket.getInetAddress(),m.getUsername()),m);
-				//}
-					
-				//	System.out.println(i);
-				
+				* }
+				*/
 			}
 		}
 		catch (IOException e) {
 			e.printStackTrace();
 		}
 		finally {
+			/*
 			try {
 				inputStream.close();
 			} catch (IOException e) {
-				// TODO Auto-generated catch block
+				e.printStackTrace();
 			}
+			*/
 		}
-		*/
+		
 	}
 	
 	private byte[] toByteArray(InputStream is) throws IOException{

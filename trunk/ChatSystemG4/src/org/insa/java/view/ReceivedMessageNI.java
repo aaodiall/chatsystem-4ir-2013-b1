@@ -3,7 +3,6 @@ package org.insa.java.view;
 import java.io.IOException;
 import java.net.DatagramPacket;
 import java.net.DatagramSocket;
-import java.net.InetAddress;
 
 import org.insa.java.controller.ChatController;
 

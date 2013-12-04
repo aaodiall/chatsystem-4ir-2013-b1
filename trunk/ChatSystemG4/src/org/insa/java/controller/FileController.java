@@ -1,10 +1,13 @@
 package org.insa.java.controller;
 
+import java.io.BufferedOutputStream;
+import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.Writer;
 import java.util.logging.Level;
 
 import javax.swing.JOptionPane;
@@ -34,6 +37,7 @@ public class FileController {
 	
 	private String receptionFileName;
 	private long receptionFileSize;
+	private BufferedOutputStream bufferedWriter;
 	private FileOutputStream fileOutputStream;
 	private Thread receivedThread = null;
 	
@@ -58,8 +62,12 @@ public class FileController {
 		SendMessageNI.getInstance().sendMessage(MessageFactory.getFileTransfertConfirmationMessage(chatModel.getLocalUsername(), isAccepetd, idDemand), user.getAddress());
 	}
 	
-	private void sendFile(User user) {
-		SendFileNI.getInstance(this).sendFile(user);
+	private void sendFile() {
+		try {
+			SendFileNI.getInstance(this).sendFile();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
 		sendThread = new Thread(SendFileNI.getInstance(this));
 		sendThread.start();
 	}
@@ -81,10 +89,12 @@ public class FileController {
 			int option = JOptionPane.showConfirmDialog(null, "You received a file transfer demand from "+msg.getUsername()+"\nFile name : "+ this.receptionFileName +"\nSize (in byte) : "+ this.receptionFileSize +"\n\nDo you want to accept ?", "File transfer demand received", JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE);
 			if(option == JOptionPane.OK_OPTION) {
 				chatGUI.getStatusBar().beginFileTransferReception((int) receptionFileSize);		
-				receivedThread = new Thread(ReceivedFileNI.getInstance(this,((FileTransfertDemand) msg).getPortClient()));
-				receivedThread.start();
-				ReceivedFileNI.getInstance(this,((FileTransfertDemand) msg).getPortClient()).go();
 				fileOutputStream = new FileOutputStream(this.getFilePath(), true);
+				bufferedWriter = new BufferedOutputStream(fileOutputStream);
+				receivedThread = new Thread(ReceivedFileNI.getInstance(this,((FileTransfertDemand) msg).getPortClient(),user));
+				receivedThread.start();
+				ReceivedFileNI.getInstance(this,((FileTransfertDemand) msg).getPortClient(),user).go();
+				
 				this.sendFileTransfertConfirmation(user, true, ((FileTransfertDemand) msg).getIdDemand());
 			}
 			else
@@ -92,11 +102,11 @@ public class FileController {
 		}
 		else if(msg instanceof FilePart) {
 			chatGUI.getStatusBar().setReceptionBarValue(((FilePart) msg).getFilePart().length);
-			fileOutputStream.write(((FilePart) msg).getFilePart());
-			fileOutputStream.flush();
+			bufferedWriter.write(((FilePart) msg).getFilePart());
+			bufferedWriter.flush();
 			if(((FilePart) msg).isLast()) {
 				finishFileTransferReception();
-				fileOutputStream.close();
+				bufferedWriter.close();
 			}
 		}
 	}
@@ -129,8 +139,8 @@ public class FileController {
 			this.moveToState(TransferState.PROCESSING);
 			break;
 		case PROCESSING :
-			if(((FileTransfertConfirmation) msg).isAccepted())
-				this.sendFile(user);	
+			if(((FileTransfertConfirmation) msg).isAccepted()) 
+				this.sendFile();
 			else 
 				this.moveToState(TransferState.CANCELED);
 			break;
@@ -205,9 +215,9 @@ public class FileController {
 	}
 	
 	public void finishFileTransferReception() {
-		ReceivedFileNI.getInstance(this, DEFAULT_CLIENT_PORT).stop();
+		ReceivedFileNI.getInstance(this, DEFAULT_CLIENT_PORT,null).stop();
 		try {
-			ReceivedFileNI.getInstance(this, DEFAULT_CLIENT_PORT).closeSocket();
+			ReceivedFileNI.getInstance(this, DEFAULT_CLIENT_PORT,null).closeSocket();
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
