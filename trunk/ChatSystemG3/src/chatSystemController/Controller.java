@@ -237,6 +237,8 @@ public class Controller extends Thread{
 	
 	public void fileReceived(int idDemand){
 		this.filesToReceive.get(idDemand).setIsReceived();
+		String remote=new String(this.filesToReceive.get(idDemand).getRemote());
+		this.chatgui.updateModelFileReceive(remote);
 		this.filesToReceive.remove(idDemand);
 	}
 	
@@ -271,8 +273,6 @@ public class Controller extends Thread{
 	
 	public void partReceived(byte[] fileBytes,int idDemand, boolean isLast){	
 		this.filesToReceive.get(idDemand).writeFilePart(fileBytes, isLast);
-		String remote=new String(this.filesToReceive.get(idDemand).getRemote());
-		this.chatgui.updateModelFileReceive(remote);
 	}
 	
 	/**
@@ -301,7 +301,7 @@ public class Controller extends Thread{
 					part=f.readNextPart();
 					this.chatNI.sendPart(part, f.getIdDemand(),false);
 					nbPartsSent++;
-					System.out.println(nbPartsSent);
+					//System.out.println(nbPartsSent);
 				}
 				part=f.readNextPart();
 				this.chatNI.sendPart(part, f.getIdDemand(),true);		

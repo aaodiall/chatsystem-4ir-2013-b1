@@ -73,11 +73,11 @@ public class ModelFileToSend extends ModelFile{
 	}
 	
 	public void setProgress(int level){
-		this.progression=(Integer)(100*level/(super.getNumberParts()));
-		System.out.println("dans setProgress de modelFile "+ this.getRemote()+" progression"+this.progression);
+		this.progression+=(Integer)(100*level/(super.getNumberParts()));
+		//System.out.println("dans setProgress de modelFile "+ this.getRemote()+" progression"+this.progression);
 		setChanged();
 		notifyObservers();
-		System.out.println("dans setProgress de modelFile apres notify"+ this.getRemote());
+		//System.out.println("dans setProgress de modelFile apres notify"+ this.getRemote());
 	}
 	
 	public Integer getProgression() {

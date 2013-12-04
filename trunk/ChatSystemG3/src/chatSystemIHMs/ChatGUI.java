@@ -134,7 +134,7 @@ public class ChatGUI extends View implements Observer,ToUser,FromUser{
 		
 		String remote=new String(((ModelFileToSend)arg1).getRemote());
 		int progress=((ModelFileToSend)arg1).getProgression();
-		System.out.println(progress);
+		//System.out.println(progress);
 		this.wCommunicate.get(remote).getProgressBarFile().setValue(progress);
 		//this.wCommunicate.get(remote).getBtnFileReceived().setVisible(true);
 		if(progress==100){
@@ -175,7 +175,7 @@ public class ChatGUI extends View implements Observer,ToUser,FromUser{
  * @param arg1
  */
 	public void update(Observable arg0, Object arg1) {
-		System.out.println("Dans update");
+		//System.out.println("Dans update");
 		if (arg0 instanceof ModelStates){
 			this.updateModelStates(arg1);
 		}else if(arg0 instanceof ModelText){
@@ -185,7 +185,7 @@ public class ChatGUI extends View implements Observer,ToUser,FromUser{
 		}else if(arg0 instanceof ModelUsername){
 			this.updateModelUsername(arg1);
 		}else if(arg0 instanceof ModelFileToSend){
-			System.out.println("Dans update fileToSend");
+			//System.out.println("Dans update fileToSend");
 			this.updateModelFileProgress(arg0);
 		}
 
