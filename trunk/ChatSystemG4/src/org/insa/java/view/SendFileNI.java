@@ -23,9 +23,7 @@ public final class SendFileNI extends JavaChatNI {
 	private TransferState fileTransfertState = TransferState.AVAILABLE;
 	private FileController fileController;
 
-	private OutputStream outputStream = null;
-
-	private BufferedOutputStream writerBuffer;
+	private BufferedOutputStream bufferedWriter;
 
 	private ObjectOutputStream writer;
 	
@@ -48,59 +46,35 @@ public final class SendFileNI extends JavaChatNI {
 		return SendFileNI.instance;
 	}
 
-	synchronized public void sendFile() throws IOException{
-		socket = serverSocket.accept();
-		outputStream = socket.getOutputStream();
-	}
-
 	@Override
 	public void run(){
-		 //waiting for a connection
         try {
 			this.socket = this.serverSocket.accept();
-			 //we are connected, preparing for a transfert
-	        this.writerBuffer = new BufferedOutputStream(socket.getOutputStream());
-	        this.writer = new ObjectOutputStream(writerBuffer);
+	        this.bufferedWriter = new BufferedOutputStream(socket.getOutputStream());
+	        this.writer = new ObjectOutputStream(bufferedWriter);
 
 	        Message msg;
 	        while(this.fileTransfertState == TransferState.PROCESSING) {
-	            //allows sending big files (if we don't do that we keep the file in mem)
 	            this.writer.reset();
-	            //recover the file's part to send and write it in the socket
 	            msg =  fileController.getFilePartToSend();
-
 	            this.writer.writeObject(msg);
-	            this.writerBuffer.flush();
+	            this.bufferedWriter.flush();
+	            if(((FilePart) msg).isLast())
+	            	fileController.finishFileTransferEmission();
 	        }
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
-		}
-
-       
-		
-		/*
-		while(this.fileTransfertState == TransferState.PROCESSING) {
+		} finally {
 			try {
-				FilePart fp = fileController.getFilePartToSend();
-
-				if(fp != null) {
-					outputStream.write(fp.toArray());
-					outputStream.flush();
-					outputStream.close();
-					if(fp.isLast())
-						fileController.finishFileTransferEmission();
-				}
+				this.bufferedWriter.flush();
+				this.writer.close();
+				this.bufferedWriter.close();
+				this.socket.close();
+				this.serverSocket.close();
 			} catch (IOException e) {
-				fileController.fileEmissionCanceled();
+				e.printStackTrace();
 			}
 		}
-		try {
-			outputStream.close();
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-		*/
 	}
 	
 	public void closeSocket() throws IOException {

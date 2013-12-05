@@ -21,15 +21,13 @@ public final class ReceivedFileNI extends JavaChatNI {
 
 	private FileController fileController;
 
-	//private ServerSocket serverSocket;
 	private Socket socket;
-	private InputStream inputStream;
 
 	private int portClient;
 	private boolean running = true;
 	private User user;
 
-	private BufferedInputStream readerBuffer;
+	private BufferedInputStream bufferedReader;
 
 	private ObjectInputStream reader;
 
@@ -52,53 +50,28 @@ public final class ReceivedFileNI extends JavaChatNI {
 	@Override
 	public void run() { 
 		try {
-			//The client starts by trying to connect himself
 			socket = new Socket(user.getAddress(), portClient);
-            this.readerBuffer = new BufferedInputStream(socket.getInputStream());
-            this.reader = new ObjectInputStream(this.readerBuffer);
+            this.bufferedReader = new BufferedInputStream(socket.getInputStream());
+            this.reader = new ObjectInputStream(this.bufferedReader);
            
-            Message msg = null;
-            /*
-            do {
-                msg = reader.readObject();
-                if(((FilePart) msg).isLast()){
-                     this.fileToReceive.setIsLast(true);
-                }
-                this.chatNI.filePartReceived(this.fileToReceive.getId(), ((FilePart) msg).getFilePart(), ((FilePart) msg).isLast());
-
-            } while (!((FilePart) msg).isLast());
-			*/
-
-			
-			//inputStream = socket.getInputStream();
 			while(running) {
-				try {
-					msg = (Message) reader.readObject();
-				} catch (ClassNotFoundException e) {
-					e.printStackTrace();
-				}
-				if(msg != null)
-					fileController.receivedMessage(new User(socket.getInetAddress(),msg.getUsername()),msg);
-				
-				/*
-				 * while(running) {
-				Message m = Message.fromArray(this.toByteArray(inputStream));
-				fileController.receivedMessage(new User(socket.getInetAddress(),m.getUsername()),m);
-				* }
-				*/
+				Message msg = (Message) reader.readObject();
+				fileController.receivedMessage(new User(socket.getInetAddress(),msg.getUsername()),msg);
 			}
 		}
-		catch (IOException e) {
+		catch (ClassNotFoundException e) {
+			e.printStackTrace();
+		} catch (IOException e) {
 			e.printStackTrace();
 		}
 		finally {
-			/*
 			try {
-				inputStream.close();
+				this.reader.close();
+				this.bufferedReader.close();
+				this.socket.close();
 			} catch (IOException e) {
 				e.printStackTrace();
 			}
-			*/
 		}
 		
 	}
