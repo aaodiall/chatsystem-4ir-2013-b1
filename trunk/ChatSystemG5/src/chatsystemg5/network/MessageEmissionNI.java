@@ -64,8 +64,7 @@ public class MessageEmissionNI implements ToRemoteApp{
 
             byte[] buffer = ((Message) hi).toArray();
             //System.out.println("Envoi à : " + IP_dest + "\nTaille : " + buffer.length);
-            this.message = new DatagramPacket(buffer, buffer.length, IP_dest, this.UDP_port_dest);
-            this.UDP_sock.send(message);
+            this.send_on_network(buffer, IP_dest);
 
             if (!hi.isAck()) {
                 // disable broadcast
@@ -92,8 +91,8 @@ public class MessageEmissionNI implements ToRemoteApp{
             this.UDP_sock.setBroadcast(true);
             // send bye
             byte[] buffer = ((Message) bye).toArray();
-            this.message = new DatagramPacket(buffer, buffer.length, IP_dest, this.UDP_port_dest);
-            this.UDP_sock.send(message);
+            this.send_on_network(buffer, IP_dest);
+            
             // disbale brodcast
             this.UDP_sock.setBroadcast(false);
             
@@ -114,9 +113,7 @@ public class MessageEmissionNI implements ToRemoteApp{
     public void send_text (Text txt, InetAddress IP_dest) {
         try {
             byte[] buffer = ((Message) txt).toArray();
-            message = new DatagramPacket(buffer, buffer.length, IP_dest, UDP_port_dest);
-            UDP_sock.send(message);
-            
+            this.send_on_network(buffer, IP_dest);
         }
         catch (IOException exc) {
             System.out.println("Send text error\n" + exc);
@@ -137,13 +134,13 @@ public class MessageEmissionNI implements ToRemoteApp{
         return broadcast;
     }
 
-    /**
-     *
-     * @param msg
-     * @param IP_dest
-     */
     @Override
-    public void send(Message msg, InetAddress IP_dest) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    public void send_on_network(byte[] msg, InetAddress IP_dest) {
+        try {
+            message = new DatagramPacket(msg, msg.length, IP_dest, UDP_port_dest);
+            UDP_sock.send(message);
+        } catch (IOException ex) {
+            Logger.getLogger(MessageEmissionNI.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }
 }

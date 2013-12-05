@@ -8,10 +8,10 @@ import java.net.InetAddress;
 public interface FromRemoteApp {
 
     /**
-     *
-     * @param array
-     * @param IP_addr
+     * This signal is used for the receiving of messages from the network with IP address of the sender
+     * @param msg : message received
+     * @param IP_addr : sender's IP address
      */
-    public void send_to_controller (byte[] array, InetAddress IP_addr);
+    public void receive_from_network (byte[] msg, InetAddress IP_addr);
     
 }

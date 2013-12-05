@@ -92,13 +92,8 @@ public class MessageReceptionNI extends Thread implements FromRemoteApp {
         this.UDP_sock.close();
     }
     
-    /**
-     *
-     * @param array
-     * @param IP_addr
-     */
     @Override
-    public void send_to_controller(byte[] array, InetAddress IP_addr) {
+    public void receive_from_network (byte[] msg, InetAddress IP_addr) {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
     
