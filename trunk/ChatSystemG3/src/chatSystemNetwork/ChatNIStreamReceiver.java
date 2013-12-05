@@ -52,7 +52,6 @@ public class ChatNIStreamReceiver extends Thread{
 					objectReader.close();
 				}
 			}
-			System.out.println("file received");
 			this.chatNI.fileReceived(this.idDemand);
 		} catch (ClassNotFoundException e) {
 			e.printStackTrace();

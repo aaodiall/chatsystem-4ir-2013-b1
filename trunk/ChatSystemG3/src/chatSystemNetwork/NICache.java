@@ -104,30 +104,60 @@ public class NICache {
 	 */
 	void addRemoteUsername(String remote, Integer idDemand){
 		this.demandsToUsername.put(idDemand, remote);
-		System.out.println("demand "+ idDemand+ "  remote "+this.demandsToUsername.get(idDemand));
+		System.out.println("NICache --> demand "+ idDemand+ "  remote "+this.demandsToUsername.get(idDemand));
 	}
 	
+	/**
+	 * 
+	 * @param idDemand
+	 */
 	void removeRemoteUsername(int idDemand){
 		this.demandsToUsername.remove(idDemand);
 	}
 	
+	
+	/**
+	 * 
+	 * @param idDemand
+	 * @return
+	 */
 	String getRemoteUsername(int idDemand){
 		return this.demandsToUsername.get(idDemand);
 	}
 	
+	/**
+	 * 
+	 * @param idDemand
+	 * @param port
+	 */
 	void addRemotePort(int idDemand, int port){
 		this.remoteDemands.put(idDemand,port);
-		System.out.println("demand "+ idDemand+ "  remote "+this.remoteDemands.get(idDemand));
+		System.out.println("NICache --> demand "+ idDemand+ "  remote "+this.remoteDemands.get(idDemand));
 	}
 	
+	
+	/**
+	 * 
+	 * @param idDemand
+	 */
 	void removeRemotePort(int idDemand){
 		this.remoteDemands.remove(idDemand);
 	}
 	
+	
+	/**
+	 * 
+	 * @param idDemand
+	 * @return
+	 */
 	Integer getRemotePort(int idDemand){
 		return this.remoteDemands.get(idDemand);
 	}
 	
+	
+	/**
+	 * 
+	 */
 	void clear(){
 		this.username=null;
 		this.demandsToUsername.clear();

@@ -14,8 +14,7 @@ public class ChatSystem {
 	private static ModelListUsers modelListUsers;
 	private static ModelUsername modelUsername;
 	private static ModelStates modelStates;
-	private static ModelText modelText; 
-	private static ModelFile modelFile;
+	private static ModelText modelText;
 	private static ModelGroupRecipient modelGroupRecipient;
 
 	
@@ -33,7 +32,6 @@ public class ChatSystem {
 		modelStates = new ModelStates();
 		modelGroupRecipient = new ModelGroupRecipient();
 		modelText = new ModelText();
-		//modelFile=new ModelFile();
 		chatController = new Controller(modelListUsers,modelStates , modelText, modelUsername, modelGroupRecipient);
 		chatNI = new ChatNI(portUDP,bufferSize,chatController);
 		chatController.setChatNI(chatNI);
@@ -46,7 +44,6 @@ public class ChatSystem {
 		modelUsername.addObserver(chatGUI);
 		modelStates.addObserver(chatGUI);
 		modelText.addObserver(chatGUI);
-		//modelFile.addObserver(chatGUI);
 		
 		/*
 		 				/\

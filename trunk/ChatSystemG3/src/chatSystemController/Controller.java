@@ -136,7 +136,6 @@ public class Controller extends Thread{
 		InetAddress ipRecipient;
 		ipRecipient=this.modelListUsers.getListUsers().get(remote);
 		this.chatNI.sendMsgText(ipRecipient, text);
-		
 	}
 	
 	/**
@@ -144,7 +143,6 @@ public class Controller extends Thread{
 	 */
 	public void performJoinFile(ModelFileToSend f){		
 		this.ftoSend.add(f);
-		System.out.println("file added");
 	}
 	
 	/**
@@ -158,6 +156,7 @@ public class Controller extends Thread{
 		if ((this.filesToSend.size() <= this.numFileMax) && (this.nbSendingBytes<=this.maxSizeToTransfer)){
 			//on l'ajoute a la liste des fichier a envoyer;
 			this.filesToSend.put(f.getIdDemand(), f);
+			f.addObserver(chatgui);
 			if (this.currentidSendDemand <= this.maxidDemand){
 				this.currentidSendDemand++;
 			}else{
@@ -166,7 +165,7 @@ public class Controller extends Thread{
 			//On recupere l'ip du destinataire
 			InetAddress ipRemote = this.modelListUsers.getListUsers().get(remote);
 			// on envoie la proposition
-			this.chatNI.sendPropositionFile(remote, ipRemote, f.getName(), f.getSize(),f.getIdDemand(),f.getNumberParts());
+			this.chatNI.sendPropositionFile(remote, ipRemote, f.getName(), f.getSize(),f.getIdDemand());
 		}else{
 			// prevenir l'interface graphique
 			System.out.println("Too many files to send, try later");
@@ -181,16 +180,22 @@ public class Controller extends Thread{
 		ModelFileToReceive f = this.filesToReceive.get(this.remoteToDemand.get(remote));
 		InetAddress ipRemote = this.modelListUsers.getListUsers().get(remote);
 		if (answer == true){
-			this.nbReceivingBytes += f.getSize();
-			if (this.nbReceivingBytes <= this.maxSizeToTransfer ){
-				this.chatNI.sendConfirmationFile(remote,ipRemote, f.getName(), answer, f.getIdDemand());
-			}else{
+			// si l'utilisateur veut accepter plus que le maximum autorise on ne reçoit pas le fichier
+			if (this.nbReceivingBytes + f.getSize() > this.maxSizeToTransfer){
+				f.deleteFile();
+				f.deleteObservers();
+				this.filesToReceive.remove(this.remoteToDemand.get(remote));
 				//PREVENIR LA GUI
 				System.err.println("attemp of sending more than 2Go, file not sent");
-				this.nbReceivingBytes -= f.getSize();
+			}else{
+				this.nbReceivingBytes += f.getSize();
+				this.chatNI.sendConfirmationFile(remote,ipRemote, f.getName(), answer, f.getIdDemand());
 			}
 		}else{
+			this.chatNI.sendConfirmationFile(remote,ipRemote, f.getName(), answer, f.getIdDemand());
 			f.deleteFile();
+			f.deleteObservers();
+			this.filesToReceive.remove(this.remoteToDemand.get(remote));
 		}
 	}
 	
@@ -200,13 +205,12 @@ public class Controller extends Thread{
 	public void filePropositionReceived(String remote, String file, long size, int idDemand){
 		if (this.modelStates.isConnected()){
 			ModelFileToReceive f = new ModelFileToReceive(remote,file,size,idDemand,this.maxWrite);
-			f.setStateReceivedDemand(true);
-			System.out.println("id demand in file proposition received   " + idDemand);
+			f.addObserver(chatgui);
+			System.out.println("Controller --> idDemand received : " + idDemand);
+			System.out.println("Controller --> file demand received from " + remote);
 			this.filesToReceive.put(idDemand, f);
 			this.remoteToDemand.put(remote, idDemand);
-			// signale normalement a la gui qu'on a recu une demande
-			this.chatgui.proposeFile(remote, file, size);
-			System.out.println("file demand received from " + remote);
+			f.setStateReceivedDemand(true);
 		}
 	}
 	
@@ -217,14 +221,11 @@ public class Controller extends Thread{
 		System.out.println("file answer received from " + remote);
 		if (this.modelStates.isConnected()){
 			ModelFileToSend f = this.filesToSend.get(idDemand);
-			if (isAccepted){
-				System.out.println("perform join file");
-				if (f==this.filesToSend.get(idDemand)){
-					this.filesToSend.get(idDemand).addObserver(chatgui);	
-				}				
+			if (isAccepted){				
 				this.performJoinFile(f);
 			}else{
-				System.out.println("file refused");
+				f.setRefused();
+				f.deleteObservers();
 				this.filesToSend.remove(idDemand);
 			}
 		}
@@ -236,9 +237,6 @@ public class Controller extends Thread{
 	public void fileTranfertCancelReceived(String remote, int idDemand){}
 	
 	public void fileReceived(int idDemand){
-		this.filesToReceive.get(idDemand).setIsReceived();
-		String remote=new String(this.filesToReceive.get(idDemand).getRemote());
-		this.chatgui.updateModelFileReceive(remote);
 		this.filesToReceive.remove(idDemand);
 	}
 	
@@ -246,7 +244,7 @@ public class Controller extends Thread{
 		if (modelStates.isConnected() && this.modelListUsers.isInListUsers(username)){
 			this.modelText.setRemote(username);
 			this.modelText.setTextReceived(text);
-			System.out.println (username + " : " + text);
+			System.out.println ("message received   "+username + " : " + text);
 		}
 	}
 	
@@ -276,14 +274,6 @@ public class Controller extends Thread{
 	}
 	
 	/**
-	 * signale au controller que le fichier associé à l'id a été entièrement reçu
-	 * @param idDemand
-	 */
-	public void fileSent(int idDemand){
-		this.filesToSend.get(idDemand).setSent();
-	}
-	
-	/**
 	 * sert à envoyer les fichiers
 	 */
 	public void run(){
@@ -301,7 +291,6 @@ public class Controller extends Thread{
 					part=f.readNextPart();
 					this.chatNI.sendPart(part, f.getIdDemand(),false);
 					nbPartsSent++;
-					System.out.println(nbPartsSent);
 				}
 				part=f.readNextPart();
 				this.chatNI.sendPart(part, f.getIdDemand(),true);		

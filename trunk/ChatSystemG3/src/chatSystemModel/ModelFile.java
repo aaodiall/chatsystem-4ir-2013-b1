@@ -18,12 +18,6 @@ public class ModelFile extends Observable{
 	private int numberOfParts;
 	private int max;
 	
-	
-	
-
-	
-
-
 	/**
 	 * 
 	 * @param remote nom de l'utilisateur distant

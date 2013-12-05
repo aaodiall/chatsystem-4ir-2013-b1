@@ -112,9 +112,9 @@ public class ChatNI extends View implements Runnable,Observer,FromRemoteApp,ToRe
 		this.chatNIMessage.sendText(recipient, text2Send, this.cache.getUsername());
 	}	
 	
-	public void sendPropositionFile(String remote, InetAddress recipient, String fileName, long size, int idDemand, int nbParts){
+	public void sendPropositionFile(String remote, InetAddress recipient, String fileName, long size, int idDemand){
 		// on cree un ChatNIStreamSender pour envoyer le fichier
-		ChatNIStreamSender sender = new ChatNIStreamSender(this,nbParts,idDemand);
+		ChatNIStreamSender sender = new ChatNIStreamSender(this,idDemand);
 		System.out.println("port server  "+sender.getNumPort());
 		this.cache.addSender(idDemand,sender);
 		this.chatNIMessage.sendFileTransfertDemand(this.cache.getUsername(),recipient,fileName,size,sender.getNumPort(),idDemand);	
@@ -151,7 +151,7 @@ public class ChatNI extends View implements Runnable,Observer,FromRemoteApp,ToRe
 	}
 	
 	public void fileTansfertDemandReceived(String remoteUsername, String fileName, long fileSize, int idDemand, int remotePort){
-		System.out.println(remoteUsername +"  demand  "+ idDemand +" port  "+remotePort);
+		System.out.println("ChatNI -->"+ remoteUsername + " demand  "+ idDemand +" port  "+remotePort);
 		this.cache.addRemotePort(idDemand,remotePort);
 		this.cache.addRemoteUsername(remoteUsername, idDemand);
 		this.controller.filePropositionReceived(remoteUsername,fileName,fileSize,idDemand);
@@ -160,7 +160,7 @@ public class ChatNI extends View implements Runnable,Observer,FromRemoteApp,ToRe
 	public void fileTansfertConfirmationReceived(String remoteUsername,int idDemand, boolean isAccepted){
 		if (isAccepted){
 			// on lance le thread
-			this.cache.getSender(idDemand).start();//this.cache.getLocalDemand(idDemand)).start();
+			this.cache.getSender(idDemand).start();
 		}else{
 			this.cache.removeSender(idDemand);//this.cache.getLocalDemand(idDemand));
 			//this.cache.removeLocalDemand(idDemand);
@@ -179,8 +179,6 @@ public class ChatNI extends View implements Runnable,Observer,FromRemoteApp,ToRe
 	public void fileSent(int idDemand){
 		// suppression au niveau du cache des informations sur le fichier envoye 
 		this.cache.removeSender(idDemand);
-		// notification du "controller"
-		this.controller.fileSent(idDemand);
 	}
 	
 	public void fileReceived(int idDemand){
@@ -215,7 +213,6 @@ public class ChatNI extends View implements Runnable,Observer,FromRemoteApp,ToRe
 		}
 		// si il y a eu un setStateConnected
 		if(arg0.getClass().equals(ModelStates.class)){
-			System.out.println("in model");
 			// utilisateur est deconnecte
 			if (arg1.equals(false)){
 				this.connected = false;

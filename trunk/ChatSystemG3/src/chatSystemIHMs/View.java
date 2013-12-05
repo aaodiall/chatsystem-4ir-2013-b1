@@ -16,6 +16,4 @@ public abstract class View {
 	public Controller getController() {
 		return controller;
 	}
-	
-
 }

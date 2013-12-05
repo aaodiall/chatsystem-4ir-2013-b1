@@ -17,14 +17,12 @@ public class ModelFileToReceive extends ModelFile{
 	private File fileToReceive;
 	private FileOutputStream fos;
 	private Boolean stateReceivedDemand;
-	private boolean isReceived;
 	
 	public ModelFileToReceive(String remote, String name,long size, int idDemand,int maxWrite){
 		super(remote,idDemand, maxWrite);
 		super.setName(name);
 		super.setSize(size);
 		super.setNumberParts();
-		this.isReceived = false;
 		System.out.print(System.getenv("HOME") +"/Téléchargements/"+name);
 		System.out.println(" ");
 		this.fileToReceive = new File(System.getenv("HOME") +"/Téléchargements/"+name);
@@ -43,7 +41,6 @@ public class ModelFileToReceive extends ModelFile{
 		try {
 			this.fos.write(part);
 			this.fos.flush();
-			
 			if (isReceived== true){
 				this.fos.close();
 				this.setIsReceived();
@@ -56,10 +53,10 @@ public class ModelFileToReceive extends ModelFile{
 	}
 	
 	public void setIsReceived(){
-		this.isReceived=true;
 		setChanged();
-		notifyObservers();
+		notifyObservers(super.getRemote());
 	}
+
 	
 	public void deleteFile(){
 		this.fileToReceive.delete();
@@ -76,7 +73,8 @@ public class ModelFileToReceive extends ModelFile{
 
 	public void setStateReceivedDemand(Boolean stateReceivedDemand) {
 		this.stateReceivedDemand = stateReceivedDemand;
-		
+		this.setChanged();
+		this.notifyObservers(this);
 	}
 
 }

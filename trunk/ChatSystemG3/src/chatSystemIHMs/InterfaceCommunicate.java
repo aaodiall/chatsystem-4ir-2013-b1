@@ -5,29 +5,15 @@ package chatSystemIHMs;
 
 import javax.swing.JFrame;
 import javax.swing.JButton;
-
-import chatSystemController.Controller;
-
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.util.Vector;
-
 import javax.swing.ImageIcon;
-import javax.swing.JPanel;
-import javax.swing.JLabel;
-import javax.swing.JList;
 import javax.swing.JScrollPane;
-import javax.swing.JTabbedPane;
 import javax.swing.JTextArea;
-import javax.swing.ListSelectionModel;
 import javax.swing.UIManager;
-
 import java.awt.Font;
-
 import javax.swing.JProgressBar;
-
 import java.awt.Color;
-import java.awt.Canvas;
 
 /**
  * represents the conversation window

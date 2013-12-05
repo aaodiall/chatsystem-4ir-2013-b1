@@ -22,15 +22,13 @@ public class ChatNIStreamSender extends Thread{
 	private ObjectOutputStream out;
 	private boolean firstPart;
 	private int idDemand;
-	private int nbParts;
 	private ChatNI chatNI;
 	
-	public ChatNIStreamSender(ChatNI chatNI, int nbParts, int idDemand){
+	public ChatNIStreamSender(ChatNI chatNI, int idDemand){
 		try {
 			this.serverSocket = new ServerSocket(0);
 			this.idDemand = idDemand;
 			this.chatNI = chatNI;
-			this.nbParts=nbParts;
 			this.firstPart = true;
 			System.out.println("port du server "+this.serverSocket.getLocalPort());
 		} catch (IOException e) {
@@ -53,7 +51,6 @@ public class ChatNIStreamSender extends Thread{
 			this.out.writeObject((Object)f);
 			this.out.flush();
 			if (f.isLast()){
-				System.out.println("end writing");
 				this.out.close();
 				this.sock.close();
 				this.chatNI.fileSent(idDemand);
@@ -66,10 +63,7 @@ public class ChatNIStreamSender extends Thread{
 	
 	public void run(){
 		try {
-			System.out.println("avant accept");
 			this.sock = this.serverSocket.accept();
-			System.out.println("après accept");
-			System.out.println("nb parts to send  "+this.nbParts);
 			this.serverSocket.close();
 		} catch (IOException e) {
 			System.out.println("Error : accept in StreamConnection");
