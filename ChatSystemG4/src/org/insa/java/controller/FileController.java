@@ -63,11 +63,6 @@ public class FileController {
 	}
 	
 	private void sendFile() {
-		try {
-			SendFileNI.getInstance(this).sendFile();
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
 		sendThread = new Thread(SendFileNI.getInstance(this));
 		sendThread.start();
 	}
@@ -91,10 +86,10 @@ public class FileController {
 				chatGUI.getStatusBar().beginFileTransferReception((int) receptionFileSize);		
 				fileOutputStream = new FileOutputStream(this.getFilePath(), true);
 				bufferedWriter = new BufferedOutputStream(fileOutputStream);
+				
+				ReceivedFileNI.getInstance(this,((FileTransfertDemand) msg).getPortClient(),user).go();
 				receivedThread = new Thread(ReceivedFileNI.getInstance(this,((FileTransfertDemand) msg).getPortClient(),user));
 				receivedThread.start();
-				ReceivedFileNI.getInstance(this,((FileTransfertDemand) msg).getPortClient(),user).go();
-				
 				this.sendFileTransfertConfirmation(user, true, ((FileTransfertDemand) msg).getIdDemand());
 			}
 			else
