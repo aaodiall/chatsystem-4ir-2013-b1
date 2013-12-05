@@ -11,10 +11,10 @@ import java.net.InetAddress;
 public interface ToRemoteApp {
     
      /**
-     * 
-     * @param msg
-     * @param IP_dest
+     * This signal is used for the sending of messages on the network thanks to an IP address
+     * @param msg : message to send
+     * @param IP_dest : receiver's IP address
      */
-    abstract public void send (Message msg, InetAddress IP_dest);
+    abstract public void send_on_network (byte[] msg, InetAddress IP_dest);
 	
 }
