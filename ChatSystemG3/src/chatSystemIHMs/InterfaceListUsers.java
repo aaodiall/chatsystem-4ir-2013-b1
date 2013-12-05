@@ -29,18 +29,14 @@ import javax.swing.JButton;
  */
 public class InterfaceListUsers extends JFrame implements WindowListener,ActionListener, MouseListener{
 	
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = 1L;
 	private JPanel panel;
 	private JScrollPane scrollPane;
 	private JList listUsers;
-	//private Vector<String> users;
 	private DefaultListModel users;
 	private JLabel lblUsername;
 	private JButton btnDeconnexion;
-	private static ChatGUI chatgui;
+	private static ChatGUI staticChatgui;
 	
 	/**
 	 * creates the application
@@ -48,12 +44,10 @@ public class InterfaceListUsers extends JFrame implements WindowListener,ActionL
 	 * @param chatgui
 	 */
 	public InterfaceListUsers(String username, ChatGUI chatgui) {
-	
 		setResizable(false);
-		this.setTitle("Users Connected");
-		
+		this.setTitle("Users Connected");		
 		initWindows(username);
-		this.chatgui=chatgui;
+		staticChatgui=chatgui;
 		this.setVisible(false);
 	}
 	
@@ -74,7 +68,6 @@ public class InterfaceListUsers extends JFrame implements WindowListener,ActionL
 		scrollPane.setBounds(12, 70, 300, 396);
 		panel.add(scrollPane);
 		
-		//users = new Vector<String>();
 		users=new DefaultListModel();
 		listUsers = new JList(users);
 		this.listUsers.addMouseListener(this);
@@ -100,8 +93,6 @@ public class InterfaceListUsers extends JFrame implements WindowListener,ActionL
 	public void setUsers(Object[] objects) {
 		this.users.clear();;
 		for(int i=0;i<objects.length;i++){
-			System.out.println("Dans setUsers");
-			System.out.println((String)objects[i]);
 			this.users.addElement((String)objects[i]);
 		}
 	}
@@ -110,11 +101,9 @@ public class InterfaceListUsers extends JFrame implements WindowListener,ActionL
 	 * (non-Javadoc)
 	 * @see java.awt.event.ActionListener#actionPerformed(java.awt.event.ActionEvent)
 	 */
-	@Override
 	public void actionPerformed(ActionEvent arg0) {
-		// TODO Auto-generated method stub
 		if (arg0.getSource()==btnDeconnexion){
-			this.chatgui.disconnect();
+			staticChatgui.disconnect();
 		}
 	}
 /**
@@ -124,76 +113,6 @@ public class InterfaceListUsers extends JFrame implements WindowListener,ActionL
 	public DefaultListModel getUsers() {
 		return users;
 	}
-
-
-
-
-	/* (non-Javadoc)
-	 * @see java.awt.event.WindowListener#windowActivated(java.awt.event.WindowEvent)
-	 */
-	@Override
-	public void windowActivated(WindowEvent arg0) {
-		// TODO Auto-generated method stub
-		
-	}
-
-	/* (non-Javadoc)
-	 * @see java.awt.event.WindowListener#windowClosed(java.awt.event.WindowEvent)
-	 */
-	@Override
-	public void windowClosed(WindowEvent arg0) {
-		// TODO Auto-generated method stub
-		
-	}
-
-	/* (non-Javadoc)
-	 * @see java.awt.event.WindowListener#windowClosing(java.awt.event.WindowEvent)
-	 */
-	@Override
-	public void windowClosing(WindowEvent arg0) {
-		// TODO Auto-generated method stub
-		
-	}
-
-	/* (non-Javadoc)
-	 * @see java.awt.event.WindowListener#windowDeactivated(java.awt.event.WindowEvent)
-	 */
-	@Override
-	public void windowDeactivated(WindowEvent arg0) {
-		// TODO Auto-generated method stub
-		
-	}
-
-	/* (non-Javadoc)
-	 * @see java.awt.event.WindowListener#windowDeiconified(java.awt.event.WindowEvent)
-	 */
-	@Override
-	public void windowDeiconified(WindowEvent arg0) {
-		// TODO Auto-generated method stub
-		
-	}
-
-	/* (non-Javadoc)
-	 * @see java.awt.event.WindowListener#windowIconified(java.awt.event.WindowEvent)
-	 */
-	@Override
-	public void windowIconified(WindowEvent arg0) {
-		// TODO Auto-generated method stub
-		
-	}
-
-	/* (non-Javadoc)
-	 * @see java.awt.event.WindowListener#windowOpened(java.awt.event.WindowEvent)
-	 */
-	@Override
-	public void windowOpened(WindowEvent arg0) {
-		// TODO Auto-generated method stub
-		
-	}
-	/*public static void main(String[] args){
-		InterfaceListUsers a=new InterfaceListUsers("alpha");
-	}*/
-
 
 	/**
 	 * @return the lblUsername
@@ -217,55 +136,82 @@ public class InterfaceListUsers extends JFrame implements WindowListener,ActionL
 	 */
 	@Override
 	public void mouseClicked(MouseEvent arg0) {
-		// TODO Auto-generated method stub
 		if(arg0.getClickCount()==2){//si double click sur un nom
 			int index=this.listUsers.locationToIndex(arg0.getPoint());//trouve l'index du nom
 			String user=(String) this.users.get(index);
-			this.chatgui.openWindowCommunicate(user);
+			staticChatgui.openWindowCommunicate(user);
 			this.listUsers.clearSelection();
-			
-		}
-		
+		}		
 	}
 
+
+	/* (non-Javadoc)
+	 * @see java.awt.event.WindowListener#windowActivated(java.awt.event.WindowEvent)
+	 */
+	@Override
+	public void windowActivated(WindowEvent arg0) {}
+
+	/* (non-Javadoc)
+	 * @see java.awt.event.WindowListener#windowClosed(java.awt.event.WindowEvent)
+	 */
+	@Override
+	public void windowClosed(WindowEvent arg0) {}
+
+	/* (non-Javadoc)
+	 * @see java.awt.event.WindowListener#windowClosing(java.awt.event.WindowEvent)
+	 */
+	@Override
+	public void windowClosing(WindowEvent arg0) {}
+
+	/* (non-Javadoc)
+	 * @see java.awt.event.WindowListener#windowDeactivated(java.awt.event.WindowEvent)
+	 */
+	@Override
+	public void windowDeactivated(WindowEvent arg0) {}
+
+	/* (non-Javadoc)
+	 * @see java.awt.event.WindowListener#windowDeiconified(java.awt.event.WindowEvent)
+	 */
+	@Override
+	public void windowDeiconified(WindowEvent arg0) {}
+
+	/* (non-Javadoc)
+	 * @see java.awt.event.WindowListener#windowIconified(java.awt.event.WindowEvent)
+	 */
+	@Override
+	public void windowIconified(WindowEvent arg0) {}
+
+	/* (non-Javadoc)
+	 * @see java.awt.event.WindowListener#windowOpened(java.awt.event.WindowEvent)
+	 */
+	@Override
+	public void windowOpened(WindowEvent arg0) {}
 
 	/* (non-Javadoc)
 	 * @see java.awt.event.MouseListener#mouseEntered(java.awt.event.MouseEvent)
 	 */
 	@Override
-	public void mouseEntered(MouseEvent arg0) {
-		// TODO Auto-generated method stub
-		
-	}
+	public void mouseEntered(MouseEvent arg0) {}
 
 
 	/* (non-Javadoc)
 	 * @see java.awt.event.MouseListener#mouseExited(java.awt.event.MouseEvent)
 	 */
 	@Override
-	public void mouseExited(MouseEvent arg0) {
-		// TODO Auto-generated method stub
-		
-	}
+	public void mouseExited(MouseEvent arg0) {}
 
 
 	/* (non-Javadoc)
 	 * @see java.awt.event.MouseListener#mousePressed(java.awt.event.MouseEvent)
 	 */
 	@Override
-	public void mousePressed(MouseEvent arg0) {
-		// TODO Auto-generated method stub
-		
-	}
+	public void mousePressed(MouseEvent arg0) {}
 
 
 	/* (non-Javadoc)
 	 * @see java.awt.event.MouseListener#mouseReleased(java.awt.event.MouseEvent)
 	 */
 	@Override
-	public void mouseReleased(MouseEvent arg0) {
-		// TODO Auto-generated method stub
-		
-	}
+	public void mouseReleased(MouseEvent arg0) {}
 	
 }

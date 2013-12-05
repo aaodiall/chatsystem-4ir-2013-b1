@@ -27,9 +27,5 @@ public class ModelStates extends Observable {
 		this.stateConnected = stateConnected;
 		setChanged();
 		notifyObservers(stateConnected);
-
-	}
-
-	
-	
+	}	
 }

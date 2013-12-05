@@ -18,9 +18,9 @@ public class ModelFileToSend extends ModelFile{
 	private String path;
 	private BufferedInputStream reader;
 	private File fileToSend;
-	private boolean fileTransmitted;
 	private byte[] partbytes;
 	private int level = 0;
+	boolean fileRefused;
 	
 	private Integer progression;
 	
@@ -29,8 +29,8 @@ public class ModelFileToSend extends ModelFile{
 		this.progression=new Integer(0);
 		this.path = path;
 		this.fileToSend = new File(this.path);
-		this.fileTransmitted = false;
 		this.partbytes = new byte[super.getMax()];
+		this.fileRefused = false;
 		try {
 			this.reader = new BufferedInputStream(new FileInputStream(this.fileToSend));
 			super.setName(this.fileToSend.getName());
@@ -50,7 +50,6 @@ public class ModelFileToSend extends ModelFile{
 		try{
 			nbBytesRead = reader.read(this.partbytes);
 			if (nbBytesRead < 0){
-				this.setSent();
 				this.reader.close();
 				return new byte[0];
 			}else if (nbBytesRead < super.getMax()){
@@ -74,28 +73,26 @@ public class ModelFileToSend extends ModelFile{
 	
 	public void setProgress(int level){
 		this.progression=(Integer)(100*level/(super.getNumberParts()));
-		System.out.println("dans setProgress de modelFile "+ this.getRemote()+" progression"+this.progression);
 		setChanged();
-		notifyObservers();
-		//System.out.println("dans setProgress de modelFile apres notify"+ this.getRemote());
+		notifyObservers(this);
 	}
 	
 	public Integer getProgression() {
 		return progression;
 	}
 	
-	/*public void resetProgress(){
-		this.progression=0;
-	}*/
-	
 	public void resetLevel(){
 		this.level=0;
 	}
 	
-	public void setSent(){
-		this.fileTransmitted = true;
+	public boolean isRefused(){
+		return this.fileRefused;
+	}
+	
+	public void setRefused(){
+		this.fileRefused = true;
 		this.setChanged();
-		this.notifyObservers(this.fileTransmitted);
+		this.notifyObservers(this);
 	}
 	
 }

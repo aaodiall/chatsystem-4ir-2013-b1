@@ -31,7 +31,6 @@ public class ModelListUsers extends Observable {
 		this.listUsers.remove(username);
 		setChanged();
 		notifyObservers(listUsers);
-		
 	}
 	
 	public boolean isInListUsers(String username){
@@ -40,8 +39,6 @@ public class ModelListUsers extends Observable {
 
 	public void clearListUsers(){
 		this.listUsers.clear();
-		//this.listUsers=null;
-	}
-	
+	}	
 	
 }

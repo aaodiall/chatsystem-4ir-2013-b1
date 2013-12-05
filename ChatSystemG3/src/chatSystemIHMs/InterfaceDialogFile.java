@@ -3,8 +3,6 @@
  */
 package chatSystemIHMs;
 
-import java.io.File;
-import java.io.IOException;
 
 import javax.swing.JFileChooser;
 
@@ -21,11 +19,9 @@ public class InterfaceDialogFile {
 	public InterfaceDialogFile(){
 		// Boîte de sélection de fichier à partir du répertoire
         // "home" de l'utilisateur
-        
-            // création de la boîte de dialogue
-            dialogue = new JFileChooser();
-          
-		
+        	
+		// création de la boîte de dialogue
+		dialogue = new JFileChooser();		
 	}
 	/**
 	 * returns the JFileChosser which is opened when the user wants to send a file 

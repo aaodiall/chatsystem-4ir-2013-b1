@@ -144,7 +144,6 @@ public class ChatNIDatagramSender extends Thread{
 			confStream = conf.toArray();
 			pdu2send = new DatagramPacket(confStream,confStream.length,recipient,this.socketUDP.getLocalPort());
 			this.socketUDP.send(pdu2send);
-			System.out.println("confirmation sent");
 		}catch(IOException ioExc){
 			System.out.println("error : construction du fileTransfertDemand");
 			ioExc.printStackTrace();
@@ -178,7 +177,6 @@ public class ChatNIDatagramSender extends Thread{
 				Thread.sleep(100);
 				// envoie d'un pdu si le buffer n'est pas vide
 				if (this.bufferMsg2Send.isEmpty() == false){
-					System.out.println("message à envoyer");
 					try{
 						this.socketUDP.send(this.bufferMsg2Send.poll());
 						System.out.println("message envoyé");				
