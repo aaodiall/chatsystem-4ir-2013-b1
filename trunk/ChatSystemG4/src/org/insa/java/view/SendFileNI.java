@@ -3,13 +3,11 @@ package org.insa.java.view;
 import java.io.BufferedOutputStream;
 import java.io.IOException;
 import java.io.ObjectOutputStream;
-import java.io.OutputStream;
 import java.net.ServerSocket;
 import java.net.Socket;
 
 import org.insa.java.controller.FileController;
 import org.insa.java.controller.TransferState;
-import org.insa.java.model.User;
 
 import chatSystemCommon.FilePart;
 import chatSystemCommon.Message;
@@ -68,8 +66,9 @@ public final class SendFileNI extends JavaChatNI {
 			try {
 				this.bufferedWriter.flush();
 				this.writer.close();
-				this.bufferedWriter.close();
-				this.socket.close();
+				this.bufferedWriter.close(); 
+				if(socket != null)
+					this.socket.close();
 				this.serverSocket.close();
 			} catch (IOException e) {
 				e.printStackTrace();

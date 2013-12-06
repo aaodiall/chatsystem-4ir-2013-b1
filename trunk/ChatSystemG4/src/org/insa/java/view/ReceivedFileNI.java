@@ -1,19 +1,13 @@
 package org.insa.java.view;
 
 import java.io.BufferedInputStream;
-import java.io.ByteArrayOutputStream;
 import java.io.IOException;
-import java.io.InputStream;
 import java.io.ObjectInputStream;
-import java.net.InetAddress;
-import java.net.ServerSocket;
 import java.net.Socket;
-import java.net.UnknownHostException;
 
 import org.insa.java.controller.FileController;
 import org.insa.java.model.User;
 
-import chatSystemCommon.FilePart;
 import chatSystemCommon.Message;
 
 public final class ReceivedFileNI extends JavaChatNI {
@@ -75,7 +69,7 @@ public final class ReceivedFileNI extends JavaChatNI {
 		}
 		
 	}
-	
+	/*
 	private byte[] toByteArray(InputStream is) throws IOException{
 		ByteArrayOutputStream baos = new ByteArrayOutputStream();
 		int reads = is.read();
@@ -86,7 +80,7 @@ public final class ReceivedFileNI extends JavaChatNI {
 		}
 		return baos.toByteArray();
 	}
-
+	 */
 	public void closeSocket() throws IOException {
 		if(socket != null) {
 			socket.close();

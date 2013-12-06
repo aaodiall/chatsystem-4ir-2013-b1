@@ -81,7 +81,7 @@ public class ChatController {
 	}
 	
 	public void connect() {
-		String localUsername = chatGUI.usernameInput();
+		String localUsername = chatGUI.displayUsernameInputDialog();
 		this.checkLocalUsername(localUsername);
 		try {
 			localUsername += "@" + InetAddress.getLocalHost().getHostAddress();
@@ -93,6 +93,10 @@ public class ChatController {
 		}
 		this.enableMessageReception();
 		this.sendHelloMessage(chatModel.getLocalUser());	
+	}
+	
+	public void disconnect() {
+		this.sendGoodbyeMessage(chatModel.getLocalUser());
 	}
 	
 	public void enableMessageReception() {

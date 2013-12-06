@@ -47,7 +47,7 @@ public class MessageController {
 			chatModel.removeUser(new User(user.getAddress(),msg.getUsername()));
 		}
 		else if(msg instanceof Text) {
-			int selectedIndex = chatGUI.getSelectedIndex();
+			int selectedIndex = chatGUI.getSelectedUserIndex();
 			this.addMessage(user, msg);
 			chatGUI.getStatusBar().setMessageBarText("New message received from : " + msg.getUsername());
 			
@@ -66,7 +66,7 @@ public class MessageController {
 				talk += m.getUsername() + " : " + ((Text) m).getText() + "\n";
 		}
 		
-		chatGUI.setChatText(talk);
+		chatGUI.displayTalk(talk);
 	}
 	
 	public void addMessage(User user, Message msg) {
