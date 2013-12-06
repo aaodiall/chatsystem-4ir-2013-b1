@@ -51,6 +51,9 @@ public class SwingChatGUI extends JavaChatGUI implements ControllerToGui, Action
 		this.initComponents();
 	}
 	
+	/**
+	 * Initialize GUI by placing different components in the space.
+	 */
 	private void initComponents() {		
 		userList.setModel(chatController.getModel());
 	
@@ -81,10 +84,8 @@ public class SwingChatGUI extends JavaChatGUI implements ControllerToGui, Action
 		mainWindow.setSize(WIDTH, HEIGHT);
 		mainWindow.setLocationRelativeTo(null);
 		mainWindow.setVisible(true);
-		
-		//((JPanel)statusBar.getContainer()).setPreferredSize(new Dimension(mainWindow.getWidth(),40));	
-		
-		//Equivalent to disconnect method
+				
+		//Equivalent to disconnect method (used if application don't exit normally) 
 		Runtime.getRuntime().addShutdownHook(new Thread() {
 			@Override
 			public void run() {
@@ -94,19 +95,40 @@ public class SwingChatGUI extends JavaChatGUI implements ControllerToGui, Action
 	}
 
 	@Override
-	public String usernameInput() {
+	public String displayUsernameInputDialog() {
 		return JOptionPane.showInputDialog(mainWindow,"Type your username and press accept to connect.\nUsername: ","Chat System Connection",JOptionPane.PLAIN_MESSAGE);
 	}
 	
 	@Override
-	public void setChatText(String newTalk) {
-		chatTextPane.setText(newTalk);
+	public void displayTalk(String talk) {
+		chatTextPane.setText(talk);
+	}
+	
+	@Override
+	public Object getFrame() {
+		return mainWindow;
+	}
+
+	@Override
+	public int getSelectedUserIndex() {
+		return userList.getSelectedIndex();
+	}
+	
+	@Override
+	public String getFilePath() {
+		JFileChooser fileChooser = new JFileChooser();
+		fileChooser.setDialogType(JFileChooser.SAVE_DIALOG);
+		fileChooser.setDialogTitle("Where do you want to save the file ?");
+		fileChooser.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
+		fileChooser.setAcceptAllFileFilterUsed(false);
+		fileChooser.showOpenDialog(mainWindow);
+		return fileChooser.getSelectedFile().toString();
 	}
 
 	@Override
 	public void actionPerformed(ActionEvent e) {
 		if(e.getSource() == sendButton)
-			this.sendTextMessage(userList.getSelectedValue(), sendTextArea.getText());
+			sendTextMessage(userList.getSelectedValue(), sendTextArea.getText());
 		else if(e.getSource() == sendFileButton) {
 			JFileChooser fileChooser = new JFileChooser();
 			int returnVal = fileChooser.showOpenDialog(mainWindow.getParent());
@@ -115,7 +137,6 @@ public class SwingChatGUI extends JavaChatGUI implements ControllerToGui, Action
 				this.sendFile(userList.getSelectedValue(), fileChooser.getSelectedFile());
 			}
 		}
-			
 	}
 	
 	@Override
@@ -134,92 +155,41 @@ public class SwingChatGUI extends JavaChatGUI implements ControllerToGui, Action
 	public void windowClosing(WindowEvent e) {
 		this.disconnect();
 	}
-	
-	public JFrame getMainWindow() {
-		return mainWindow;
-	}
 
-	@Override
-	public int getSelectedIndex() {
-		return userList.getSelectedIndex();
-	}
-
-	@Override
-	public String getFilePath() {
-		JFileChooser fileChooser = new JFileChooser();
-		fileChooser.setDialogType(JFileChooser.SAVE_DIALOG);
-		fileChooser.setDialogTitle("Where do you want to save the file ?");
-		fileChooser.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
-		fileChooser.setAcceptAllFileFilterUsed(false);
-		fileChooser.setVisible(true);
-		//fileChooser.showOpenDialog(mainWindow);
-		return fileChooser.getSelectedFile().toString();
-	}
-
-	@Override
-	public Object getFrame() {
-		return mainWindow;
-	}
-	
-	
 	//Unused actions
 	@Override
-	public void mouseEntered(MouseEvent e) {
-
-	}
+	public void mouseEntered(MouseEvent e) {}
 
 	@Override
-	public void mouseExited(MouseEvent e) {
-
-	}
+	public void mouseExited(MouseEvent e) {}
 
 	@Override
-	public void mousePressed(MouseEvent e) {
-
-	}
+	public void mousePressed(MouseEvent e) {}
 
 	@Override
-	public void mouseReleased(MouseEvent e) {
-
-	}
+	public void mouseReleased(MouseEvent e) {}
 
 	@Override
-	public void keyReleased(KeyEvent arg0) {
-
-	}
+	public void keyReleased(KeyEvent arg0) {}
 
 	@Override
-	public void keyTyped(KeyEvent arg0) {
-		
-	}
+	public void keyTyped(KeyEvent arg0) {}
 
 	@Override
-	public void windowActivated(WindowEvent e) {
-		
-	}
+	public void windowActivated(WindowEvent e) {}
 
 	@Override
-	public void windowClosed(WindowEvent e) {
-		
-	}
+	public void windowClosed(WindowEvent e) {}
 
 	@Override
-	public void windowDeactivated(WindowEvent e) {
-		
-	}
+	public void windowDeactivated(WindowEvent e) {}
 
 	@Override
-	public void windowDeiconified(WindowEvent e) {
-		
-	}
+	public void windowDeiconified(WindowEvent e) {}
 
 	@Override
-	public void windowIconified(WindowEvent e) {
-		
-	}
+	public void windowIconified(WindowEvent e) {}
 
 	@Override
-	public void windowOpened(WindowEvent e) {
-		
-	}
+	public void windowOpened(WindowEvent e) {}
 }

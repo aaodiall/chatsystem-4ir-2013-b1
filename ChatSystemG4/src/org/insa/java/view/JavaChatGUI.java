@@ -23,6 +23,7 @@ public abstract class JavaChatGUI {
 	}
 
 	public void disconnect() {
+		chatController.disconnect();
 		chatController.sendGoodbyeMessage(chatController.getModel().getLocalUser());
 	}
 
@@ -30,11 +31,11 @@ public abstract class JavaChatGUI {
 		return statusBar;
 	}
 	
-	public abstract String usernameInput();
+	public abstract String displayUsernameInputDialog();
 
-	public abstract void setChatText(String talk);
+	public abstract void displayTalk(String talk);
 
-	public abstract int getSelectedIndex();
+	public abstract int getSelectedUserIndex();
 
 	public abstract String getFilePath();
 
