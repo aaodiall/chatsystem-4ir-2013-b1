@@ -1,6 +1,6 @@
 package org.insa.java.view;
 
-public abstract class JavaFileTransferBar {	
+public abstract class JavaFileTransferBar {		
 	public abstract void setVisible(boolean b);
 	
 	public abstract void setText(String s);
@@ -17,16 +17,16 @@ public abstract class JavaFileTransferBar {
 	
 	public abstract Object getCancelbutton();
 	
-	public void beginFileTransferEmission(int fileSize) {
+	public void beginFileTransferEmission() {
 		this.setVisible(true);
 		this.setText("File emission processing...");
-		this.setMax(fileSize);
+		this.setMax(100);
 	}
 	
-	public void beginFileTransferReception(int fileSize) {
+	public void beginFileTransferReception() {
 		this.setVisible(true);
 		this.setText("File reception processing...");
-		this.setMax(fileSize);
+		this.setMax(100);
 	}
 
 	public void finishFileTransferEmission() {

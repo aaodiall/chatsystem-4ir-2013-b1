@@ -62,7 +62,8 @@ public final class ReceivedFileNI extends JavaChatNI {
 			try {
 				this.reader.close();
 				this.bufferedReader.close();
-				this.socket.close();
+				if( socket != null)
+					this.socket.close();
 			} catch (IOException e) {
 				e.printStackTrace();
 			}

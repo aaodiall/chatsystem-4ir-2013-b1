@@ -9,11 +9,13 @@ public abstract class JavaStatusBar {
 	protected ChatController chatController;
 	
 	public void setEmissionBarValue(int i) {
-		emissionBar.setValue(emissionBar.getValue() + i);
+		//emissionBar.setValue(emissionBar.getValue() + i);
+		emissionBar.setValue(i);
 	}
 	
 	public void setReceptionBarValue(int i) {
-		receptionBar.setValue(receptionBar.getValue() + i);
+		//receptionBar.setValue(receptionBar.getValue() + i);
+		receptionBar.setValue(i);
 	}
 	
 	public void setEmissionBarMax(int i) {
@@ -36,12 +38,12 @@ public abstract class JavaStatusBar {
 		messageBar.setText(s);
 	}
 	
-	public void beginFileTransferEmission(int fileSize) {
-		emissionBar.beginFileTransferEmission(fileSize);
+	public void beginFileTransferEmission() {
+		emissionBar.beginFileTransferEmission();
 	}
 	
-	public void beginFileTransferReception(int fileSize) {
-		receptionBar.beginFileTransferReception(fileSize);
+	public void beginFileTransferReception() {
+		receptionBar.beginFileTransferReception();
 	}
 	
 	public void finishFileTransferEmission() {
@@ -53,6 +55,6 @@ public abstract class JavaStatusBar {
 	}
 	
 	public abstract Object getContainer();
-	
+
 }
 

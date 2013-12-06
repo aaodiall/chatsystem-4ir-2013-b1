@@ -21,6 +21,9 @@ public class SwingFileTransferBar extends JavaFileTransferBar{
 	public SwingFileTransferBar() {
 		this.textLabel = new JLabel();
 		this.progressBar = new JProgressBar();
+		progressBar.setStringPainted(true);
+		progressBar.setMaximum(100);
+		
 		this.cancelButton = new JButton("x");
 		cancelButton.setBorder(null);
 		cancelButton.setPreferredSize(new Dimension(20,20));
@@ -45,6 +48,7 @@ public class SwingFileTransferBar extends JavaFileTransferBar{
 	@Override
 	public void setValue(int i) {
 		progressBar.setValue(i);
+		progressBar.setString(i+"%");
 	}
 
 	@Override

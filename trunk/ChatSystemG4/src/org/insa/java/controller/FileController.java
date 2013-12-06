@@ -37,12 +37,13 @@ public class FileController {
 	private long receptionFileSize;
 	private BufferedOutputStream bufferedWriter;
 	private FileOutputStream fileOutputStream;
+	private long receptionPosition = 0;
 	private Thread receivedThread = null;
 	
 	private long emissionFileSize;
 	private File emissionFile;
 	private FileInputStream fileInputStream;
-	private int emissionPosition = 0;
+	private long emissionPosition = 0;
 	private Thread sendThread = null;
 	
 	public FileController(JavaChatGUI chatGUI, ChatModel chatModel) {
@@ -72,7 +73,7 @@ public class FileController {
 		}
 		else if(msg instanceof FileTransfertConfirmation) {
 			if (SendFileNI.getInstance(this).getFileTransfertState() == TransferState.PROCESSING) {
-				chatGUI.getStatusBar().beginFileTransferEmission((int) emissionFileSize);
+				chatGUI.getStatusBar().beginFileTransferEmission();
 				this.fileTransfertProtocol(user, null, msg);
 			}
 		}
@@ -81,7 +82,7 @@ public class FileController {
 			this.receptionFileSize = ((FileTransfertDemand) msg).getSize();
 			int option = JOptionPane.showConfirmDialog(null, "You received a file transfer demand from "+msg.getUsername()+"\nFile name : "+ this.receptionFileName +"\nSize (in byte) : "+ this.receptionFileSize +"\n\nDo you want to accept ?", "File transfer demand received", JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE);
 			if(option == JOptionPane.OK_OPTION) {
-				chatGUI.getStatusBar().beginFileTransferReception((int) receptionFileSize);		
+				chatGUI.getStatusBar().beginFileTransferReception();		
 				fileOutputStream = new FileOutputStream(this.getFilePath(), true);
 				bufferedWriter = new BufferedOutputStream(fileOutputStream);
 				
@@ -94,7 +95,8 @@ public class FileController {
 				this.sendFileTransfertConfirmation(user, false, msg.getId());
 		}
 		else if(msg instanceof FilePart) {
-			chatGUI.getStatusBar().setReceptionBarValue(((FilePart) msg).getFilePart().length);
+			receptionPosition += ((FilePart) msg).getFilePart().length;
+			chatGUI.getStatusBar().setReceptionBarValue((int) (receptionPosition*100/receptionFileSize));
 			bufferedWriter.write(((FilePart) msg).getFilePart());
 			bufferedWriter.flush();
 			if(((FilePart) msg).isLast()) {
@@ -170,7 +172,7 @@ public class FileController {
 	
 	private FilePart getFilePart(int bufferSize) {
 		byte[] buf = new byte[bufferSize];
-		this.setEmissionBarValue(bufferSize);
+		this.setEmissionBarValue((int) (emissionPosition*100/emissionFileSize));
 		emissionPosition += bufferSize;
 		try {
 			fileInputStream.read(buf);
