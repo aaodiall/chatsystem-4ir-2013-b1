@@ -1,5 +1,7 @@
 package chatsystemg5.brain;
 
+import java.util.Observer;
+
 /**
  * Represents the UserModel<p>
  * Handles the local user username and status<p>
@@ -54,5 +56,20 @@ public class UserModel extends ChatModel {
      */
     public void set_state(boolean connected) {
         this.status = connected;
+    }
+
+    @Override
+    public void addObserver(Observer o) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public void deleteObservers() {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public void notifyObservers() {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 }
