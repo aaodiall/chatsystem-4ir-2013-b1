@@ -191,7 +191,7 @@ ate to connected
             chatNI.to_send_text(username_and_IP, message);
             DateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
             Date date = new Date();
-            message = "[" + dateFormat.format(date) + "]\n" + message + "\n\n";
+            message = "[" + dateFormat.format(date) + "]\n" + message;
             this.get_convDB().add_conversation(username_and_IP, "YOU : " + message + "\n\n");
             
         }
