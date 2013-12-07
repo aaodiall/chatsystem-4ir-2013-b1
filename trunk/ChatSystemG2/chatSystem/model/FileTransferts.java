@@ -1,14 +1,13 @@
-/**
- * Keep and manage all the file's tranfers
- * This class implements the Singleton's pattern
- */
-
 package chatSystem.model;
 
 import java.io.File;
 import java.util.Map;
 import java.util.HashMap;
 
+/**
+ * Keep and manage all the file's tranfers
+ * This class implements the Singleton's pattern
+ */
 public class FileTransferts extends Model{
 	
     private static FileTransferts instance;

@@ -1,11 +1,10 @@
-/*
- * Interface modelizing the messages that can be sent from the user interface to the controller
- */
-
 package chatSystem.controller;
 
 import java.io.File;
 
+/*
+ * Interface modelizing the messages that can be sent from the user interface to the controller
+ */
 public interface GuiToCont {
 
     /**

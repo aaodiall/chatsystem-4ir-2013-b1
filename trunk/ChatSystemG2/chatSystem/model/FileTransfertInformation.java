@@ -1,11 +1,10 @@
-/**
- * Information about a file's transfert
- */
-
 package chatSystem.model;
 
 import java.io.File;
 
+/**
+ * Information about a file's transfert
+ */
 public abstract class FileTransfertInformation extends Model {
 
     protected static final int tailleSegment = 1024;

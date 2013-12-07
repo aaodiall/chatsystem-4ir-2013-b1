@@ -1,15 +1,14 @@
-/*
- * Responsible for the sending of new hello messages from time to time
- * In order to inform the other remote systems the user is still connected
- * and learn if some remote systems have gone away
- */
-
 package chatSystem.controller;
 
 import chatSystem.model.RemoteSystems;
 import chatSystem.model.UserInformation;
 import chatSystem.model.UserState;
 
+/*
+ * Responsible for the sending of new hello messages from time to time
+ * In order to inform the other remote systems the user is still connected
+ * and learn if some remote systems have gone away
+ */
 public class ChatAlive extends Thread{
 
     private final long msBetweenHellos;

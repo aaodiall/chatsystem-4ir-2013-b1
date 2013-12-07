@@ -1,9 +1,8 @@
+package chatSystem.model;
+
 /**
  * Information the system has about a user
  */
-
-package chatSystem.model;
-
 public class UserInformation extends Model{
 	
 	private String username;

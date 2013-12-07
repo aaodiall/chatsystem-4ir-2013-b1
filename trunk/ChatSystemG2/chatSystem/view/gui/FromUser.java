@@ -1,12 +1,10 @@
-/**
- * Represents all the messages that can be sent by the local user and must be performed
- */
-
 package chatSystem.view.gui;
 
 import java.io.File;
 
-/** Actions the chat system's user can start **/
+/** Actions the chat system's user can start
+ * Represents all the messages that can be sent by the local user and must be performed
+ */
 
 public interface FromUser {
 

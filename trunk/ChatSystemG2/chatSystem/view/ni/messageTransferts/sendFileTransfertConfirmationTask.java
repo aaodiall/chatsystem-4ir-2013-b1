@@ -1,15 +1,14 @@
+package chatSystem.view.ni.messageTransferts;
+
 /*
  * Represents the task to send a file transfert confirmation to a given remote system
  */
-
-package chatSystem.view.ni.messageTransferts;
-
-
 public class sendFileTransfertConfirmationTask extends Task {
 
     private final String idRemoteSystem;
     private final boolean isAccepted;
     private final int idTransfertRequest;
+    
     /**
      * Class' constructor
      * @param messageTransferts reference to the messageTransferts instance which will fulfill the task

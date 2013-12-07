@@ -1,7 +1,3 @@
-/**
- * First window to appear, where the user is to enter a username to get connected
- */
-
 package chatSystem.view.gui;
 
 
@@ -13,6 +9,9 @@ import java.awt.event.ActionListener;
 
 import javax.swing.*;
 
+/**
+ * First window to appear, where the user is to enter a username to get connected
+ */
 public final class ConnectWindow extends JFrame implements ActionListener {
 
     private static final long serialVersionUID = 1L;

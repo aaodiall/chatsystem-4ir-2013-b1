@@ -1,7 +1,3 @@
-/**
- * Information about a file that is being received by the local user
- */
-
 package chatSystem.model;
 
 import java.io.BufferedOutputStream;
@@ -12,7 +8,9 @@ import java.io.IOException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-
+/**
+ * Information about a file that is being received by the local user
+ */
 public class FileReceivingInformation extends FileTransfertInformation{
     
     private FileOutputStream writer;

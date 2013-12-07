@@ -1,10 +1,6 @@
-/**
- * Active class responsible for the reception of file sent from a given remote
- * system
- */
+
 package chatSystem.view.ni;
 
-//CLIENT
 import chatSystem.model.FileReceivingInformation;
 import chatSystemCommon.FilePart;
 import java.io.BufferedInputStream;
@@ -15,6 +11,11 @@ import java.net.UnknownHostException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+/**
+ * Active class responsible for the reception of file sent from a given remote
+ * system
+ * CLIENT
+ */
 public class FileReceiver implements Runnable {
 
     private final String ipServer;

@@ -1,7 +1,3 @@
-/**
- * Window corresponding to the communication between the local user and a given remote system
- */
-
 package chatSystem.view.gui;
 
 import java.awt.event.ActionEvent;
@@ -10,7 +6,9 @@ import java.io.File;
 import java.util.HashMap;
 import javax.swing.*;
 
-
+/**
+ * Window corresponding to the communication between the local user and a given remote system
+ */
 public class DialogWindow extends JFrame implements ActionListener {
 
     private final JList conversation;

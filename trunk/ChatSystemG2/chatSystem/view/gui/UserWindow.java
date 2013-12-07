@@ -1,9 +1,3 @@
-/**
- * Display to the local user the list of contacts he can communicate with
- * The user has only to click on the name of the remote system he wishes to communicate with
- * to see displayed the corresponding DialogWindow
- */
-
 package chatSystem.view.gui;
 
 import java.awt.BorderLayout;
@@ -17,6 +11,11 @@ import java.util.List;
 
 import javax.swing.*;
 
+/**
+ * Display to the local user the list of contacts he can communicate with
+ * The user has only to click on the name of the remote system he wishes to communicate with
+ * to see displayed the corresponding DialogWindow
+ */
 public class UserWindow extends JFrame implements ActionListener, MouseListener {
 
     private static final long serialVersionUID = 1L;

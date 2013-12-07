@@ -1,8 +1,3 @@
-/**
- * Controls the system' execution
- */
-
-
 package chatSystem.controller;
 
 import chatSystem.model.*;
@@ -12,6 +7,9 @@ import java.net.InetAddress;
 import java.net.UnknownHostException;
 import java.io.File;
 
+/**
+ * Controls the system' execution
+ */
 public class ChatController extends Controller implements GuiToCont, NiToCont {
 
     private UserInformation localUser;

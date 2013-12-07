@@ -1,7 +1,3 @@
-/**
- * Active class responsible for the file's transferts from this local system to
- * a given remote system
- */
 package chatSystem.view.ni;
 
 import chatSystem.model.FileSendingInformation;
@@ -16,7 +12,11 @@ import java.io.ObjectOutputStream;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-//SERVEUR
+/**
+ * Active class responsible for the file's transferts from this local system to
+ * a given remote system
+ * SERVEUR
+ */
 public class FileTransfert implements Runnable {
 
     private final ChatNI chatNI;
