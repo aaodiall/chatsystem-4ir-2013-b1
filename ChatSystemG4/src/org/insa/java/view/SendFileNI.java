@@ -43,6 +43,10 @@ public final class SendFileNI extends JavaChatNI {
 		}
 		return SendFileNI.instance;
 	}
+	
+	public final static void resetInstance() {
+		SendFileNI.instance = null;
+	}
 
 	@Override
 	public void run(){
@@ -58,28 +62,21 @@ public final class SendFileNI extends JavaChatNI {
 	            this.writer.writeObject(msg);
 	            this.bufferedWriter.flush();
 	            if(((FilePart) msg).isLast())
-	            	fileController.finishFileTransferEmission();
+	            	fileController.finishFileEmission();
 	        }
 		} catch (IOException e) {
 			e.printStackTrace();
-		} finally {
-			try {
-				this.bufferedWriter.flush();
-				this.writer.close();
-				this.bufferedWriter.close(); 
-				if(socket != null)
-					this.socket.close();
-				this.serverSocket.close();
-			} catch (IOException e) {
-				e.printStackTrace();
-			}
 		}
 	}
 	
-	public void closeSocket() throws IOException {
-		if(socket != null) {
-			socket.close();
-			socket = null;
+	public void close() {
+		try {
+			this.writer.close();
+			this.bufferedWriter.close(); 
+			this.socket.close();
+			this.serverSocket.close();
+		} catch (IOException e) {
+			e.printStackTrace();
 		}
 	}
 

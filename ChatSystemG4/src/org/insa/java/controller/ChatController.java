@@ -55,15 +55,6 @@ public class ChatController {
 		if(msg.getUsername().equals(chatModel.getLocalUsername()))
 			return -1;
 		
-		/*
-		try {
-			if(inetAddress.equals(InetAddress.getLocalHost()))
-				return -1;
-		} catch (UnknownHostException e) {
-			e.printStackTrace();
-		}
-		*/
-		
 		User user = new User(inetAddress,msg.getUsername());
 		
 		Logger.getLogger(ChatController.class).log(Level.INFO, "Message received >> " + msg.toString());
@@ -84,7 +75,7 @@ public class ChatController {
 		String localUsername = chatGUI.displayUsernameInputDialog();
 		this.checkLocalUsername(localUsername);
 		try {
-			localUsername += "@" + InetAddress.getLocalHost().getHostAddress();
+			//localUsername += "@" + InetAddress.getLocalHost().getHostAddress();
 			chatModel = new ChatModel(new User(InetAddress.getLocalHost(),localUsername));
 			this.messageController = new MessageController(this,chatGUI,chatModel);
 			this.fileController = new FileController(chatGUI,chatModel);

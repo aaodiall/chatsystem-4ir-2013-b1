@@ -18,12 +18,14 @@ public abstract class JavaFileTransferBar {
 	public abstract Object getCancelbutton();
 	
 	public void beginFileTransferEmission() {
+		this.reset();
 		this.setVisible(true);
 		this.setText("File emission processing...");
 		this.setMax(100);
 	}
 	
 	public void beginFileTransferReception() {
+		this.reset();
 		this.setVisible(true);
 		this.setText("File reception processing...");
 		this.setMax(100);
