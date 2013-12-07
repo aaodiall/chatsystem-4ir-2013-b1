@@ -40,15 +40,15 @@ public class ChatController {
 	}
 	
 	public void sendFile(User user, File file) {
-		fileController.beginFileTransfertProtocol(user, file);
+		fileController.beginEmissionProtocol(user, file);
 	}
 
 	public void sendHelloMessage(User localUser) {
-		messageController.sendHelloMessage(MessageFactory.getHelloMessage(chatModel.getLocalUsername(), false));
+		messageController.sendHelloMessage(MessageFactory.hello(chatModel.getLocalUsername(), false));
 	}
 
 	public void sendGoodbyeMessage(User localUser) {
-		messageController.sendGoodbyeMessage(MessageFactory.getByeMessage(chatModel.getLocalUsername()));
+		messageController.sendGoodbyeMessage(MessageFactory.bye(chatModel.getLocalUsername()));
 	}
 	
 	public int receivedMessage(InetAddress inetAddress, Message msg){
@@ -65,7 +65,7 @@ public class ChatController {
 			try {
 				fileController.receivedMessage(user,msg);
 			} catch (IOException e) {
-				e.printStackTrace();
+				Logger.getLogger(ChatController.class).log(Level.SEVERE, "", e);
 			}
 		}
 		return 0;
@@ -75,7 +75,6 @@ public class ChatController {
 		String localUsername = chatGUI.displayUsernameInputDialog();
 		this.checkLocalUsername(localUsername);
 		try {
-			//localUsername += "@" + InetAddress.getLocalHost().getHostAddress();
 			chatModel = new ChatModel(new User(InetAddress.getLocalHost(),localUsername));
 			this.messageController = new MessageController(this,chatGUI,chatModel);
 			this.fileController = new FileController(chatGUI,chatModel);
@@ -108,11 +107,11 @@ public class ChatController {
 		return chatModel;
 	}
 
-	public void fileEmissionCanceled() {
-		fileController.fileEmissionCanceled();
+	public void cancelEmissionTransfer() {
+		fileController.cancelEmissionTransfer();
 	}
 
-	public void fileReceptionCanceled() {
-		fileController.fileReceptionCanceled();
+	public void cancelReceptionTransfer() {
+		fileController.cancelReceptionTransfer();
 	}
 }

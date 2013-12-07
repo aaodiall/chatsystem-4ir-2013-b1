@@ -27,9 +27,7 @@ import org.insa.java.controller.ChatController;
 import org.insa.java.model.User;
 import org.insa.java.view.JavaChatGUI;
 
-import Interface.ControllerToGui;
-
-public class SwingChatGUI extends JavaChatGUI implements ControllerToGui, ActionListener, MouseListener, KeyListener, WindowListener{
+public class SwingChatGUI extends JavaChatGUI implements ActionListener, MouseListener, KeyListener, WindowListener{
 	private final int WIDTH = 800;
 	private final int HEIGHT = 800;
 
@@ -46,17 +44,17 @@ public class SwingChatGUI extends JavaChatGUI implements ControllerToGui, Action
 
 	public SwingChatGUI() {
 		chatController = new ChatController(this);	
-		statusBar = new SwingStatusBar(chatController);
+		statusBar = new SwingStatusBar(this);
 		this.connect();
 		this.initComponents();
 	}
-	
+
 	/**
 	 * Initialize GUI by placing different components in the space.
 	 */
 	private void initComponents() {		
 		userList.setModel(chatController.getModel());
-	
+
 		sendPanel.setLayout(new GridLayout(2,1));
 		sendPanel.add(sendButton);
 		sendPanel.add(sendFileButton);
@@ -75,7 +73,7 @@ public class SwingChatGUI extends JavaChatGUI implements ControllerToGui, Action
 		userList.addMouseListener(this);
 		sendTextArea.addKeyListener(this);
 		mainWindow.addWindowListener(this);
-		
+
 		mainWindow.setLayout(new BorderLayout());
 		mainWindow.add(new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, chatPanel, userList),BorderLayout.CENTER);
 		mainWindow.add((JPanel)statusBar.getContainer(),BorderLayout.SOUTH);
@@ -84,7 +82,7 @@ public class SwingChatGUI extends JavaChatGUI implements ControllerToGui, Action
 		mainWindow.setSize(WIDTH, HEIGHT);
 		mainWindow.setLocationRelativeTo(null);
 		mainWindow.setVisible(true);
-				
+
 		//Equivalent to disconnect method (used if application don't exit normally) 
 		Runtime.getRuntime().addShutdownHook(new Thread() {
 			@Override
@@ -98,12 +96,12 @@ public class SwingChatGUI extends JavaChatGUI implements ControllerToGui, Action
 	public String displayUsernameInputDialog() {
 		return JOptionPane.showInputDialog(mainWindow,"Type your username and press accept to connect.\nUsername: ","Chat System Connection",JOptionPane.PLAIN_MESSAGE);
 	}
-	
+
 	@Override
 	public void displayTalk(String talk) {
 		chatTextPane.setText(talk);
 	}
-	
+
 	@Override
 	public Object getFrame() {
 		return mainWindow;
@@ -113,7 +111,7 @@ public class SwingChatGUI extends JavaChatGUI implements ControllerToGui, Action
 	public int getSelectedUserIndex() {
 		return userList.getSelectedIndex();
 	}
-	
+
 	@Override
 	public String getFilePath() {
 		JFileChooser fileChooser = new JFileChooser();
@@ -127,18 +125,21 @@ public class SwingChatGUI extends JavaChatGUI implements ControllerToGui, Action
 
 	@Override
 	public void actionPerformed(ActionEvent e) {
-		if(e.getSource() == sendButton)
-			sendTextMessage(userList.getSelectedValue(), sendTextArea.getText());
-		else if(e.getSource() == sendFileButton) {
-			JFileChooser fileChooser = new JFileChooser();
-			int returnVal = fileChooser.showOpenDialog(mainWindow.getParent());
+		User selectedValue = userList.getSelectedValue();
+		if(selectedValue != null) {
+			if(e.getSource() == sendButton)
+				sendTextMessage(selectedValue, sendTextArea.getText());
+			else if(e.getSource() == sendFileButton) {
+				JFileChooser fileChooser = new JFileChooser();
+				int returnVal = fileChooser.showOpenDialog(mainWindow.getParent());
 
-			if (returnVal == JFileChooser.APPROVE_OPTION) {
-				this.sendFile(userList.getSelectedValue(), fileChooser.getSelectedFile());
+				if (returnVal == JFileChooser.APPROVE_OPTION)
+					this.sendFile(selectedValue, fileChooser.getSelectedFile());
 			}
 		}
+
 	}
-	
+
 	@Override
 	public void keyPressed(KeyEvent e) {
 		if(e.getSource() == sendTextArea && e.getKeyCode() == KeyEvent.VK_ENTER)
@@ -147,10 +148,14 @@ public class SwingChatGUI extends JavaChatGUI implements ControllerToGui, Action
 
 	@Override
 	public void mouseClicked(MouseEvent e) {
-		if(e.getSource() == userList)
-			chatController.updateTalk(userList.locationToIndex(e.getPoint()));
+		if(e.getSource() == userList) {
+			int index = userList.locationToIndex(e.getPoint());
+			if(index != -1)
+				chatController.updateTalk(index);
+		}
+
 	}
-	
+
 	@Override
 	public void windowClosing(WindowEvent e) {
 		this.disconnect();
