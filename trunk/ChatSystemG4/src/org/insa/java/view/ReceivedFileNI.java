@@ -6,6 +6,7 @@ import java.io.ObjectInputStream;
 import java.net.Socket;
 
 import org.insa.java.controller.FileController;
+import org.insa.java.controller.TransferState;
 import org.insa.java.model.User;
 
 import chatSystemCommon.Message;
@@ -17,8 +18,9 @@ public final class ReceivedFileNI extends JavaChatNI {
 
 	private Socket socket;
 
+	private TransferState fileTransfertState = TransferState.AVAILABLE;
+	
 	private int portClient;
-	private boolean running = true;
 	private User user;
 
 	private BufferedInputStream bufferedReader;
@@ -41,6 +43,10 @@ public final class ReceivedFileNI extends JavaChatNI {
 		return ReceivedFileNI.instance;
 	}
 	
+	public final static void resetInstance() {
+		ReceivedFileNI.instance = null;
+	}
+	
 	@Override
 	public void run() { 
 		try {
@@ -48,7 +54,7 @@ public final class ReceivedFileNI extends JavaChatNI {
             this.bufferedReader = new BufferedInputStream(socket.getInputStream());
             this.reader = new ObjectInputStream(this.bufferedReader);
            
-			while(running) {
+			while(fileTransfertState == TransferState.PROCESSING) {
 				Message msg = (Message) reader.readObject();
 				fileController.receivedMessage(new User(socket.getInetAddress(),msg.getUsername()),msg);
 			}
@@ -57,43 +63,24 @@ public final class ReceivedFileNI extends JavaChatNI {
 			e.printStackTrace();
 		} catch (IOException e) {
 			e.printStackTrace();
-		}
-		finally {
-			try {
-				this.reader.close();
-				this.bufferedReader.close();
-				if( socket != null)
-					this.socket.close();
-			} catch (IOException e) {
-				e.printStackTrace();
-			}
-		}
-		
+		}	
 	}
-	/*
-	private byte[] toByteArray(InputStream is) throws IOException{
-		ByteArrayOutputStream baos = new ByteArrayOutputStream();
-		int reads = is.read();
 
-		while(reads != -1){
-			baos.write(reads);
-			reads = is.read();
-		}
-		return baos.toByteArray();
-	}
-	 */
-	public void closeSocket() throws IOException {
-		if(socket != null) {
+	public void close() {
+		try {
+			reader.close();
+			bufferedReader.close();
 			socket.close();
-			socket = null;
+		} catch(IOException e) {
+			
 		}
 	}
-	
-	public void stop() {
-		running = false;
+
+	public TransferState getFileTransfertState() {
+		return fileTransfertState;
 	}
-	
-	public void go() {
-		running = true;
+
+	public void setFileTransfertState(TransferState fileTransfertState) {
+		this.fileTransfertState = fileTransfertState;
 	}
 }
