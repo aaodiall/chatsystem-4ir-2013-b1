@@ -41,7 +41,7 @@ public class MessageController {
 			if(!chatModel.contains(user)) 
 				chatModel.addUser(user);
 			if(!((Hello) msg).isAck())
-				this.sendWelcomeMessage(MessageFactory.getHelloMessage(chatModel.getLocalUsername(), true), user.getAddress());
+				this.sendWelcomeMessage(MessageFactory.hello(chatModel.getLocalUsername(), true), user.getAddress());
 		}
 		else if(msg instanceof Goodbye) {
 			chatModel.removeUser(new User(user.getAddress(),msg.getUsername()));
@@ -49,7 +49,7 @@ public class MessageController {
 		else if(msg instanceof Text) {
 			int selectedIndex = chatGUI.getSelectedUserIndex();
 			this.addMessage(user, msg);
-			chatGUI.getStatusBar().setMessageBarText("New message received from : " + msg.getUsername());
+			chatGUI.displayMessageInformation("New message received from : " + msg.getUsername());
 			
 			if(selectedIndex != -1)
 				if(chatModel.get(selectedIndex).equals(user))

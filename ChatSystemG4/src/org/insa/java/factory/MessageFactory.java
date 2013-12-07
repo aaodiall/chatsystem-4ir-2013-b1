@@ -15,7 +15,7 @@ public class MessageFactory {
 	private static FileTransfertConfirmation fileTransfertConfirmation = null;
 	private static FileTransfertDemand fileTransfertDemand = null;
 	
-	public static Hello getHelloMessage(String username,boolean isAck) {
+	public static Hello hello(String username,boolean isAck) {
 		if(hello == null) {
 			hello = new Hello(username, isAck);
 		}
@@ -26,7 +26,7 @@ public class MessageFactory {
 		return hello;
 	}
 	
-	public static Goodbye getByeMessage(String username) {
+	public static Goodbye bye(String username) {
 		if(bye == null) {
 			bye = new Goodbye(username);
 		}
@@ -36,7 +36,7 @@ public class MessageFactory {
 		return bye;
 	}
 	
-	public static FilePart getFileMessage(String username, byte[] filePart, boolean isLast) {
+	public static FilePart file(String username, byte[] filePart, boolean isLast) {
 		if(file == null) {
 			file = new FilePart(username,filePart,isLast);
 		}
@@ -48,7 +48,7 @@ public class MessageFactory {
 		return file;
 	}
 	
-	public static FileTransfertCancel getFileTransfertCancelMessage(String username, int idDemand) {
+	public static FileTransfertCancel cancel(String username, int idDemand) {
 		if(fileTransfertCancel == null) {
 			fileTransfertCancel = new FileTransfertCancel(username,idDemand);
 		}
@@ -59,7 +59,7 @@ public class MessageFactory {
 		return fileTransfertCancel;
 	}
 	
-	public static FileTransfertConfirmation getFileTransfertConfirmationMessage(String username, boolean isAccepted, int idDemand) {
+	public static FileTransfertConfirmation confirmation(String username, boolean isAccepted, int idDemand) {
 		if(fileTransfertConfirmation == null) {
 			fileTransfertConfirmation = new FileTransfertConfirmation(username,isAccepted,idDemand);
 		}
@@ -71,7 +71,7 @@ public class MessageFactory {
 		return fileTransfertConfirmation;
 	}
 	
-	public static FileTransfertDemand getFileTransfertDemandMessage(String username, String name, long size,int portClient) {
+	public static FileTransfertDemand demand(String username, String name, long size,int portClient) {
 		if(fileTransfertDemand == null) {
 			fileTransfertDemand = new FileTransfertDemand(username,name,size,portClient,1);
 		}

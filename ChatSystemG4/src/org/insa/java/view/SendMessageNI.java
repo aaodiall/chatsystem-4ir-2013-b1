@@ -6,8 +6,11 @@ import java.net.DatagramSocket;
 import java.net.InetAddress;
 import java.net.SocketException;
 import java.net.UnknownHostException;
+import java.util.logging.Level;
 
 import chatSystemCommon.Message;
+
+import com.sun.istack.internal.logging.Logger;
 
 public final class SendMessageNI extends JavaChatNI {
 	private static SendMessageNI instance = null;
@@ -19,7 +22,7 @@ public final class SendMessageNI extends JavaChatNI {
 			datagramSocket = new DatagramSocket(UDP_CLIENT_PORT);
 			datagramSocket.setBroadcast(true);
 		} catch (SocketException e) {
-			e.printStackTrace();
+			Logger.getLogger(SendMessageNI.class).log(Level.SEVERE, "", e);
 		}
 	}
 	
@@ -37,7 +40,7 @@ public final class SendMessageNI extends JavaChatNI {
 		try {
 			this.sendMessage(message, InetAddress.getByName(UDP_BROADCAST_EMISSION));
 		} catch (UnknownHostException e) {
-			e.printStackTrace();
+			Logger.getLogger(SendMessageNI.class).log(Level.SEVERE, "", e);
 		}
 	}
 	
@@ -47,13 +50,12 @@ public final class SendMessageNI extends JavaChatNI {
 			DatagramPacket sendPacket = new DatagramPacket(sendData, sendData.length, address,UDP_SERVER_PORT);
 			datagramSocket.send(sendPacket);
 		} catch (IOException e) {
-			e.printStackTrace();
+			Logger.getLogger(SendMessageNI.class).log(Level.SEVERE, "", e);
 		}	
 	}
 
 	@Override
 	public void run() {
-		// TODO Auto-generated method stub
-		
+		// Empty method
 	}
 }

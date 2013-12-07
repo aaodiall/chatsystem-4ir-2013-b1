@@ -3,10 +3,13 @@ package org.insa.java.view;
 import java.io.IOException;
 import java.net.DatagramPacket;
 import java.net.DatagramSocket;
+import java.util.logging.Level;
 
 import org.insa.java.controller.ChatController;
 
 import chatSystemCommon.Message;
+
+import com.sun.istack.internal.logging.Logger;
 
 public final class ReceivedMessageNI extends JavaChatNI {
 	private static ReceivedMessageNI instance = null;
@@ -39,8 +42,8 @@ public final class ReceivedMessageNI extends JavaChatNI {
 				socket.receive(packet);
 				chatController.receivedMessage(packet.getAddress(),Message.fromArray(packet.getData()));
 			}
-		} catch (IOException ex) {
-			ex.printStackTrace();
+		} catch (IOException e) {
+			Logger.getLogger(ReceivedMessageNI.class).log(Level.SEVERE, "", e);
 		}
 		finally {
 			socket.close();

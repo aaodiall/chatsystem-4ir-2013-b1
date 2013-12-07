@@ -1,20 +1,17 @@
 package org.insa.java.view;
 
-import org.insa.java.controller.ChatController;
 
 public abstract class JavaStatusBar {
 	protected JavaFileTransferBar emissionBar;
 	protected JavaFileTransferBar receptionBar;
 	protected JavaStandardMessageBar messageBar;
-	protected ChatController chatController;
+	protected JavaChatGUI chatGUI;
 	
 	public void setEmissionBarValue(int i) {
-		//emissionBar.setValue(emissionBar.getValue() + i);
 		emissionBar.setValue(i);
 	}
 	
 	public void setReceptionBarValue(int i) {
-		//receptionBar.setValue(receptionBar.getValue() + i);
 		receptionBar.setValue(i);
 	}
 	
@@ -38,23 +35,6 @@ public abstract class JavaStatusBar {
 		messageBar.setText(s);
 	}
 	
-	public void beginFileTransferEmission() {
-		emissionBar.beginFileTransferEmission();
-	}
-	
-	public void beginFileTransferReception() {
-		receptionBar.beginFileTransferReception();
-	}
-	
-	public void finishFileTransferEmission() {
-		emissionBar.finishFileTransferEmission();
-	}
-	
-	public void finishFileTransferReception() {
-		receptionBar.finishFileTransferReception();
-	}
-	
 	public abstract Object getContainer();
-
 }
 

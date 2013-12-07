@@ -5,12 +5,15 @@ import java.io.IOException;
 import java.io.ObjectOutputStream;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.util.logging.Level;
 
 import org.insa.java.controller.FileController;
 import org.insa.java.controller.TransferState;
 
 import chatSystemCommon.FilePart;
 import chatSystemCommon.Message;
+
+import com.sun.istack.internal.logging.Logger;
 
 public final class SendFileNI extends JavaChatNI {
 	private static SendFileNI instance = null;
@@ -62,10 +65,10 @@ public final class SendFileNI extends JavaChatNI {
 	            this.writer.writeObject(msg);
 	            this.bufferedWriter.flush();
 	            if(((FilePart) msg).isLast())
-	            	fileController.finishFileEmission();
+	            	fileController.finishEmissionTransfer();
 	        }
 		} catch (IOException e) {
-			e.printStackTrace();
+			fileController.cancelEmissionTransfer();
 		}
 	}
 	
@@ -76,7 +79,7 @@ public final class SendFileNI extends JavaChatNI {
 			this.socket.close();
 			this.serverSocket.close();
 		} catch (IOException e) {
-			e.printStackTrace();
+			Logger.getLogger(SendFileNI.class).log(Level.SEVERE, "", e);
 		}
 	}
 

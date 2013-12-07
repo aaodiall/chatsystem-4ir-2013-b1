@@ -7,15 +7,14 @@ import java.awt.event.ActionListener;
 import javax.swing.AbstractButton;
 import javax.swing.JPanel;
 
-import org.insa.java.controller.ChatController;
 import org.insa.java.view.JavaStatusBar;
 
 public class SwingStatusBar extends JavaStatusBar implements ActionListener{
 
 	private JPanel container = new JPanel();
 
-	public SwingStatusBar(ChatController chatController) {
-		this.chatController = chatController;
+	public SwingStatusBar(SwingChatGUI swingChatGUI) {
+		this.chatGUI = swingChatGUI;
 		this.emissionBar = new SwingFileTransferBar();
 		this.receptionBar = new SwingFileTransferBar();
 		this.messageBar = new SwingStandardMessageBar();
@@ -40,11 +39,9 @@ public class SwingStatusBar extends JavaStatusBar implements ActionListener{
 
 	@Override
 	public void actionPerformed(ActionEvent e) {
-		if(e.getSource() == emissionBar.getCancelbutton()) {
-			chatController.fileEmissionCanceled();
-		}
-		else if(e.getSource() == receptionBar.getCancelbutton()) {
-			chatController.fileReceptionCanceled();
-		}
+		if(e.getSource() == emissionBar.getCancelbutton())
+			chatGUI.cancelEmissionTransfer();
+		else if(e.getSource() == receptionBar.getCancelbutton())
+			chatGUI.cancelReceptionTransfer();
 	}
 }
