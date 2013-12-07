@@ -1,8 +1,3 @@
-/**
- * View of the network
- * controls the sending and receiving of messages and files
- */
-
 package chatSystem.view.ni;
 
 import chatSystem.view.gui.View;
@@ -14,6 +9,10 @@ import java.util.Observable;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+/**
+ * View of the network
+ * controls the sending and receiving of messages and files
+ */
 public class ChatNI extends View {
 
     private Thread threadMessageReceiver;

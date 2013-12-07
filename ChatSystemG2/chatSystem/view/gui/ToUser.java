@@ -1,14 +1,12 @@
-/**
- * Represents all the messages that can be sent to the local user
- */
-
 package chatSystem.view.gui;
 
 import chatSystem.model.FileReceivingInformation;
 import chatSystem.model.FileTransfertInformation;
 import java.util.List;
 
-
+/**
+ * Represents all the messages that can be sent to the local user
+ */
 public interface ToUser {
 	
     /** Modify the interface to show the user he is disconnected */

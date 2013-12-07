@@ -1,6 +1,3 @@
-/**
- * Responsible of the interface between the local user and the system
- */
 package chatSystem.view.gui;
 
 import java.util.List;
@@ -13,6 +10,9 @@ import java.util.HashMap;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+/**
+ * Responsible of the interface between the local user and the system
+ */
 public class ChatGUI extends View implements ToUser, FromUser {
 
     private ConnectWindow cWindow = null;

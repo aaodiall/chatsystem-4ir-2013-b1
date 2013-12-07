@@ -1,8 +1,3 @@
-/**
- * Keep and manage the remote systems' information
- * This class implements the Singleton's pattern
- */
-
 package chatSystem.model;
 
 import java.util.ArrayList;
@@ -11,6 +6,10 @@ import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
+/**
+ * Keep and manage the remote systems' information
+ * This class implements the Singleton's pattern
+ */
 public class RemoteSystems extends Model implements Iterable<RemoteSystemInformation> {
 
     private static RemoteSystems instance;
