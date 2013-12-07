@@ -1,6 +1,5 @@
 package chatSystem.view.gui;
 
-
 import java.awt.BorderLayout;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
@@ -10,7 +9,8 @@ import java.awt.event.ActionListener;
 import javax.swing.*;
 
 /**
- * First window to appear, where the user is to enter a username to get connected
+ * First window to appear, where the user is to enter a username to get
+ * connected
  */
 public final class ConnectWindow extends JFrame implements ActionListener {
 
@@ -24,14 +24,16 @@ public final class ConnectWindow extends JFrame implements ActionListener {
 
     /**
      * Class' constructor
-     * @param chatGUI instance of chatGUI which is responsible for the instance of ConnectWindow
+     *
+     * @param chatGUI instance of chatGUI which is responsible for the instance
+     * of ConnectWindow
      */
     public ConnectWindow(ChatGUI chatGUI) {
 
         this.bienvenueLabel = new JLabel("Bienvenue sur le chat System");
         this.usernameLabel = new JLabel("username  ");
         this.usernameTextField = new JTextField(30);
-        this.connectButton = new JButton("Connect");   
+        this.connectButton = new JButton("Connect");
         this.chatGUI = chatGUI;
 
         this.initWindow();
@@ -69,7 +71,7 @@ public final class ConnectWindow extends JFrame implements ActionListener {
         c.fill = GridBagConstraints.HORIZONTAL;
         panel.add(this.usernameLabel, c);
 
-         //initialization of the constraints for username textField
+        //initialization of the constraints for username textField
         c.gridx = 1;
         c.gridy = 1;
         c.ipady = 10;
@@ -78,7 +80,7 @@ public final class ConnectWindow extends JFrame implements ActionListener {
         c.fill = GridBagConstraints.HORIZONTAL;
         panel.add(this.usernameTextField, c);
 
-         //initialization of the constraints for the connect button
+        //initialization of the constraints for the connect button
         c.gridx = 1;
         c.gridy = 2;
         c.ipady = 10;
@@ -89,13 +91,13 @@ public final class ConnectWindow extends JFrame implements ActionListener {
         this.add(panel, BorderLayout.PAGE_START);
         this.setDefaultCloseOperation(EXIT_ON_CLOSE);
         this.setVisible(true);
-        
+
         this.connectButton.addActionListener(this);
     }
 
     /**
-     * Opens a window to show the user a problem has been detected during the connection
-     * The program close after that
+     * Opens a window to show the user a problem has been detected during the
+     * connection The program close after that
      */
     public void displayConnectionError() {
         SwingUtilities.invokeLater(new Runnable() {
@@ -109,16 +111,17 @@ public final class ConnectWindow extends JFrame implements ActionListener {
             }
         });
     }
-    
+
     /**
      * Action performed when an event is detected
+     *
      * @param ae actionEvent detected
      */
-    @Override 
+    @Override
     public void actionPerformed(ActionEvent ae) {
         System.out.println("Entering actionPerformed");
-        if(ae.getSource() == this.connectButton){
-            if(!usernameTextField.getText().equals("")){
+        if (ae.getSource() == this.connectButton) {
+            if (!usernameTextField.getText().equals("")) {
                 chatGUI.connect(usernameTextField.getText());
             }
         }

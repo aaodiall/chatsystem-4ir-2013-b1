@@ -8,18 +8,26 @@ import java.util.List;
  * Represents all the messages that can be sent to the local user
  */
 public interface ToUser {
-	
-    /** Modify the interface to show the user he is disconnected */
+
+    /**
+     * Modify the interface to show the user he is disconnected
+     */
     public void disconnected();
 
-    /**  Modify the interface to show the user he is connected */
+    /**
+     * Modify the interface to show the user he is connected
+     */
     public void connected();
 
-    /** Display an error message to show the user the connection got wrong */
+    /**
+     * Display an error message to show the user the connection got wrong
+     */
     public void displayConnectionErrorNotification();
 
     /**
-     * Display an error message to show the user there was an error during the file transfert
+     * Display an error message to show the user there was an error during the
+     * file transfert
+     *
      * @param idRemoteSystem contact
      * @param fileName name of the file
      */
@@ -28,19 +36,21 @@ public interface ToUser {
     /**
      * Modify the interface to show the user the progression of his file
      * transfert
+     *
      * @param tmp information about the file transfert
      */
     public void displayFileTransfertProgression(FileTransfertInformation tmp);
 
     /**
-     * Modify the interface to reset the progression of a file
-     * transfert
+     * Modify the interface to reset the progression of a file transfert
+     *
      * @param tmp information about the file transfert
      */
     public void resetFileTransfertProgression(FileTransfertInformation tmp);
 
     /**
      * Modify the interface to show the user a file transfert's suggestion
+     *
      * @param tmp
      */
     public void displayFileSuggestion(FileReceivingInformation tmp);
@@ -48,12 +58,14 @@ public interface ToUser {
     /**
      * Modify the interface to show the user the dialog window of the remote
      * system he wishes to communicate with
+     *
      * @param contact
      */
     public void displayDialogWindow(String contact);
 
     /**
      * Modify the interface to update the list of available contacts
+     *
      * @param newList new list of available contact
      * @throws GUIException security in case the update was launched before
      * creating the user list window
@@ -61,7 +73,9 @@ public interface ToUser {
     public void listUser(List<String> newList) throws GUIException;
 
     /**
-     * Update the interface corresponding to a given Remote Sytem by adding a new message
+     * Update the interface corresponding to a given Remote Sytem by adding a
+     * new message
+     *
      * @param idRemoteSystem
      * @param newMessage
      */

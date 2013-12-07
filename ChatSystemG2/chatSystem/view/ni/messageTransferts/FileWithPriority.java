@@ -8,6 +8,7 @@ import java.util.logging.Logger;
 /**
  * Tasks' file, the user can add tasks like when using a normal file but also
  * insert urgent tasks which will be treated first.
+ *
  * @param <E> : type of object
  */
 public class FileWithPriority<E> {
@@ -18,11 +19,12 @@ public class FileWithPriority<E> {
      * Class' constructor
      */
     public FileWithPriority() {
-        this.fileTask = new LinkedList<E>();
+        this.fileTask = new LinkedList<>();
     }
 
     /**
      * Determining if the file is empty
+     *
      * @return true if the file is empty, or false if it's not
      */
     public boolean isEmpty() {
@@ -31,6 +33,7 @@ public class FileWithPriority<E> {
 
     /**
      * Add a task to the end of the pile
+     *
      * @param task the task which is to be added
      */
     public synchronized void addTask(E task) {
@@ -40,6 +43,7 @@ public class FileWithPriority<E> {
 
     /**
      * Add a task at the beginning of the pile
+     *
      * @param task the task which is to be added
      */
     public synchronized void addUrgentTask(E task) {
@@ -49,6 +53,7 @@ public class FileWithPriority<E> {
 
     /**
      * Determine the file's size
+     *
      * @return file's size
      */
     public int size() {
@@ -57,6 +62,7 @@ public class FileWithPriority<E> {
 
     /**
      * Return and erase the next task in the file
+     *
      * @return first element in the file
      */
     public synchronized E getNextTask() {
@@ -74,6 +80,7 @@ public class FileWithPriority<E> {
 
     /**
      * Return the String representation of the file
+     *
      * @return String representation of the file
      */
     @Override

@@ -19,7 +19,7 @@ import java.util.logging.Logger;
  * and open the template in the editor.
  */
 public class MessageTransferts implements Runnable {
-    
+
     final static int portUdpEmission = 16001;
 
     private DatagramSocket messageSocket;
@@ -31,7 +31,8 @@ public class MessageTransferts implements Runnable {
 
     /**
      * Class' constructor
-     * @param chatni reference to the instance of the chat ni 
+     *
+     * @param chatni reference to the instance of the chat ni
      */
     public MessageTransferts(ChatNI chatni) {
         try {
@@ -39,7 +40,7 @@ public class MessageTransferts implements Runnable {
             this.messageSocket.setBroadcast(true);
             this.rmInstance = RemoteSystems.getInstance();
             this.chatni = chatni;
-            this.fileTask = new FileWithPriority<Task>();
+            this.fileTask = new FileWithPriority<>();
         } catch (SocketException exc) {
             System.out.println("Problème à la création du socket d'envoi de messages");
         }
@@ -47,6 +48,7 @@ public class MessageTransferts implements Runnable {
 
     /**
      * Determine the computer local red's broadcast address.
+     *
      * @return broadcast address determined
      */
     private InetAddress determineBroadcastAddress() {
@@ -74,6 +76,7 @@ public class MessageTransferts implements Runnable {
 
     /**
      * Send a hello message to a determined remote system
+     *
      * @param ip ip address of the remote system we want to send the message
      */
     protected void sendHello(String ip) {
@@ -93,8 +96,11 @@ public class MessageTransferts implements Runnable {
     }
 
     /**
-     * Send a text message to someone and indicates the chatNI the text message has been sent
-     * @param idRemoteSystem id of the remote system the text message is to be sent to
+     * Send a text message to someone and indicates the chatNI the text message
+     * has been sent
+     *
+     * @param idRemoteSystem id of the remote system the text message is to be
+     * sent to
      * @param text message content
      */
     protected void sendTextMessage(String idRemoteSystem, String text) {
@@ -106,6 +112,7 @@ public class MessageTransferts implements Runnable {
 
     /**
      * Send a request in order to send a file to a remote system
+     *
      * @param name file's name
      * @param size file's size
      * @param idRemoteSystem remote system id
@@ -114,13 +121,16 @@ public class MessageTransferts implements Runnable {
      */
     protected void sendFileTransfertDemand(String name, long size, String idRemoteSystem, int portClient, int idTransfert) {
         String ip = this.rmInstance.getRemoteSystem(idRemoteSystem).getIP();
-        FileTransfertDemand ftd = new FileTransfertDemand(this.chatni.getUserInfo().getUsername(), name, size, portClient,idTransfert);
+        FileTransfertDemand ftd = new FileTransfertDemand(this.chatni.getUserInfo().getUsername(), name, size, portClient, idTransfert);
         this.sendPacket(ip, ftd);
     }
 
     /**
-     * Send a confirmation to a remote system which sent a file transfert request
-     * @param isAccepted boolean indicating if the request was accepted or refused
+     * Send a confirmation to a remote system which sent a file transfert
+     * request
+     *
+     * @param isAccepted boolean indicating if the request was accepted or
+     * refused
      * @param idTransfertRequest file transfert's id
      * @param idRemoteSystem remote system id
      */
@@ -132,6 +142,7 @@ public class MessageTransferts implements Runnable {
 
     /**
      * Private function used to send a Message to someone
+     *
      * @param ip ip address of the remote system we want to send the message
      * @param msg Message already built we want to send
      */
@@ -141,12 +152,12 @@ public class MessageTransferts implements Runnable {
             this.sendPacket(ipAddress, msg);
         } catch (UnknownHostException exc) {
             System.err.println("probleme a la creation de l'adresse");
-            exc.printStackTrace();
         }
     }
 
     /**
      * Private function used to send a Message
+     *
      * @param ip ip address of the remote system we want to send the message
      * @param msg Message already built we want to send
      */
@@ -162,18 +173,19 @@ public class MessageTransferts implements Runnable {
     }
 
     /**
-     * Set a new sendHelloTask to fulfill
-     * the hello message is to be sent to a single remote system
+     * Set a new sendHelloTask to fulfill the hello message is to be sent to a
+     * single remote system
+     *
      * @param ip ip adress of the remote system the hello message is to be sent
      */
     public void setHelloTask(String ip) {
         System.out.println("Hello Task added");
-        this.fileTask.addUrgentTask(new sendHelloTask(this,ip));
+        this.fileTask.addUrgentTask(new sendHelloTask(this, ip));
     }
 
     /**
-     * Set a new sendHelloTask to fulfill
-     * the hello message is to be sent to all the remote systems
+     * Set a new sendHelloTask to fulfill the hello message is to be sent to all
+     * the remote systems
      */
     public void setHelloTask() {
         System.out.println("Hello Task added");
@@ -181,8 +193,8 @@ public class MessageTransferts implements Runnable {
     }
 
     /**
-     * Set a new sendGoodbyeTask to fulfill
-     * the goodbye message is to be sent to all the remote systems
+     * Set a new sendGoodbyeTask to fulfill the goodbye message is to be sent to
+     * all the remote systems
      */
     public void setGoodbyeTask() {
         this.fileTask.addUrgentTask(new sendGoodbyeTask(this));
@@ -190,15 +202,18 @@ public class MessageTransferts implements Runnable {
 
     /**
      * Set a new sendTextMessageTask to fulfill
-     * @param idRemoteSystem id of the remote system the text message is to be sent
+     *
+     * @param idRemoteSystem id of the remote system the text message is to be
+     * sent
      * @param text text's content
      */
-    public void setTextMessageTask(String idRemoteSystem,String text) {
-        this.fileTask.addTask(new sendTextTask(this, idRemoteSystem,text));
+    public void setTextMessageTask(String idRemoteSystem, String text) {
+        this.fileTask.addTask(new sendTextTask(this, idRemoteSystem, text));
     }
 
     /**
      * Set a new sendFileDemandTask to fulfill
+     *
      * @param name file's name
      * @param size file's size
      * @param idRemoteSystem id of the remote system the request is to be sent
@@ -211,16 +226,20 @@ public class MessageTransferts implements Runnable {
 
     /**
      * Set a new sendFileConfirmationTask to fulfill
-     * @param idRemoteSystem id of the remote system the confirmation is to be sent to
-     * @param isAccepted boolean indicating whether or not the request has been accepted
-     * @param idTransfertRequest id of the transfert request the user is answering 
+     *
+     * @param idRemoteSystem id of the remote system the confirmation is to be
+     * sent to
+     * @param isAccepted boolean indicating whether or not the request has been
+     * accepted
+     * @param idTransfertRequest id of the transfert request the user is
+     * answering
      */
     public void setFileConfirmationTask(String idRemoteSystem, boolean isAccepted, int idTransfertRequest) {
-        this.fileTask.addTask(new sendFileTransfertConfirmationTask(this,idRemoteSystem,isAccepted,idTransfertRequest));
+        this.fileTask.addTask(new sendFileTransfertConfirmationTask(this, idRemoteSystem, isAccepted, idTransfertRequest));
     }
 
     /**
-     *  Wait a new task to do, getNextTask func is using wait
+     * Wait a new task to do, getNextTask func is using wait
      */
     @Override
     public synchronized void run() {
@@ -228,14 +247,5 @@ public class MessageTransferts implements Runnable {
             this.fileTask.getNextTask().execute();
         }
     }
-
-
-    
-
-
-
-
-  
-
 
 }

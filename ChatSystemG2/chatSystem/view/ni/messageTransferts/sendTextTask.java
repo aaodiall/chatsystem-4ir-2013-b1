@@ -10,8 +10,11 @@ public class sendTextTask extends Task {
 
     /**
      * Class' constructor
-     * @param messageTransferts reference to the messageTransferts instance which will fulfill the task
-     * @param idRemoteSystem id of the remote system the text message is to be sent to
+     *
+     * @param messageTransferts reference to the messageTransferts instance
+     * which will fulfill the task
+     * @param idRemoteSystem id of the remote system the text message is to be
+     * sent to
      * @param text text message's content
      */
     public sendTextTask(MessageTransferts messageTransferts, String idRemoteSystem, String text) {

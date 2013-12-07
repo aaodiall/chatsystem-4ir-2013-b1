@@ -10,8 +10,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 /**
- * View of the network
- * controls the sending and receiving of messages and files
+ * View of the network controls the sending and receiving of messages and files
  */
 public class ChatNI extends View {
 
@@ -24,6 +23,7 @@ public class ChatNI extends View {
 
     /**
      * Class' constructor
+     *
      * @param controller instance of ChatController that controls this view
      */
     public ChatNI(ChatController controller) {
@@ -41,6 +41,7 @@ public class ChatNI extends View {
 
     /**
      * Informs the controller of the reception of a hello message
+     *
      * @param username username of the contact who sent the hello message
      * @param ip ip adress of the contact
      * @param isAck whether or not the contact expects an answer
@@ -51,6 +52,7 @@ public class ChatNI extends View {
 
     /**
      * Informs the controller of the reception of a text message
+     *
      * @param msg text message's content
      * @param username username of the contact who sent the text message
      */
@@ -60,7 +62,8 @@ public class ChatNI extends View {
 
     /**
      * Informs the controller of the reception of a goodbye message
-     * @param username username of the contact who sent the goodbye message 
+     *
+     * @param username username of the contact who sent the goodbye message
      */
     public void goodbyeReceived(String username) {
         ((ChatController) (this.controller)).performGoodbyeReceived(username);
@@ -68,8 +71,9 @@ public class ChatNI extends View {
 
     /**
      * Informs the controller of the reception of a file transfert request
+     *
      * @param name file's name
-     * @param username  username of the contact who sent the request
+     * @param username username of the contact who sent the request
      * @param ip ip adress of the contact
      * @param size file's size
      * @param id transfert's id
@@ -81,6 +85,7 @@ public class ChatNI extends View {
 
     /**
      * Informs the controller of the reception of a file transfert confirmation
+     *
      * @param ip ip adress of the contact who answered the request
      * @param idTransfert transfert's id
      * @param accepted whether or not the contact accepted the transfert
@@ -91,6 +96,7 @@ public class ChatNI extends View {
 
     /**
      * Informs the controller of the reception of a file's part
+     *
      * @param idTransfert transfert's id
      * @param filePart file part received
      * @param isLast whether or not this is the last part of the transfert
@@ -101,6 +107,7 @@ public class ChatNI extends View {
 
     /**
      * Informs the controller of the sending of a file
+     *
      * @param idTransfert transfert's id
      * @param idRemoteSystem id of the remote system the file was sent to
      */
@@ -109,13 +116,14 @@ public class ChatNI extends View {
     }
 
     /**
-     * Update launched when one of the Observable objects the chatNI is following
-     * is modified
+     * Update launched when one of the Observable objects the chatNI is
+     * following is modified
+     *
      * @param o : part of the model which send a the notification
      * @param arg : argument sended by the model
      */
     @Override
-    public void update(Observable o, Object arg) {          
+    public void update(Observable o, Object arg) {
         //System.out.println("Entering update ChatNI" + o + " : " + arg);
         if (o instanceof UserInformation) {
             if (arg instanceof UserState) {
@@ -140,6 +148,7 @@ public class ChatNI extends View {
 
     /**
      * Update launched when an instance of FileReceivingInformation is modified
+     *
      * @param tmp instance of FileReceivingInformation that was modified
      */
     public void updateByFileReceivingInformation(FileReceivingInformation tmp) {
@@ -168,6 +177,7 @@ public class ChatNI extends View {
 
     /**
      * Update launched when an instance of FileSendingInformation is modified
+     *
      * @param tmp instance of FileSendingInformation that was modified
      */
     public void updateByFileSendingInformation(FileSendingInformation tmp) {
@@ -197,6 +207,7 @@ public class ChatNI extends View {
 
     /**
      * Update launched when the instance of UserInformation is modified
+     *
      * @param usrInfo instance of UserInformation that was modified
      * @param state new user's state
      */
@@ -234,10 +245,12 @@ public class ChatNI extends View {
     }
 
     /**
-     * Update launched when the instance of RemoteSystems
-     * alerts a instance of RemoteSystemInformation was modified
-     * We decided to receive the notification from RemoteSystems to centralize the information
-     * and for the chatNI not to be disturbed by the RemoteSystemInformation instances' notifications for the chatGUI
+     * Update launched when the instance of RemoteSystems alerts a instance of
+     * RemoteSystemInformation was modified We decided to receive the
+     * notification from RemoteSystems to centralize the information and for the
+     * chatNI not to be disturbed by the RemoteSystemInformation instances'
+     * notifications for the chatGUI
+     *
      * @param aux instance of RemoteSystemInformation that was modified
      */
     public void updateByRemoteSystems(RemoteSystemInformation aux) {
@@ -249,8 +262,10 @@ public class ChatNI extends View {
 
     /**
      * Informs the controller a text message was sent
+     *
      * @param msg text message's content
-     * @param idRemoteSystem id of the remote system the message has been sent to
+     * @param idRemoteSystem id of the remote system the message has been sent
+     * to
      */
     public void messageSent(String msg, String idRemoteSystem) {
         ((ChatController) this.controller).performMessageSent(msg, idRemoteSystem);
@@ -258,6 +273,7 @@ public class ChatNI extends View {
 
     /**
      * Return the UserInformation instance
+     *
      * @return information about the local user
      */
     public UserInformation getUserInfo() {
@@ -266,9 +282,10 @@ public class ChatNI extends View {
 
     /**
      * Informs the controller there has been an error during a file transfert
+     *
      * @param idTransfert transfert's id
      */
     public void fileTransfertError(int idTransfert) {
-        ((ChatController)controller).performFileTransfertError(idTransfert);
+        ((ChatController) controller).performFileTransfertError(idTransfert);
     }
 }

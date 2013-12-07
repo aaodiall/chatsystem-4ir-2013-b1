@@ -5,13 +5,13 @@ package chatSystem.view.gui;
  */
 public class GUIException extends Exception {
 
-	private static final long serialVersionUID = 1L;
-	
-	public GUIException() {
-	}
-	
-	public GUIException(String message) {
-		super(message);
-	}
+    private static final long serialVersionUID = 1L;
+
+    public GUIException() {
+    }
+
+    public GUIException(String message) {
+        super(message);
+    }
 
 }
