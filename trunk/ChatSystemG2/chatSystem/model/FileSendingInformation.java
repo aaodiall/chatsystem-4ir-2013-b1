@@ -20,13 +20,14 @@ public class FileSendingInformation extends FileTransfertInformation {
 
     /**
      * Class' constructor
+     *
      * @param idRemoteSystem id of the remote system the file is being sent to
-     * @param fileToSend file which is to be sent 
+     * @param fileToSend file which is to be sent
      */
     public FileSendingInformation(String idRemoteSystem, File fileToSend) {
         super(idRemoteSystem, fileToSend);
         this.writerArray = new ByteArrayOutputStream();
-        
+
         try {
             this.reader = new FileInputStream(this.fileDescriptor);
             this.readerBuffer = new BufferedInputStream(this.reader);
@@ -37,25 +38,26 @@ public class FileSendingInformation extends FileTransfertInformation {
 
     /**
      * Obtaining the next file's part to send
+     *
      * @return file's part
      */
     public byte[] getFilePart() {
         this.writerArray.reset();
-        int cpt = 1,tmp = 0;
+        int cpt = 1, tmp = 0;
         try {
-            
+
             //get the byte
-            do{
+            do {
                 tmp = this.readerBuffer.read();
-                if(tmp == -1){
-                    this.isLast = true; 
-                }else{
+                if (tmp == -1) {
+                    this.isLast = true;
+                } else {
                     this.writerArray.write(tmp);
                     cpt++;
                 }
-            }while(cpt<tailleSegment && tmp!=-1);
-            
-            this.setProgression(this.getProgression()+cpt);              
+            } while (cpt < tailleSegment && tmp != -1);
+
+            this.setProgression(this.getProgression() + cpt);
             //set isLast to true when last part has been loaded
         } catch (IOException ex) {
             Logger.getLogger(FileTransfertInformation.class.getName()).log(Level.SEVERE, null, ex);

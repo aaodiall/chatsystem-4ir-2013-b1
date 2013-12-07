@@ -7,8 +7,8 @@ import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
 /**
- * Keep and manage the remote systems' information
- * This class implements the Singleton's pattern
+ * Keep and manage the remote systems' information This class implements the
+ * Singleton's pattern
  */
 public class RemoteSystems extends Model implements Iterable<RemoteSystemInformation> {
 
@@ -19,17 +19,18 @@ public class RemoteSystems extends Model implements Iterable<RemoteSystemInforma
      * Private class' constructor
      */
     private RemoteSystems() {
-        this.remoteSystemsInformation = new ConcurrentHashMap<String, RemoteSystemInformation>();
+        this.remoteSystemsInformation = new ConcurrentHashMap<>();
     }
 
     /**
      * Add a remote system in the remote system's list
+     *
      * @param username contact's username
      * @param ip remote system's ip address
      * @param isAck whether or not the remote system expects an answer
      */
     public void addRemoteSystem(String username, String ip, boolean isAck) {
-        
+
         String key = RemoteSystemInformation.generateID(username, ip);
         if (!this.remoteSystemsInformation.containsKey(key)) {
             System.out.println("Adding a user : " + username + "     " + ip);
@@ -46,8 +47,8 @@ public class RemoteSystems extends Model implements Iterable<RemoteSystemInforma
                 this.setChanged();
                 this.notifyObservers(ip);
                 this.clearChanged();
-        
-            }else if (aux.getUserState() == UserState.MAYBEOFFLINE) {
+
+            } else if (aux.getUserState() == UserState.MAYBEOFFLINE) {
                 //message sent to answer a hello broadcast to determine which remote system is still connected
                 aux.setUserState(UserState.CONNECTED);
             }
@@ -56,6 +57,7 @@ public class RemoteSystems extends Model implements Iterable<RemoteSystemInforma
 
     /**
      * Remove a remote system from the list
+     *
      * @param idRemoteSystem id of the remote system to be removed
      */
     public void deleteRemoteSystem(String idRemoteSystem) {
@@ -67,6 +69,7 @@ public class RemoteSystems extends Model implements Iterable<RemoteSystemInforma
 
     /**
      * Obtain the information about a given remote system
+     *
      * @param idRemoteSystem id of the remote system which is wanted
      * @return instance of RemoteSystemInformation corresponding to the id
      */
@@ -76,6 +79,7 @@ public class RemoteSystems extends Model implements Iterable<RemoteSystemInforma
 
     /**
      * Add a received message in a given remote system's list
+     *
      * @param idRemoteSystem id of the remote system
      * @param message message which is to be added
      */
@@ -85,6 +89,7 @@ public class RemoteSystems extends Model implements Iterable<RemoteSystemInforma
 
     /**
      * add a message in the message-to-send list of a given remote system
+     *
      * @param idRemoteSystem remote system the message has to be sent to
      * @param message message which has to be sent
      */
@@ -99,6 +104,7 @@ public class RemoteSystems extends Model implements Iterable<RemoteSystemInforma
 
     /**
      * add a message in the sent-message list of a given remote system
+     *
      * @param message message that has been sent
      * @param idRemoteSystem remote system the message has been sent to
      */
@@ -109,53 +115,53 @@ public class RemoteSystems extends Model implements Iterable<RemoteSystemInforma
     }
 
     /**
-     * Get the contacts username's list
-     * This method is synchronized to avoid the use of iterator by 
-     * more than one thread (see ConcurrentHashMap javadoc) 
-     * 
+     * Get the contacts username's list This method is synchronized to avoid the
+     * use of iterator by more than one thread (see ConcurrentHashMap javadoc)
+     *
      * @return usernames' list
      */
     public synchronized List<String> getUserList() {
-        List<String> userList = new ArrayList<String>();
+        List<String> userList = new ArrayList<>();
         userList.addAll(this.remoteSystemsInformation.keySet());
         return userList;
     }
 
     /**
-     * Set all the remote systems' state as maybeoffline
-     * Will launch a search for the remote systems which are still connected
-     * And those who are not
-     * We synchronized it just in case an other thread will need it and because
-     * the use of iterator may lead to a deadlock
+     * Set all the remote systems' state as maybeoffline Will launch a search
+     * for the remote systems which are still connected And those who are not We
+     * synchronized it just in case an other thread will need it and because the
+     * use of iterator may lead to a deadlock
      */
     public synchronized void setAllMaybeOffline() {
-        for (RemoteSystemInformation rsi: this) {
+        for (RemoteSystemInformation rsi : this) {
             rsi.setUserState(UserState.MAYBEOFFLINE);
         }
         this.setChanged();
         /**
-         * if the GUI try to update here, we will enter in a deadlock,
-         * Indeed, the use of iterators of ConcurentHashMap may lead to
-         * a deadlock if it is used by more than one thread
-         **/
+         * if the GUI try to update here, we will enter in a deadlock, Indeed,
+         * the use of iterators of ConcurentHashMap may lead to a deadlock if it
+         * is used by more than one thread
+         *
+         */
         this.notifyObservers(UserState.MAYBEOFFLINE);
         this.clearChanged();
     }
-    
+
     /**
      * Remove from the list the remote systems which appeared to be offline
      */
     public void removeOfflineRemoteSystem() {
         List<String> rsList = this.getUserList();
-        for(String key : rsList){
-            if (this.remoteSystemsInformation.get(key).getUserState() == UserState.MAYBEOFFLINE){
+        for (String key : rsList) {
+            if (this.remoteSystemsInformation.get(key).getUserState() == UserState.MAYBEOFFLINE) {
                 this.deleteRemoteSystem(key);
             }
         }
     }
-    
+
     /**
      * Static method to obtain an instance of the class RemoteSystems
+     *
      * @return RemoteSystems unique instance
      */
     public final static RemoteSystems getInstance() {
@@ -170,9 +176,10 @@ public class RemoteSystems extends Model implements Iterable<RemoteSystemInforma
     }
 
     /**
-     * Provide an iterator on the instance
-     * The aim is for others objects to be able to look through the instance 
-     * without knowing from what it is composed
+     * Provide an iterator on the instance The aim is for others objects to be
+     * able to look through the instance without knowing from what it is
+     * composed
+     *
      * @return instance's interator
      */
     @Override

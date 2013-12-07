@@ -1,4 +1,3 @@
-
 package chatSystem.view.ni;
 
 import chatSystem.model.FileReceivingInformation;
@@ -13,8 +12,7 @@ import java.util.logging.Logger;
 
 /**
  * Active class responsible for the reception of file sent from a given remote
- * system
- * CLIENT
+ * system CLIENT
  */
 public class FileReceiver implements Runnable {
 
@@ -29,6 +27,7 @@ public class FileReceiver implements Runnable {
 
     /**
      * Class' constructor
+     *
      * @param fileToReceive
      * @param ipServer ip adress of the remote system sending the file
      * @param portServer port the remote system is going to use
@@ -52,18 +51,17 @@ public class FileReceiver implements Runnable {
             this.socketClient = new Socket(this.ipServer, this.portServer);
             this.readerBuffer = new BufferedInputStream(socketClient.getInputStream());
             this.reader = new ObjectInputStream(this.readerBuffer);
-            
+
             Object msg;
             do {
                 msg = reader.readObject();
-                if(((FilePart) msg).isLast()){
-                     this.fileToReceive.setIsLast(true);
+                if (((FilePart) msg).isLast()) {
+                    this.fileToReceive.setIsLast(true);
                 }
                 this.chatNI.filePartReceived(this.fileToReceive.getId(), ((FilePart) msg).getFilePart(), ((FilePart) msg).isLast());
 
             } while (!((FilePart) msg).isLast());
 
-        
         } catch (UnknownHostException ex) {
             this.chatNI.fileTransfertError(this.fileToReceive.getId());
             Logger.getLogger(FileReceiver.class.getName()).log(Level.SEVERE, null, ex);

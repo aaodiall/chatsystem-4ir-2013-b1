@@ -21,13 +21,14 @@ public class ChatGUI extends View implements ToUser, FromUser {
 
     /**
      * Class' constructor
+     *
      * @param controller instance of controller responsible for this instance of
      * chat gui
      */
     public ChatGUI(ChatController controller) {
         super(controller);
         this.cWindow = new ConnectWindow(this);
-        this.dWindows = new HashMap<String, DialogWindow>();
+        this.dWindows = new HashMap<>();
     }
 
     /**
@@ -62,9 +63,11 @@ public class ChatGUI extends View implements ToUser, FromUser {
     public void displayConnectionErrorNotification() {
         this.cWindow.displayConnectionError();
     }
-    
+
     /**
-     * Display an error message to show the user there was an error during the file transfert
+     * Display an error message to show the user there was an error during the
+     * file transfert
+     *
      * @param idRemoteSystem contact
      * @param fileName name of the file
      */
@@ -76,6 +79,7 @@ public class ChatGUI extends View implements ToUser, FromUser {
     /**
      * Modify the interface to show the user the progression of his file
      * transfert
+     *
      * @param tmp information about the file transfert
      */
     @Override
@@ -86,10 +90,10 @@ public class ChatGUI extends View implements ToUser, FromUser {
             this.getDialogWindow(tmp.getIdRemoteSystem()).displayFileReceivingProgression(tmp.getId(), tmp.getSize(), tmp.getProgression());
         }
     }
-    
+
     /**
-     * Modify the interface to reset the progression of a file
-     * transfert
+     * Modify the interface to reset the progression of a file transfert
+     *
      * @param tmp information about the file transfert
      */
     @Override
@@ -103,6 +107,7 @@ public class ChatGUI extends View implements ToUser, FromUser {
 
     /**
      * Modify the interface to show the user a file transfert's suggestion
+     *
      * @param tmp
      */
     @Override
@@ -113,6 +118,7 @@ public class ChatGUI extends View implements ToUser, FromUser {
     /**
      * Modify the interface to show the user the dialog window of the remote
      * system he wishes to communicate with
+     *
      * @param contact
      */
     @Override
@@ -122,18 +128,20 @@ public class ChatGUI extends View implements ToUser, FromUser {
 
     /**
      * Modify the interface to update the list of available contacts
+     *
      * @param newList new list of available contact
      * @throws GUIException security in case the update was launched before
      * creating the user list window
      */
     @Override
     public void listUser(List<String> newList) throws GUIException {
-        
-        for (String contact: this.dWindows.keySet()) {
-            if (!newList.contains(contact))
+
+        for (String contact : this.dWindows.keySet()) {
+            if (!newList.contains(contact)) {
                 this.getDialogWindow(contact).displayUserDisconnected();
+            }
         }
-        
+
         for (String contact : newList) {
             if (!(this.dWindows.containsKey(contact))) {
                 //contact created with no window associated
@@ -147,20 +155,22 @@ public class ChatGUI extends View implements ToUser, FromUser {
             this.uWindow.updateContacts(newList);
         }
     }
-    
+
     /**
      * Update the Dialog Window of a Remote Sytem by adding a new message
+     *
      * @param idRemoteSystem
      * @param newMessage
      */
     @Override
-    public void displayMessage(String idRemoteSystem, String newMessage){
+    public void displayMessage(String idRemoteSystem, String newMessage) {
         this.dWindows.get(idRemoteSystem).updateConversation(newMessage);
     }
-    
+
     /**
-     * Private function which verifies if a Dialog Window for a Remote User is created
-     * before returning it
+     * Private function which verifies if a Dialog Window for a Remote User is
+     * created before returning it
+     *
      * @param idRemoteSystem
      * @return the dialogWindow we need
      */
@@ -177,6 +187,7 @@ public class ChatGUI extends View implements ToUser, FromUser {
     /**
      * Update launched by the modification of some Observable object the class
      * is following
+     *
      * @param o : part of the model which send a the notification
      * @param arg : argument sended by the model
      */
@@ -219,6 +230,7 @@ public class ChatGUI extends View implements ToUser, FromUser {
     /**
      * Updates the chatGUI and its components have to do because of the
      * modification of a RemoteSystemInformation instance
+     *
      * @param rsi RemoteSystemInformation instance that was modified
      * @param arg modification in the instance
      */
@@ -285,6 +297,7 @@ public class ChatGUI extends View implements ToUser, FromUser {
 
     /**
      * Connection of the local user
+     *
      * @param username username chosen for the connection by the local user
      */
     @Override
@@ -302,6 +315,7 @@ public class ChatGUI extends View implements ToUser, FromUser {
 
     /**
      * Send a text message
+     *
      * @param message text message's content
      * @param idRemoteSystem id of the remote system the local user wants to
      * send the text message
@@ -313,6 +327,7 @@ public class ChatGUI extends View implements ToUser, FromUser {
 
     /**
      * Save a file in the computer's memory
+     *
      * @param fileToSend file which is to be saved
      * @param idTransfert id of the file's transfert
      */
@@ -324,6 +339,7 @@ public class ChatGUI extends View implements ToUser, FromUser {
     /**
      * Open the dialog window corresponding to the remote system the user wants
      * to talk to
+     *
      * @param idRemoteSystem id of the remote system
      */
     @Override
@@ -333,6 +349,7 @@ public class ChatGUI extends View implements ToUser, FromUser {
 
     /**
      * Accept the file transfert's suggestion displayed to the local user
+     *
      * @param idTransfert id of the file's transfert
      */
     @Override
@@ -342,6 +359,7 @@ public class ChatGUI extends View implements ToUser, FromUser {
 
     /**
      * Decline the file transfert's suggestion displayed to the local user
+     *
      * @param idTransfert id of the file's transfert
      */
     @Override
@@ -351,8 +369,10 @@ public class ChatGUI extends View implements ToUser, FromUser {
 
     /**
      * Send a file transfert's request to a given remote system
+     *
      * @param fileToSend file the user wants to send
-     * @param idRemoteSystem id of the remote system the file is to be proposed to
+     * @param idRemoteSystem id of the remote system the file is to be proposed
+     * to
      */
     @Override
     public void sendFileRequest(File fileToSend, String idRemoteSystem) {

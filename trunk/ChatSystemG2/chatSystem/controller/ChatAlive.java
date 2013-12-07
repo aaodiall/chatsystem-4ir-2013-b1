@@ -9,15 +9,16 @@ import chatSystem.model.UserState;
  * In order to inform the other remote systems the user is still connected
  * and learn if some remote systems have gone away
  */
-public class ChatAlive extends Thread{
+public class ChatAlive extends Thread {
 
     private final long msBetweenHellos;
     private final long msTimeToAnswer;
     private final UserInformation usrInfo;
     private RemoteSystems rmInstance = null;
-      
+
     /**
      * Class' constructor
+     *
      * @param usrInfo information about the local user
      */
     public ChatAlive(UserInformation usrInfo) {
@@ -25,8 +26,8 @@ public class ChatAlive extends Thread{
         this.usrInfo = usrInfo;
         this.msBetweenHellos = 20000; //10s
         this.msTimeToAnswer = 15000; //6s
-    } 
-    
+    }
+
     /**
      * Action to be executed
      */
@@ -34,7 +35,7 @@ public class ChatAlive extends Thread{
     public void run() {
         while (this.usrInfo.getUserState() == UserState.CONNECTED) {
             try {
-                ChatAlive.sleep(this.msBetweenHellos-this.msTimeToAnswer);
+                ChatAlive.sleep(this.msBetweenHellos - this.msTimeToAnswer);
                 rmInstance.setAllMaybeOffline();
                 ChatAlive.sleep(this.msTimeToAnswer);
                 this.rmInstance.removeOfflineRemoteSystem();
@@ -42,5 +43,5 @@ public class ChatAlive extends Thread{
                 System.err.println("Someone interrupted ChatAlive for no reason");
             }
         }
-    }   
+    }
 }

@@ -1,14 +1,15 @@
 package chatSystem.view.ni.messageTransferts;
 
 /*
-* Represents a task the messageTransferts has to fulfill
-*/
- public abstract class Task {
+ * Represents a task the messageTransferts has to fulfill
+ */
+public abstract class Task {
 
     protected MessageTransferts messageTransferts;
 
     /**
      * Class' constructor
+     *
      * @param messageTransferts reference to the messageTransferts instance
      * which will fulfill the task
      */

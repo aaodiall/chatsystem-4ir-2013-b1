@@ -12,9 +12,9 @@ import java.util.List;
 import javax.swing.*;
 
 /**
- * Display to the local user the list of contacts he can communicate with
- * The user has only to click on the name of the remote system he wishes to communicate with
- * to see displayed the corresponding DialogWindow
+ * Display to the local user the list of contacts he can communicate with The
+ * user has only to click on the name of the remote system he wishes to
+ * communicate with to see displayed the corresponding DialogWindow
  */
 public class UserWindow extends JFrame implements ActionListener, MouseListener {
 
@@ -29,8 +29,10 @@ public class UserWindow extends JFrame implements ActionListener, MouseListener 
 
     /**
      * Class' constructor
+     *
      * @param username local user's username
-     * @param chatGUI instance of chatGUI which is responsible for this instance of UserWindow
+     * @param chatGUI instance of chatGUI which is responsible for this instance
+     * of UserWindow
      */
     public UserWindow(String username, ChatGUI chatGUI) {
 
@@ -101,23 +103,25 @@ public class UserWindow extends JFrame implements ActionListener, MouseListener 
 
     /**
      * Update the contacts' list
+     *
      * @param newContacts new contacts' list
      */
-    public void updateContacts(final List<String> newContacts) {   
+    public void updateContacts(final List<String> newContacts) {
         SwingUtilities.invokeLater(new Runnable() {
             @Override
             public void run() {
                 contactsName.removeAllElements();
-                for (String name : newContacts){
+                for (String name : newContacts) {
                     contactsName.addElement(name);
-                }   
+                }
             }
         });
     }
 
     /**
      * Set the local user's username
-     * @param usrname username the local user wants to have 
+     *
+     * @param usrname username the local user wants to have
      */
     public void setUsername(final String usrname) {
         SwingUtilities.invokeLater(new Runnable() {
@@ -128,8 +132,9 @@ public class UserWindow extends JFrame implements ActionListener, MouseListener 
         });
     }
 
-     /**
+    /**
      * Action performed when an event is detected
+     *
      * @param ae actionEvent detected
      */
     @Override
@@ -141,8 +146,9 @@ public class UserWindow extends JFrame implements ActionListener, MouseListener 
     }
 
     /**
-     * Action performed when the user clicks on the contacts' list
-     * to select a remote system he wants to communicate with
+     * Action performed when the user clicks on the contacts' list to select a
+     * remote system he wants to communicate with
+     *
      * @param me mouse event
      */
     @Override
@@ -160,6 +166,7 @@ public class UserWindow extends JFrame implements ActionListener, MouseListener 
 
     /**
      * Fonctions we had to overwrite but will not use for this application
+     *
      * @param me event
      */
     @Override

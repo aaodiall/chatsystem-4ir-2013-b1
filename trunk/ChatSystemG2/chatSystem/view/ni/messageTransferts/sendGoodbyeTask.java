@@ -7,7 +7,9 @@ public class sendGoodbyeTask extends Task {
 
     /**
      * Class' constructor
-     * @param messageTransferts reference to the messageTransferts instance which will fulfill the task
+     *
+     * @param messageTransferts reference to the messageTransferts instance
+     * which will fulfill the task
      */
     public sendGoodbyeTask(MessageTransferts messageTransferts) {
         super(messageTransferts);

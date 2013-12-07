@@ -14,8 +14,7 @@ import java.util.logging.Logger;
 
 /**
  * Active class responsible for the file's transferts from this local system to
- * a given remote system
- * SERVEUR
+ * a given remote system SERVEUR
  */
 public class FileTransfert implements Runnable {
 
@@ -30,6 +29,7 @@ public class FileTransfert implements Runnable {
 
     /**
      * Class' constructor
+     *
      * @param idTransfert id of the file transfert the instance has to execute
      * @param chatNI instance of chat ni which is responsible for this file
      * transferts instance
@@ -48,6 +48,7 @@ public class FileTransfert implements Runnable {
 
     /**
      * Determine the port the file transfert is going to be executing on
+     *
      * @return port
      */
     public int getPort() {

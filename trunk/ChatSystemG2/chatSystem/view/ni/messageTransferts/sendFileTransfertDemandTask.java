@@ -13,6 +13,7 @@ public class sendFileTransfertDemandTask extends Task {
 
     /**
      * Class' constructor
+     *
      * @param messageTransferts reference to the messageTransferts instance
      * which will fulfill the task
      * @param name file's name
@@ -20,6 +21,7 @@ public class sendFileTransfertDemandTask extends Task {
      * @param idRemoteSystem id of the remote system the request is to be sent
      * to
      * @param portClient port the transfert is going to use
+     * @param idTransfert id of the current transfert
      */
     public sendFileTransfertDemandTask(MessageTransferts messageTransferts, String name, long size, String idRemoteSystem, int portClient, int idTransfert) {
         super(messageTransferts);

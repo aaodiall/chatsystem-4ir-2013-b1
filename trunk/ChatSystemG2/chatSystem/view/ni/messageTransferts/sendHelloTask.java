@@ -9,6 +9,7 @@ public class sendHelloTask extends Task {
 
     /**
      * Class' constructor
+     *
      * @param messageTransferts reference to the messageTransferts instance
      * which will fulfill the task
      * @param ip ip adress of the contact the hello message is to be sent to

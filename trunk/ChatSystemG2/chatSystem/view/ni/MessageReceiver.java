@@ -24,8 +24,10 @@ public class MessageReceiver implements Runnable {
 
     /**
      * Class' constructor
+     *
      * @param chatni chatNI responsible for this messageReceiver instance
-     * @throws java.net.SocketException this error have to be catched to warn the user
+     * @throws java.net.SocketException this error have to be catched to warn
+     * the user
      */
     public MessageReceiver(ChatNI chatni) throws SocketException {
 
