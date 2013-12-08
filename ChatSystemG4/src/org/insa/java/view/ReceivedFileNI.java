@@ -14,6 +14,11 @@ import chatSystemCommon.Message;
 
 import com.sun.istack.internal.logging.Logger;
 
+/**
+ * Network interface used for receiving TCP messages.
+ * @author thomas thiebaud
+ * @author unaï sanchez
+ */
 public final class ReceivedFileNI extends JavaChatNI {
 	private static ReceivedFileNI instance = null;
 
@@ -21,31 +26,45 @@ public final class ReceivedFileNI extends JavaChatNI {
 
 	private Socket socket;
 
-	private TransferState fileTransfertState = TransferState.AVAILABLE;
+	private TransferState fileTransferState = TransferState.AVAILABLE;
 	
 	private int portClient;
-	private User user;
+	private User localUser;
 
 	private BufferedInputStream bufferedReader;
 
 	private ObjectInputStream reader;
 
-	private ReceivedFileNI(FileController fileController, User user) {
+	/**
+	 * Private constructor
+	 * @param fileController Controller used for file transfer.
+	 * @param localUser Local user
+	 */
+	private ReceivedFileNI(FileController fileController, User localUser) {
 		this.fileController = fileController;
-		this.user = user;
+		this.localUser = localUser;
 		this.portClient = fileController.getTransferPort();
 	}
 
-	public final static ReceivedFileNI getInstance(FileController fileController, User user) {
+	/**
+	 * Get an unique instance of the class.
+	 * @param fileController Controller used for file transfer.
+	 * @param localUser Local user
+	 * @return instance Unique instance of the class.
+	 */
+	public final static ReceivedFileNI getInstance(FileController fileController, User localUser) {
 		if(ReceivedFileNI.instance == null) {
 			synchronized(ReceivedFileNI.class) {
 				if(ReceivedFileNI.instance == null)
-					ReceivedFileNI.instance = new ReceivedFileNI(fileController, user);
+					ReceivedFileNI.instance = new ReceivedFileNI(fileController, localUser);
 			}
 		}
 		return ReceivedFileNI.instance;
 	}
 	
+	/**
+	 * Reset instance of the class
+	 */
 	public final static void resetInstance() {
 		ReceivedFileNI.instance = null;
 	}
@@ -53,11 +72,11 @@ public final class ReceivedFileNI extends JavaChatNI {
 	@Override
 	public void run() { 
 		try {
-			socket = new Socket(user.getAddress(), portClient);
+			socket = new Socket(localUser.getAddress(), portClient);
             this.bufferedReader = new BufferedInputStream(socket.getInputStream());
             this.reader = new ObjectInputStream(this.bufferedReader);
            
-			while(fileTransfertState == TransferState.PROCESSING) {
+			while(fileTransferState == TransferState.PROCESSING) {
 				Message msg = (Message) reader.readObject();
 				fileController.receivedMessage(new User(socket.getInetAddress(),msg.getUsername()),msg);
 			}
@@ -69,6 +88,9 @@ public final class ReceivedFileNI extends JavaChatNI {
 		}	
 	}
 
+	/**
+	 * Close socket and stream.
+	 */
 	public void close() {
 		try {
 			reader.close();
@@ -79,11 +101,19 @@ public final class ReceivedFileNI extends JavaChatNI {
 		}
 	}
 
+	/**
+	 * Get reception state.
+	 * @return fileTransfertState FileTransferState.
+	 */
 	public TransferState getFileTransfertState() {
-		return fileTransfertState;
+		return fileTransferState;
 	}
 
-	public void setFileTransfertState(TransferState fileTransfertState) {
-		this.fileTransfertState = fileTransfertState;
+	/**
+	 * Set reception state.
+	 * @param fileTransferState New state value.
+	 */
+	public void setFileTransfertState(TransferState fileTransferState) {
+		this.fileTransferState = fileTransferState;
 	}
 }

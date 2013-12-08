@@ -12,11 +12,19 @@ import chatSystemCommon.Message;
 
 import com.sun.istack.internal.logging.Logger;
 
+/**
+ * Network interface used to send UDP messages.
+ * @author thomas thiebaud
+ * @author unaï sanchez
+ */
 public final class SendMessageNI extends JavaChatNI {
 	private static SendMessageNI instance = null;
 	
 	private DatagramSocket datagramSocket;
 	
+	/**
+	 * Private constructor
+	 */
 	private SendMessageNI() {
 		try {
 			datagramSocket = new DatagramSocket(UDP_CLIENT_PORT);
@@ -26,6 +34,10 @@ public final class SendMessageNI extends JavaChatNI {
 		}
 	}
 	
+	/**
+	 * Get an unique instance of the class.
+	 * @return instance Unique instance of the class.
+	 */
 	public final static SendMessageNI getInstance() {
 		if(SendMessageNI.instance == null) {
 			synchronized(SendMessageNI.class) {
@@ -36,6 +48,10 @@ public final class SendMessageNI extends JavaChatNI {
 		return SendMessageNI.instance;
 	}
 	
+	/**
+	 * Send a broadcast message
+	 * @param message Message to send.
+	 */
 	public void sendBroadcastMessage(Message message) {	
 		try {
 			this.sendMessage(message, InetAddress.getByName(UDP_BROADCAST_EMISSION));
@@ -44,6 +60,11 @@ public final class SendMessageNI extends JavaChatNI {
 		}
 	}
 	
+	/**
+	 * Send a message to a specific user.
+	 * @param message Message to send.
+	 * @param address User address.
+	 */
 	public void sendMessage(Message message, InetAddress address) {
 		try {			
 			byte[] sendData = message.toArray();

@@ -11,6 +11,11 @@ import javax.swing.JProgressBar;
 
 import org.insa.java.view.JavaFileTransferBar;
 
+/**
+ * File transfer bar for swing-based application.
+ * @author thomas thiebaud
+ * @author unaï sanchez
+ */
 public class SwingFileTransferBar extends JavaFileTransferBar{
 	protected JLabel textLabel;
 	protected JProgressBar progressBar;
@@ -18,6 +23,9 @@ public class SwingFileTransferBar extends JavaFileTransferBar{
 	protected JPanel container = new JPanel();
 	protected JPanel buttonContainer = new JPanel();
 	
+	/**
+	 * Constructor
+	 */
 	public SwingFileTransferBar() {
 		this.textLabel = new JLabel();
 		this.progressBar = new JProgressBar();
