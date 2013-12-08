@@ -151,7 +151,7 @@ public class ChatNI extends View {
      *
      * @param tmp instance of FileReceivingInformation that was modified
      */
-    public void updateByFileReceivingInformation(FileReceivingInformation tmp) {
+    private void updateByFileReceivingInformation(FileReceivingInformation tmp) {
         switch (tmp.getState()) {
             case ACCEPTED:
                 this.messageTransfert.setFileConfirmationTask(tmp.getIdRemoteSystem(), true, tmp.getId());
@@ -180,7 +180,7 @@ public class ChatNI extends View {
      *
      * @param tmp instance of FileSendingInformation that was modified
      */
-    public void updateByFileSendingInformation(FileSendingInformation tmp) {
+    private void updateByFileSendingInformation(FileSendingInformation tmp) {
         switch (tmp.getState()) {
             case ACCEPTED:
                 //Noting TODO
@@ -211,7 +211,7 @@ public class ChatNI extends View {
      * @param usrInfo instance of UserInformation that was modified
      * @param state new user's state
      */
-    public void updateByUserInformation(UserInformation usrInfo, UserState state) {
+    private void updateByUserInformation(UserInformation usrInfo, UserState state) {
 
         if (state == UserState.CONNECTED) {
             //create and start new Threads
@@ -253,7 +253,7 @@ public class ChatNI extends View {
      *
      * @param aux instance of RemoteSystemInformation that was modified
      */
-    public void updateByRemoteSystems(RemoteSystemInformation aux) {
+    private void updateByRemoteSystems(RemoteSystemInformation aux) {
         String msgToSend = aux.getMessageToSend();
         if (msgToSend != null) {
             this.messageTransfert.setTextMessageTask(aux.getIdRemoteSystem(), msgToSend);

@@ -20,7 +20,7 @@ import java.util.logging.Logger;
  */
 public class MessageTransferts implements Runnable {
 
-    final static int portUdpEmission = 16001;
+    private final static int portUdpEmission = 16001;
 
     private DatagramSocket messageSocket;
     private RemoteSystems rmInstance;
