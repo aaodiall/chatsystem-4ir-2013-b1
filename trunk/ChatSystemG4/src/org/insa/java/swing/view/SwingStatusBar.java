@@ -9,10 +9,19 @@ import javax.swing.JPanel;
 
 import org.insa.java.view.JavaStatusBar;
 
+/**
+ * Status bar for swing-based application.
+ * @author thomas thiebaud
+ * @author unaï sanchez
+ */
 public class SwingStatusBar extends JavaStatusBar implements ActionListener{
 
 	private JPanel container = new JPanel();
 
+	/**
+	 * Constructor
+	 * @param swingChatGUI Graphic interface for swing-based application.
+	 */
 	public SwingStatusBar(SwingChatGUI swingChatGUI) {
 		this.chatGUI = swingChatGUI;
 		this.emissionBar = new SwingFileTransferBar();

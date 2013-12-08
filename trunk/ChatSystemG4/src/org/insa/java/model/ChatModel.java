@@ -2,35 +2,69 @@ package org.insa.java.model;
 
 import javax.swing.DefaultListModel;
 
+/**
+ * Model of the chat system. Contains data using by the application.
+ * @author thomas thiebaud
+ * @author unaï sanchez
+ */
 public class ChatModel extends DefaultListModel<User>{
 	private static final long serialVersionUID = -4071263680161746323L;
-	
+
 	private User localUser;
 
-	public ChatModel(User user) {
-		this.localUser = user;
+	/**
+	 * Constructor
+	 * @param localUser Local user.
+	 */
+	public ChatModel(User localUser) {
+		this.localUser = localUser;
 	}
 
-	public void addUser(User u) {
-		this.addElement(u);
+	/**
+	 * Add an user to the list of users.
+	 * @param user User to add.
+	 */
+	public void addUser(User user) {
+		this.addElement(user);
 	}
 
-	public void removeUser(User u) {
-		this.removeElement(u);
+	/**
+	 * Remove an user from the list of users.
+	 * @param user User to remove.
+	 */
+	public void removeUser(User user) {
+		this.removeElement(user);
 	}
 
+	/**
+	 * Get local user.
+	 * @return localUser Local user.
+	 */
 	public User getLocalUser() {
 		return localUser;
 	}
 
+	/**
+	 * Set localu user.
+	 * @param localUser New local user
+	 */
 	public void setLocalUser(User localUser) {
 		this.localUser = localUser;
 	}
 
-	public User get(User u) {
-		return this.get(this.indexOf(u));
+	/**
+	 * Get a specific user from the list.
+	 * @param user User to return.
+	 * @return user The real user from the list.
+	 */
+	public User get(User user) {
+		return this.get(this.indexOf(user));
 	}
-	
+
+	/**
+	 * Get local user name.
+	 * @return name The name of the local user.
+	 */
 	public String getLocalUsername() {
 		return localUser.getUsername();
 	}

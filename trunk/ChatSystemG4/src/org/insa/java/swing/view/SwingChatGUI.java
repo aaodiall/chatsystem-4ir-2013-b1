@@ -27,6 +27,11 @@ import org.insa.java.controller.ChatController;
 import org.insa.java.model.User;
 import org.insa.java.view.JavaChatGUI;
 
+/**
+ * Graphic interface for swing-based application.
+ * @author thomas thiebaud
+ * @author unaï sanchez
+ */
 public class SwingChatGUI extends JavaChatGUI implements ActionListener, MouseListener, KeyListener, WindowListener{
 	private final int WIDTH = 800;
 	private final int HEIGHT = 800;
@@ -42,6 +47,9 @@ public class SwingChatGUI extends JavaChatGUI implements ActionListener, MouseLi
 	private JPanel sendPanel = new JPanel();
 	private JPanel formPanel = new JPanel();
 
+	/**
+	 * Constructor
+	 */
 	public SwingChatGUI() {
 		chatController = new ChatController(this);	
 		statusBar = new SwingStatusBar(this);
@@ -127,8 +135,10 @@ public class SwingChatGUI extends JavaChatGUI implements ActionListener, MouseLi
 	public void actionPerformed(ActionEvent e) {
 		User selectedValue = userList.getSelectedValue();
 		if(selectedValue != null) {
-			if(e.getSource() == sendButton)
+			if(e.getSource() == sendButton) {
 				sendTextMessage(selectedValue, sendTextArea.getText());
+				sendTextArea.setText("");
+			}
 			else if(e.getSource() == sendFileButton) {
 				JFileChooser fileChooser = new JFileChooser();
 				int returnVal = fileChooser.showOpenDialog(mainWindow.getParent());

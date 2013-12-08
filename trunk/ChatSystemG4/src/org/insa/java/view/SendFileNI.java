@@ -15,6 +15,11 @@ import chatSystemCommon.Message;
 
 import com.sun.istack.internal.logging.Logger;
 
+/**
+ * Network interface used to send TCP messages.
+ * @author thomas thiebaud
+ * @author unaï sanchez
+ */
 public final class SendFileNI extends JavaChatNI {
 	private static SendFileNI instance = null;
 
@@ -28,6 +33,10 @@ public final class SendFileNI extends JavaChatNI {
 
 	private ObjectOutputStream writer;
 	
+	/**
+	 * Private constructor
+	 * @param fileController Controller used for file transfer.
+	 */
 	private SendFileNI(FileController fileController) {
 		this.fileController = fileController;
 		try {
@@ -37,6 +46,11 @@ public final class SendFileNI extends JavaChatNI {
 		}
 	}
 
+	/**
+	 * Get an unique instance of the class.
+	 * @param fileController Controller used for file transfer.
+	 * @return instance Unique instance of the class.
+	 */
 	public final static SendFileNI getInstance(FileController fileController) {
 		if(SendFileNI.instance == null) {
 			synchronized(SendFileNI.class) {
@@ -47,6 +61,9 @@ public final class SendFileNI extends JavaChatNI {
 		return SendFileNI.instance;
 	}
 	
+	/**
+	 * Reset instance of the class
+	 */
 	public final static void resetInstance() {
 		SendFileNI.instance = null;
 	}
@@ -72,6 +89,9 @@ public final class SendFileNI extends JavaChatNI {
 		}
 	}
 	
+	/**
+	 * Close socket and stream.
+	 */
 	public void close() {
 		try {
 			this.writer.close();
@@ -83,14 +103,26 @@ public final class SendFileNI extends JavaChatNI {
 		}
 	}
 
+	/**
+	 * Get emission state.
+	 * @return fileTransfertState FileTransferState.
+	 */
 	public TransferState getFileTransfertState() {
 		return fileTransfertState;
 	}
 
+	/**
+	 * Set emission state.
+	 * @param fileTransferState New state value.
+	 */
 	public void setFileTransfertState(TransferState fileTransfertState) {
 		this.fileTransfertState = fileTransfertState;
 	}
 	
+	/**
+	 * Get TCP port used for file transfer.
+	 * @return port TCP port number
+	 */
 	public int getPort() {
 		return this.serverSocket.getLocalPort();
 	}

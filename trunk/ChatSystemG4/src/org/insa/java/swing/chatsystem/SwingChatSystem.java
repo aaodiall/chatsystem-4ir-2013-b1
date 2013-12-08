@@ -9,6 +9,11 @@ import org.insa.java.swing.view.SwingChatGUI;
 
 import com.sun.istack.internal.logging.Logger;
 
+/**
+ * Main function for swing-based application.
+ * @author thomas thiebaud
+ * @author unaï sanchez
+ */
 public class SwingChatSystem extends JavaChatSystem {
 	public static void main(String[] args) {
 		try {

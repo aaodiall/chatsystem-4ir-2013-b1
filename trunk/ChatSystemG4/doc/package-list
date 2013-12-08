@@ -1,0 +1,8 @@
+chatSystemCommon
+org.insa.java.chatsystem
+org.insa.java.controller
+org.insa.java.factory
+org.insa.java.model
+org.insa.java.swing.chatsystem
+org.insa.java.swing.view
+org.insa.java.view
