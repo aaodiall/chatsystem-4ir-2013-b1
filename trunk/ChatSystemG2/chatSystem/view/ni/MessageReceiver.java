@@ -13,10 +13,10 @@ import java.util.logging.Logger;
  */
 public class MessageReceiver implements Runnable {
 
-    final static int portUdpReception = 16001;
-    final static int tailleMaxDatagram = 1024;
+    private final static int portUdpReception = 16001;
+    private final static int tailleMaxDatagram = 1024;
 
-    final String ipLocal;
+    private final String ipLocal;
 
     private final DatagramSocket serverSocket;
     private final byte[] messageReceived;
