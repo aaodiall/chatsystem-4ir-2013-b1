@@ -6,6 +6,7 @@ package chatSystemModel;
 import java.util.Observable;
 
 /**
+ * This class contains all the general information about a file
  * @author joanna
  *
  */

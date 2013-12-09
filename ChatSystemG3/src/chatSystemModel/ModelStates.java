@@ -6,6 +6,7 @@ package chatSystemModel;
 import java.util.Observable;
 
 /**
+ * This class represents the states connected or disconnected of the local user
  * @author alpha
  *
  */

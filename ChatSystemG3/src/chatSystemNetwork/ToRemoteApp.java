@@ -6,6 +6,7 @@ package chatSystemNetwork;
 import java.net.InetAddress;
 
 /**
+ * This class contains all the messages that the local chat system can send to a remote application
  * @author joanna
  *
  */

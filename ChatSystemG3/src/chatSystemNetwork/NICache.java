@@ -8,6 +8,7 @@ import java.util.HashMap;
 import chatSystemCommon.Hello;
 
 /**
+ * This class is a local memory for the ChatNI
  * @author joanna
  *
  */

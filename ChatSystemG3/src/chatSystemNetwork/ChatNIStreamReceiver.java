@@ -12,8 +12,9 @@ import java.net.Socket;
 import chatSystemCommon.FilePart;
 
 /**
- * @author joanna
  * This class is responsible for file receiving
+ * @author joanna
+ * 
  */
 public class ChatNIStreamReceiver extends Thread{
 
@@ -39,13 +40,15 @@ public class ChatNIStreamReceiver extends Thread{
 	
 	/**
 	 * 
-	 * @return demand id
+	 * @return demand id associated
 	 */
 	public int getidDemand(){
 		return this.idDemand;
 	}
 	
-	
+	/**
+	 * connect to the server and read all the file parts
+	 */
 	public void run(){
 		Object objectRead;
 		FilePart f;

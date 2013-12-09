@@ -180,11 +180,13 @@ public class ChatNI extends View implements Runnable,Observer,FromRemoteApp,ToRe
 		if (isLast){
 			// suppression, au niveau du cache, des informations sur le fichier reçu
 			this.cache.removeRemotePort(idDemand);
-			// notification du "controller"
-			this.controller.fileReceived(idDemand);
 		}
 	}	
 	
+	/**
+	 * launch the datagram receiver and then check sends Hello periodically.
+	 * if the local user disconnects it stops the datagram receiver and cleans the NICache 
+	 */
 	public void run(){
 		// on lance un récepteur de packet UDP
 		ChatNIDatagramReceiver chatNIDatagramReceiver = new ChatNIDatagramReceiver(this,this.numMsgMax,this.socketUDP,this.userIP);
@@ -205,6 +207,9 @@ public class ChatNI extends View implements Runnable,Observer,FromRemoteApp,ToRe
 		this.cache = null;
 	}
 	
+	/**
+	 * the method is used when the chatNI is notified of an event (by its observable objects)
+	 */
 	public void update(Observable arg0, Object arg1) {
 		// si il y a eu un changement de username
 		if(arg0 instanceof ModelUsername){

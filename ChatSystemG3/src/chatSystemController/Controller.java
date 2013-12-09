@@ -12,11 +12,10 @@ import chatSystemModel.*;
 import chatSystemNetwork.ChatNI;
 
 /**
+ * The controller is the only one who can update the different models.
+ * It directly controls the chatNI but not the ChatGUI (it is done by update messages) 
  * @author joanna
- * The controller is the only one who can update the different models.Le contrôleur est le seul à ecrire dans le modèle, c'est lui qui le met a jour
- * It directly controls the chatNI 
- * Il ne fait pas appel au ChatGUI, c'est au niveau des "update" que les envois se declenchent.
- * Il contrôle directement le chatNI
+ *
  */
 public class Controller extends Thread{
 
@@ -41,10 +40,10 @@ public class Controller extends Thread{
 	
 	/**
 	 * Controller Constructor
-	 * @param modelListUsers
-	 * @param modelStates
-	 * @param modelText
-	 * @param modelUsername
+	 * @param modelListUsers object of type ModelListUsers
+	 * @param modelStates object of type ModelStates
+	 * @param modelText object of type ModelText
+	 * @param modelUsername object of type ModelUsername
 	 */
 	public Controller(ModelListUsers modelListUsers,
 			ModelStates modelStates,
@@ -68,17 +67,25 @@ public class Controller extends Thread{
 		this.nbSendingBytes = 0;
 	}
 
+	/**
+	 * indicates to the controller the ChatGUI that it have to use 
+	 * @param chatgui object of type ChatGUI
+	 */
 	public void setChatgui(ChatGUI chatgui) {
 		this.chatgui = chatgui;
 	}
 
+	/**
+	 * indicates to the controller the ChatNI that it have to use
+	 * @param chatNI object of type ChatNI
+	 */
 	public void setChatNI(ChatNI chatNI) {
 		this.chatNI = chatNI;
 	}
 	
 	/**
 	 * Handle local user connection
-	 * @param username
+	 * @param username local user's user name
 	 */
 	public void performConnect(String username){
 		// enregistrement du pseudo
@@ -118,7 +125,7 @@ public class Controller extends Thread{
 	
 	/**
 	 * Launch file sending
-	 * @param f 
+	 * @param f representation of the file to send
 	 */
 	public void performJoinFile(ModelFileToSend f){		
 		this.ftoSend.add(f);
@@ -192,7 +199,7 @@ public class Controller extends Thread{
 	 * @param remote recipient
 	 * @param file file name
 	 * @param size file size
-	 * @param idDemand
+	 * @param idDemand demand ID associated
 	 */
 	public void filePropositionReceived(String remote, String file, long size, int idDemand){
 		if (this.modelStates.isConnected() && this.modelListUsers.isInListUsers(remote)){
@@ -209,7 +216,7 @@ public class Controller extends Thread{
 	/**
 	 * Handle file tranfer answer from local user
 	 * @param remote user who answers
-	 * @param idDemand
+	 * @param idDemand demand ID associated
 	 * @param isAccepted answer
 	 */
 	public void fileAnswerReceived(String remote,int idDemand,boolean isAccepted){
@@ -225,17 +232,10 @@ public class Controller extends Thread{
 		}
 	}
 	
-	/**
-	 * Handle the end of receive transfers
-	 * @param idDemand
-	 */
-	public void fileReceived(int idDemand){
-		this.filesToReceive.remove(idDemand);
-	}
 	
 	/**
 	 * Handle textual messages from remote users 
-	 * @param text
+	 * @param text received text
 	 * @param username remote user
 	 */
 	public void messageReceived(String text, String username){
@@ -277,7 +277,7 @@ public class Controller extends Thread{
 	/**
 	 * Handle file part receiving 
 	 * @param fileBytes file part to write in ModelFileToReceive
-	 * @param idDemand
+	 * @param idDemand demand ID associated
 	 * @param isLast indicates of it is the last part to receive or not
 	 */
 	public void partReceived(byte[] fileBytes,int idDemand, boolean isLast){	
@@ -311,5 +311,5 @@ public class Controller extends Thread{
 			}
 		}
 	}
-	
+
 }

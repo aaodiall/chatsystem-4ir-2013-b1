@@ -51,9 +51,7 @@ public class InterfaceCommunicate extends JFrame implements ActionListener{
 	/**
 	 * Initialize the contents of the frame.
 	 */
-	private void initialize() {
-		/*tab.add("tab",new JPanel() );*/
-		
+	private void initialize() {		
 		this.setBounds(100, 5, 663, 702);
 		this.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 		getContentPane().setBackground(UIManager.getColor("Button.select"));
@@ -110,9 +108,6 @@ public class InterfaceCommunicate extends JFrame implements ActionListener{
 		this.setResizable(false);
 	
 	}
-
-	
-
 
 /**
  * returns the FileReceived button
