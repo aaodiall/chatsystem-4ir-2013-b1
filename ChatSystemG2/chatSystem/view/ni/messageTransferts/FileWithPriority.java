@@ -8,7 +8,6 @@ import java.util.logging.Logger;
 /**
  * Tasks' file, the user can add tasks like when using a normal file but also
  * insert urgent tasks which will be treated first.
- *
  * @param <E> : type of object
  */
 public class FileWithPriority<E> {

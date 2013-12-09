@@ -12,7 +12,7 @@ import java.util.logging.Logger;
 
 /**
  * Active class responsible for the reception of file sent from a given remote
- * system CLIENT
+ * system
  */
 public class FileReceiver implements Runnable {
 

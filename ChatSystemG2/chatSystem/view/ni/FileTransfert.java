@@ -14,7 +14,7 @@ import java.util.logging.Logger;
 
 /**
  * Active class responsible for the file's transferts from this local system to
- * a given remote system SERVEUR
+ * a given remote system
  */
 public class FileTransfert implements Runnable {
 
