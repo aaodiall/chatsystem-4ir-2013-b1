@@ -12,6 +12,7 @@ import java.net.Socket;
 import chatSystemCommon.FilePart;
 
 /**
+ * This class is responsible for file sending
  * @author joanna
  *
  */
@@ -79,6 +80,9 @@ public class ChatNIStreamSender extends Thread{
 	 * 		- si on utilisait un buffer d'envoi on aurait la contrainte	temps d'alimentation du buffer < temps d'envoi de la partie 
 	 * 		- c'était notre option la plus optimale en terme de temps d'execution
 	 * */
+	/**
+	 * accept the connection and initialize the socket dedicated to the transfer 
+	 */
 	public void run(){
 		try {
 			this.sock = this.serverSocket.accept();

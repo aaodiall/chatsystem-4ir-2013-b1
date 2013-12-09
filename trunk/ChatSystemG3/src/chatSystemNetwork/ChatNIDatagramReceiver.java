@@ -19,6 +19,7 @@ import chatSystemCommon.Text;
 
 
 /**
+ * This class is responsible for receiving UDP datagrams
  * @author joanna
  *
  */
@@ -46,7 +47,10 @@ public class ChatNIDatagramReceiver extends Thread{
 		this.pduReceived = new DatagramPacket(this.streamReceived,this.streamReceived.length);
 	}	
 
-	
+	/**
+	 * change the state to connected or disconnected
+	 * @param isConnected
+	 */
 	void setConnected(boolean isConnected){
 		this.connected = isConnected;
 	}	
@@ -96,12 +100,19 @@ public class ChatNIDatagramReceiver extends Thread{
 		}
 	}
 	
-	
+	/**
+	 * build a unique user name to use in the chat system 
+	 * @param username remote user name
+	 * @param ip remote IP address
+	 * @return unique username to use in the chat system
+	 */
 	public String makeUsername(String username, InetAddress ip){		
 		return username +"@"+ ip.getHostAddress();
 	}
 	
-	
+	/**
+	 * receives datagrams and launch the analyze 
+	 */
 	public void run(){
 		while(this.connected){
 			// on se met en attente de reception d'un pdu

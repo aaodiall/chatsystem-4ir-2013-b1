@@ -1,1 +1,6 @@
+chatSystemCommon
+chatSystemController
 chatSystemIHMs
+chatSystemModel
+chatSystemNetwork
+runChat

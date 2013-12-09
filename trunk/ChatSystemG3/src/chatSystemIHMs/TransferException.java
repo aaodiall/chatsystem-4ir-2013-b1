@@ -4,8 +4,9 @@
 package chatSystemIHMs;
 
 /**
- * @author joanna
  * this exception is used to control local user's data transfers
+ * @author joanna
+ *
  */
 public class TransferException extends Exception{
 

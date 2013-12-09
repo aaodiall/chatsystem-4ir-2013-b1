@@ -6,28 +6,36 @@ package chatSystemNetwork;
 import java.net.InetAddress;
 
 /**
+ * This class contains all the messages that can be received from a remote application
  * @author joanna
  *
  */
 public interface FromRemoteApp {
 	
 	/**
-	 * this function is used when the chat system has received a Hello
-	 * @param remoteUsername remote user's username
+	 * this method is used when the chat system has received a Hello
+	 * @param remoteUsername remote login
 	 * @param remoteIP remote user's IP address
 	 * @param isAck informs if the Hello is an acknowledgment or not
 	 */
 	public void helloReceived(String remoteUsername, InetAddress remoteIP, boolean isAck);	
 	
 	/**
-	 * this function is used when the chat system has received a Goodbye
-	 * @param remoteUsername remote user's username
+	 * this method is used when the chat system has received a Goodbye
+	 * @param remoteUsername remote login
 	 */
 	public void goodbyeReceived(String remoteUsername);	
 	
 	/**
-	 * this function is used when the chat system has received a FileTransfertDemand
-	 * @param remoteUsername remote user's username
+	 * this method is used when the chat system receives a text message
+	 * @param remoteUsername remote login
+	 * @param text received text
+	 */
+	public void textReceived(String remoteUsername, String text);
+	
+	/**
+	 * this method is used when the chat system has received a FileTransfertDemand
+	 * @param remoteUsername remote login
 	 * @param fileName name of the file
 	 * @param fileSize size of the file
 	 * @param idDemand id of the demand 
@@ -37,18 +45,11 @@ public interface FromRemoteApp {
 	
 	/**
 	 * this function is used when the chat system has received a FileTransfertConfirmation
-	 * @param remoteUsername remote user's username
+	 * @param remoteUsername remote login
 	 * @param idDemand id of the demand
 	 * @param isAccepted informs if the file is accepted or not
 	 */
 	public void fileTansfertConfirmationReceived(String remoteUsername,int idDemand, boolean isAccepted);	
-	
-	/**
-	 * this function is used when the chat system has received a FileTransfertCancel
-	 * @param remoteUsername remote user's username
-	 * @param idDemand id of the demand
-	 */
-	//public void fileTansfertCancelReceived(String remoteUsername,int idDemand);	
 	
 	/**
 	 * this function is used when the chat system has received a FilePart

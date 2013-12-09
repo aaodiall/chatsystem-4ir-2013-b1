@@ -10,8 +10,9 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 
 /**
+ * This class represents a file received by the local user
  * @author joanna
- *This class represents a file received by the local user
+ *
  */
 public class ModelFileToReceive extends ModelFile{
 	

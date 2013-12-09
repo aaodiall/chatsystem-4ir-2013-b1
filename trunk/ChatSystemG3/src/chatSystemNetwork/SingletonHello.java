@@ -6,12 +6,13 @@ package chatSystemNetwork;
 import chatSystemCommon.Hello;
 
 /**
+ * This class provides a unique and reusable message Hello
  * @author joanna
  *
  */
 public class SingletonHello {
 
-	private static SingletonHello instance=null;
+	private static SingletonHello instance;
 	private Hello hello;
 	
 	/**
@@ -22,8 +23,8 @@ public class SingletonHello {
 	}
 	
 	/**
-	 * 
-	 * @return instance of SingletonHello
+	 * gets an instance of SingletonHello
+	 * @return instance
 	 */
 	public static SingletonHello getInstance(){
 		if (instance == null){
@@ -33,7 +34,7 @@ public class SingletonHello {
 	}
 	
 	/**
-	 * 
+	 * gets an instance of Hello
 	 * @return instance of Hello initialized with null and false
 	 */
 	public Hello getHello(){

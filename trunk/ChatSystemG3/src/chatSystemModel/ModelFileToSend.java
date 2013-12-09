@@ -10,8 +10,9 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 
 /**
- * @author joanna
  * this class represents a file that will be sent
+ * @author joanna
+ * 
  */
 public class ModelFileToSend extends ModelFile{
 

@@ -16,9 +16,10 @@ import chatSystemCommon.Text;
 import java.util.concurrent.ArrayBlockingQueue;
 
 /**
- * @author alpha
  * This class is responsible for sending all UDP datagram
  * The only messages that it can't send are FilePart messages
+ * @author joanna
+ * 
  */
 
 public class ChatNIDatagramSender extends Thread{
@@ -28,6 +29,11 @@ public class ChatNIDatagramSender extends Thread{
 	private int numMsgMax;
 	private boolean connected;
 	
+	/**
+	 * Constructor
+	 * @param numMsgMax
+	 * @param socketChatNIMessage
+	 */
 	public ChatNIDatagramSender(int numMsgMax, DatagramSocket socketChatNIMessage){
 		this.socketUDP = socketChatNIMessage;
 		this.numMsgMax = numMsgMax;
@@ -64,12 +70,16 @@ public class ChatNIDatagramSender extends Thread{
 
 	}
 	
+	/**
+	 * change state to connected or disconnected
+	 * @param isConnected
+	 */
 	void setConnected(boolean isConnected){
 		this.connected = isConnected;
 	}
 
 	/**
-	 * 
+	 * add a bye message in the list of messages to send
 	 * @param username
 	 * @param broadcast
 	 */
@@ -89,7 +99,7 @@ public class ChatNIDatagramSender extends Thread{
 	}
 	
 	/**
-	 * 
+	 * add a text message in the list of messages to send
 	 * @param recipient
 	 * @param text2Send
 	 * @param username
@@ -108,7 +118,7 @@ public class ChatNIDatagramSender extends Thread{
 	}
 	
 	/**
-	 * 
+	 * add a FileTransfertDemand message in the list of messages to send
 	 * @param username
 	 * @param recipient
 	 * @param name
@@ -130,7 +140,7 @@ public class ChatNIDatagramSender extends Thread{
 	}
 	
 	/**
-	 * 
+	 * add a FileTransfertConfirmation message in the list of messages to send
 	 * @param username
 	 * @param recipient
 	 * @param answer
@@ -150,6 +160,9 @@ public class ChatNIDatagramSender extends Thread{
 		}
 	}
 	
+	/**
+	 * check periodically if there is messages to send and sends them
+	 */
 	public void run(){
 		while(this.connected){
 			// il dort

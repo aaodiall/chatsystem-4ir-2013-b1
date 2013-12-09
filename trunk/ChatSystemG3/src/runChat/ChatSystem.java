@@ -5,6 +5,11 @@ import chatSystemNetwork.*;
 import chatSystemController.Controller;
 import chatSystemIHMs.*;
 
+/**
+ * This class contains the main program to launch the chat system
+ * @author joanna
+ *
+ */
 public class ChatSystem {
 	
 	private static Controller chatController;
@@ -17,8 +22,9 @@ public class ChatSystem {
 
 	
 	/**
-	 * @param args
 	 * main program : creates the essential objects and make the different associations
+	 * @param args
+	 * 
 	 */
 	public static void main(String[] args){	
 		// pour des tests locaux demander a l'utilisateur d'entrer un numero de port
