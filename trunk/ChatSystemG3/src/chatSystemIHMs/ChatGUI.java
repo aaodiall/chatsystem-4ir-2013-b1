@@ -49,7 +49,6 @@ public class ChatGUI extends View implements Observer,ToUser,FromUser{
 /**
  * This method is called whenever the ModelState object is changed.
  * update automatically the view when the user disconnect
- * @see chatSystemController.ModelStates
  * @param arg1
  */
 	public void updateModelStates(Object arg1){
@@ -65,7 +64,6 @@ public class ChatGUI extends View implements Observer,ToUser,FromUser{
 /**
  * This method is called whenever the ModelText object is changed.
  * update automatically the view when the user receive a message
- * @see chatSystemController.ModelText
  * @param arg0
  * @param arg1
  */
@@ -78,24 +76,12 @@ public class ChatGUI extends View implements Observer,ToUser,FromUser{
 /**
  * This method is called whenever the ModelListUsers object is changed.
  * update automatically the view when the remote user connect or disconnect
- * @see chatSystemController.ModelListUsers
  * @param arg1
  */
 	public void updateModelListUsers(Object arg1){
 		this.wListUsers.setUsers(((HashMap<?, ?>)arg1 ).keySet().toArray()) ;
 	}
 	
-	
-	/**
-	 * This method is called whenever the ModelFileToReceive object is changed.
-	 * update automatically the view when the user receive a File
-	 * @see chatSystemController.ModelFile
-	 * @param arg1
-	 */
-	
-	/*public void updateFileReceived(String arg0){ 
-		this.wCommunicate.get(arg0).getBtnFileReceived().setVisible(true);
-	}*/
 	
 	public void udpateFilePropositionReceived(ModelFileToReceive arg1){
 		this.proposeFile(arg1.getRemote(),arg1.getName(),arg1.getSize());
@@ -104,7 +90,6 @@ public class ChatGUI extends View implements Observer,ToUser,FromUser{
 	/**
 	 * This method is called whenever the ModelFileToSend object is changed.
 	 * update automatically the view when the user receive a File
-	 * @see chatSystemController.ModelFile
 	 * @param arg1
 	 */
 	public synchronized void updateModelFileProgress(Object arg1){
@@ -143,7 +128,6 @@ public class ChatGUI extends View implements Observer,ToUser,FromUser{
 	/**
 	 * This method is called whenever the ModelUsername object is changed.
 	 * update automatically the view when the user connected
-	 * @see chatSystemController.ModelUsername
 	 * @param arg1
 	 */
 	public void updateModelUsername(Object arg1){

@@ -24,8 +24,6 @@ public class ChatNIStreamSender extends Thread{
 	
 	/**
 	 * Constructor of the ChatNIStreamSender
-	 * @param chatNI
-	 * @param idDemand
 	 */
 	public ChatNIStreamSender(){
 		try {
@@ -39,7 +37,7 @@ public class ChatNIStreamSender extends Thread{
 	
 	/**
 	 * gets the number associated to the TCP server socket
-	 * @return
+	 * @return port used by the server
 	 */
 	public int getNumPort(){
 		return this.serverSocket.getLocalPort();
