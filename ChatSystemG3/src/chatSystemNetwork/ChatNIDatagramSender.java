@@ -8,8 +8,6 @@ import java.net.DatagramPacket;
 import java.net.DatagramSocket;
 import java.net.InetAddress;
 import java.net.SocketException;
-
-import chatSystemCommon.FileTransfertCancel;
 import chatSystemCommon.FileTransfertConfirmation;
 import chatSystemCommon.FileTransfertDemand;
 import chatSystemCommon.Goodbye;
@@ -19,8 +17,8 @@ import java.util.concurrent.ArrayBlockingQueue;
 
 /**
  * @author alpha
- * Cette classe sert à envoyer des messages avec une connexion UDP
- * Il n'y a que les messages de type File qu'elle ne peut pas envoyer
+ * This class is responsible for sending all UDP datagram
+ * The only messages that it can't send are FilePart messages
  */
 
 public class ChatNIDatagramSender extends Thread{
@@ -39,7 +37,8 @@ public class ChatNIDatagramSender extends Thread{
 			this.socketUDP.setBroadcast(true);
 			this.bufferMsg2Send = new ArrayBlockingQueue<DatagramPacket>(this.numMsgMax);
 		}catch (SocketException e){
-			System.out.println("error : socket exception setBroadcast");
+			System.err.println("Error : cannot set socket in a broadcast mode");
+			System.exit(-1);
 		}		
 	}
 	
@@ -60,7 +59,8 @@ public class ChatNIDatagramSender extends Thread{
 			// add pdu to bufferMessagesToSend
 			this.bufferMsg2Send.add(pdu);
 		}catch (IOException e){
-			System.out.println("connection failed");
+			System.err.println("Error : toArray Message");
+			e.printStackTrace();
 		}
 
 	}
@@ -80,10 +80,11 @@ public class ChatNIDatagramSender extends Thread{
 		// new Goodbye object
 		Goodbye bye = new Goodbye(username);
 		try{
-			byeStream =bye.toArray();
+			byeStream = bye.toArray();
 			pdu=new DatagramPacket(byeStream, byeStream.length,broadcast, this.socketUDP.getLocalPort());
 			this.bufferMsg2Send.add(pdu);
 		}catch (IOException e){
+			System.err.println("Error : toArray Message");
 			e.printStackTrace();
 		}
 	}
@@ -101,9 +102,9 @@ public class ChatNIDatagramSender extends Thread{
 			byte[] messageStream = messageText.toArray();	
 			pdu2send = new DatagramPacket(messageStream,messageStream.length,recipient,this.socketUDP.getLocalPort());
 			this.socketUDP.send(pdu2send);
-		}catch(IOException ioExc){
-			System.out.println("error : construction du stream message");
-			ioExc.printStackTrace();
+		}catch(IOException e){
+			System.err.println("Error : toArray Message");
+			e.printStackTrace();
 		}
 	}
 	
@@ -123,9 +124,9 @@ public class ChatNIDatagramSender extends Thread{
 			demandStream = demand.toArray();
 			pdu2send = new DatagramPacket(demandStream,demandStream.length,recipient,this.socketUDP.getLocalPort());
 			this.socketUDP.send(pdu2send);
-		}catch(IOException ioExc){
-			System.out.println("error : construction du fileTransfertDemand");
-			ioExc.printStackTrace();
+		}catch(IOException e){
+			System.err.println("Error : toArrayMessage");
+			e.printStackTrace();
 		}
 	}
 	
@@ -144,29 +145,9 @@ public class ChatNIDatagramSender extends Thread{
 			confStream = conf.toArray();
 			pdu2send = new DatagramPacket(confStream,confStream.length,recipient,this.socketUDP.getLocalPort());
 			this.socketUDP.send(pdu2send);
-		}catch(IOException ioExc){
-			System.out.println("error : construction du fileTransfertDemand");
-			ioExc.printStackTrace();
-		}
-	}
-	
-	/**
-	 * 
-	 * @param username
-	 * @param recipient
-	 * @param idDemand
-	 */
-	public void sendTransfertCancel(String username,InetAddress recipient,int idDemand){
-		FileTransfertCancel cancel = new FileTransfertCancel(username,idDemand);
-		byte[] cancelStream;
-		DatagramPacket pdu2send;
-		try{
-			cancelStream = cancel.toArray();
-			pdu2send = new DatagramPacket(cancelStream,cancelStream.length,recipient,this.socketUDP.getLocalPort());
-			this.socketUDP.send(pdu2send);
-		}catch(IOException ioExc){
-			System.out.println("error : construction du fileTransfertDemand");
-			ioExc.printStackTrace();
+		}catch(IOException e){
+			System.err.println("Error : toArray Message");
+			e.printStackTrace();
 		}
 	}
 	
@@ -178,15 +159,14 @@ public class ChatNIDatagramSender extends Thread{
 				// envoie d'un pdu si le buffer n'est pas vide
 				if (this.bufferMsg2Send.isEmpty() == false){
 					try{
-						this.socketUDP.send(this.bufferMsg2Send.poll());
-						System.out.println("message envoyé");				
-					}catch (IOException sendExc){
-						System.out.println("cannot send the message");
-						sendExc.printStackTrace();
+						this.socketUDP.send(this.bufferMsg2Send.poll());			
+					}catch (IOException e){
+						System.err.println("Error : cannot send the message");
+						e.printStackTrace();
 					}
 				}
 			}catch (InterruptedException e) {
-				System.out.println("sleep interrupted in S-Thread");
+				System.err.println("Error : sleep interrupted in DS-Thread");
 				e.printStackTrace();
 			}			
 		}

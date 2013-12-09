@@ -15,14 +15,15 @@ public class NICache {
 
 	private String username; // nom du local user
 	private InetAddress localBroadcast; // address IP de broadcast du local user
-	private HashMap<Integer,String> demandsToUsername; // key = idDemand , value = remote Username
 	private HashMap<Integer,Integer> remoteDemands; // key = idDemand , value = portTCPServer distant
 	private HashMap<Integer,ChatNIStreamSender> senders; // key = idDemand , value = ChatNIStreamSender
 	
+	/**
+	 * Constructor of NICache
+	 */
 	NICache(){
 		username = null;
 		localBroadcast = null;
-		this.demandsToUsername = new HashMap<Integer,String>();
 		this.remoteDemands = new HashMap<Integer,Integer>();
 		this.senders = new HashMap<Integer,ChatNIStreamSender>(); 
 	}
@@ -99,34 +100,6 @@ public class NICache {
 	
 	/**
 	 * 
-	 * @param remote
-	 * @param idDemand
-	 */
-	void addRemoteUsername(String remote, Integer idDemand){
-		this.demandsToUsername.put(idDemand, remote);
-		System.out.println("NICache --> demand "+ idDemand+ "  remote "+this.demandsToUsername.get(idDemand));
-	}
-	
-	/**
-	 * 
-	 * @param idDemand
-	 */
-	void removeRemoteUsername(int idDemand){
-		this.demandsToUsername.remove(idDemand);
-	}
-	
-	
-	/**
-	 * 
-	 * @param idDemand
-	 * @return
-	 */
-	String getRemoteUsername(int idDemand){
-		return this.demandsToUsername.get(idDemand);
-	}
-	
-	/**
-	 * 
 	 * @param idDemand
 	 * @param port
 	 */
@@ -148,7 +121,7 @@ public class NICache {
 	/**
 	 * 
 	 * @param idDemand
-	 * @return
+	 * @return related port
 	 */
 	Integer getRemotePort(int idDemand){
 		return this.remoteDemands.get(idDemand);
@@ -156,12 +129,10 @@ public class NICache {
 	
 	
 	/**
-	 * 
+	 * cleans the cache
 	 */
 	void clear(){
 		this.username=null;
-		this.demandsToUsername.clear();
-		this.demandsToUsername=null;
 		this.localBroadcast=null;
 		this.remoteDemands.clear();
 		this.remoteDemands=null;

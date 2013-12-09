@@ -13,7 +13,7 @@ import chatSystemCommon.FilePart;
 
 /**
  * @author joanna
- * le Receiver se connecte au port distant et reçoit le fichier
+ * This class is responsible for file receiving
  */
 public class ChatNIStreamReceiver extends Thread{
 
@@ -23,6 +23,13 @@ public class ChatNIStreamReceiver extends Thread{
 	private ChatNI chatNI;
 	private int idDemand;
 	
+	/**
+	 * Constructor
+	 * @param chatNI
+	 * @param remotePort
+	 * @param remoteIP
+	 * @param idDemand
+	 */
 	public ChatNIStreamReceiver(ChatNI chatNI, int remotePort,InetAddress remoteIP,int idDemand){
 		this.idDemand = idDemand;
 		this.chatNI = chatNI;
@@ -30,19 +37,26 @@ public class ChatNIStreamReceiver extends Thread{
 		this.remoteIP = remoteIP;
 	}
 	
-	
+	/**
+	 * 
+	 * @return demand id
+	 */
 	public int getidDemand(){
 		return this.idDemand;
 	}
 	
-
+	
 	public void run(){
 		Object objectRead;
 		FilePart f;
 		boolean isReceived = false;
 		try {
+			// creation du socket
 			this.rSocket = new Socket(this.remoteIP,this.remotePort);
+			// creation de l'inputstream (object pour simplifier les envois, buffered pour les performances)
 			ObjectInputStream objectReader = new ObjectInputStream(new BufferedInputStream(this.rSocket.getInputStream()));
+			// tant qu'on n'a pas tout recu on lit une partie et on la communique au chatNI
+			// une fois qu'on a lu la derniere partie on ferme l'inputstream et on finit le run
 			while (isReceived == false){
 				objectRead = objectReader.readObject();
 				f = (FilePart)objectRead;
@@ -52,12 +66,10 @@ public class ChatNIStreamReceiver extends Thread{
 					objectReader.close();
 				}
 			}
-			this.chatNI.fileReceived(this.idDemand);
 		} catch (ClassNotFoundException e) {
 			e.printStackTrace();
 		} catch (IOException e) {
 			e.printStackTrace(); 
 		}
-	}
-	
+	}	
 }
