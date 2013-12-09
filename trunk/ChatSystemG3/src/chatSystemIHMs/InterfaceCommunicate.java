@@ -99,9 +99,9 @@ public class InterfaceCommunicate extends JFrame implements ActionListener{
 		progressBarFile.setBounds(449, 12, 148, 14);
 		getContentPane().add(progressBarFile);
 		
-		btnFileReceived = new JButton(new ImageIcon("image/download_opt.png"));
+		btnFileReceived = new JButton(new ImageIcon("icons/download_opt.png"));
 		btnFileReceived.addActionListener(this);
-		btnFileReceived.setBackground(Color.WHITE);
+		btnFileReceived.setBackground(Color.GREEN);
 		btnFileReceived.setBounds(617, 12, 29, 18);
 		this.btnFileReceived.setVisible(false);
 		getContentPane().add(btnFileReceived);
