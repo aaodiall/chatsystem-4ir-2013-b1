@@ -55,7 +55,6 @@ public class ChatNI extends View implements Runnable,Observer,FromRemoteApp,ToRe
 	/**
 	 * creates an UDP socket bind with port  
 	 * @param port port UDP de reception
-	 * @param numMsgMax nombre de pdu UDP qu'on peut stocker au maximum
 	 */
 	public void setUDPsocket(int port){
 		try {

@@ -123,7 +123,7 @@ public class InterfaceListUsers extends JFrame implements WindowListener,ActionL
 
 
 	/**
-	 * @param lblUsername the lblUsername to set
+	 * @param username the lblUsername to set
 	 */
 	public void setLblUsername(String username) {
 		this.lblUsername.setText(username); 

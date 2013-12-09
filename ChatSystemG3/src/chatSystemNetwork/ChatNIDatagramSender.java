@@ -43,10 +43,9 @@ public class ChatNIDatagramSender extends Thread{
 	}
 	
 	/**
-	 * 
-	 * @param username
-	 * @param ack
-	 * @param broadcast
+	 * sends hello in broadcast mode
+	 * @param h Hello message to send
+	 * @param broadcast IP broadcast address
 	 */
 	public void sendHello(Hello h, InetAddress broadcast){
 		byte [] helloStream;
