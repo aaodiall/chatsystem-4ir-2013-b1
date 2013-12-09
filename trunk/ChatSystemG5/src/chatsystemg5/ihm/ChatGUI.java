@@ -2,7 +2,6 @@ package chatsystemg5.ihm;
 
 import chatsystemg5.brain.ChatController;
 import java.util.HashMap;
-import javax.swing.JFrame;
 
 
 /**
