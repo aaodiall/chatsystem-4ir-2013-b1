@@ -11,13 +11,20 @@ import chatSystemCommon.Hello;
  */
 public class SingletonHello {
 
-	private static SingletonHello instance;
+	private static SingletonHello instance=null;
 	private Hello hello;
 	
+	/**
+	 * private constructor
+	 */
 	private SingletonHello(){
 		this.hello = new Hello(null,false);		
 	}
 	
+	/**
+	 * 
+	 * @return instance of SingletonHello
+	 */
 	public static SingletonHello getInstance(){
 		if (instance == null){
 			instance = new SingletonHello();
@@ -25,6 +32,10 @@ public class SingletonHello {
 		return instance;
 	}
 	
+	/**
+	 * 
+	 * @return instance of Hello initialized with null and false
+	 */
 	public Hello getHello(){
 		return this.hello;
 	}

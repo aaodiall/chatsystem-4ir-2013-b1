@@ -93,9 +93,9 @@ public class ChatGUI extends View implements Observer,ToUser,FromUser{
 	 * @param arg1
 	 */
 	
-	public void updateFileReceived(String arg0){ 
+	/*public void updateFileReceived(String arg0){ 
 		this.wCommunicate.get(arg0).getBtnFileReceived().setVisible(true);
-	}
+	}*/
 	
 	public void udpateFilePropositionReceived(ModelFileToReceive arg1){
 		this.proposeFile(arg1.getRemote(),arg1.getName(),arg1.getSize());
@@ -107,18 +107,37 @@ public class ChatGUI extends View implements Observer,ToUser,FromUser{
 	 * @see chatSystemController.ModelFile
 	 * @param arg1
 	 */
-	public void updateModelFileProgress(Object arg1){
-		String remote=new String(((ModelFileToSend)arg1).getRemote());
-		int progress=((ModelFileToSend)arg1).getProgression();
+	public synchronized void updateModelFileProgress(Object arg1){
+		String remote;
+		int progress;
+		if (arg1 instanceof ModelFileToSend){
+			remote=new String(((ModelFileToSend)arg1).getRemote());
+			progress=((ModelFileToSend)arg1).getProgression();
+		}else{
+			remote=new String(((ModelFileToReceive)arg1).getRemote());
+			progress=((ModelFileToReceive)arg1).getProgression();
+		}
 		this.wCommunicate.get(remote).getProgressBarFile().setValue(progress);
 		if(progress==100){
-			this.wCommunicate.get(remote).getProgressBarFile().setVisible(false);
-			this.wCommunicate.get(remote).getProgressBarFile().setValue(0);
+			if (arg1 instanceof ModelFileToSend){
+				this.wCommunicate.get(remote).getProgressBarFile().setVisible(false);
+				this.wCommunicate.get(remote).getProgressBarFile().setValue(0);
+			}else if(arg1 instanceof ModelFileToReceive){
+				this.wCommunicate.get(remote).getProgressBarFile().setVisible(false);
+				this.wCommunicate.get(remote).getProgressBarFile().setValue(0);
+				this.wCommunicate.get(((ModelFileToReceive)arg1).getRemote()).getBtnFileReceived().setVisible(true);
+			}
 		}	
 	}
 
 	public void updateModelFileRefused(Object arg1){
+		// on rend la scroll bar invisible
+		this.wCommunicate.get(((ModelFileToSend)arg1).getRemote()).getProgressBarFile().setVisible(false);
+		this.wCommunicate.get(((ModelFileToSend)arg1).getRemote()).getProgressBarFile().setValue(0);
 		System.out.println("gui know file refused");
+		/*
+		 * PARTIE MESSAGE A L'UTILISATEUR A IMPLEMENTER
+		 */
 	}
 	
 	/**
@@ -160,10 +179,10 @@ public class ChatGUI extends View implements Observer,ToUser,FromUser{
 				this.updateModelFileProgress(arg1);
 			}
 		}else if(arg0 instanceof ModelFileToReceive){
-			if (arg1 instanceof String){
-				this.updateFileReceived((String)arg1);
-			}else if (arg1 instanceof ModelFileToReceive){
+			if (((ModelFileToReceive)arg1).getStateReceivedDemand()){
 				this.udpateFilePropositionReceived((ModelFileToReceive)arg1);
+			}else if (arg1 instanceof ModelFileToReceive){
+				this.updateModelFileProgress(arg1);
 			}
 		}
 	}
@@ -206,39 +225,42 @@ public class ChatGUI extends View implements Observer,ToUser,FromUser{
 		if (InterfaceDialogFile.getDialogue().showOpenDialog(null)==JFileChooser.APPROVE_OPTION){
 			String filePath=InterfaceDialogFile.getDialogue().getSelectedFile().getPath();
 			this.wCommunicate.get(remote).getProgressBarFile().setVisible(true);
-			this.controller.performPropositionFile(remote, filePath);
+			try {
+				this.controller.performPropositionFile(remote, filePath);
+			} catch (TransferException e) {
+				if(e.isSizeTransfer())
+					e.handleSizeTransfer();
+				else
+					e.handleTooManyFiles();
+			}
 		}
 	}
 
 	/**
 	 * is called when the user responds to a receive file demand
-	 * @param remote
-	 * 			a remote username
+	 * @param file
+	 * 			name of the file
 	 * @param answer
 	 * 			answer of the user
 	 */
-	public void receiveFile(String remote, int answer) {	
+	public void receiveFile(String remote,String file, int answer) {	
 		if (answer == JOptionPane.YES_OPTION) {
-			this.controller.performFileAnswer(remote, true);        	
+			this.wCommunicate.get(remote).getProgressBarFile().setVisible(true);
+			try {
+				this.controller.performFileAnswer(remote,file, true);
+			} catch (TransferException e) {
+				e.handleSizeTransfer();
+			}        	
 		}
 		else if (answer == JOptionPane.NO_OPTION){
-			this.controller.performFileAnswer(remote, false);
+			try {
+				this.controller.performFileAnswer(remote,file, false);
+			} catch (TransferException e) {
+				e.handleSizeTransfer();
+			}
 		}
 	}
 
-/**
- * 
- */
-	/*public void addRecipient(String remote) {
-		this.controller.performAddURecipient(remote);
-	}*/
-
-/**
- * 
- */
-	/*public void removeRecipient(String remote) {
-		this.controller.performRemoveRecipient(remote);
-	}*/
 
 /**
  * open a conversion window
@@ -280,12 +302,11 @@ public class ChatGUI extends View implements Observer,ToUser,FromUser{
  * 			file size
  */
 	public void proposeFile(String remote, String file, long size) {
-		System.out.println("dans propose file");
 		String title=new String("Download File Proposition");
 		String message=new String(remote+" vous envoi ce fichier "+file+" de taille "+size);
 		this.openWindowCommunicate(remote);
 		int answer = JOptionPane.showConfirmDialog(this.wCommunicate.get(remote), message, title,JOptionPane.YES_NO_OPTION);
-		this.receiveFile(remote, answer);
+		this.receiveFile(remote,file, answer);
 	}
 
 /**

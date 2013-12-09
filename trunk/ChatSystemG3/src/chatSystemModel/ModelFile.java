@@ -17,6 +17,8 @@ public class ModelFile extends Observable{
 	private int idDemand;
 	private int numberOfParts;
 	private int max;
+	private int level;
+	private Integer progression;
 	
 	/**
 	 * 
@@ -27,9 +29,36 @@ public class ModelFile extends Observable{
 		this.remote = new String(remote);
 		this.idDemand =idDemand;
 		this.max =max;
-		
+		this.progression=new Integer(0);
+		this.level = 0;
 	}
 
+	/**
+	 * increments the level
+	 */
+	public void levelUP(){
+		this.level++;
+	}
+	
+	/**
+	 * 
+	 * @return current level
+	 */
+	public int getLevel(){
+		return this.level;
+	}
+	
+	/**
+	 * calculates the transfer progression
+	 */
+	public void calcProgress(){
+		this.progression=(Integer)(100*this.level/(this.numberOfParts));
+	}
+	
+	public Integer getProgression() { return progression; }
+	
+	public void resetLevel(){ this.level=0;	}
+	
 	public void setNumberParts(){
 		this.numberOfParts = this.size.intValue() / this.max;
 		if ((this.size.intValue() % this.max) != 0){
@@ -37,8 +66,6 @@ public class ModelFile extends Observable{
 		} 
 	}
 	
-
-
 	public int getMax(){
 		return this.max;
 	}

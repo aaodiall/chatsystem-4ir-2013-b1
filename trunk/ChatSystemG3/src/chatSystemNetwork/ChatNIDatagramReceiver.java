@@ -59,7 +59,7 @@ public class ChatNIDatagramReceiver extends Thread{
 		InetAddress ipRemoteAddr;
 		ipRemoteAddr = this.bufferPDUReceived.peek().getAddress();
 		DatagramPacket pdureceived;
-		if (this.userIP.equals(ipRemoteAddr)){
+		if (!this.userIP.equals(ipRemoteAddr)){
 			try {
 				pdureceived = this.bufferPDUReceived.poll();
 				receivedMsg = Message.fromArray(pdureceived.getData());
@@ -83,11 +83,12 @@ public class ChatNIDatagramReceiver extends Thread{
 					this.chatNI.fileTansfertConfirmationReceived(username, ftco.getIdDemand(), ftco.isAccepted());
 				// FileTransfertCancel
 				}else if (receivedMsg.getClass() == FileTransfertCancel.class){
-					FileTransfertCancel ftca = ((FileTransfertCancel)receivedMsg);
-					this.chatNI.fileTansfertCancelReceived(username, ftca.getIdDemand());
+					receivedMsg = null;
+					//FileTransfertCancel ftca = ((FileTransfertCancel)receivedMsg);
+					//this.chatNI.fileTansfertCancelReceived(username, ftca.getIdDemand());
 				}
 			}catch (IOException recExc){
-				System.out.println("error : cannot transform PDUdata in Message");
+				System.err.println("error : cannot transform PDUdata in Message");
 				recExc.printStackTrace();
 			}
 		}else{

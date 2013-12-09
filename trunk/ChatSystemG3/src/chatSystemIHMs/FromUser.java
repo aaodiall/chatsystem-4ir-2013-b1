@@ -14,5 +14,5 @@ public interface FromUser{
 	public void disconnect();
 	public void sendMessage(String remote);
 	public void sendFile(String remote);
-	public void receiveFile(String remote, int answer);
+	public void receiveFile(String remote, String file, int answer);
 }

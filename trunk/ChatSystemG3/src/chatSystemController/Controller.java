@@ -7,19 +7,16 @@ import java.net.InetAddress;
 import java.util.HashMap;
 import java.util.concurrent.ArrayBlockingQueue;
 import chatSystemIHMs.ChatGUI;
+import chatSystemIHMs.TransferException;
 import chatSystemModel.*;
 import chatSystemNetwork.ChatNI;
 
-/* note pour plus tard : 
- *  - checkConnection a implementer
- *  - ecrire la javadoc et les commentaires
- */
-
 /**
  * @author joanna
- * Le controller est le seul a ecrire dans le modele, c'est lui qui le met a jour
- * Il ne fait pas appel a ChatNI ni a ChatGUI (les views)
- * C'est au niveau des "update" que les envois se declenchent
+ * The controller is the only one who can update the different models.Le contrôleur est le seul à ecrire dans le modèle, c'est lui qui le met a jour
+ * It directly controls the chatNI 
+ * Il ne fait pas appel au ChatGUI, c'est au niveau des "update" que les envois se declenchent.
+ * Il contrôle directement le chatNI
  */
 public class Controller extends Thread{
 
@@ -27,7 +24,6 @@ public class Controller extends Thread{
 	private ModelStates modelStates;	
 	private ModelText modelText;
 	private ModelUsername modelUsername;
-	private ModelGroupRecipient modelGroupRecipient;
 	private ChatGUI chatgui;
 	private ChatNI chatNI;
 	private int numFileMax;
@@ -35,7 +31,7 @@ public class Controller extends Thread{
 	private int maxRead;
 	private HashMap <Integer,ModelFileToSend> filesToSend;
 	private HashMap <Integer,ModelFileToReceive> filesToReceive;
-	private HashMap <String,Integer> remoteToDemand;
+	private HashMap <String,Integer> fileToDemand;
 	private long maxSizeToTransfer;
 	private long nbSendingBytes;
 	private long nbReceivingBytes;
@@ -44,31 +40,29 @@ public class Controller extends Thread{
 	private ArrayBlockingQueue <ModelFileToSend> ftoSend;
 	
 	/**
+	 * Controller Constructor
 	 * @param modelListUsers
-	 * @param modelStateConnected
-	 * @param modelStateDisconnected
+	 * @param modelStates
 	 * @param modelText
 	 * @param modelUsername
-	 * @param modelGroupRecipient
 	 */
 	public Controller(ModelListUsers modelListUsers,
 			ModelStates modelStates,
 			ModelText modelText,
-			ModelUsername modelUsername, ModelGroupRecipient modelGroupRecipient) {
+			ModelUsername modelUsername) {
 		this.modelListUsers = modelListUsers;
 		this.modelStates = modelStates;
 		this.modelText = modelText;
 		this.modelUsername = modelUsername;
-		this.modelGroupRecipient = modelGroupRecipient;
 		this.numFileMax = 5;
 		this.ftoSend = new ArrayBlockingQueue<ModelFileToSend>(this.numFileMax,true);
 		this.maxRead = 1024;
 		this.maxWrite = 1024;
 		this.currentidSendDemand = 0;
 		this.maxidDemand = 50; // on suppose que quelqu'un n'enverra pas  plus 50 fichiers dans une seule session
-		this.filesToSend = new HashMap <Integer,ModelFileToSend> ();
-		this.filesToReceive = new HashMap<Integer,ModelFileToReceive> ();
-		this.remoteToDemand = new HashMap <String,Integer>();
+		this.filesToSend = new HashMap <Integer,ModelFileToSend> (); // key = idDemand 
+		this.filesToReceive = new HashMap<Integer,ModelFileToReceive> (); //key = idDemand
+		this.fileToDemand = new HashMap <String,Integer>();//key = name of file, value = id demand 
 		this.maxSizeToTransfer = 2000000000;
 		this.nbReceivingBytes = 0;
 		this.nbSendingBytes = 0;
@@ -82,6 +76,10 @@ public class Controller extends Thread{
 		this.chatNI = chatNI;
 	}
 	
+	/**
+	 * Handle local user connection
+	 * @param username
+	 */
 	public void performConnect(String username){
 		// enregistrement du pseudo
 		this.modelUsername.setUsername(username);
@@ -90,10 +88,12 @@ public class Controller extends Thread{
 		// lancement de la connexion
 		this.chatNI.connect(false);
 		// on lance le thread du controller pour les fichiers
-		this.start();
-		System.out.println( this.modelUsername.getUsername() + " : connected");		
+		this.start();	
 	}
 	
+	/**
+	 * Handle local user disconnection
+	 */
 	public void performDisconnect(){
 		if (this.modelStates.isConnected()){
 			// on passe l'etat a deconnecte
@@ -102,58 +102,38 @@ public class Controller extends Thread{
 			this.modelListUsers.clearListUsers();
 			// on lance la deconnexion
 			this.chatNI.disconnect();
-			System.out.println(this.modelUsername.getUsername() + " : disconnected");
-		}
-	}
-
-	public void performAddURecipient(String remote){
-		if (this.modelStates.isConnected()){
-			this.modelGroupRecipient.addRecipient(remote);
-		}
-	}
-
-	public void performRemoveRecipient(String remote){
-		if (this.modelStates.isConnected()){
-			this.modelGroupRecipient.removeRecipient(remote);
 		}
 	}
 	
+	/**
+	 * Handle local user's text sending
+	 * @param remote message recipient
+	 * @param text text to send
+	 */
 	public void performSendText (String remote,String text){
-		/*Iterator<String> it = recipientList.iterator();
-		String recipient;
-		modelText.setTextToSend(text);
-		while (it.hasNext()){
-			recipient = it.next();
-			modelGroupRecipient.addRecipient(recipient);
-		}*/
-		/*if (this.modelStates.isConnected()){
-			InetAddress ipRecipient;
-			for(int i=0; i < this.modelGroupRecipient.getGroupRecipients().size();i++){
-				ipRecipient=this.modelListUsers.getListUsers().get(this.modelGroupRecipient.getGroupRecipients().poll());
-				this.chatNI.sendMsgText(ipRecipient, text);
-			}
-		}*/
 		InetAddress ipRecipient;
 		ipRecipient=this.modelListUsers.getListUsers().get(remote);
 		this.chatNI.sendMsgText(ipRecipient, text);
 	}
 	
 	/**
-	 * Demande à la GUI de lancer le processus de récupération de choix de fichier à envoyer
+	 * Launch file sending
+	 * @param f 
 	 */
 	public void performJoinFile(ModelFileToSend f){		
 		this.ftoSend.add(f);
 	}
 	
 	/**
-	 * Permet de proposer le fichier choisi a une personne connectée
-	 * @param username
+	 * Handle file propositions from local user
+	 * @param remote user proposition recipient
+	 * @param filePath file path in local disk
 	 */
-	public void performPropositionFile(String remote, String filePath){
+	public void performPropositionFile(String remote, String filePath) throws TransferException{
 		// on cree le modelFile
 		ModelFileToSend f = new ModelFileToSend (remote,filePath,this.currentidSendDemand,this.maxRead);
 		this.nbSendingBytes += f.getSize();
-		if ((this.filesToSend.size() <= this.numFileMax) && (this.nbSendingBytes<=this.maxSizeToTransfer)){
+		if ((this.nbSendingBytes<=this.maxSizeToTransfer) && (this.ftoSend.size() < this.numFileMax)){
 			//on l'ajoute a la liste des fichier a envoyer;
 			this.filesToSend.put(f.getIdDemand(), f);
 			f.addObserver(chatgui);
@@ -166,60 +146,74 @@ public class Controller extends Thread{
 			InetAddress ipRemote = this.modelListUsers.getListUsers().get(remote);
 			// on envoie la proposition
 			this.chatNI.sendPropositionFile(remote, ipRemote, f.getName(), f.getSize(),f.getIdDemand());
-		}else{
-			// prevenir l'interface graphique
-			System.out.println("Too many files to send, try later");
+		}else if(this.nbSendingBytes > this.maxSizeToTransfer){
+			throw new TransferException(1);
+		}else if (this.ftoSend.size() == this.numFileMax){
+			throw new TransferException(2);
 		}
 	}
 
-	
 	/**
-	 * Permet d'envoyer la réponse de l'utilisateur à une demande d'envoi de fichier
+	 * Handle local user's answers to file proposition
+	 * @param file name of file
+	 * @param answer local user's answer
 	 */
-	public void performFileAnswer(String remote, boolean answer){
-		ModelFileToReceive f = this.filesToReceive.get(this.remoteToDemand.get(remote));
+	public void performFileAnswer(String remote,String file, boolean answer) throws TransferException{
+		
+		ModelFileToReceive f = this.filesToReceive.get(this.fileToDemand.get(file));
 		InetAddress ipRemote = this.modelListUsers.getListUsers().get(remote);
 		if (answer == true){
+			if (f.getExist()){
+				f.cleanFile();
+			}
 			// si l'utilisateur veut accepter plus que le maximum autorise on ne reçoit pas le fichier
 			if (this.nbReceivingBytes + f.getSize() > this.maxSizeToTransfer){
+				this.chatNI.sendConfirmationFile(remote,ipRemote, f.getName(), false, f.getIdDemand());
 				f.deleteFile();
 				f.deleteObservers();
-				this.filesToReceive.remove(this.remoteToDemand.get(remote));
-				//PREVENIR LA GUI
-				System.err.println("attemp of sending more than 2Go, file not sent");
+				this.filesToReceive.remove(this.fileToDemand.get(file));
+				throw new TransferException(1);
 			}else{
 				this.nbReceivingBytes += f.getSize();
 				this.chatNI.sendConfirmationFile(remote,ipRemote, f.getName(), answer, f.getIdDemand());
 			}
 		}else{
 			this.chatNI.sendConfirmationFile(remote,ipRemote, f.getName(), answer, f.getIdDemand());
-			f.deleteFile();
+			if(!f.getExist()){
+				f.deleteFile();
+			}
 			f.deleteObservers();
-			this.filesToReceive.remove(this.remoteToDemand.get(remote));
+			this.filesToReceive.remove(this.fileToDemand.get(file));
 		}
 	}
 	
 	/**
-	 * Permet de signaler à l'utilisateur une demande d'envoi de fichier
+	 * Handle file transfer demands from other users
+	 * @param remote recipient
+	 * @param file file name
+	 * @param size file size
+	 * @param idDemand
 	 */
 	public void filePropositionReceived(String remote, String file, long size, int idDemand){
-		if (this.modelStates.isConnected()){
+		if (this.modelStates.isConnected() && this.modelListUsers.isInListUsers(remote)){
 			ModelFileToReceive f = new ModelFileToReceive(remote,file,size,idDemand,this.maxWrite);
 			f.addObserver(chatgui);
 			System.out.println("Controller --> idDemand received : " + idDemand);
 			System.out.println("Controller --> file demand received from " + remote);
 			this.filesToReceive.put(idDemand, f);
-			this.remoteToDemand.put(remote, idDemand);
+			this.fileToDemand.put(file, idDemand);
 			f.setStateReceivedDemand(true);
 		}
 	}
 	
 	/**
-	 * Permet de signaler à l'utilisateur la réponse de l'utilisateur distant
+	 * Handle file tranfer answer from local user
+	 * @param remote user who answers
+	 * @param idDemand
+	 * @param isAccepted answer
 	 */
 	public void fileAnswerReceived(String remote,int idDemand,boolean isAccepted){
-		System.out.println("file answer received from " + remote);
-		if (this.modelStates.isConnected()){
+		if (this.modelStates.isConnected() && this.modelListUsers.isInListUsers(remote)){
 			ModelFileToSend f = this.filesToSend.get(idDemand);
 			if (isAccepted){				
 				this.performJoinFile(f);
@@ -232,49 +226,66 @@ public class Controller extends Thread{
 	}
 	
 	/**
-	 * permet d'arrêter un téléchargement en cours
+	 * Handle the end of receive transfers
+	 * @param idDemand
 	 */
-	public void fileTranfertCancelReceived(String remote, int idDemand){}
-	
 	public void fileReceived(int idDemand){
 		this.filesToReceive.remove(idDemand);
 	}
 	
+	/**
+	 * Handle textual messages from remote users 
+	 * @param text
+	 * @param username remote user
+	 */
 	public void messageReceived(String text, String username){
 		if (modelStates.isConnected() && this.modelListUsers.isInListUsers(username)){
 			this.modelText.setRemote(username);
 			this.modelText.setTextReceived(text);
-			System.out.println ("message received   "+username + " : " + text);
 		}
 	}
 	
-	
-	public void connectReceived(String username,InetAddress ipRemote, boolean ack){		
+	/**
+	 * Handle remote users' connection
+	 * @param username remote user who connects
+	 * @param ipRemote user's IP address 
+	 * @param isAck inform about if we need to answer or not 
+	 */
+	public void connectReceived(String username,InetAddress ipRemote, boolean isAck){		
 		if (modelStates.isConnected()){
 			// si ack = false c'est une demande de connexion donc on repond	
-			if (!ack){
+			if (!isAck){
 				this.chatNI.connect(true);
 			}
-			if ((!modelListUsers.isInListUsers(username)) ){					
+			if ((!this.modelListUsers.isInListUsers(username)) ){					
 				this.modelListUsers.addUsernameList(username, ipRemote);
-				System.out.println(username + " s'est connecté");
 			}	
 		}
 	}
 	
+	/**
+	 * handle remote users' disconnection
+	 * @param username remote user
+	 */
 	public void disconnectReceived(String username){
-		if (modelStates.isConnected()){
+		if (this.modelStates.isConnected() && this.modelListUsers.isInListUsers(username)){
 			this.modelListUsers.removeUsernameList(username);
 			System.out.println(username + " s'est deconnecté");	
 		}			
 	}
 	
+	/**
+	 * Handle file part receiving 
+	 * @param fileBytes file part to write in ModelFileToReceive
+	 * @param idDemand
+	 * @param isLast indicates of it is the last part to receive or not
+	 */
 	public void partReceived(byte[] fileBytes,int idDemand, boolean isLast){	
 		this.filesToReceive.get(idDemand).writeFilePart(fileBytes, isLast);
 	}
 	
 	/**
-	 * sert à envoyer les fichiers
+	 * Handle the sending of files
 	 */
 	public void run(){
 		while (this.modelStates.isConnected()){
