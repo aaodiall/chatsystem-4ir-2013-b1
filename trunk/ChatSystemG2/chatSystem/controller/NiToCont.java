@@ -1,6 +1,6 @@
 package chatSystem.controller;
 
-/*
+/**
  * Interface modelizing the messages that can be sent from the network interface to the controller
  */
 public interface NiToCont {

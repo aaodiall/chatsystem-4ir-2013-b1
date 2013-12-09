@@ -1,6 +1,6 @@
 package chatSystem.view.ni.messageTransferts;
 
-/*
+/**
  * Represents the task to send a text message to a given remote system
  */
 public class sendTextTask extends Task {

@@ -1,6 +1,6 @@
 package chatSystem.view.ni.messageTransferts;
 
-/*
+/**
  * Represents a task to send a hello message, to everyone or to one remote system
  */
 public class sendHelloTask extends Task {
