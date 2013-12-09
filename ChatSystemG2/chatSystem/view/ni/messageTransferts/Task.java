@@ -1,6 +1,6 @@
 package chatSystem.view.ni.messageTransferts;
 
-/*
+/**
  * Represents a task the messageTransferts has to fulfill
  */
 public abstract class Task {

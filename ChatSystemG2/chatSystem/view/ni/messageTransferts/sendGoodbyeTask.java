@@ -1,6 +1,6 @@
 package chatSystem.view.ni.messageTransferts;
 
-/*
+/**
  * Represents the task to send a goodbye message to everyone
  */
 public class sendGoodbyeTask extends Task {

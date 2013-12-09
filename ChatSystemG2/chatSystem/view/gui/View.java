@@ -3,7 +3,7 @@ package chatSystem.view.gui;
 import java.util.Observer;
 import chatSystem.controller.Controller;
 
-/*
+/**
  * VIEW of the system, following the MVC pattern
  */
 public abstract class View implements Observer {
