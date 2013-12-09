@@ -11,8 +11,6 @@ import java.util.Observer;
 import javax.swing.JFrame;
 import javax.swing.text.DefaultCaret;
 
-
-
 /**
  * Represents a ChatWindow frame
  * Implements Observer to be aware of the changes in the model
