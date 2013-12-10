@@ -154,7 +154,7 @@ public class FileController {
 	 * @param msg File to receive.
 	 */
 	public void beginReceptionProtocol(User user, Message msg) {
-		if(ReceivedFileNI.getInstance(this,user).getFileTransfertState() == TransferState.AVAILABLE) {
+		if(ReceivedFileNI.getInstance(this).getFileTransfertState() == TransferState.AVAILABLE) {
 			try {
 				this.receptionProtocol(user,(FileTransfertDemand) msg);
 			} catch (FileNotFoundException e) {
@@ -222,13 +222,13 @@ public class FileController {
 	 * @throws FileNotFoundException raised if there is a problem when saving file on hard drive.
 	 */
 	public void receptionProtocol(User user, FileTransfertDemand msg) throws FileNotFoundException {
-		switch(ReceivedFileNI.getInstance(this,user).getFileTransfertState()) {
+		switch(ReceivedFileNI.getInstance(this).getFileTransfertState()) {
 		case AVAILABLE:
 			int option = JOptionPane.showConfirmDialog(null, "You received a file transfer demand from "+msg.getUsername()+"\nFile name : "+ this.receptionFileName +"\nSize (in byte) : "+ this.receptionFileSize +"\n\nDo you want to accept ?", "File transfer demand received", JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE);
 			if(option == JOptionPane.OK_OPTION) {
 				performReceiveFile();
 				this.sendFileTransfertConfirmation(user, true, msg.getIdDemand());
-				moveReceptionStateTo(TransferState.PROCESSING,user);
+				moveReceptionStateTo(TransferState.PROCESSING);
 				this.receptionProtocol(user, msg);
 			}
 			else
@@ -251,7 +251,8 @@ public class FileController {
 	 * @param user Destination user.
 	 */
 	private void enableFileReception(User user) {
-		receivedThread = new Thread(ReceivedFileNI.getInstance(this,user));
+		chatModel.setFileTransferClient(user);
+		receivedThread = new Thread(ReceivedFileNI.getInstance(this));
 		receivedThread.start();
 	}
 	
@@ -264,22 +265,13 @@ public class FileController {
 		fileOutputStream = new FileOutputStream(this.getFilePath(), true);
 		bufferedWriter = new BufferedOutputStream(fileOutputStream);		
 	}
-
-	/**
-	 * Update reception state machine to another state when receiving a message from a destination user
-	 * @param state New state. 
-	 * @param user Destination user.
-	 */
-	public void moveReceptionStateTo(TransferState state,User user) {
-		ReceivedFileNI.getInstance(this,user).setFileTransfertState(state);
-	}
 	
 	/**
 	 * Update reception state machine to another state.
 	 * @param state New state. 
 	 */
 	public void moveReceptionStateTo(TransferState state) {
-		ReceivedFileNI.getInstance(this,null).setFileTransfertState(state);
+		ReceivedFileNI.getInstance(this).setFileTransfertState(state);
 	}
 	
 	/**
@@ -347,7 +339,7 @@ public class FileController {
 		receivedThread = null;
 		chatGUI.hideReceptionTransferInformation();
 		this.moveReceptionStateTo(TransferState.TERMINATED);
-		ReceivedFileNI.getInstance(this,null).close();
+		ReceivedFileNI.getInstance(this).close();
 		ReceivedFileNI.resetInstance();
 	}
 
@@ -373,5 +365,21 @@ public class FileController {
 	 */
 	public int getTransferPort() {
 		return transferPort;
+	}
+	
+	/**
+	 * Get the file transfer client.
+	 * @return fileTransferClient Last file transfer client.
+	 */
+	public User getFileTransferClient() {
+		return chatModel.getFileTransferClient();
+	}
+
+	/**
+	 * Set the file transfer client.
+	 * @param fileTransferClient New file transfer client.
+	 */
+	public void setFileTransferClient(User fileTransferClient) {
+		chatModel.setFileTransferClient(fileTransferClient);
 	}
 }

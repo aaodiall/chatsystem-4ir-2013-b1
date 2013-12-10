@@ -29,7 +29,6 @@ public final class ReceivedFileNI extends JavaChatNI {
 	private TransferState fileTransferState = TransferState.AVAILABLE;
 	
 	private int portClient;
-	private User localUser;
 
 	private BufferedInputStream bufferedReader;
 
@@ -40,9 +39,8 @@ public final class ReceivedFileNI extends JavaChatNI {
 	 * @param fileController Controller used for file transfer.
 	 * @param localUser Local user
 	 */
-	private ReceivedFileNI(FileController fileController, User localUser) {
+	private ReceivedFileNI(FileController fileController) {
 		this.fileController = fileController;
-		this.localUser = localUser;
 		this.portClient = fileController.getTransferPort();
 	}
 
@@ -52,11 +50,11 @@ public final class ReceivedFileNI extends JavaChatNI {
 	 * @param localUser Local user
 	 * @return instance Unique instance of the class.
 	 */
-	public final static ReceivedFileNI getInstance(FileController fileController, User localUser) {
+	public final static ReceivedFileNI getInstance(FileController fileController) {
 		if(ReceivedFileNI.instance == null) {
 			synchronized(ReceivedFileNI.class) {
 				if(ReceivedFileNI.instance == null)
-					ReceivedFileNI.instance = new ReceivedFileNI(fileController, localUser);
+					ReceivedFileNI.instance = new ReceivedFileNI(fileController);
 			}
 		}
 		return ReceivedFileNI.instance;
@@ -72,7 +70,7 @@ public final class ReceivedFileNI extends JavaChatNI {
 	@Override
 	public void run() { 
 		try {
-			socket = new Socket(localUser.getAddress(), portClient);
+			socket = new Socket(fileController.getFileTransferClient().getAddress(), portClient);
             this.bufferedReader = new BufferedInputStream(socket.getInputStream());
             this.reader = new ObjectInputStream(this.bufferedReader);
            
