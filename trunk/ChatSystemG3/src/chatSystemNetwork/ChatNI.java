@@ -9,7 +9,6 @@ import java.util.Enumeration;
 import java.util.Iterator;
 import java.util.Observable;
 import java.util.Observer;
-import chatSystemIHMs.View;
 import chatSystemModel.ModelStates;
 import chatSystemModel.ModelUsername;
 import chatSystemCommon.FilePart;
@@ -20,7 +19,7 @@ import chatSystemController.Controller;
  * @author joanna
  *
  */
-public class ChatNI extends View implements Runnable,Observer,FromRemoteApp,ToRemoteApp{	
+public class ChatNI implements Runnable,Observer,FromRemoteApp,ToRemoteApp{	
 	
 	private Controller controller;
 	private ChatNIDatagramSender chatNIMessage;

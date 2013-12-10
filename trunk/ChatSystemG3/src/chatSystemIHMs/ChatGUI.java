@@ -25,7 +25,7 @@ import chatSystemModel.ModelFileToReceive;
  */
 
 
-public class ChatGUI extends View implements Observer,ToUser,FromUser{
+public class ChatGUI implements Observer,ToUser,FromUser{
 	private InterfaceConnect wConnect;
 	private Map<String,InterfaceCommunicate > wCommunicate;
 	private InterfaceListUsers wListUsers=null;;
