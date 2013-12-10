@@ -90,7 +90,6 @@ public class SwingChatGUI extends JavaChatGUI implements ActionListener, MouseLi
 		mainWindow.setSize(WIDTH, HEIGHT);
 		mainWindow.setLocationRelativeTo(null);
 		mainWindow.setVisible(true);
-
 		//Equivalent to disconnect method (used if application don't exit normally) 
 		Runtime.getRuntime().addShutdownHook(new Thread() {
 			@Override

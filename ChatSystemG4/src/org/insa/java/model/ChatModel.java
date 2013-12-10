@@ -11,6 +11,7 @@ public class ChatModel extends DefaultListModel<User>{
 	private static final long serialVersionUID = -4071263680161746323L;
 
 	private User localUser;
+	private User fileTransferClient = null;
 
 	/**
 	 * Constructor
@@ -60,7 +61,23 @@ public class ChatModel extends DefaultListModel<User>{
 	public User get(User user) {
 		return this.get(this.indexOf(user));
 	}
+	
+	/**
+	 * Get the file transfer client.
+	 * @return fileTransferClient Last file transfer client.
+	 */
+	public User getFileTransferClient() {
+		return fileTransferClient;
+	}
 
+	/**
+	 * Set the file transfer client.
+	 * @param fileTransferClient New file transfer client.
+	 */
+	public void setFileTransferClient(User fileTransferClient) {
+		this.fileTransferClient = fileTransferClient;
+	}
+	
 	/**
 	 * Get local user name.
 	 * @return name The name of the local user.
@@ -68,4 +85,6 @@ public class ChatModel extends DefaultListModel<User>{
 	public String getLocalUsername() {
 		return localUser.getUsername();
 	}
+
+	
 }
