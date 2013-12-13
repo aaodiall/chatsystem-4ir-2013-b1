@@ -129,4 +129,10 @@ public abstract class JavaChatGUI implements FromUser, ToUser{
 	public JavaStatusBar getStatusBar() {
 		return statusBar;
 	}
+
+	/**
+	 * Display an error message to the user.
+	 * @param s Message to display.
+	 */
+	public abstract void showErrorMessage(String s);
 }

@@ -3,6 +3,7 @@ package org.insa.java.swing.view;
 import java.awt.BorderLayout;
 import java.awt.Dimension;
 import java.awt.GridLayout;
+import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
@@ -33,8 +34,12 @@ import org.insa.java.view.JavaChatGUI;
  * @author unaï sanchez
  */
 public class SwingChatGUI extends JavaChatGUI implements ActionListener, MouseListener, KeyListener, WindowListener{
-	private final int WIDTH = 800;
-	private final int HEIGHT = 800;
+	Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
+	double width = screenSize.getWidth();
+	double height = screenSize.getHeight();
+	
+	private final int WIDTH = (int) (width/2);
+	private final int HEIGHT = (int) (0.9*height);
 
 	private JTextPane chatTextPane = new JTextPane();
 
@@ -75,6 +80,8 @@ public class SwingChatGUI extends JavaChatGUI implements ActionListener, MouseLi
 		chatPanel.add(chatTextPane,BorderLayout.CENTER);
 		chatPanel.add(formPanel,BorderLayout.SOUTH);
 		chatPanel.setMinimumSize(new Dimension((int) (0.7*WIDTH), chatPanel.getHeight()));
+		
+		chatTextPane.setEditable(false);
 
 		sendButton.addActionListener(this);
 		sendFileButton.addActionListener(this);
@@ -206,4 +213,10 @@ public class SwingChatGUI extends JavaChatGUI implements ActionListener, MouseLi
 
 	@Override
 	public void windowOpened(WindowEvent e) {}
+
+	@Override
+	public void showErrorMessage(String s) {
+		JOptionPane.showMessageDialog(null, s, "Error", JOptionPane.ERROR_MESSAGE);
+		System.exit(-1);
+	}
 }

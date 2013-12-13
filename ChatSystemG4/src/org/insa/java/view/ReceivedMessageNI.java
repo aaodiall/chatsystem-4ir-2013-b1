@@ -57,10 +57,15 @@ public final class ReceivedMessageNI extends JavaChatNI {
 				chatController.receivedMessage(packet.getAddress(),Message.fromArray(packet.getData()));
 			}
 		} catch (IOException e) {
-			Logger.getLogger(ReceivedMessageNI.class).log(Level.SEVERE, "", e);
+			chatController.messageError("Impossible to perform connect. Maybe this application is already running.");
+			//Logger.getLogger(ReceivedMessageNI.class).log(Level.SEVERE, "", e);
 		}
 		finally {
-			socket.close();
+			try {
+				socket.close();
+			} catch(Exception e) {
+				Logger.getLogger(ReceivedMessageNI.class).log(Level.SEVERE, "", e);
+			}
 		}
 	}
 }

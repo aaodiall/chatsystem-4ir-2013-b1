@@ -31,6 +31,8 @@ public final class SendMessageNI extends JavaChatNI {
 			datagramSocket.setBroadcast(true);
 		} catch (SocketException e) {
 			Logger.getLogger(SendMessageNI.class).log(Level.SEVERE, "", e);
+		} catch (Exception e) {
+			Logger.getLogger(SendMessageNI.class).log(Level.SEVERE, "", e);
 		}
 	}
 	
@@ -72,7 +74,9 @@ public final class SendMessageNI extends JavaChatNI {
 			datagramSocket.send(sendPacket);
 		} catch (IOException e) {
 			Logger.getLogger(SendMessageNI.class).log(Level.SEVERE, "", e);
-		}	
+		} catch (Exception e) {
+			Logger.getLogger(SendMessageNI.class).log(Level.SEVERE, "", e);
+		}
 	}
 
 	@Override
