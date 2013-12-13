@@ -174,4 +174,12 @@ public class ChatController {
 	public void cancelReceptionTransfer() {
 		fileController.cancelReceptionTransfer();
 	}
+
+	/**
+	 * Display an error message to the user.
+	 * @param s Message to display.
+	 */
+	public void messageError(String s) {
+		chatGUI.showErrorMessage(s);
+	}
 }
