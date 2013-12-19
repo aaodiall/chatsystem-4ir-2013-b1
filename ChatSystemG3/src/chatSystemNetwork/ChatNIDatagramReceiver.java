@@ -8,6 +8,7 @@ import java.net.DatagramPacket;
 import java.net.DatagramSocket;
 import java.net.InetAddress;
 import java.net.SocketException;
+import java.net.SocketTimeoutException;
 import java.util.concurrent.ArrayBlockingQueue;
 import chatSystemCommon.FileTransfertCancel;
 import chatSystemCommon.FileTransfertConfirmation;
@@ -33,12 +34,13 @@ public class ChatNIDatagramReceiver extends Thread{
 	private DatagramPacket pduReceived;
 	private boolean connected;
 	
-	public ChatNIDatagramReceiver(ChatNI chatNI,int nbPDUinBuffer,DatagramSocket socketUDP, InetAddress userIP){
+	public ChatNIDatagramReceiver(ChatNI chatNI,DatagramSocket socketUDP, InetAddress userIP){
 		this.connected = true;
 		this.chatNI = chatNI;
 		this.socketUDP = socketUDP;
 		this.userIP = userIP;
-		this.bufferPDUReceived = new ArrayBlockingQueue<DatagramPacket>(nbPDUinBuffer) ;
+		int bufferSize = 15;
+		this.bufferPDUReceived = new ArrayBlockingQueue<DatagramPacket>(bufferSize) ;
 		try {
 			this.streamReceived = new byte[this.socketUDP.getReceiveBufferSize()];
 		} catch (SocketException e) {
@@ -113,23 +115,33 @@ public class ChatNIDatagramReceiver extends Thread{
 	/**
 	 * receives datagrams and launch the analyze 
 	 */
+	@Override
 	public void run(){
+		try{
+			this.socketUDP.setSoTimeout(30000);
+		}catch(SocketException e){
+			System.err.println("Error : Timeout not set");
+		}
 		while(this.connected){
 			// on se met en attente de reception d'un pdu
 			try {
-				Thread.sleep(100);
 				this.socketUDP.receive(pduReceived);
 				// on a recu un pdu donc on traite le message qu'il contient
 				this.bufferPDUReceived.add(pduReceived);
 				this.pduAnalyze();
-			}catch (InterruptedException e) {
-				System.out.println("error : sleep interrupted in R-Thread");	
-				e.printStackTrace();
+			}catch (SocketTimeoutException e) {
+				//si le timeout est atteint le thread dort un peut
+				try{
+					Thread.sleep(1000);
+				}catch(InterruptedException ie){
+					System.err.println("Error: ChatNIDatagramReceiver has been interrupted");
+				}				
 			}catch (IOException sockRec){
-				System.out.println("error : receive socket");	
+				System.err.println("Error : ChatNIDatagramReceiver socket - fonction receive");	
 				sockRec.printStackTrace();
 			}
 		}
+		this.socketUDP.close();
 	}
 
 }

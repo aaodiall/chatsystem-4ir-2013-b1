@@ -4,6 +4,7 @@
 package chatSystemIHMs;
 
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.Map;
 import java.util.Observable;
 import java.util.Observer;
@@ -52,8 +53,12 @@ public class ChatGUI implements Observer,ToUser,FromUser{
  * @param arg1
  */
 	public void updateModelStates(Object arg1){
-		if ((Boolean)arg1.equals(false)){
+		if (arg1.equals(false)){
 			this.wListUsers.getUsers().clear();
+			Iterator<InterfaceCommunicate> it = this.wCommunicate.values().iterator();
+			while (it.hasNext()){
+				it.next().dispose();
+			}
 			this.wCommunicate.clear();
 			this.wListUsers.setVisible(false);
 			wConnect.setVisible(true);
@@ -147,6 +152,7 @@ public class ChatGUI implements Observer,ToUser,FromUser{
 	 * @param arg0
 	 * @param arg1
 	 */
+	@Override
 	public void update(Observable arg0, Object arg1) {
 		if (arg0 instanceof ModelStates){
 			this.updateModelStates(arg1);
@@ -170,11 +176,12 @@ public class ChatGUI implements Observer,ToUser,FromUser{
 			}
 		}
 	}
-
+	
 
 	/**
 	 * is called when the user pushes connect button or presses enter
 	 */
+	@Override
 	public void connect() {
 		this.controller.performConnect(this.wConnect.getTfdUsername().trim());
 	}
@@ -183,6 +190,7 @@ public class ChatGUI implements Observer,ToUser,FromUser{
 	/**
 	 * is called when the user pushes disconnect button
 	 */
+	@Override
 	public void disconnect() {
 		controller.performDisconnect();
 	}
@@ -191,6 +199,7 @@ public class ChatGUI implements Observer,ToUser,FromUser{
 	 * is called when the user pushes send message button
 	 * @param remoteUsername 
 	 */
+	@Override
 	public void sendMessage(String remoteUsername) {
 		String localUsername=this.wListUsers.getLblUsername();
 		String text2Send =this.wCommunicate.get(remoteUsername).gettAreaMessageText().trim();
@@ -204,6 +213,7 @@ public class ChatGUI implements Observer,ToUser,FromUser{
 	 * @param remote
 	 * 			a remote username
 	 */
+	@Override
 	public void sendFile(String remote) {
 		this.openInterfaceDialogFile();
 		if (InterfaceDialogFile.getDialogue().showOpenDialog(null)==JFileChooser.APPROVE_OPTION){
@@ -227,6 +237,7 @@ public class ChatGUI implements Observer,ToUser,FromUser{
 	 * @param answer
 	 * 			answer of the user
 	 */
+	@Override
 	public void receiveFile(String remote,String file, int answer) {	
 		if (answer == JOptionPane.YES_OPTION) {
 			this.wCommunicate.get(remote).getProgressBarFile().setVisible(true);
@@ -250,6 +261,7 @@ public class ChatGUI implements Observer,ToUser,FromUser{
  * open a conversion window
  * @param remoteUsername
  */
+	@Override
 	public void openWindowCommunicate(String remoteUsername) {
 		if (this.wCommunicate.containsKey(remoteUsername)) {
 			if (this.wCommunicate.get(remoteUsername) == null) {
@@ -270,6 +282,7 @@ public class ChatGUI implements Observer,ToUser,FromUser{
  * @param remote
  * 			a remote username
  */
+	@Override
 	public void displayMessage(String text, String remote) {
 		this.openWindowCommunicate(remote);
 		this.wCommunicate.get(remote).settAreaHistoryCom("   "+remote+" :"+text+"\n");	
@@ -285,6 +298,7 @@ public class ChatGUI implements Observer,ToUser,FromUser{
  * @param size
  * 			file size
  */
+	@Override
 	public void proposeFile(String remote, String file, long size) {
 		String title=new String("Download File Proposition");
 		String message=new String(remote+" vous envoi ce fichier "+file+" de taille "+size);
@@ -296,6 +310,7 @@ public class ChatGUI implements Observer,ToUser,FromUser{
 /**
  * opens window which allows the user to select file in his local disk 
  */
+	@Override
 	public void openInterfaceDialogFile() {
 		this.wDialogFile=new InterfaceDialogFile();
 	}
@@ -303,6 +318,7 @@ public class ChatGUI implements Observer,ToUser,FromUser{
 /**
  * initializes the connection window
  */
+	@Override
 	public void initConnection() {
 		this.wCommunicate=new HashMap<String,InterfaceCommunicate>();
 		this.wConnect = new InterfaceConnect(this);
@@ -316,6 +332,7 @@ public class ChatGUI implements Observer,ToUser,FromUser{
 	 * (non-Javadoc)
 	 * @see chatSystemIHMs.ToUser#notifyFileReceived(java.lang.String)
 	 */
+	@Override
 	public void notifyFileReceived(String remote) {
 		JOptionPane.showMessageDialog(this.wCommunicate.get(remote), "File Receveid and Stocked in directory Download",
 				"File",

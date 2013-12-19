@@ -53,7 +53,7 @@ public class ModelFile extends Observable{
 	 * calculates the transfer progression
 	 */
 	public void calcProgress(){
-		this.progression=(Integer)(100*this.level/(this.numberOfParts));
+		this.progression=(100*this.level/(this.numberOfParts));
 	}
 	
 	public Integer getProgression() { return progression; }

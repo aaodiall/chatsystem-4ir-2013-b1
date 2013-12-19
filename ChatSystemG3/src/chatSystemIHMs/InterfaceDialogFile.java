@@ -21,7 +21,7 @@ public class InterfaceDialogFile {
         // "home" de l'utilisateur
         	
 		// création de la boîte de dialogue
-		dialogue = new JFileChooser();		
+		dialogue = new JFileChooser();
 	}
 	/**
 	 * returns the JFileChosser which is opened when the user wants to send a file 

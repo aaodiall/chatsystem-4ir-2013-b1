@@ -11,6 +11,8 @@ import javax.swing.ImageIcon;
 import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 import javax.swing.UIManager;
+import javax.swing.WindowConstants;
+
 import java.awt.Font;
 import javax.swing.JProgressBar;
 import java.awt.Color;
@@ -53,7 +55,7 @@ public class InterfaceCommunicate extends JFrame implements ActionListener{
 	 */
 	private void initialize() {		
 		this.setBounds(100, 5, 663, 702);
-		this.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+		this.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
 		getContentPane().setBackground(UIManager.getColor("Button.select"));
 		getContentPane().setLayout(null);
 		

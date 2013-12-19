@@ -26,7 +26,7 @@ public class ChatNIDatagramSender extends Thread{
 	
 	private DatagramSocket socketUDP;
 	private ArrayBlockingQueue <DatagramPacket> bufferMsg2Send;
-	private int numMsgMax;
+	private final int numMsgMax = 20;
 	private boolean connected;
 	
 	/**
@@ -34,9 +34,8 @@ public class ChatNIDatagramSender extends Thread{
 	 * @param numMsgMax
 	 * @param socketChatNIMessage
 	 */
-	public ChatNIDatagramSender(int numMsgMax, DatagramSocket socketChatNIMessage){
+	public ChatNIDatagramSender(DatagramSocket socketChatNIMessage){
 		this.socketUDP = socketChatNIMessage;
-		this.numMsgMax = numMsgMax;
 		this.connected = true;
 		// Enable Broadcast
 		try{
@@ -163,6 +162,7 @@ public class ChatNIDatagramSender extends Thread{
 	/**
 	 * check periodically if there is messages to send and sends them
 	 */
+	@Override
 	public void run(){
 		while(this.connected){
 			// il dort

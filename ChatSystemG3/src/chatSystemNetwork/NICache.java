@@ -106,7 +106,6 @@ public class NICache {
 	 */
 	void addRemotePort(int idDemand, int port){
 		this.remoteDemands.put(idDemand,port);
-		System.out.println("NICache --> demand "+ idDemand+ "  remote "+this.remoteDemands.get(idDemand));
 	}
 	
 	

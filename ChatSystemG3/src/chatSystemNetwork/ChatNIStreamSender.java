@@ -59,7 +59,7 @@ public class ChatNIStreamSender extends Thread{
 			 * car ces objets gardent des références en mémoire (seul le premier tableau sera réellement reçu à chaque envoi)
 			 */
 			this.out.reset();
-			this.out.writeObject((Object)f);
+			this.out.writeObject(f);
 			// parce qu'on utilise un bufferedOuputStream
 			this.out.flush();
 			// si c'est le dernier envoi on ferme le flux et le socket
@@ -83,6 +83,7 @@ public class ChatNIStreamSender extends Thread{
 	/**
 	 * accept the connection and initialize the socket dedicated to the transfer 
 	 */
+	@Override
 	public void run(){
 		try {
 			this.sock = this.serverSocket.accept();

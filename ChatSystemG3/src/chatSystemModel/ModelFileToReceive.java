@@ -35,8 +35,6 @@ public class ModelFileToReceive extends ModelFile{
 		super.setSize(size);
 		super.setNumberParts();
 		this.alreadyExist = false;
-		System.out.print(System.getenv("HOME") +"/Téléchargements/"+name);
-		System.out.println();
 		this.fileToReceive = new File(System.getenv("HOME") +"/Téléchargements/"+name);
 		try {
 			this.alreadyExist = !this.fileToReceive.createNewFile();
