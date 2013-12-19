@@ -91,9 +91,9 @@ public class InterfaceListUsers extends JFrame implements WindowListener,ActionL
 	 * @param objects
 	 */
 	public void setUsers(Object[] objects) {
-		this.users.clear();;
+		this.users.clear();
 		for(int i=0;i<objects.length;i++){
-			this.users.addElement((String)objects[i]);
+			this.users.addElement(objects[i]);
 		}
 	}
 	
@@ -101,6 +101,7 @@ public class InterfaceListUsers extends JFrame implements WindowListener,ActionL
 	 * (non-Javadoc)
 	 * @see java.awt.event.ActionListener#actionPerformed(java.awt.event.ActionEvent)
 	 */
+	@Override
 	public void actionPerformed(ActionEvent arg0) {
 		if (arg0.getSource()==btnDeconnexion){
 			staticChatgui.disconnect();

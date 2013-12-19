@@ -17,7 +17,7 @@ import chatSystemNetwork.ChatNI;
  * @author joanna
  *
  */
-public class Controller extends Thread{
+public class Controller implements Runnable{
 
 	private ModelListUsers modelListUsers;
 	private ModelStates modelStates;	
@@ -32,7 +32,6 @@ public class Controller extends Thread{
 	private HashMap <Integer,ModelFileToReceive> filesToReceive;
 	private HashMap <String,Integer> fileToDemand;
 	private long maxSizeToTransfer;
-	private long nbSendingBytes;
 	private long nbReceivingBytes;
 	private int currentidSendDemand;
 	private int maxidDemand;
@@ -64,7 +63,6 @@ public class Controller extends Thread{
 		this.fileToDemand = new HashMap <String,Integer>();//key = name of file, value = id demand 
 		this.maxSizeToTransfer = 2000000000;
 		this.nbReceivingBytes = 0;
-		this.nbSendingBytes = 0;
 	}
 
 	/**
@@ -95,7 +93,8 @@ public class Controller extends Thread{
 		// lancement de la connexion
 		this.chatNI.connect(false);
 		// on lance le thread du controller pour les fichiers
-		this.start();	
+		Thread threadControl = new Thread(this);
+		threadControl.start();	
 	}
 	
 	/**
@@ -139,8 +138,7 @@ public class Controller extends Thread{
 	public void performPropositionFile(String remote, String filePath) throws TransferException{
 		// on cree le modelFile
 		ModelFileToSend f = new ModelFileToSend (remote,filePath,this.currentidSendDemand,this.maxRead);
-		this.nbSendingBytes += f.getSize();
-		if ((this.nbSendingBytes<=this.maxSizeToTransfer) && (this.ftoSend.size() < this.numFileMax)){
+		if ((f.getSize()<=this.maxSizeToTransfer) && (this.ftoSend.size() < this.numFileMax)){
 			//on l'ajoute a la liste des fichier a envoyer;
 			this.filesToSend.put(f.getIdDemand(), f);
 			f.addObserver(chatgui);
@@ -153,7 +151,7 @@ public class Controller extends Thread{
 			InetAddress ipRemote = this.modelListUsers.getListUsers().get(remote);
 			// on envoie la proposition
 			this.chatNI.sendPropositionFile(remote, ipRemote, f.getName(), f.getSize(),f.getIdDemand());
-		}else if(this.nbSendingBytes > this.maxSizeToTransfer){
+		}else if(f.getSize() > this.maxSizeToTransfer){
 			throw new TransferException(1);
 		}else if (this.ftoSend.size() == this.numFileMax){
 			throw new TransferException(2);
@@ -205,8 +203,6 @@ public class Controller extends Thread{
 		if (this.modelStates.isConnected() && this.modelListUsers.isInListUsers(remote)){
 			ModelFileToReceive f = new ModelFileToReceive(remote,file,size,idDemand,this.maxWrite);
 			f.addObserver(chatgui);
-			System.out.println("Controller --> idDemand received : " + idDemand);
-			System.out.println("Controller --> file demand received from " + remote);
 			this.filesToReceive.put(idDemand, f);
 			this.fileToDemand.put(file, idDemand);
 			f.setStateReceivedDemand(true);
@@ -270,7 +266,6 @@ public class Controller extends Thread{
 	public void disconnectReceived(String username){
 		if (this.modelStates.isConnected() && this.modelListUsers.isInListUsers(username)){
 			this.modelListUsers.removeUsernameList(username);
-			System.out.println(username + " s'est deconnecté");	
 		}			
 	}
 	
@@ -287,6 +282,7 @@ public class Controller extends Thread{
 	/**
 	 * Handle the sending of files
 	 */
+	@Override
 	public void run(){
 		while (this.modelStates.isConnected()){
 			try{

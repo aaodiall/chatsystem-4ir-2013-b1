@@ -27,18 +27,21 @@ public class ChatSystem {
 	 * 
 	 */
 	public static void main(String[] args){	
-		// pour des tests locaux demander a l'utilisateur d'entrer un numero de port
 		int portUDP=16001;
 		int bufferSize = 50;
 		modelListUsers = new ModelListUsers();
 		modelUsername = new ModelUsername();
 		modelStates = new ModelStates();
 		modelText = new ModelText();
-		chatController = new Controller(modelListUsers,modelStates , modelText, modelUsername);
-		chatNI = new ChatNI(portUDP,bufferSize,chatController);
-		chatController.setChatNI(chatNI);
+		chatController = new Controller(modelListUsers,modelStates, modelText, modelUsername);
 		chatGUI=new ChatGUI(chatController);
 		chatController.setChatgui(chatGUI);
+		try{
+			chatNI = new ChatNI(portUDP,bufferSize,chatController);
+		}catch(java.net.SocketException e){
+			System.err.println("");
+		}
+		chatController.setChatNI(chatNI);		
 		modelUsername.addObserver(chatNI);
 		modelStates.addObserver(chatNI);
 		modelListUsers.addObserver(chatGUI);

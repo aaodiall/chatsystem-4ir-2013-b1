@@ -49,6 +49,7 @@ public class ChatNIStreamReceiver extends Thread{
 	/**
 	 * connect to the server and read all the file parts
 	 */
+	@Override
 	public void run(){
 		Object objectRead;
 		FilePart f;
