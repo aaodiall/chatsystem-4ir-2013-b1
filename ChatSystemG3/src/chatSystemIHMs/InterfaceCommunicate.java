@@ -12,7 +12,6 @@ import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 import javax.swing.UIManager;
 import javax.swing.WindowConstants;
-
 import java.awt.Font;
 import javax.swing.JProgressBar;
 import java.awt.Color;
@@ -68,7 +67,6 @@ public class InterfaceCommunicate extends JFrame implements ActionListener{
 		this.tAreaMessageText.setLineWrap(true);
 		scrollPane.setViewportView(tAreaMessageText);
 		
-		
 		btnSendMessage = new JButton("Send Message");
  		btnSendMessage.setBounds(512, 554, 138, 25);
  		
@@ -101,7 +99,7 @@ public class InterfaceCommunicate extends JFrame implements ActionListener{
 		progressBarFile.setBounds(449, 12, 148, 14);
 		getContentPane().add(progressBarFile);
 		
-		btnFileReceived = new JButton(new ImageIcon("icons/download_opt.png"));
+		btnFileReceived = new JButton(new ImageIcon(this.getClass().getResource("/download_opt.png")));
 		btnFileReceived.addActionListener(this);
 		btnFileReceived.setBackground(Color.GREEN);
 		btnFileReceived.setBounds(617, 12, 29, 18);
@@ -109,6 +107,14 @@ public class InterfaceCommunicate extends JFrame implements ActionListener{
 		getContentPane().add(btnFileReceived);
 		this.setResizable(false);
 	
+	}
+
+	JButton getBtnSendFile(){
+		return this.btnSendFile;
+	}
+	
+	JButton getBtnSendMessage(){
+		return this.btnSendMessage;
 	}
 
 /**
@@ -143,7 +149,7 @@ public class InterfaceCommunicate extends JFrame implements ActionListener{
 	 */
 	@Override
 	public void actionPerformed(final ActionEvent e) {
-		if (e.getSource()==btnSendMessage){
+		if(e.getSource()==btnSendMessage){
 			if(!tAreaMessageText.getText().equals("")){
 				this.chatGUI.sendMessage(this.getTitle());
 			}

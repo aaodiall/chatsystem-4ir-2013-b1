@@ -52,7 +52,7 @@ public class Controller implements Runnable{
 		this.modelStates = modelStates;
 		this.modelText = modelText;
 		this.modelUsername = modelUsername;
-		this.numFileMax = 5;
+		this.numFileMax = 1;//5;
 		this.ftoSend = new ArrayBlockingQueue<ModelFileToSend>(this.numFileMax,true);
 		this.maxRead = 1024;
 		this.maxWrite = 1024;
@@ -61,7 +61,7 @@ public class Controller implements Runnable{
 		this.filesToSend = new HashMap <Integer,ModelFileToSend> (); // key = idDemand 
 		this.filesToReceive = new HashMap<Integer,ModelFileToReceive> (); //key = idDemand
 		this.fileToDemand = new HashMap <String,Integer>();//key = name of file, value = id demand 
-		this.maxSizeToTransfer = 2000000000;
+		this.maxSizeToTransfer = 760000000;//2 000 000 000;
 		this.nbReceivingBytes = 0;
 	}
 
@@ -164,31 +164,28 @@ public class Controller implements Runnable{
 	 * @param answer local user's answer
 	 */
 	public void performFileAnswer(String remote,String file, boolean answer) throws TransferException{
-		
 		ModelFileToReceive f = this.filesToReceive.get(this.fileToDemand.get(file));
 		InetAddress ipRemote = this.modelListUsers.getListUsers().get(remote);
-		if (answer == true){
-			if (f.getExist()){
+		// si l'utilisateur accepte de recevoir le fichier et qu'il est dans les limites
+		if (answer == true && (this.nbReceivingBytes + f.getSize() < this.maxSizeToTransfer)){
+			// on regarde s'il existe deja un fichier de ce nom
+			if (!f.hasBeenCreated()){
+				// si oui on essaye de renommer le fichier 
 				f.cleanFile();
 			}
-			// si l'utilisateur veut accepter plus que le maximum autorise on ne reçoit pas le fichier
-			if (this.nbReceivingBytes + f.getSize() > this.maxSizeToTransfer){
-				this.chatNI.sendConfirmationFile(remote,ipRemote, f.getName(), false, f.getIdDemand());
-				f.deleteFile();
-				f.deleteObservers();
-				this.filesToReceive.remove(this.fileToDemand.get(file));
-				throw new TransferException(1);
-			}else{
-				this.nbReceivingBytes += f.getSize();
-				this.chatNI.sendConfirmationFile(remote,ipRemote, f.getName(), answer, f.getIdDemand());
-			}
-		}else{
+			this.nbReceivingBytes += f.getSize();
 			this.chatNI.sendConfirmationFile(remote,ipRemote, f.getName(), answer, f.getIdDemand());
-			if(!f.getExist()){
+		// sinon on efface les informations du fichier	
+		}else{
+			this.chatNI.sendConfirmationFile(remote,ipRemote, f.getName(), false, f.getIdDemand());
+			if (f.hasBeenCreated()){					
 				f.deleteFile();
 			}
 			f.deleteObservers();
 			this.filesToReceive.remove(this.fileToDemand.get(file));
+			if (this.nbReceivingBytes + f.getSize() > this.maxSizeToTransfer){
+				throw new TransferException(1);
+			}
 		}
 	}
 	
@@ -277,6 +274,9 @@ public class Controller implements Runnable{
 	 */
 	public void partReceived(byte[] fileBytes,int idDemand, boolean isLast){	
 		this.filesToReceive.get(idDemand).writeFilePart(fileBytes, isLast);
+		if(isLast){
+			this.nbReceivingBytes -=this.filesToReceive.get(idDemand).getSize();
+		}
 	}
 	
 	/**
