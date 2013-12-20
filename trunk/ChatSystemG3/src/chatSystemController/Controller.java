@@ -52,7 +52,7 @@ public class Controller implements Runnable{
 		this.modelStates = modelStates;
 		this.modelText = modelText;
 		this.modelUsername = modelUsername;
-		this.numFileMax = 1;//5;
+		this.numFileMax = 5;
 		this.ftoSend = new ArrayBlockingQueue<ModelFileToSend>(this.numFileMax,true);
 		this.maxRead = 1024;
 		this.maxWrite = 1024;
@@ -61,7 +61,7 @@ public class Controller implements Runnable{
 		this.filesToSend = new HashMap <Integer,ModelFileToSend> (); // key = idDemand 
 		this.filesToReceive = new HashMap<Integer,ModelFileToReceive> (); //key = idDemand
 		this.fileToDemand = new HashMap <String,Integer>();//key = name of file, value = id demand 
-		this.maxSizeToTransfer = 760000000;//2 000 000 000;
+		this.maxSizeToTransfer = 2000000000;
 		this.nbReceivingBytes = 0;
 	}
 

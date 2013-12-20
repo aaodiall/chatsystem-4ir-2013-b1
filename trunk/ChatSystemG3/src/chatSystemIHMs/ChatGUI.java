@@ -300,6 +300,23 @@ public class ChatGUI implements Observer,ToUser,FromUser{
 	}
 
 
+	private String sizeofFile(long size){
+		String res;
+		long kilo = 1000;
+		long mega = 1000000;
+		long giga = 1000000000;
+		if (size < 1000){
+			res=size+" octets";
+		}else if(size <1000000){
+			res=size/kilo+"Ko";
+		}else if(size < 1000000000){
+			res=size/mega+"Mo";
+		}else{
+			res=size/giga+"Go";
+		}
+		return res;
+	}
+	
 /**
  * is called when the user receives a proposition File from the remote user 
  * @param remote
@@ -312,7 +329,7 @@ public class ChatGUI implements Observer,ToUser,FromUser{
 	@Override
 	public void proposeFile(String remote, String file, long size) {
 		String title=new String("Download File Proposition");
-		String message=new String(remote+" want to send you a file. name : "+file+" size : "+size);
+		String message=new String(remote+" want to send you the file "+file+" size : "+this.sizeofFile(size));
 		this.openWindowCommunicate(remote);
 		int answer = JOptionPane.showConfirmDialog(this.wCommunicate.get(remote), message, title,JOptionPane.YES_NO_OPTION);
 		this.receiveFile(remote,file, answer);
