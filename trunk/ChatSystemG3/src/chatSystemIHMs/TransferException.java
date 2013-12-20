@@ -3,6 +3,8 @@
  */
 package chatSystemIHMs;
 
+
+
 /**
  * this exception is used to control local user's data transfers
  * @author joanna
@@ -11,6 +13,9 @@ package chatSystemIHMs;
 public class TransferException extends Exception{
 
 	private int type;
+	private final String fileSize = "the file to send exceed 2Go, transfer refused";
+	private final String fileNumber = "There are too many transfers in progress please retry later";
+	private final String receivingsize = "The total size of the files to receive exceed 2Go, tranfer refused. Please retry later";
 	private final int typeSizeTransfer = 1;
 	private final int typeNumberOfFile = 2;
 	
@@ -21,6 +26,18 @@ public class TransferException extends Exception{
 
 	public TransferException(int i){
 		this.type = i;
+	}
+	
+	String getMessageToSize(){
+		return this.fileSize;
+	}
+	
+	String getMessageToNumber(){
+		return this.fileNumber;
+	}
+	
+	String getMessageToReceive(){
+		return this.receivingsize;
 	}
 	
 	/**
@@ -37,22 +54,5 @@ public class TransferException extends Exception{
 	 */
 	public boolean isNumberOfFile(){
 		return this.type == this.typeNumberOfFile;
-	}
-	
-	/**
-	 * indicates to local user that an error occured because of the total size of data he is trying to send
-	 */
-	public void handleSizeTransfer(){
-		// A IMPLEMENTER EN FONCTION DE LA GUI
-		System.out.println("attemp of sending more than 2Go, file not sent");
-	}
-	
-	/**
-	 * indicates to local user that an error occured because of the number of files he is trying to send
-	 */
-	public void handleTooManyFiles(){
-		// A IMPLEMENTER EN FONCTION DE LA GUI
-		System.out.println("attemp of sending more than 6 files in the same time, file not sent");
-	}
-	
+	}	
 }

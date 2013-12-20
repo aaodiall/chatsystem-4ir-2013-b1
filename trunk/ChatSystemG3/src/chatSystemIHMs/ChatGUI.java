@@ -85,6 +85,16 @@ public class ChatGUI implements Observer,ToUser,FromUser{
  */
 	public void updateModelListUsers(Object arg1){
 		this.wListUsers.setUsers(((HashMap<?, ?>)arg1 ).keySet().toArray()) ;
+		// on desactive les envois de messages/fichiers pour les utilisateurs deconnectes
+		Iterator<String> it = this.wCommunicate.keySet().iterator();
+		String userCommunicate;
+		while(it.hasNext()){
+			userCommunicate = (String)it.next();
+			if (!this.wListUsers.getUsers().contains(userCommunicate)){
+				this.wCommunicate.get(userCommunicate).getBtnSendMessage().setEnabled(false);
+				this.wCommunicate.get(userCommunicate).getBtnSendFile().setEnabled(false);
+			}
+		}
 	}
 	
 	
@@ -121,13 +131,15 @@ public class ChatGUI implements Observer,ToUser,FromUser{
 	}
 
 	public void updateModelFileRefused(Object arg1){
+		String remote = ((ModelFileToSend)arg1).getRemote();
 		// on rend la scroll bar invisible
-		this.wCommunicate.get(((ModelFileToSend)arg1).getRemote()).getProgressBarFile().setVisible(false);
-		this.wCommunicate.get(((ModelFileToSend)arg1).getRemote()).getProgressBarFile().setValue(0);
-		System.out.println("gui know file refused");
-		/*
-		 * PARTIE MESSAGE A L'UTILISATEUR A IMPLEMENTER
-		 */
+		if(this.wCommunicate.get(remote).getProgressBarFile().getPercentComplete() == 0.0){
+			this.wCommunicate.get(remote).getProgressBarFile().setVisible(false);
+			this.wCommunicate.get(remote).getProgressBarFile().setValue(0);
+		}
+		JOptionPane.showMessageDialog(this.wCommunicate.get(remote), remote +" has refused the file transfer",
+				"File refused",
+				JOptionPane.WARNING_MESSAGE);
 	}
 	
 	/**
@@ -218,14 +230,15 @@ public class ChatGUI implements Observer,ToUser,FromUser{
 		this.openInterfaceDialogFile();
 		if (InterfaceDialogFile.getDialogue().showOpenDialog(null)==JFileChooser.APPROVE_OPTION){
 			String filePath=InterfaceDialogFile.getDialogue().getSelectedFile().getPath();
-			this.wCommunicate.get(remote).getProgressBarFile().setVisible(true);
 			try {
 				this.controller.performPropositionFile(remote, filePath);
+				this.wCommunicate.get(remote).getProgressBarFile().setVisible(true);
 			} catch (TransferException e) {
-				if(e.isSizeTransfer())
-					e.handleSizeTransfer();
-				else
-					e.handleTooManyFiles();
+				if(e.isSizeTransfer()){
+					JOptionPane.showMessageDialog(this.wCommunicate.get(remote),e.getMessageToSize(),"File too big",JOptionPane.WARNING_MESSAGE);
+				}else{
+					JOptionPane.showMessageDialog(this.wCommunicate.get(remote),e.getMessageToNumber(),"Too many file transfers",JOptionPane.WARNING_MESSAGE);
+				}
 			}
 		}
 	}
@@ -244,15 +257,13 @@ public class ChatGUI implements Observer,ToUser,FromUser{
 			try {
 				this.controller.performFileAnswer(remote,file, true);
 			} catch (TransferException e) {
-				e.handleSizeTransfer();
+				JOptionPane.showMessageDialog(this.wCommunicate.get(remote),e.getMessageToReceive(),"More than 2Go to receive",JOptionPane.WARNING_MESSAGE);
 			}        	
 		}
 		else if (answer == JOptionPane.NO_OPTION){
 			try {
 				this.controller.performFileAnswer(remote,file, false);
-			} catch (TransferException e) {
-				e.handleSizeTransfer();
-			}
+			} catch (TransferException e) {}
 		}
 	}
 
@@ -301,7 +312,7 @@ public class ChatGUI implements Observer,ToUser,FromUser{
 	@Override
 	public void proposeFile(String remote, String file, long size) {
 		String title=new String("Download File Proposition");
-		String message=new String(remote+" vous envoi ce fichier "+file+" de taille "+size);
+		String message=new String(remote+" want to send you a file. name : "+file+" size : "+size);
 		this.openWindowCommunicate(remote);
 		int answer = JOptionPane.showConfirmDialog(this.wCommunicate.get(remote), message, title,JOptionPane.YES_NO_OPTION);
 		this.receiveFile(remote,file, answer);
@@ -334,7 +345,7 @@ public class ChatGUI implements Observer,ToUser,FromUser{
 	 */
 	@Override
 	public void notifyFileReceived(String remote) {
-		JOptionPane.showMessageDialog(this.wCommunicate.get(remote), "File Receveid and Stocked in directory Download",
+		JOptionPane.showMessageDialog(this.wCommunicate.get(remote), "File Receveid and Stocked in download directory",
 				"File",
 				JOptionPane.WARNING_MESSAGE);
 		this.wCommunicate.get(remote).getBtnFileReceived().setVisible(false);

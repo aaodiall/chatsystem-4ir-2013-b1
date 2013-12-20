@@ -19,7 +19,7 @@ public class ModelFileToReceive extends ModelFile{
 	private File fileToReceive;
 	private BufferedOutputStream bos;
 	private Boolean stateReceivedDemand;
-	private boolean alreadyExist;
+	private boolean created;
 	/**
 	 * ModelFileToReceive constructor
 	 * si le fichier existe déjà et que l'utilisateur accepte de le recevoir on ecrase le précédent contenu
@@ -34,10 +34,10 @@ public class ModelFileToReceive extends ModelFile{
 		super.setName(name);
 		super.setSize(size);
 		super.setNumberParts();
-		this.alreadyExist = false;
+		this.created = false;
 		this.fileToReceive = new File(System.getenv("HOME") +"/Téléchargements/"+name);
 		try {
-			this.alreadyExist = !this.fileToReceive.createNewFile();
+			this.created = this.fileToReceive.createNewFile();
 			this.bos = new BufferedOutputStream(new FileOutputStream(this.fileToReceive,true));
 		} catch (FileNotFoundException e) {
 			e.printStackTrace();
@@ -50,8 +50,8 @@ public class ModelFileToReceive extends ModelFile{
 	 * indicates if the file to receive already exists
 	 * @return yes or no
 	 */
-	public boolean getExist(){
-		return this.alreadyExist;
+	public boolean hasBeenCreated(){
+		return this.created;
 	}
 
 	
@@ -61,13 +61,25 @@ public class ModelFileToReceive extends ModelFile{
 	 * used when the local user wants to receive a file that exists 
 	 */
 	public void cleanFile(){
-		this.fileToReceive.delete();
-		try {
-			this.bos.close();
-			this.fileToReceive.createNewFile();
-			this.bos = new BufferedOutputStream(new FileOutputStream(this.fileToReceive,true));
-		} catch (IOException e) {
-			e.printStackTrace();
+		int i=1;
+		// recherche d'un nom qui convient
+		while(this.created && i<6){
+			this.fileToReceive = new File(System.getenv("HOME") +"/Téléchargements/"+this.getName()+"("+i+")");
+			try {
+				this.created = !this.fileToReceive.createNewFile();
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+			i++;
+		}
+		if(i==6){ this.fileToReceive.delete();
+		}else{
+			try {
+				this.bos.close();
+				this.bos = new BufferedOutputStream(new FileOutputStream(this.fileToReceive,true));
+			} catch (IOException e) {
+				e.printStackTrace();
+			}	
 		}
 	}
 	
